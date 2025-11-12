@@ -22,46 +22,39 @@ import { useNode, useNodeEvents, useNodePods } from '@/lib/hooks/use-nodes'
 import { StatusBadge } from '@/components/common/status-badge'
 import { formatAge } from '@/lib/utils'
 import type { Pod } from '@/types/kubernetes'
+import { DetailSkeleton } from '@/components/common/detail-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 
 export default function NodeDetailPage() {
   const params = useParams()
   const router = useRouter()
   const name = params.name as string
 
-  const { data: node, isLoading, error } = useNode(name)
+  const { data: node, isLoading, error, refetch } = useNode(name)
   const { data: events, isLoading: eventsLoading } = useNodeEvents(name)
   const { data: pods, isLoading: podsLoading } = useNodePods(name)
 
   if (isLoading) {
-    return (
-      <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/nodes')}
-          sx={{ mb: 2 }}
-        >
-          Back to Nodes
-        </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
-      </Box>
-    )
+    return <DetailSkeleton />
   }
 
   if (error || !node) {
     return (
       <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/nodes')}
-          sx={{ mb: 2 }}
-        >
-          Back to Nodes
-        </Button>
-        <Alert severity="error">
-          Failed to load node: {error instanceof Error ? error.message : 'Node not found'}
-        </Alert>
+        <Box p={3}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => router.push('/nodes')}
+            sx={{ mb: 2 }}
+          >
+            Back to Nodes
+          </Button>
+        </Box>
+        <ErrorState
+          error={error || new Error('Node not found')}
+          onRetry={() => refetch()}
+          title="Failed to Load Node"
+        />
       </Box>
     )
   }

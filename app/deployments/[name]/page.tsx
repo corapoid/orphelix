@@ -26,13 +26,15 @@ import { formatAge } from '@/lib/utils'
 import { TopologyGraph } from '@/app/components/topology/topology-graph'
 import { buildDeploymentTopology } from '@/lib/topology'
 import { useMemo } from 'react'
+import { DetailSkeleton } from '@/components/common/detail-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 
 export default function DeploymentDetailPage() {
   const params = useParams()
   const router = useRouter()
   const name = params.name as string
 
-  const { data: deployment, isLoading, error } = useDeployment(name)
+  const { data: deployment, isLoading, error, refetch } = useDeployment(name)
   const { data: pods, isLoading: podsLoading } = useDeploymentPods(name)
   const { data: events, isLoading: eventsLoading } = useDeploymentEvents(name)
   const { data: allConfigMaps } = useConfigMaps()
@@ -55,35 +57,26 @@ export default function DeploymentDetailPage() {
   }, [deployment, pods, allConfigMaps, allSecrets])
 
   if (isLoading) {
-    return (
-      <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/deployments')}
-          sx={{ mb: 2 }}
-        >
-          Back to Deployments
-        </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
-      </Box>
-    )
+    return <DetailSkeleton />
   }
 
   if (error || !deployment) {
     return (
       <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/deployments')}
-          sx={{ mb: 2 }}
-        >
-          Back to Deployments
-        </Button>
-        <Alert severity="error">
-          Failed to load deployment: {error instanceof Error ? error.message : 'Deployment not found'}
-        </Alert>
+        <Box p={3}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => router.push('/deployments')}
+            sx={{ mb: 2 }}
+          >
+            Back to Deployments
+          </Button>
+        </Box>
+        <ErrorState
+          error={error || new Error('Deployment not found')}
+          onRetry={() => refetch()}
+          title="Failed to Load Deployment"
+        />
       </Box>
     )
   }

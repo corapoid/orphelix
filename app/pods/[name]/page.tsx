@@ -35,13 +35,15 @@ import { TopologyGraph } from '@/app/components/topology/topology-graph'
 import { buildPodTopology } from '@/lib/topology'
 import { formatAge } from '@/lib/utils'
 import { RestartPodDialog } from '@/app/components/pods/restart-pod-dialog'
+import { DetailSkeleton } from '@/components/common/detail-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 
 export default function PodDetailPage() {
   const params = useParams()
   const router = useRouter()
   const name = params.name as string
 
-  const { data: pod, isLoading, error } = usePod(name)
+  const { data: pod, isLoading, error, refetch } = usePod(name)
   const { data: events, isLoading: eventsLoading } = usePodEvents(name)
   const { data: allConfigMaps } = useConfigMaps()
   const { data: allSecrets } = useSecrets()
@@ -107,35 +109,26 @@ export default function PodDetailPage() {
   }
 
   if (isLoading) {
-    return (
-      <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/pods')}
-          sx={{ mb: 2 }}
-        >
-          Back to Pods
-        </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
-      </Box>
-    )
+    return <DetailSkeleton />
   }
 
   if (error || !pod) {
     return (
       <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/pods')}
-          sx={{ mb: 2 }}
-        >
-          Back to Pods
-        </Button>
-        <Alert severity="error">
-          Failed to load pod: {error instanceof Error ? error.message : 'Pod not found'}
-        </Alert>
+        <Box p={3}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => router.push('/pods')}
+            sx={{ mb: 2 }}
+          >
+            Back to Pods
+          </Button>
+        </Box>
+        <ErrorState
+          error={error || new Error('Pod not found')}
+          onRetry={() => refetch()}
+          title="Failed to Load Pod"
+        />
       </Box>
     )
   }

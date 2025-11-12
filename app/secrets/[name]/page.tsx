@@ -37,6 +37,8 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { useSecret, useSecretEvents } from '@/lib/hooks/use-secrets'
+import { DetailSkeleton } from '@/components/common/detail-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 
 const MAX_PREVIEW_LINES = 10
 
@@ -49,7 +51,7 @@ export default function SecretDetailPage({
   const name = resolvedParams.name
   const router = useRouter()
 
-  const { data: secret, isLoading, error } = useSecret(name)
+  const { data: secret, isLoading, error, refetch } = useSecret(name)
   const { data: events, isLoading: eventsLoading } = useSecretEvents(name)
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -178,25 +180,26 @@ export default function SecretDetailPage({
   }, [secret, searchQuery])
 
   if (isLoading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-        <CircularProgress />
-      </Box>
-    )
+    return <DetailSkeleton />
   }
 
-  if (error) {
+  if (error || !secret) {
     return (
-      <Box p={3}>
-        <Alert severity="error">Failed to load Secret: {error.message}</Alert>
-      </Box>
-    )
-  }
-
-  if (!secret) {
-    return (
-      <Box p={3}>
-        <Alert severity="warning">Secret not found</Alert>
+      <Box>
+        <Box p={3}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => router.back()}
+            sx={{ mb: 2 }}
+          >
+            Back to Secrets
+          </Button>
+        </Box>
+        <ErrorState
+          error={error || new Error('Secret not found')}
+          onRetry={() => refetch()}
+          title="Failed to Load Secret"
+        />
       </Box>
     )
   }
