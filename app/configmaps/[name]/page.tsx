@@ -3,15 +3,8 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid2'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -25,7 +18,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { useState, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useConfigMap, useConfigMapEvents } from '@/lib/hooks/use-configmaps'
+import { useConfigMap } from '@/lib/hooks/use-configmaps'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
@@ -38,7 +31,6 @@ export default function ConfigMapDetailPage() {
   const name = params.name as string
 
   const { data: configMap, isLoading, error, refetch } = useConfigMap(name)
-  const { data: events, isLoading: eventsLoading } = useConfigMapEvents(name)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set())
@@ -280,49 +272,6 @@ export default function ConfigMapDetailPage() {
               )
             })}
           </Box>
-        )}
-      </Paper>
-
-      {/* Events Section */}
-      <Paper sx={{ p: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Events
-        </Typography>
-        {eventsLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
-            <CircularProgress size={24} />
-          </Box>
-        ) : !events || events.length === 0 ? (
-          <Alert severity="info">No events found for this ConfigMap</Alert>
-        ) : (
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Reason</TableCell>
-                  <TableCell>Message</TableCell>
-                  <TableCell>Age</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {events.map((event, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell>
-                      <Chip
-                        label={event.type}
-                        size="small"
-                        color={event.type === 'Warning' ? 'warning' : 'default'}
-                      />
-                    </TableCell>
-                    <TableCell>{event.reason}</TableCell>
-                    <TableCell>{event.message}</TableCell>
-                    <TableCell>{event.lastTimestamp || 'Unknown'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
         )}
       </Paper>
 

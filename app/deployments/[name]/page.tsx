@@ -40,6 +40,11 @@ export default function DeploymentDetailPage() {
   const { data: allConfigMaps } = useConfigMaps()
   const { data: allSecrets } = useSecrets()
 
+  // Debug logging
+  console.log('[Deployment Detail] name:', name)
+  console.log('[Deployment Detail] pods:', pods)
+  console.log('[Deployment Detail] podsLoading:', podsLoading)
+
   // Build topology graph data
   const topologyData = useMemo(() => {
     if (!deployment || !pods) return null
@@ -238,7 +243,7 @@ export default function DeploymentDetailPage() {
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
             <CircularProgress />
           </Box>
-        ) : pods && pods.length > 0 ? (
+        ) : pods?.length ? (
           <TableContainer>
             <Table>
               <TableHead>

@@ -8,14 +8,7 @@ import {
   Paper,
   Chip,
   Alert,
-  CircularProgress,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   InputAdornment,
   Snackbar,
@@ -36,7 +29,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import { useSecret, useSecretEvents } from '@/lib/hooks/use-secrets'
+import { useSecret } from '@/lib/hooks/use-secrets'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
 
@@ -52,7 +45,6 @@ export default function SecretDetailPage({
   const router = useRouter()
 
   const { data: secret, isLoading, error, refetch } = useSecret(name)
-  const { data: events, isLoading: eventsLoading } = useSecretEvents(name)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set())
@@ -449,51 +441,6 @@ export default function SecretDetailPage({
                     )
                   })}
                 </Box>
-              )}
-            </Paper>
-          </Grid>
-
-          {/* Events Section */}
-          <Grid size={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Events
-              </Typography>
-              {eventsLoading ? (
-                <CircularProgress size={24} />
-              ) : events && events.length > 0 ? (
-                <TableContainer>
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Type</TableCell>
-                        <TableCell>Reason</TableCell>
-                        <TableCell>Message</TableCell>
-                        <TableCell>Age</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {events.map((event, index) => (
-                        <TableRow key={index}>
-                          <TableCell>
-                            <Chip
-                              label={event.type}
-                              size="small"
-                              color={event.type === 'Warning' ? 'error' : 'success'}
-                            />
-                          </TableCell>
-                          <TableCell>{event.reason}</TableCell>
-                          <TableCell>{event.message}</TableCell>
-                          <TableCell>{event.lastTimestamp || 'Unknown'}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  No events found
-                </Typography>
               )}
             </Paper>
           </Grid>

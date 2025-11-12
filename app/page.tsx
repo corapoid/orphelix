@@ -71,6 +71,7 @@ export default function DashboardPage() {
             title="Deployments"
             total={summary.deployments.total}
             icon={AccountTreeIcon}
+            href="/deployments"
             details={[
               { label: 'Healthy', value: summary.deployments.healthy, color: 'success' },
               { label: 'Degraded', value: summary.deployments.degraded, color: 'error' },
@@ -83,6 +84,7 @@ export default function DashboardPage() {
             title="Pods"
             total={summary.pods.total}
             icon={WidgetsIcon}
+            href="/pods"
             details={[
               { label: 'Running', value: summary.pods.running, color: 'success' },
               { label: 'Pending', value: summary.pods.pending, color: 'warning' },
@@ -96,6 +98,7 @@ export default function DashboardPage() {
             title="Nodes"
             total={summary.nodes.total}
             icon={StorageIcon}
+            href="/nodes"
             details={[
               { label: 'Ready', value: summary.nodes.ready, color: 'success' },
               { label: 'Not Ready', value: summary.nodes.notReady, color: 'error' },
@@ -108,20 +111,21 @@ export default function DashboardPage() {
             title="Persistent Volumes"
             total={summary.pv.total}
             icon={FolderOpenIcon}
+            href="/pv"
             details={[{ label: 'Bound', value: summary.pv.bound, color: 'success' }]}
           />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <SummaryCard title="ConfigMaps" total={summary.configMaps} icon={SettingsIcon} />
+          <SummaryCard title="ConfigMaps" total={summary.configMaps} icon={SettingsIcon} href="/configmaps" />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <SummaryCard title="Secrets" total={summary.secrets} icon={LockIcon} />
+          <SummaryCard title="Secrets" total={summary.secrets} icon={LockIcon} href="/secrets" />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <SummaryCard title="HPA" total={summary.hpa} icon={TrendingUpIcon} />
+          <SummaryCard title="HPA" total={summary.hpa} icon={TrendingUpIcon} href="/hpa" />
         </Grid>
       </Grid>
 

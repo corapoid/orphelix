@@ -23,16 +23,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { usePod, usePodEvents, usePodLogs } from '@/lib/hooks/use-pods'
-import { useConfigMaps } from '@/lib/hooks/use-configmaps'
-import { useSecrets } from '@/lib/hooks/use-secrets'
 import { useRestartPod } from '@/lib/hooks/use-restart-pod'
 import { StatusBadge } from '@/components/common/status-badge'
 import { LogsViewer } from '@/app/components/pods/logs-viewer'
-import { TopologyGraph } from '@/app/components/topology/topology-graph'
-import { buildPodTopology } from '@/lib/topology'
 import { formatAge } from '@/lib/utils'
 import { RestartPodDialog } from '@/app/components/pods/restart-pod-dialog'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
@@ -45,8 +41,6 @@ export default function PodDetailPage() {
 
   const { data: pod, isLoading, error, refetch } = usePod(name)
   const { data: events, isLoading: eventsLoading } = usePodEvents(name)
-  const { data: allConfigMaps } = useConfigMaps()
-  const { data: allSecrets } = useSecrets()
 
   const [selectedContainer, setSelectedContainer] = useState('')
   const [restartDialogOpen, setRestartDialogOpen] = useState(false)
@@ -55,17 +49,6 @@ export default function PodDetailPage() {
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success')
 
   const restartMutation = useRestartPod(name)
-
-  // Build topology graph data
-  const topologyData = useMemo(() => {
-    if (!pod) return null
-
-    // Filter ConfigMaps and Secrets related to this pod (based on namespace)
-    const relatedConfigMaps = allConfigMaps?.filter((cm) => cm.namespace === pod.namespace) || []
-    const relatedSecrets = allSecrets?.filter((s) => s.namespace === pod.namespace) || []
-
-    return buildPodTopology(pod, relatedConfigMaps, relatedSecrets)
-  }, [pod, allConfigMaps, allSecrets])
 
   // Set default container when pod loads
   if (pod && !selectedContainer && pod.containers.length > 0) {
@@ -209,21 +192,6 @@ export default function PodDetailPage() {
           </Paper>
         </Grid>
       </Grid>
-
-      {/* Topology Graph Section */}
-      {topologyData && (
-        <Box sx={{ mb: 3 }}>
-          <Paper sx={{ p: 2, mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Topology
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Visual representation of pod resources and their relationships
-            </Typography>
-          </Paper>
-          <TopologyGraph data={topologyData} height={400} />
-        </Box>
-      )}
 
       <Paper sx={{ mb: 3 }}>
         <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>

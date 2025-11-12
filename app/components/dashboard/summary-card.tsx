@@ -3,11 +3,13 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { SvgIconComponent } from '@mui/icons-material'
+import Link from 'next/link'
 
 interface SummaryCardProps {
   title: string
   total: number
   icon: SvgIconComponent
+  href?: string
   details?: Array<{
     label: string
     value: number
@@ -22,9 +24,21 @@ const colorMap = {
   info: '#2196f3',
 }
 
-export function SummaryCard({ title, total, icon: Icon, details }: SummaryCardProps) {
-  return (
-    <Card sx={{ height: '100%' }}>
+export function SummaryCard({ title, total, icon: Icon, href, details }: SummaryCardProps) {
+  const cardContent = (
+    <Card
+      sx={{
+        height: '100%',
+        cursor: href ? 'pointer' : 'default',
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        '&:hover': href
+          ? {
+              transform: 'translateY(-4px)',
+              boxShadow: 4,
+            }
+          : {},
+      }}
+    >
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Box
@@ -83,4 +97,14 @@ export function SummaryCard({ title, total, icon: Icon, details }: SummaryCardPr
       </CardContent>
     </Card>
   )
+
+  if (href) {
+    return (
+      <Link href={href as any} style={{ textDecoration: 'none', color: 'inherit' }}>
+        {cardContent}
+      </Link>
+    )
+  }
+
+  return cardContent
 }
