@@ -186,15 +186,17 @@ if (error || !item) {
 ## 📁 Strony do zaktualizowania
 
 ### List Pages (Priorytet: Wysoki):
-- [ ] app/pods/page.tsx
-- [ ] app/nodes/page.tsx
+- [x] **app/pods/page.tsx** ✅ (commit: e4776c0)
+- [x] **app/nodes/page.tsx** ✅ (commit: e4776c0)
 - [ ] app/secrets/page.tsx
-- [ ] app/configmaps/page.tsx
+- [x] **app/configmaps/page.tsx** ✅ (commit: e4776c0)
 - [ ] app/events/page.tsx
 - [ ] app/hpa/page.tsx
 - [ ] app/pv/page.tsx
 
 ### Detail Pages (Priorytet: Wysoki):
+- [x] **app/configmaps/[name]/page.tsx** ✅ (commit: d788194)
+- [x] **app/deployments/page.tsx** ✅ (commit: d788194)
 - [ ] app/pods/[name]/page.tsx
 - [ ] app/nodes/[name]/page.tsx
 - [ ] app/secrets/[name]/page.tsx
