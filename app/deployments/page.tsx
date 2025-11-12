@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -19,11 +18,13 @@ import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDeployments } from '@/lib/hooks/use-deployments'
 import { StatusBadge } from '@/components/common/status-badge'
+import { TableSkeleton } from '@/components/common/table-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 
 export default function DeploymentsPage() {
   const router = useRouter()
-  const { data: deployments, isLoading, error } = useDeployments()
+  const { data: deployments, isLoading, error, refetch } = useDeployments()
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredDeployments = useMemo(() => {
@@ -41,9 +42,7 @@ export default function DeploymentsPage() {
         <Typography variant="h4" gutterBottom>
           Deployments
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
+        <TableSkeleton rows={8} columns={8} />
       </Box>
     )
   }
@@ -54,9 +53,7 @@ export default function DeploymentsPage() {
         <Typography variant="h4" gutterBottom>
           Deployments
         </Typography>
-        <Alert severity="error">
-          Failed to load deployments: {error instanceof Error ? error.message : 'Unknown error'}
-        </Alert>
+        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Deployments" />
       </Box>
     )
   }

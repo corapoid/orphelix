@@ -26,6 +26,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { useState, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useConfigMap, useConfigMapEvents } from '@/lib/hooks/use-configmaps'
+import { DetailSkeleton } from '@/components/common/detail-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 
 const MAX_PREVIEW_LINES = 10
@@ -35,7 +37,7 @@ export default function ConfigMapDetailPage() {
   const router = useRouter()
   const name = params.name as string
 
-  const { data: configMap, isLoading, error } = useConfigMap(name)
+  const { data: configMap, isLoading, error, refetch } = useConfigMap(name)
   const { data: events, isLoading: eventsLoading } = useConfigMapEvents(name)
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -103,20 +105,7 @@ export default function ConfigMapDetailPage() {
   }
 
   if (isLoading) {
-    return (
-      <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/configmaps')}
-          sx={{ mb: 2 }}
-        >
-          Back to ConfigMaps
-        </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
-      </Box>
-    )
+    return <DetailSkeleton />
   }
 
   if (error || !configMap) {
@@ -129,9 +118,11 @@ export default function ConfigMapDetailPage() {
         >
           Back to ConfigMaps
         </Button>
-        <Alert severity="error">
-          Failed to load ConfigMap: {error instanceof Error ? error.message : 'ConfigMap not found'}
-        </Alert>
+        <ErrorState
+          error={error || new Error('ConfigMap not found')}
+          onRetry={() => refetch()}
+          title="Failed to Load ConfigMap"
+        />
       </Box>
     )
   }
