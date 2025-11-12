@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -15,11 +14,13 @@ import TextField from '@mui/material/TextField'
 import LinearProgress from '@mui/material/LinearProgress'
 import { useState } from 'react'
 import { useHPAs } from '@/lib/hooks/use-hpa'
+import { TableSkeleton } from '@/components/common/table-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 
 export default function HPAPage() {
   const [searchQuery, setSearchQuery] = useState('')
-  const { data: hpas, isLoading, error } = useHPAs()
+  const { data: hpas, isLoading, error, refetch } = useHPAs()
 
   const filteredHPAs = hpas?.filter((hpa) =>
     hpa.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -31,9 +32,7 @@ export default function HPAPage() {
         <Typography variant="h4" gutterBottom>
           HPA (Horizontal Pod Autoscaler)
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
+        <TableSkeleton rows={6} columns={7} />
       </Box>
     )
   }
@@ -44,9 +43,7 @@ export default function HPAPage() {
         <Typography variant="h4" gutterBottom>
           HPA (Horizontal Pod Autoscaler)
         </Typography>
-        <Alert severity="error">
-          Failed to load HPAs: {error instanceof Error ? error.message : 'Unknown error'}
-        </Alert>
+        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load HPAs" />
       </Box>
     )
   }

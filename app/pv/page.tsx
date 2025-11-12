@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -17,14 +16,16 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { useState } from 'react'
 import { usePVs, usePVCs } from '@/lib/hooks/use-pv'
+import { TableSkeleton } from '@/components/common/table-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 
 export default function PersistentVolumesPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [tab, setTab] = useState(0)
 
-  const { data: pvs, isLoading: pvsLoading, error: pvsError } = usePVs()
-  const { data: pvcs, isLoading: pvcsLoading, error: pvcsError } = usePVCs()
+  const { data: pvs, isLoading: pvsLoading, error: pvsError, refetch: refetchPVs } = usePVs()
+  const { data: pvcs, isLoading: pvcsLoading, error: pvcsError, refetch: refetchPVCs } = usePVCs()
 
   const filteredPVs = pvs?.filter((pv) =>
     pv.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -36,6 +37,7 @@ export default function PersistentVolumesPage() {
 
   const isLoading = tab === 0 ? pvsLoading : pvcsLoading
   const error = tab === 0 ? pvsError : pvcsError
+  const refetch = tab === 0 ? refetchPVs : refetchPVCs
 
   if (isLoading) {
     return (
@@ -43,9 +45,7 @@ export default function PersistentVolumesPage() {
         <Typography variant="h4" gutterBottom>
           Persistent Volumes
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
+        <TableSkeleton rows={5} columns={5} />
       </Box>
     )
   }
@@ -56,9 +56,7 @@ export default function PersistentVolumesPage() {
         <Typography variant="h4" gutterBottom>
           Persistent Volumes
         </Typography>
-        <Alert severity="error">
-          Failed to load: {error instanceof Error ? error.message : 'Unknown error'}
-        </Alert>
+        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Persistent Volumes" />
       </Box>
     )
   }

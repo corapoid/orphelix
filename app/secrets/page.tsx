@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -14,11 +13,13 @@ import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { useSecrets } from '@/lib/hooks/use-secrets'
+import { TableSkeleton } from '@/components/common/table-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 
 export default function SecretsPage() {
   const [searchQuery, setSearchQuery] = useState('')
-  const { data: secrets, isLoading, error } = useSecrets()
+  const { data: secrets, isLoading, error, refetch } = useSecrets()
 
   const filteredSecrets = secrets?.filter((s) =>
     s.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -30,9 +31,7 @@ export default function SecretsPage() {
         <Typography variant="h4" gutterBottom>
           Secrets
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
+        <TableSkeleton rows={8} columns={5} />
       </Box>
     )
   }
@@ -43,9 +42,7 @@ export default function SecretsPage() {
         <Typography variant="h4" gutterBottom>
           Secrets
         </Typography>
-        <Alert severity="error">
-          Failed to load Secrets: {error instanceof Error ? error.message : 'Unknown error'}
-        </Alert>
+        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Secrets" />
       </Box>
     )
   }

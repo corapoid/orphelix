@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -18,13 +17,15 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 import { useRecentEvents } from '@/lib/hooks/use-dashboard'
+import { TableSkeleton } from '@/components/common/table-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 
 export default function EventsPage() {
   const [typeFilter, setTypeFilter] = useState<'Normal' | 'Warning' | ''>('')
   const [limit, setLimit] = useState(50)
 
-  const { data: events, isLoading, error } = useRecentEvents(100)
+  const { data: events, isLoading, error, refetch } = useRecentEvents(100)
 
   const filteredEvents = events?.filter((event) =>
     typeFilter ? event.type === typeFilter : true
@@ -36,9 +37,7 @@ export default function EventsPage() {
         <Typography variant="h4" gutterBottom>
           Events
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
+        <TableSkeleton rows={10} columns={6} />
       </Box>
     )
   }
@@ -49,9 +48,7 @@ export default function EventsPage() {
         <Typography variant="h4" gutterBottom>
           Events
         </Typography>
-        <Alert severity="error">
-          Failed to load events: {error instanceof Error ? error.message : 'Unknown error'}
-        </Alert>
+        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Events" />
       </Box>
     )
   }
