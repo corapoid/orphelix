@@ -20,6 +20,7 @@ import { useDeployments } from '@/lib/hooks/use-deployments'
 import { StatusBadge } from '@/components/common/status-badge'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
+import { ClusterConnectionAlert } from '@/components/common/cluster-connection-alert'
 import { formatAge } from '@/lib/utils'
 
 export default function DeploymentsPage() {
@@ -77,6 +78,8 @@ export default function DeploymentsPage() {
           sx={{ width: 300 }}
         />
       </Box>
+
+      <ClusterConnectionAlert minimal />
 
       {filteredDeployments.length === 0 ? (
         <Alert severity="info">

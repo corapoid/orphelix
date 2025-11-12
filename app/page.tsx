@@ -15,14 +15,29 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import { SummaryCard } from './components/dashboard/summary-card'
 import { RecentEvents } from './components/dashboard/recent-events'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
+import { ClusterConnectionAlert } from '@/components/common/cluster-connection-alert'
+import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
 
 export default function DashboardPage() {
+  const { data: health } = useClusterHealth()
   const { data: summary, isLoading, error } = useDashboardSummary()
   const {
     data: events,
     isLoading: eventsLoading,
     error: eventsError,
   } = useRecentEvents(10)
+
+  // If cluster is not connected, show connection alert instead of loading/error states
+  if (health?.status === 'disconnected') {
+    return (
+      <Box>
+        <Typography variant="h4" gutterBottom>
+          Dashboard Overview
+        </Typography>
+        <ClusterConnectionAlert />
+      </Box>
+    )
+  }
 
   if (isLoading) {
     return (
