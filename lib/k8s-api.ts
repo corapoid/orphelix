@@ -387,6 +387,47 @@ export async function fetchNode(name: string): Promise<Node | null> {
   }
 }
 
+export async function fetchNodeEvents(nodeName: string): Promise<Event[]> {
+  return fetchResourceEvents('Node', nodeName, '')
+}
+
+export async function fetchNodePods(nodeName: string): Promise<Pod[]> {
+  try {
+    const coreApi = getCoreApi()
+    const response = await coreApi.listPodForAllNamespaces({
+      fieldSelector: `spec.nodeName=${nodeName}`,
+    })
+
+    return response.items.map((pod) => {
+      const containerStatuses = pod.status?.containerStatuses || []
+      const totalRestarts = containerStatuses.reduce(
+        (sum, cs) => sum + (cs.restartCount || 0),
+        0
+      )
+
+      return {
+        name: pod.metadata?.name || '',
+        namespace: pod.metadata?.namespace || '',
+        status: (pod.status?.phase as PodStatus) || 'Unknown',
+        nodeName: pod.spec?.nodeName || 'Unknown',
+        ip: pod.status?.podIP || 'Unknown',
+        restartCount: totalRestarts,
+        age: calculateAge(pod.metadata?.creationTimestamp),
+        labels: pod.metadata?.labels || {},
+        containers: containerStatuses.map((cs) => ({
+          name: cs.name,
+          image: cs.image || '',
+          ready: cs.ready || false,
+          restartCount: cs.restartCount || 0,
+        })),
+      }
+    })
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch pods for node ${nodeName}:`, error)
+    return []
+  }
+}
+
 /**
  * ConfigMaps API
  */
