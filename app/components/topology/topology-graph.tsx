@@ -45,16 +45,16 @@ export function TopologyGraph({ data, height = 600 }: TopologyGraphProps) {
       // Navigate based on resource type
       switch (resourceType) {
         case 'Deployment':
-          router.push(`/deployments/${label}`)
+          router.push(`/deployments/${encodeURIComponent(label)}`)
           break
         case 'Pod':
-          router.push(`/pods/${label}`)
+          router.push(`/pods/${encodeURIComponent(label)}`)
           break
         case 'ConfigMap':
-          router.push(`/configmaps`)
+          router.push(`/configmaps/${encodeURIComponent(label)}`)
           break
         case 'Secret':
-          router.push(`/secrets`)
+          router.push(`/secrets/${encodeURIComponent(label)}`)
           break
         default:
           break

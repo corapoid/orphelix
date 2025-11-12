@@ -4,9 +4,23 @@
  * @returns Human-readable age string (e.g., "5m", "2h", "3d")
  */
 export function formatAge(date: Date | string): string {
+  if (!date) return 'N/A'
+
   const now = new Date()
   const then = typeof date === 'string' ? new Date(date) : date
+
+  // Check if date is valid
+  if (isNaN(then.getTime())) {
+    return 'N/A'
+  }
+
   const diffMs = now.getTime() - then.getTime()
+
+  // Handle negative or zero time difference
+  if (diffMs <= 0) {
+    return '0s'
+  }
+
   const diffSeconds = Math.floor(diffMs / 1000)
   const diffMinutes = Math.floor(diffSeconds / 60)
   const diffHours = Math.floor(diffMinutes / 60)
