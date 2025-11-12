@@ -194,15 +194,16 @@ describe('useRecentEvents', () => {
     React.createElement(QueryClientProvider, { client: queryClient }, children)
 
   it('should return mock events in mock mode', async () => {
-    // Arrange
+    // Arrange - use recent timestamps (within last 24 hours)
+    const now = new Date()
     const mockEvents = [
       {
         type: 'Normal' as const,
         reason: 'Started',
         message: 'Container started successfully',
         count: 1,
-        firstTimestamp: new Date('2024-01-15T12:00:00Z').toISOString(),
-        lastTimestamp: new Date('2024-01-15T12:00:00Z').toISOString(),
+        firstTimestamp: new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+        lastTimestamp: new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString(),
         kind: 'Pod',
         name: 'web-app-123',
         namespace: 'default',
@@ -212,8 +213,8 @@ describe('useRecentEvents', () => {
         reason: 'BackOff',
         message: 'Back-off restarting failed container',
         count: 5,
-        firstTimestamp: new Date('2024-01-15T11:00:00Z').toISOString(),
-        lastTimestamp: new Date('2024-01-15T11:55:00Z').toISOString(),
+        firstTimestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+        lastTimestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(),
         kind: 'Pod',
         name: 'api-server-456',
         namespace: 'default',
@@ -225,8 +226,8 @@ describe('useRecentEvents', () => {
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
-    // Act
-    const { result } = renderHook(() => useRecentEvents(10), { wrapper })
+    // Act - use default 24 hour time range
+    const { result } = renderHook(() => useRecentEvents(24), { wrapper })
 
     // Assert - initially loading
     expect(result.current.isLoading).toBe(true)
@@ -237,65 +238,93 @@ describe('useRecentEvents', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    // Assert - data loaded
-    expect(result.current.data).toEqual(mockEvents)
+    // Assert - data loaded and filtered by time range
+    expect(result.current.data).toHaveLength(2)
     expect(result.current.isLoading).toBe(false)
     expect(result.current.error).toBeNull()
     expect(mockData.generateMockEvents).toHaveBeenCalledTimes(1)
   })
 
-  it('should respect limit parameter', async () => {
-    // Arrange
-    const mockEvents = Array.from({ length: 20 }, (_, i) => ({
-      type: 'Normal' as const,
-      reason: 'Event',
-      message: `Event ${i}`,
-      count: 1,
-      firstTimestamp: new Date().toISOString(),
-      lastTimestamp: new Date().toISOString(),
-      kind: 'Pod',
-      name: `pod-${i}`,
-      namespace: 'default',
-    }))
+  it('should respect timeRange parameter', async () => {
+    // Arrange - create events with different timestamps
+    const now = new Date()
+    const mockEvents = [
+      {
+        type: 'Normal' as const,
+        reason: 'Event',
+        message: 'Recent event (2 hours ago)',
+        count: 1,
+        firstTimestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(),
+        lastTimestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(),
+        kind: 'Pod',
+        name: 'pod-1',
+        namespace: 'default',
+      },
+      {
+        type: 'Normal' as const,
+        reason: 'Event',
+        message: 'Old event (10 hours ago)',
+        count: 1,
+        firstTimestamp: new Date(now.getTime() - 10 * 60 * 60 * 1000).toISOString(),
+        lastTimestamp: new Date(now.getTime() - 10 * 60 * 60 * 1000).toISOString(),
+        kind: 'Pod',
+        name: 'pod-2',
+        namespace: 'default',
+      },
+    ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
-    // Act
-    const { result } = renderHook(() => useRecentEvents(5), { wrapper })
+    // Act - use 6 hour time range
+    const { result } = renderHook(() => useRecentEvents(6), { wrapper })
 
     // Wait for the query to resolve
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    // Assert - should only return 5 events
-    expect(result.current.data).toHaveLength(5)
-    expect(result.current.data).toEqual(mockEvents.slice(0, 5))
+    // Assert - should only return events within last 6 hours (only the first one)
+    expect(result.current.data).toHaveLength(1)
+    expect(result.current.data?.[0].message).toBe('Recent event (2 hours ago)')
   })
 
-  it('should use default limit of 10', async () => {
-    // Arrange
-    const mockEvents = Array.from({ length: 20 }, (_, i) => ({
-      type: 'Normal' as const,
-      reason: 'Event',
-      message: `Event ${i}`,
-      count: 1,
-      firstTimestamp: new Date().toISOString(),
-      lastTimestamp: new Date().toISOString(),
-      kind: 'Pod',
-      name: `pod-${i}`,
-      namespace: 'default',
-    }))
+  it('should use default timeRange of 24 hours', async () => {
+    // Arrange - create events with different timestamps
+    const now = new Date()
+    const mockEvents = [
+      {
+        type: 'Normal' as const,
+        reason: 'Event',
+        message: 'Event within 24h',
+        count: 1,
+        firstTimestamp: new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString(),
+        lastTimestamp: new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString(),
+        kind: 'Pod',
+        name: 'pod-1',
+        namespace: 'default',
+      },
+      {
+        type: 'Normal' as const,
+        reason: 'Event',
+        message: 'Old event (30 hours ago)',
+        count: 1,
+        firstTimestamp: new Date(now.getTime() - 30 * 60 * 60 * 1000).toISOString(),
+        lastTimestamp: new Date(now.getTime() - 30 * 60 * 60 * 1000).toISOString(),
+        kind: 'Pod',
+        name: 'pod-2',
+        namespace: 'default',
+      },
+    ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
-    // Act - don't pass limit parameter
+    // Act - don't pass timeRange parameter
     const { result } = renderHook(() => useRecentEvents(), { wrapper })
 
     // Wait for the query to resolve
@@ -303,9 +332,9 @@ describe('useRecentEvents', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    // Assert - should return default 10 events
-    expect(result.current.data).toHaveLength(10)
-    expect(result.current.data).toEqual(mockEvents.slice(0, 10))
+    // Assert - should return events within default 24 hours
+    expect(result.current.data).toHaveLength(1)
+    expect(result.current.data?.[0].message).toBe('Event within 24h')
   })
 
   it('should handle loading states', async () => {
@@ -386,7 +415,7 @@ describe('useRecentEvents', () => {
     expect(result.current.data).toEqual(mockEvents)
   })
 
-  it('should use correct query key with mode and limit', () => {
+  it('should use correct query key with mode and timeRange', () => {
     // Arrange
     const mockEvents = [
       {
@@ -408,14 +437,14 @@ describe('useRecentEvents', () => {
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
     // Act
-    const { result } = renderHook(() => useRecentEvents(5), { wrapper })
+    const { result } = renderHook(() => useRecentEvents(6), { wrapper })
 
     // Assert - verify the query was created
     expect(result.current).toBeDefined()
 
-    // The query should be using the correct key (now includes namespace)
+    // The query should be using the correct key (now includes namespace and timeRange)
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['recent-events', 'mock', 'mock', 5])
+    expect(queries[0].queryKey).toEqual(['recent-events', 'mock', 'mock', 6])
   })
 })

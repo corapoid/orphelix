@@ -56,11 +56,14 @@ export default function PodDetailPage() {
   }
 
   const {
-    data: logs,
+    data: logsData,
     isLoading: logsLoading,
     error: logsError,
     refetch: refetchLogs,
   } = usePodLogs(name, selectedContainer, 100)
+
+  const logs = logsData?.logs || ''
+  const parsedLogs = logsData?.parsed
 
   const handleRestartClick = () => {
     setRestartDialogOpen(true)
@@ -191,6 +194,60 @@ export default function PodDetailPage() {
             </Box>
           </Paper>
         </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              ConfigMaps
+            </Typography>
+            {pod.configMaps.length > 0 ? (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {pod.configMaps.map((cm) => (
+                  <Chip
+                    key={cm}
+                    label={cm}
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => router.push(`/configmaps/${encodeURIComponent(cm)}`)}
+                    sx={{ cursor: 'pointer' }}
+                  />
+                ))}
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No ConfigMaps
+              </Typography>
+            )}
+          </Paper>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Secrets
+            </Typography>
+            {pod.secrets.length > 0 ? (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {pod.secrets.map((secret) => (
+                  <Chip
+                    key={secret}
+                    label={secret}
+                    size="small"
+                    color="secondary"
+                    variant="outlined"
+                    onClick={() => router.push(`/secrets/${encodeURIComponent(secret)}`)}
+                    sx={{ cursor: 'pointer' }}
+                  />
+                ))}
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No Secrets
+              </Typography>
+            )}
+          </Paper>
+        </Grid>
       </Grid>
 
       <Paper sx={{ mb: 3 }}>
@@ -268,7 +325,8 @@ export default function PodDetailPage() {
             </Box>
           )}
           <LogsViewer
-            logs={logs || ''}
+            logs={logs}
+            parsed={parsedLogs}
             isLoading={logsLoading}
             error={logsError}
             containerName={selectedContainer}

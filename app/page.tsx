@@ -3,6 +3,7 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid2'
+import Paper from '@mui/material/Paper'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
@@ -14,18 +15,37 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import { SummaryCard } from './components/dashboard/summary-card'
 import { RecentEvents } from './components/dashboard/recent-events'
+import { TopologyGraph } from './components/topology/topology-graph'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
+import { useDeployments } from '@/lib/hooks/use-deployments'
+import { useConfigMaps } from '@/lib/hooks/use-configmaps'
+import { useSecrets } from '@/lib/hooks/use-secrets'
+import { useModeStore } from '@/lib/store'
+import { buildConfigSecretsTopology } from '@/lib/topology'
+import { useMemo } from 'react'
 import { ClusterConnectionAlert } from '@/components/common/cluster-connection-alert'
 import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
 
 export default function DashboardPage() {
   const { data: health } = useClusterHealth()
+  const namespace = useModeStore((state) => state.selectedNamespace)
   const { data: summary, isLoading, error } = useDashboardSummary()
   const {
     data: events,
     isLoading: eventsLoading,
     error: eventsError,
-  } = useRecentEvents(10)
+  } = useRecentEvents(24) // Last 24 hours
+
+  // Fetch data for ConfigMaps/Secrets topology
+  const { data: deployments } = useDeployments()
+  const { data: configMaps } = useConfigMaps()
+  const { data: secrets } = useSecrets()
+
+  // Build topology graph
+  const topologyData = useMemo(() => {
+    if (!deployments || !configMaps || !secrets || !namespace) return null
+    return buildConfigSecretsTopology(deployments, configMaps, secrets, namespace)
+  }, [deployments, configMaps, secrets, namespace])
 
   // If cluster is not connected, show connection alert instead of loading/error states
   if (health?.status === 'disconnected') {
@@ -128,6 +148,22 @@ export default function DashboardPage() {
           <SummaryCard title="HPA" total={summary.hpa} icon={TrendingUpIcon} href="/hpa" />
         </Grid>
       </Grid>
+
+      {/* ConfigMaps/Secrets to Deployments Topology */}
+      {topologyData && topologyData.nodes.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <Paper sx={{ p: 2, mb: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Configuration Dependencies
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              ConfigMaps and Secrets connected to Deployments (filtered by Flux kustomize namespace:{' '}
+              <strong>{namespace}</strong>)
+            </Typography>
+          </Paper>
+          <TopologyGraph data={topologyData} height={500} />
+        </Box>
+      )}
 
       <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
     </Box>

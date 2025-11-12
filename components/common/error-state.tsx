@@ -20,6 +20,9 @@ export function ErrorState({ error, onRetry, title = 'Error Loading Data' }: Err
     if (msg.includes('Failed to fetch')) {
       return 'Network error. Please check your connection and try again.'
     }
+    if (msg.includes('401') || msg.includes('Unauthorized')) {
+      return 'You do not have permission to access this resource. Please check your Kubernetes RBAC permissions.'
+    }
     if (msg.includes('403') || msg.includes('Forbidden')) {
       return 'You do not have permission to access this resource.'
     }

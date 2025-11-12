@@ -19,17 +19,26 @@ import { useState } from 'react'
 import { useRecentEvents } from '@/lib/hooks/use-dashboard'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
+import { SortableTableCell } from '@/components/common/sortable-table-cell'
+import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import { formatAge } from '@/lib/utils'
+import type { Event } from '@/types/kubernetes'
 
 export default function EventsPage() {
   const [typeFilter, setTypeFilter] = useState<'Normal' | 'Warning' | ''>('')
-  const [limit, setLimit] = useState(50)
+  const [timeRange, setTimeRange] = useState(24) // Time range in hours
 
-  const { data: events, isLoading, error, refetch } = useRecentEvents(100)
+  const { data: events, isLoading, error, refetch } = useRecentEvents(timeRange)
 
   const filteredEvents = events?.filter((event) =>
     typeFilter ? event.type === typeFilter : true
-  ).slice(0, limit)
+  ) || []
+
+  const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Event>(
+    filteredEvents,
+    'lastTimestamp',
+    'desc'
+  )
 
   if (isLoading) {
     return (
@@ -70,16 +79,17 @@ export default function EventsPage() {
               <MenuItem value="Warning">Warning</MenuItem>
             </Select>
           </FormControl>
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel>Limit</InputLabel>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Time Range</InputLabel>
             <Select
-              value={limit}
-              label="Limit"
-              onChange={(e) => setLimit(e.target.value as number)}
+              value={timeRange}
+              label="Time Range"
+              onChange={(e) => setTimeRange(e.target.value as number)}
             >
-              <MenuItem value={25}>25</MenuItem>
-              <MenuItem value={50}>50</MenuItem>
-              <MenuItem value={100}>100</MenuItem>
+              <MenuItem value={1}>Last 1 Hour</MenuItem>
+              <MenuItem value={6}>Last 6 Hours</MenuItem>
+              <MenuItem value={12}>Last 12 Hours</MenuItem>
+              <MenuItem value={24}>Last 24 Hours</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -92,17 +102,53 @@ export default function EventsPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Type</TableCell>
-                <TableCell>Reason</TableCell>
-                <TableCell>Kind</TableCell>
-                <TableCell>Name</TableCell>
+                <SortableTableCell
+                  field="type"
+                  label="Type"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="reason"
+                  label="Reason"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="kind"
+                  label="Kind"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="name"
+                  label="Name"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell>Message</TableCell>
-                <TableCell>Count</TableCell>
-                <TableCell>Age</TableCell>
+                <SortableTableCell
+                  field="count"
+                  label="Count"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="lastTimestamp"
+                  label="Age"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredEvents?.map((event, index) => (
+              {sortedData.map((event, index) => (
                 <TableRow key={index} hover>
                   <TableCell>
                     <Chip

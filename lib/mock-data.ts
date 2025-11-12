@@ -105,6 +105,8 @@ export function generateMockPods(): Pod[] {
             uid: Math.random().toString(36).substring(2),
           },
         ],
+        configMaps: Math.random() > 0.7 ? [`${app}-config`] : [],
+        secrets: Math.random() > 0.5 ? [`${app}-secret`] : [],
       })
     }
   })

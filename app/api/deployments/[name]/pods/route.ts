@@ -65,6 +65,8 @@ export async function GET(
             name: ref.name,
             uid: ref.uid,
           })) || [],
+          configMaps: [],
+          secrets: [],
         }
       })
 

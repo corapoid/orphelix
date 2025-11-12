@@ -16,7 +16,9 @@ import { useState } from 'react'
 import { useHPAs } from '@/lib/hooks/use-hpa'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
-import { formatAge } from '@/lib/utils'
+import { SortableTableCell } from '@/components/common/sortable-table-cell'
+import { useSortableTable } from '@/lib/hooks/use-table-sort'
+import type { HPA } from '@/types/kubernetes'
 
 export default function HPAPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -24,6 +26,12 @@ export default function HPAPage() {
 
   const filteredHPAs = hpas?.filter((hpa) =>
     hpa.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || []
+
+  const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<HPA>(
+    filteredHPAs,
+    'name',
+    'asc'
   )
 
   if (isLoading) {
@@ -72,18 +80,54 @@ export default function HPAPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Namespace</TableCell>
+                <SortableTableCell
+                  field="name"
+                  label="Name"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="namespace"
+                  label="Namespace"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell>Target</TableCell>
-                <TableCell>Min Replicas</TableCell>
-                <TableCell>Max Replicas</TableCell>
-                <TableCell>Current / Desired</TableCell>
+                <SortableTableCell
+                  field="minReplicas"
+                  label="Min Replicas"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="maxReplicas"
+                  label="Max Replicas"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="currentReplicas"
+                  label="Current / Desired"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell>CPU Utilization</TableCell>
-                <TableCell>Age</TableCell>
+                <SortableTableCell
+                  field="age"
+                  label="Age"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredHPAs?.map((hpa) => {
+              {sortedData.map((hpa) => {
                 const cpuMetric = hpa.metrics.find(
                   (m) => m.type === 'Resource' && m.resource?.name === 'cpu'
                 )
@@ -116,7 +160,7 @@ export default function HPAPage() {
                         </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell>{formatAge(hpa.age)}</TableCell>
+                    <TableCell>{hpa.age}</TableCell>
                   </TableRow>
                 )
               })}

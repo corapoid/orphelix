@@ -22,8 +22,7 @@ import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
 import { ClusterConnectionAlert } from '@/components/common/cluster-connection-alert'
 import { SortableTableCell } from '@/components/common/sortable-table-cell'
-import { useSortableTable } from '@/lib/hooks/use-table-sort'
-import { formatAge } from '@/lib/utils'
+import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import type { Deployment } from '@/types/kubernetes'
 
 export default function DeploymentsPage() {
@@ -45,6 +44,19 @@ export default function DeploymentsPage() {
     'name',
     'asc'
   )
+
+  // Custom sort functions for nested properties
+  const sortByReady: SortFunction<Deployment> = (a, b, order) => {
+    const aVal = a.replicas.ready
+    const bVal = b.replicas.ready
+    return order === 'asc' ? aVal - bVal : bVal - aVal
+  }
+
+  const sortByAvailable: SortFunction<Deployment> = (a, b, order) => {
+    const aVal = a.replicas.available
+    const bVal = b.replicas.available
+    return order === 'asc' ? aVal - bVal : bVal - aVal
+  }
 
   if (isLoading) {
     return (
@@ -113,8 +125,24 @@ export default function DeploymentsPage() {
                   sortOrder={sortOrder}
                   onSort={handleSort}
                 />
-                <TableCell align="center">Replicas</TableCell>
-                <TableCell align="center">Available</TableCell>
+                <SortableTableCell
+                  field="replicas.ready"
+                  label="Replicas"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                  customSortFn={sortByReady}
+                  align="center"
+                />
+                <SortableTableCell
+                  field="replicas.available"
+                  label="Available"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                  customSortFn={sortByAvailable}
+                  align="center"
+                />
                 <TableCell align="center">Unavailable</TableCell>
                 <SortableTableCell
                   field="age"
@@ -154,7 +182,7 @@ export default function DeploymentsPage() {
                   </TableCell>
                   <TableCell align="center">{deployment.replicas.available}</TableCell>
                   <TableCell align="center">{deployment.replicas.unavailable}</TableCell>
-                  <TableCell>{formatAge(deployment.age)}</TableCell>
+                  <TableCell>{deployment.age}</TableCell>
                   <TableCell>{deployment.strategy}</TableCell>
                   <TableCell align="right">
                     <Button

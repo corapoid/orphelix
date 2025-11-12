@@ -198,6 +198,79 @@ function extractSecretNames(dep: k8s.V1Deployment): string[] {
 }
 
 /**
+ * Helper: Extract ConfigMap names from pod
+ */
+function extractConfigMapNamesFromPod(pod: k8s.V1Pod): string[] {
+  const configMaps = new Set<string>()
+  const containers = pod.spec?.containers || []
+
+  containers.forEach((container) => {
+    // From envFrom
+    container.envFrom?.forEach((envFrom) => {
+      if (envFrom.configMapRef?.name) {
+        configMaps.add(envFrom.configMapRef.name)
+      }
+    })
+
+    // From env
+    container.env?.forEach((env) => {
+      if (env.valueFrom?.configMapKeyRef?.name) {
+        configMaps.add(env.valueFrom.configMapKeyRef.name)
+      }
+    })
+  })
+
+  // From volumes
+  pod.spec?.volumes?.forEach((volume) => {
+    if (volume.configMap?.name) {
+      configMaps.add(volume.configMap.name)
+    }
+  })
+
+  return Array.from(configMaps)
+}
+
+/**
+ * Helper: Extract Secret names from pod
+ */
+function extractSecretNamesFromPod(pod: k8s.V1Pod): string[] {
+  const secrets = new Set<string>()
+  const containers = pod.spec?.containers || []
+
+  containers.forEach((container) => {
+    // From envFrom
+    container.envFrom?.forEach((envFrom) => {
+      if (envFrom.secretRef?.name) {
+        secrets.add(envFrom.secretRef.name)
+      }
+    })
+
+    // From env
+    container.env?.forEach((env) => {
+      if (env.valueFrom?.secretKeyRef?.name) {
+        secrets.add(env.valueFrom.secretKeyRef.name)
+      }
+    })
+  })
+
+  // From volumes
+  pod.spec?.volumes?.forEach((volume) => {
+    if (volume.secret?.secretName) {
+      secrets.add(volume.secret.secretName)
+    }
+  })
+
+  // Image pull secrets
+  pod.spec?.imagePullSecrets?.forEach((secret) => {
+    if (secret.name) {
+      secrets.add(secret.name)
+    }
+  })
+
+  return Array.from(secrets)
+}
+
+/**
  * Pods API
  */
 export async function fetchPods(namespace: string, labelSelector?: string): Promise<Pod[]> {
@@ -229,6 +302,8 @@ export async function fetchPods(namespace: string, labelSelector?: string): Prom
         ready: cs.ready || false,
         restartCount: cs.restartCount || 0,
       })),
+      configMaps: extractConfigMapNamesFromPod(pod),
+      secrets: extractSecretNamesFromPod(pod),
     }
   })
 }
@@ -260,6 +335,8 @@ export async function fetchPod(name: string, namespace: string): Promise<Pod | n
         ready: cs.ready || false,
         restartCount: cs.restartCount || 0,
       })),
+      configMaps: extractConfigMapNamesFromPod(pod),
+      secrets: extractSecretNamesFromPod(pod),
     }
   } catch (error) {
     console.error(`[K8s] Failed to fetch pod ${name}:`, error)
@@ -420,6 +497,8 @@ export async function fetchNodePods(nodeName: string): Promise<Pod[]> {
           ready: cs.ready || false,
           restartCount: cs.restartCount || 0,
         })),
+        configMaps: extractConfigMapNamesFromPod(pod),
+        secrets: extractSecretNamesFromPod(pod),
       }
     })
   } catch (error) {
@@ -620,23 +699,42 @@ export async function fetchPVCs(namespace: string): Promise<PersistentVolumeClai
 /**
  * Events API
  */
-export async function fetchEvents(namespace?: string): Promise<Event[]> {
+export async function fetchEvents(namespace?: string, timeRangeHours = 24): Promise<Event[]> {
   const coreApi = getCoreApi()
   const response = namespace
     ? await coreApi.listNamespacedEvent({ namespace })
     : await coreApi.listEventForAllNamespaces({})
 
-  return response.items.map((event) => ({
-    type: (event.type as 'Normal' | 'Warning') || 'Normal',
-    reason: event.reason || '',
-    message: event.message || '',
-    kind: event.involvedObject?.kind || '',
-    name: event.involvedObject?.name || '',
-    namespace: event.involvedObject?.namespace || '',
-    count: event.count || 1,
-    firstTimestamp: event.firstTimestamp?.toString() || '',
-    lastTimestamp: event.lastTimestamp?.toString() || '',
-  }))
+  // Calculate cutoff time
+  const cutoffTime = new Date()
+  cutoffTime.setHours(cutoffTime.getHours() - timeRangeHours)
+
+  // Filter events by time range and map to our Event type
+  return response.items
+    .filter((event) => {
+      const lastTimestamp = event.lastTimestamp || event.eventTime
+      if (!lastTimestamp) return false
+
+      const eventTime = new Date(lastTimestamp.toString())
+      return eventTime >= cutoffTime
+    })
+    .map((event) => ({
+      type: (event.type as 'Normal' | 'Warning') || 'Normal',
+      reason: event.reason || '',
+      message: event.message || '',
+      kind: event.involvedObject?.kind || '',
+      name: event.involvedObject?.name || '',
+      namespace: event.involvedObject?.namespace || '',
+      count: event.count || 1,
+      firstTimestamp: event.firstTimestamp?.toString() || '',
+      lastTimestamp: event.lastTimestamp?.toString() || '',
+    }))
+    .sort((a, b) => {
+      // Sort by lastTimestamp descending (most recent first)
+      const aTime = new Date(a.lastTimestamp).getTime()
+      const bTime = new Date(b.lastTimestamp).getTime()
+      return bTime - aTime
+    })
 }
 
 export async function fetchResourceEvents(

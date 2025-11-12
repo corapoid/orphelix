@@ -18,7 +18,9 @@ import { useNodes } from '@/lib/hooks/use-nodes'
 import { StatusBadge } from '@/components/common/status-badge'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
-import { formatAge } from '@/lib/utils'
+import { SortableTableCell } from '@/components/common/sortable-table-cell'
+import { useSortableTable } from '@/lib/hooks/use-table-sort'
+import type { Node } from '@/types/kubernetes'
 
 export default function NodesPage() {
   const router = useRouter()
@@ -28,6 +30,12 @@ export default function NodesPage() {
   // Filter nodes by search query
   const filteredNodes = nodes?.filter((node) =>
     node.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || []
+
+  const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Node>(
+    filteredNodes,
+    'name',
+    'asc'
   )
 
   if (isLoading) {
@@ -78,18 +86,42 @@ export default function NodesPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Status</TableCell>
+                <SortableTableCell
+                  field="name"
+                  label="Name"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="status"
+                  label="Status"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell>Roles</TableCell>
-                <TableCell>Version</TableCell>
+                <SortableTableCell
+                  field="version"
+                  label="Version"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell>CPU</TableCell>
                 <TableCell>Memory</TableCell>
                 <TableCell>Pods</TableCell>
-                <TableCell>Age</TableCell>
+                <SortableTableCell
+                  field="age"
+                  label="Age"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredNodes?.map((node) => (
+              {sortedData.map((node) => (
                 <TableRow
                   key={node.name}
                   hover
@@ -122,7 +154,7 @@ export default function NodesPage() {
                   <TableCell>
                     {node.allocatable.pods} / {node.capacity.pods}
                   </TableCell>
-                  <TableCell>{formatAge(node.age)}</TableCell>
+                  <TableCell>{node.age}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

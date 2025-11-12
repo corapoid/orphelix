@@ -34,26 +34,40 @@ export function useDashboardSummary() {
 
 /**
  * Hook to fetch recent events
- * @param limit - Number of events to fetch (default: 10)
+ * @param timeRangeHours - Number of hours to fetch events for (default: 24, max: 24)
  */
-export function useRecentEvents(limit = 10) {
+export function useRecentEvents(timeRangeHours = 24) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Event[]>({
-    queryKey: ['recent-events', mode, namespace, limit],
+    queryKey: ['recent-events', mode, namespace, timeRangeHours],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const events = generateMockEvents()
-        return events.slice(0, limit)
+
+        // Filter mock events by time range
+        const cutoffTime = new Date()
+        cutoffTime.setHours(cutoffTime.getHours() - timeRangeHours)
+
+        return events
+          .filter((event) => {
+            const eventTime = new Date(event.lastTimestamp)
+            return eventTime >= cutoffTime
+          })
+          .sort((a, b) => {
+            const aTime = new Date(a.lastTimestamp).getTime()
+            const bTime = new Date(b.lastTimestamp).getTime()
+            return bTime - aTime
+          })
       }
 
       if (!namespace) {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/events?namespace=${encodeURIComponent(namespace)}&limit=${limit}`)
+      const response = await fetch(`/api/events?namespace=${encodeURIComponent(namespace)}&timeRange=${timeRangeHours}`)
       if (!response.ok) throw new Error('Failed to fetch events')
       return response.json()
     },

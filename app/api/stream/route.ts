@@ -28,10 +28,31 @@ export async function GET(request: NextRequest) {
   // Create ReadableStream for SSE
   const stream = new ReadableStream({
     async start(controller) {
+      let isClosed = false
+
+      // Helper to safely close the controller
+      const safeClose = () => {
+        if (!isClosed) {
+          isClosed = true
+          try {
+            controller.close()
+          } catch {
+            // Controller already closed, ignore
+            console.debug('[SSE] Controller already closed')
+          }
+        }
+      }
+
       // Helper to send SSE message
       const sendEvent = (type: string, data: unknown) => {
-        const message = `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`
-        controller.enqueue(encoder.encode(message))
+        if (isClosed) return
+        try {
+          const message = `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`
+          controller.enqueue(encoder.encode(message))
+        } catch (error) {
+          console.error('[SSE] Failed to send event:', error)
+          safeClose()
+        }
       }
 
       // Send initial connection message
@@ -39,25 +60,58 @@ export async function GET(request: NextRequest) {
 
       // Heartbeat interval to keep connection alive
       const heartbeatInterval = setInterval(() => {
+        if (isClosed) {
+          clearInterval(heartbeatInterval)
+          return
+        }
         try {
           sendEvent('heartbeat', { timestamp: new Date().toISOString() })
         } catch (error) {
           console.error('[SSE] Heartbeat error:', error)
           clearInterval(heartbeatInterval)
+          safeClose()
         }
       }, 30000) // Every 30 seconds
 
       try {
         // Initialize Kubernetes client
-        initK8sClient()
+        try {
+          initK8sClient()
+        } catch (error) {
+          console.error('[SSE] Failed to initialize Kubernetes client:', error)
+          sendEvent('error', {
+            message: 'Kubernetes configuration not available. Real-time updates disabled.'
+          })
+          clearInterval(heartbeatInterval)
+          safeClose()
+          return
+        }
 
         // Initialize KubeConfig for Watch API
         const kc = new k8s.KubeConfig()
 
         try {
-          kc.loadFromCluster()
-        } catch {
           kc.loadFromDefault()
+        } catch (error) {
+          console.error('[SSE] Failed to load Kubernetes config:', error)
+          sendEvent('error', {
+            message: 'Kubernetes configuration not available. Real-time updates disabled.'
+          })
+          clearInterval(heartbeatInterval)
+          safeClose()
+          return
+        }
+
+        // Validate cluster configuration
+        const cluster = kc.getCurrentCluster()
+        if (!cluster?.server) {
+          console.error('[SSE] Cluster server URL not configured')
+          sendEvent('error', {
+            message: 'Kubernetes cluster not configured. Real-time updates disabled.'
+          })
+          clearInterval(heartbeatInterval)
+          safeClose()
+          return
         }
 
         // Watch for Deployment changes
@@ -154,7 +208,7 @@ export async function GET(request: NextRequest) {
             console.error('[SSE] Error aborting watches:', err)
           }
 
-          controller.close()
+          safeClose()
         })
       } catch (error) {
         console.error('[SSE] Failed to initialize Kubernetes watches:', error)
@@ -163,7 +217,7 @@ export async function GET(request: NextRequest) {
           error: error instanceof Error ? error.message : 'Unknown error',
         })
         clearInterval(heartbeatInterval)
-        controller.close()
+        safeClose()
       }
     },
   })

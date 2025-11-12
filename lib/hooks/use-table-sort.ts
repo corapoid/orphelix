@@ -2,11 +2,14 @@ import { useState, useMemo } from 'react'
 
 export type SortOrder = 'asc' | 'desc'
 
+// Custom sort function type - allows sorting by nested properties
+export type SortFunction<T> = (a: T, b: T, order: SortOrder) => number
+
 interface UseSortableTableReturn<T> {
   sortedData: T[]
-  sortField: keyof T | null
+  sortField: keyof T | string | null
   sortOrder: SortOrder
-  handleSort: (field: keyof T) => void
+  handleSort: (field: keyof T | string, customSortFn?: SortFunction<T>) => void
 }
 
 /**
@@ -17,13 +20,14 @@ interface UseSortableTableReturn<T> {
  */
 export function useSortableTable<T>(
   data: T[],
-  defaultSortField: keyof T | null = null,
+  defaultSortField: keyof T | string | null = null,
   defaultSortOrder: SortOrder = 'asc'
 ): UseSortableTableReturn<T> {
-  const [sortField, setSortField] = useState<keyof T | null>(defaultSortField)
+  const [sortField, setSortField] = useState<keyof T | string | null>(defaultSortField)
   const [sortOrder, setSortOrder] = useState<SortOrder>(defaultSortOrder)
+  const [customSorts, setCustomSorts] = useState<Map<string, SortFunction<T>>>(new Map())
 
-  const handleSort = (field: keyof T) => {
+  const handleSort = (field: keyof T | string, customSortFn?: SortFunction<T>) => {
     if (sortField === field) {
       // Toggle sort order if same field
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
@@ -31,6 +35,15 @@ export function useSortableTable<T>(
       // Set new field with ascending order
       setSortField(field)
       setSortOrder('asc')
+
+      // Register custom sort function if provided
+      if (customSortFn) {
+        setCustomSorts(prev => {
+          const next = new Map(prev)
+          next.set(String(field), customSortFn)
+          return next
+        })
+      }
     }
   }
 
@@ -38,8 +51,15 @@ export function useSortableTable<T>(
     if (!sortField) return data
 
     return [...data].sort((a, b) => {
-      const aVal = a[sortField]
-      const bVal = b[sortField]
+      // Check if there's a custom sort function for this field
+      const customSortFn = customSorts.get(String(sortField))
+      if (customSortFn) {
+        return customSortFn(a, b, sortOrder)
+      }
+
+      // Standard sorting for direct properties
+      const aVal = a[sortField as keyof T]
+      const bVal = b[sortField as keyof T]
 
       // Handle null/undefined
       if (aVal == null && bVal == null) return 0
@@ -62,7 +82,7 @@ export function useSortableTable<T>(
       const comparison = aStr.localeCompare(bStr)
       return sortOrder === 'asc' ? comparison : -comparison
     })
-  }, [data, sortField, sortOrder])
+  }, [data, sortField, sortOrder, customSorts])
 
   return {
     sortedData,

@@ -18,7 +18,9 @@ import { useState } from 'react'
 import { usePVs, usePVCs } from '@/lib/hooks/use-pv'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
-import { formatAge } from '@/lib/utils'
+import { SortableTableCell } from '@/components/common/sortable-table-cell'
+import { useSortableTable } from '@/lib/hooks/use-table-sort'
+import type { PersistentVolume, PersistentVolumeClaim } from '@/types/kubernetes'
 
 export default function PersistentVolumesPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -29,10 +31,22 @@ export default function PersistentVolumesPage() {
 
   const filteredPVs = pvs?.filter((pv) =>
     pv.name.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  ) || []
 
   const filteredPVCs = pvcs?.filter((pvc) =>
     pvc.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || []
+
+  const { sortedData: sortedPVs, sortField: pvSortField, sortOrder: pvSortOrder, handleSort: handlePVSort } = useSortableTable<PersistentVolume>(
+    filteredPVs,
+    'name',
+    'asc'
+  )
+
+  const { sortedData: sortedPVCs, sortField: pvcSortField, sortOrder: pvcSortOrder, handleSort: handlePVCSort } = useSortableTable<PersistentVolumeClaim>(
+    filteredPVCs,
+    'name',
+    'asc'
   )
 
   const isLoading = tab === 0 ? pvsLoading : pvcsLoading
@@ -94,18 +108,54 @@ export default function PersistentVolumesPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Capacity</TableCell>
+                  <SortableTableCell
+                    field="name"
+                    label="Name"
+                    sortField={pvSortField}
+                    sortOrder={pvSortOrder}
+                    onSort={handlePVSort}
+                  />
+                  <SortableTableCell
+                    field="status"
+                    label="Status"
+                    sortField={pvSortField}
+                    sortOrder={pvSortOrder}
+                    onSort={handlePVSort}
+                  />
+                  <SortableTableCell
+                    field="capacity"
+                    label="Capacity"
+                    sortField={pvSortField}
+                    sortOrder={pvSortOrder}
+                    onSort={handlePVSort}
+                  />
                   <TableCell>Access Modes</TableCell>
-                  <TableCell>Reclaim Policy</TableCell>
-                  <TableCell>Storage Class</TableCell>
+                  <SortableTableCell
+                    field="reclaimPolicy"
+                    label="Reclaim Policy"
+                    sortField={pvSortField}
+                    sortOrder={pvSortOrder}
+                    onSort={handlePVSort}
+                  />
+                  <SortableTableCell
+                    field="storageClass"
+                    label="Storage Class"
+                    sortField={pvSortField}
+                    sortOrder={pvSortOrder}
+                    onSort={handlePVSort}
+                  />
                   <TableCell>Claim</TableCell>
-                  <TableCell>Age</TableCell>
+                  <SortableTableCell
+                    field="age"
+                    label="Age"
+                    sortField={pvSortField}
+                    sortOrder={pvSortOrder}
+                    onSort={handlePVSort}
+                  />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredPVs?.map((pv) => (
+                {sortedPVs.map((pv) => (
                   <TableRow key={pv.name} hover>
                     <TableCell>{pv.name}</TableCell>
                     <TableCell>
@@ -120,7 +170,7 @@ export default function PersistentVolumesPage() {
                     <TableCell>{pv.reclaimPolicy}</TableCell>
                     <TableCell>{pv.storageClass}</TableCell>
                     <TableCell>{pv.claim || '-'}</TableCell>
-                    <TableCell>{formatAge(pv.age)}</TableCell>
+                    <TableCell>{pv.age}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -140,18 +190,60 @@ export default function PersistentVolumesPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Namespace</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Volume</TableCell>
-                  <TableCell>Capacity</TableCell>
+                  <SortableTableCell
+                    field="name"
+                    label="Name"
+                    sortField={pvcSortField}
+                    sortOrder={pvcSortOrder}
+                    onSort={handlePVCSort}
+                  />
+                  <SortableTableCell
+                    field="namespace"
+                    label="Namespace"
+                    sortField={pvcSortField}
+                    sortOrder={pvcSortOrder}
+                    onSort={handlePVCSort}
+                  />
+                  <SortableTableCell
+                    field="status"
+                    label="Status"
+                    sortField={pvcSortField}
+                    sortOrder={pvcSortOrder}
+                    onSort={handlePVCSort}
+                  />
+                  <SortableTableCell
+                    field="volume"
+                    label="Volume"
+                    sortField={pvcSortField}
+                    sortOrder={pvcSortOrder}
+                    onSort={handlePVCSort}
+                  />
+                  <SortableTableCell
+                    field="capacity"
+                    label="Capacity"
+                    sortField={pvcSortField}
+                    sortOrder={pvcSortOrder}
+                    onSort={handlePVCSort}
+                  />
                   <TableCell>Access Modes</TableCell>
-                  <TableCell>Storage Class</TableCell>
-                  <TableCell>Age</TableCell>
+                  <SortableTableCell
+                    field="storageClass"
+                    label="Storage Class"
+                    sortField={pvcSortField}
+                    sortOrder={pvcSortOrder}
+                    onSort={handlePVCSort}
+                  />
+                  <SortableTableCell
+                    field="age"
+                    label="Age"
+                    sortField={pvcSortField}
+                    sortOrder={pvcSortOrder}
+                    onSort={handlePVCSort}
+                  />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredPVCs?.map((pvc) => (
+                {sortedPVCs.map((pvc) => (
                   <TableRow key={pvc.name} hover>
                     <TableCell>{pvc.name}</TableCell>
                     <TableCell>{pvc.namespace}</TableCell>
@@ -166,7 +258,7 @@ export default function PersistentVolumesPage() {
                     <TableCell>{pvc.capacity}</TableCell>
                     <TableCell>{pvc.accessModes.join(', ')}</TableCell>
                     <TableCell>{pvc.storageClass}</TableCell>
-                    <TableCell>{formatAge(pvc.age)}</TableCell>
+                    <TableCell>{pvc.age}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

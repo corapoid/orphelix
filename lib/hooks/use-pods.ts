@@ -115,7 +115,7 @@ export function usePodLogs(podName: string, containerName: string, tail = 100) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
 
-  return useQuery<string>({
+  return useQuery<{ logs: string; parsed?: Array<{ line: number; timestamp?: string; level?: string; message: string; raw: string; isJson: boolean; data?: Record<string, unknown> }> }>({
     queryKey: ['pod-logs', podName, containerName, tail, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
@@ -143,7 +143,10 @@ export function usePodLogs(podName: string, containerName: string, tail = 100) {
           logLines.push(`${timestamp} ${time} [${level}] ${containerName} - ${message}`)
         }
 
-        return logLines.join('\n')
+        return {
+          logs: logLines.join('\n'),
+          parsed: undefined,
+        }
       }
 
       if (!namespace) {
@@ -154,7 +157,11 @@ export function usePodLogs(podName: string, containerName: string, tail = 100) {
         `/api/pods/${podName}/logs?namespace=${encodeURIComponent(namespace)}&container=${containerName}&tail=${tail}`
       )
       if (!response.ok) throw new Error('Failed to fetch pod logs')
-      return response.text()
+      const data = await response.json()
+      return {
+        logs: data.logs,
+        parsed: data.parsed,
+      }
     },
     enabled: !!podName && !!containerName && (mode === 'mock' || !!namespace),
     refetchInterval: false, // Don't auto-refresh logs

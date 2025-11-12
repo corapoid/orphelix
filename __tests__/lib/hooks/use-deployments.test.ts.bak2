@@ -394,8 +394,6 @@ describe('useDeploymentPods', () => {
         containers: [{ name: 'web-app', image: 'web-app:latest', ready: true, restartCount: 0 }],
         labels: { app: 'web-app', version: 'v1' },
         ownerReferences: [{ kind: 'ReplicaSet', name: 'web-app-xyz', uid: '123' }],
-      configMaps: [],
-      secrets: [],
       },
       {
         name: 'api-server-def456',
@@ -408,8 +406,6 @@ describe('useDeploymentPods', () => {
         containers: [{ name: 'api-server', image: 'api-server:latest', ready: true, restartCount: 0 }],
         labels: { app: 'api-server', version: 'v1' },
         ownerReferences: [{ kind: 'ReplicaSet', name: 'api-server-xyz', uid: '456' }],
-      configMaps: [],
-      secrets: [],
       },
     ]
 
@@ -446,8 +442,6 @@ describe('useDeploymentPods', () => {
         containers: [],
         labels: { app: 'other-app' }, // Different label
         ownerReferences: [{ kind: 'ReplicaSet', name: 'web-app-12345', uid: '123' }], // Matches deployment
-      configMaps: [],
-      secrets: [],
       },
     ]
 
@@ -483,8 +477,6 @@ describe('useDeploymentPods', () => {
         containers: [],
         labels: { app: 'web-app' }, // Matches deployment
         ownerReferences: undefined, // No owner reference
-      configMaps: [],
-      secrets: [],
       },
     ]
 

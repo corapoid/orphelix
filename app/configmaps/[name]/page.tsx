@@ -21,7 +21,6 @@ import { useParams, useRouter } from 'next/navigation'
 import { useConfigMap } from '@/lib/hooks/use-configmaps'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
-import { formatAge } from '@/lib/utils'
 
 const MAX_PREVIEW_LINES = 10
 
@@ -134,7 +133,7 @@ export default function ConfigMapDetailPage() {
           <Typography variant="h4">{configMap.name}</Typography>
         </Box>
         <Typography variant="body2" color="text.secondary">
-          Namespace: {configMap.namespace} • Age: {formatAge(configMap.age)}
+          Namespace: {configMap.namespace} • Age: {configMap.age}
         </Typography>
       </Box>
 

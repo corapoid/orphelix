@@ -27,6 +27,8 @@ export interface Pod {
   containers: Container[]
   labels: Record<string, string>
   ownerReferences?: OwnerReference[]
+  configMaps: string[]
+  secrets: string[]
 }
 
 export interface Container {

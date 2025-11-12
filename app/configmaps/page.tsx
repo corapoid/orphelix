@@ -12,18 +12,35 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
-import { formatAge } from '@/lib/utils'
+import { SortableTableCell } from '@/components/common/sortable-table-cell'
+import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
+import type { ConfigMap } from '@/types/kubernetes'
 
 export default function ConfigMapsPage() {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const { data: configMaps, isLoading, error, refetch } = useConfigMaps()
 
   const filteredConfigMaps = configMaps?.filter((cm) =>
     cm.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || []
+
+  const { sortedData, sortField, sortOrder, handleSort} = useSortableTable<ConfigMap>(
+    filteredConfigMaps,
+    'name',
+    'asc'
   )
+
+  // Custom sort for Keys (object size)
+  const sortByKeys: SortFunction<ConfigMap> = (a, b, order) => {
+    const aVal = Object.keys(a.data).length
+    const bVal = Object.keys(b.data).length
+    return order === 'asc' ? aVal - bVal : bVal - aVal
+  }
 
   if (isLoading) {
     return (
@@ -71,19 +88,49 @@ export default function ConfigMapsPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Namespace</TableCell>
-                <TableCell>Keys</TableCell>
-                <TableCell>Age</TableCell>
+                <SortableTableCell
+                  field="name"
+                  label="Name"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="namespace"
+                  label="Namespace"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="keys"
+                  label="Keys"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                  customSortFn={sortByKeys}
+                />
+                <SortableTableCell
+                  field="age"
+                  label="Age"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredConfigMaps?.map((cm) => (
-                <TableRow key={cm.name} hover>
+              {sortedData.map((cm) => (
+                <TableRow
+                  key={cm.name}
+                  hover
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => router.push(`/configmaps/${encodeURIComponent(cm.name)}`)}
+                >
                   <TableCell>{cm.name}</TableCell>
                   <TableCell>{cm.namespace}</TableCell>
                   <TableCell>{Object.keys(cm.data).length}</TableCell>
-                  <TableCell>{formatAge(cm.age)}</TableCell>
+                  <TableCell>{cm.age}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

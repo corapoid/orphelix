@@ -190,9 +190,9 @@ describe('LogsViewer', () => {
     const downloadButton = screen.getByTitle('Download logs')
     await user.click(downloadButton)
 
-    // Assert
+    // Assert - file should be downloaded as JSON
     expect(mockClick).toHaveBeenCalledTimes(1)
-    expect(mockAnchor.download).toBe('nginx-logs.txt')
+    expect(mockAnchor.download).toBe('nginx-logs.json')
     expect(createObjectURL).toHaveBeenCalled()
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:mock-url')
 

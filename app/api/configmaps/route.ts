@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
+import { getNamespaceFromRequest, handleK8sError } from '@/lib/api-helpers'
 import { fetchConfigMaps } from '@/lib/k8s-api'
 
 export async function GET(request: NextRequest) {
@@ -16,10 +16,6 @@ export async function GET(request: NextRequest) {
     const configMaps = await fetchConfigMaps(namespace)
     return NextResponse.json(configMaps)
   } catch (error) {
-    console.error('[API] Failed to fetch configmaps:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch configmaps' },
-      { status: 500 }
-    )
+    return handleK8sError(error, 'ConfigMaps')
   }
 }

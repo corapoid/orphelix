@@ -25,8 +25,9 @@ import { usePods } from '@/lib/hooks/use-pods'
 import { StatusBadge } from '@/components/common/status-badge'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
-import { formatAge } from '@/lib/utils'
-import type { PodStatus } from '@/types/kubernetes'
+import { SortableTableCell } from '@/components/common/sortable-table-cell'
+import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
+import type { PodStatus, Pod } from '@/types/kubernetes'
 
 export default function PodsPage() {
   const router = useRouter()
@@ -43,6 +44,19 @@ export default function PodsPage() {
       pod.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
   }, [pods, searchQuery])
+
+  const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Pod>(
+    filteredPods,
+    'name',
+    'asc'
+  )
+
+  // Custom sort function for containers (array length)
+  const sortByContainers: SortFunction<Pod> = (a, b, order) => {
+    const aVal = a.containers.length
+    const bVal = b.containers.length
+    return order === 'asc' ? aVal - bVal : bVal - aVal
+  }
 
   if (isLoading) {
     return (
@@ -114,18 +128,63 @@ export default function PodsPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Node</TableCell>
-                <TableCell>IP</TableCell>
-                <TableCell align="center">Restarts</TableCell>
-                <TableCell align="center">Containers</TableCell>
-                <TableCell>Age</TableCell>
+                <SortableTableCell
+                  field="name"
+                  label="Name"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="status"
+                  label="Status"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="nodeName"
+                  label="Node"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="ip"
+                  label="IP"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="restartCount"
+                  label="Restarts"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                  align="center"
+                />
+                <SortableTableCell
+                  field="containers"
+                  label="Containers"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                  customSortFn={sortByContainers}
+                  align="center"
+                />
+                <SortableTableCell
+                  field="age"
+                  label="Age"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredPods.map((pod) => (
+              {sortedData.map((pod) => (
                 <TableRow
                   key={pod.name}
                   hover
@@ -158,7 +217,7 @@ export default function PodsPage() {
                   <TableCell align="center">
                     {pod.containers.length}
                   </TableCell>
-                  <TableCell>{formatAge(pod.age)}</TableCell>
+                  <TableCell>{pod.age}</TableCell>
                   <TableCell align="right">
                     <Button
                       size="small"

@@ -356,3 +356,117 @@ export function buildNamespaceTopology(
 
   return { nodes, edges }
 }
+
+/**
+ * Build topology graph showing relationships between ConfigMaps/Secrets and Deployments
+ * Filters resources by Flux kustomize namespace label
+ */
+export function buildConfigSecretsTopology(
+  deployments: Deployment[],
+  configMaps: ConfigMap[],
+  secrets: Secret[],
+  namespace: string
+): TopologyGraphData {
+  const nodes: TopologyNode[] = []
+  const edges: TopologyEdge[] = []
+
+  // Filter ConfigMaps and Secrets by Flux kustomize namespace label
+  const filteredConfigMaps = configMaps.filter(
+    (cm) => cm.labels['kustomize.toolkit.fluxcd.io/namespace'] === namespace
+  )
+
+  const filteredSecrets = secrets.filter(
+    (s) => s.labels['kustomize.toolkit.fluxcd.io/namespace'] === namespace
+  )
+
+  if (filteredConfigMaps.length === 0 && filteredSecrets.length === 0) {
+    return { nodes: [], edges: [] }
+  }
+
+  // Calculate layout positions
+  const leftColumnX = 100
+  const rightColumnX = 800
+
+  // Add ConfigMaps on the left
+  filteredConfigMaps.forEach((cm, index) => {
+    nodes.push({
+      id: `configmap-${cm.name}`,
+      position: { x: leftColumnX, y: index * 120 + 50 },
+      data: {
+        label: cm.name,
+        resourceType: 'ConfigMap',
+        status: 'healthy',
+        namespace: cm.namespace,
+      },
+    })
+
+    // Find deployments that use this ConfigMap
+    deployments.forEach((deployment) => {
+      if (deployment.configMaps.includes(cm.name)) {
+        edges.push({
+          id: `configmap-${cm.name}-${deployment.name}`,
+          source: `configmap-${cm.name}`,
+          target: `deployment-${deployment.name}`,
+          type: 'default',
+          animated: false,
+        })
+      }
+    })
+  })
+
+  // Add Secrets below ConfigMaps on the left
+  filteredSecrets.forEach((secret, index) => {
+    const yPosition = (filteredConfigMaps.length + index) * 120 + 50
+
+    nodes.push({
+      id: `secret-${secret.name}`,
+      position: { x: leftColumnX, y: yPosition },
+      data: {
+        label: secret.name,
+        resourceType: 'Secret',
+        status: 'healthy',
+        namespace: secret.namespace,
+      },
+    })
+
+    // Find deployments that use this Secret
+    deployments.forEach((deployment) => {
+      if (deployment.secrets.includes(secret.name)) {
+        edges.push({
+          id: `secret-${secret.name}-${deployment.name}`,
+          source: `secret-${secret.name}`,
+          target: `deployment-${deployment.name}`,
+          type: 'default',
+          animated: false,
+        })
+      }
+    })
+  })
+
+  // Add Deployments on the right (only those connected to filtered ConfigMaps/Secrets)
+  const connectedDeployments = new Set<string>()
+  edges.forEach((edge) => {
+    const deploymentId = edge.target
+    if (deploymentId.startsWith('deployment-')) {
+      connectedDeployments.add(deploymentId.replace('deployment-', ''))
+    }
+  })
+
+  Array.from(connectedDeployments).forEach((deploymentName, index) => {
+    const deployment = deployments.find((d) => d.name === deploymentName)
+    if (!deployment) return
+
+    nodes.push({
+      id: `deployment-${deployment.name}`,
+      position: { x: rightColumnX, y: index * 120 + 50 },
+      data: {
+        label: deployment.name,
+        resourceType: 'Deployment',
+        status: getResourceStatus('Deployment', deployment),
+        namespace: deployment.namespace,
+      },
+    })
+  })
+
+  return { nodes, edges }
+}

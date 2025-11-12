@@ -50,8 +50,6 @@ describe('usePods', () => {
         ip: '10.0.1.1',
         containers: [{ name: 'web', image: 'nginx:latest', ready: true, restartCount: 0 }],
         labels: { app: 'web' },
-        configMaps: [],
-        secrets: [],
       },
       {
         name: 'api-server-456',
@@ -63,8 +61,6 @@ describe('usePods', () => {
         ip: '10.0.1.2',
         containers: [{ name: 'api', image: 'api:latest', ready: false, restartCount: 1 }],
         labels: { app: 'api' },
-        configMaps: [],
-        secrets: [],
       },
     ]
 
@@ -103,8 +99,6 @@ describe('usePods', () => {
         ip: '10.0.1.1',
         containers: [{ name: 'web', image: 'nginx:latest', ready: true, restartCount: 0 }],
         labels: { app: 'web' },
-        configMaps: [],
-        secrets: [],
       },
       {
         name: 'api-server-456',
@@ -116,8 +110,6 @@ describe('usePods', () => {
         ip: '10.0.1.2',
         containers: [{ name: 'api', image: 'api:latest', ready: false, restartCount: 1 }],
         labels: { app: 'api' },
-        configMaps: [],
-        secrets: [],
       },
       {
         name: 'worker-789',
@@ -129,8 +121,6 @@ describe('usePods', () => {
         ip: '10.0.1.3',
         containers: [{ name: 'worker', image: 'worker:latest', ready: true, restartCount: 0 }],
         labels: { app: 'worker' },
-        configMaps: [],
-        secrets: [],
       },
     ]
 
@@ -167,8 +157,6 @@ describe('usePods', () => {
         ip: '10.0.1.1',
         containers: [{ name: 'test', image: 'test:latest', ready: true, restartCount: 0 }],
         labels: { app: 'test' },
-        configMaps: [],
-        secrets: [],
       },
     ]
 
@@ -219,8 +207,6 @@ describe('usePods', () => {
         ip: '10.0.1.1',
         containers: [{ name: 'test', image: 'test:latest', ready: true, restartCount: 0 }],
         labels: { app: 'test' },
-        configMaps: [],
-        secrets: [],
       },
     ]
 
@@ -251,8 +237,6 @@ describe('usePods', () => {
         ip: '10.0.1.1',
         containers: [{ name: 'test', image: 'test:latest', ready: true, restartCount: 0 }],
         labels: { app: 'test' },
-        configMaps: [],
-        secrets: [],
       },
     ]
 
@@ -309,8 +293,6 @@ describe('usePod', () => {
         ip: '10.0.1.1',
         containers: [{ name: 'web', image: 'nginx:latest', ready: true, restartCount: 0 }],
         labels: { app: 'web' },
-        configMaps: [],
-        secrets: [],
       },
       {
         name: 'api-server-456',
@@ -322,8 +304,6 @@ describe('usePod', () => {
         ip: '10.0.1.2',
         containers: [{ name: 'api', image: 'api:latest', ready: false, restartCount: 1 }],
         labels: { app: 'api' },
-        configMaps: [],
-        secrets: [],
       },
     ]
 
@@ -367,8 +347,6 @@ describe('usePod', () => {
         ip: '10.0.1.1',
         containers: [{ name: 'web', image: 'nginx:latest', ready: true, restartCount: 0 }],
         labels: { app: 'web' },
-        configMaps: [],
-        secrets: [],
       },
     ]
 
@@ -593,13 +571,11 @@ describe('usePodLogs', () => {
       expect(result.current.isSuccess).toBe(true)
     })
 
-    // Assert - should return logs as an object with logs and parsed fields
+    // Assert - should return logs as a string
     expect(result.current.data).toBeDefined()
-    expect(typeof result.current.data).toBe('object')
-    expect(result.current.data?.logs).toBeDefined()
-    expect(typeof result.current.data?.logs).toBe('string')
-    expect(result.current.data?.logs).toContain('nginx')
-    expect(result.current.data?.logs.split('\n').length).toBeGreaterThan(0)
+    expect(typeof result.current.data).toBe('string')
+    expect(result.current.data).toContain('nginx')
+    expect(result.current.data?.split('\n').length).toBeGreaterThan(0)
   })
 
   it('should respect tail parameter', async () => {
@@ -617,7 +593,7 @@ describe('usePodLogs', () => {
     })
 
     // Assert - should return exactly 50 lines
-    const lines = result.current.data?.logs.split('\n').filter((line: string) => line.trim())
+    const lines = result.current.data?.split('\n').filter((line) => line.trim())
     expect(lines?.length).toBe(50)
   })
 
@@ -636,7 +612,7 @@ describe('usePodLogs', () => {
     })
 
     // Assert - should return 100 lines by default
-    const lines = result.current.data?.logs.split('\n').filter((line: string) => line.trim())
+    const lines = result.current.data?.split('\n').filter((line) => line.trim())
     expect(lines?.length).toBe(100)
   })
 

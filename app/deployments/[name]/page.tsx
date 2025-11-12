@@ -15,14 +15,15 @@ import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
+import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useDeployment, useDeploymentPods, useDeploymentEvents } from '@/lib/hooks/use-deployments'
+import { useDeployment, useDeploymentPods } from '@/lib/hooks/use-deployments'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
 import { useSecrets } from '@/lib/hooks/use-secrets'
 import { StatusBadge } from '@/components/common/status-badge'
-import { formatAge } from '@/lib/utils'
 import { TopologyGraph } from '@/app/components/topology/topology-graph'
 import { buildDeploymentTopology } from '@/lib/topology'
 import { useMemo } from 'react'
@@ -33,14 +34,45 @@ export default function DeploymentDetailPage() {
   const params = useParams()
   const router = useRouter()
   const name = params.name as string
+  const [restarting, setRestarting] = useState(false)
+  const [restartError, setRestartError] = useState<string | null>(null)
+  const [restartSuccess, setRestartSuccess] = useState(false)
 
   const { data: deployment, isLoading, error, refetch } = useDeployment(name)
   const { data: pods, isLoading: podsLoading } = useDeploymentPods(name)
-  const { data: events, isLoading: eventsLoading } = useDeploymentEvents(name)
   const { data: allConfigMaps } = useConfigMaps()
   const { data: allSecrets } = useSecrets()
 
   // Build topology graph data
+  const handleRestart = async () => {
+    setRestarting(true)
+    setRestartError(null)
+    setRestartSuccess(false)
+
+    try {
+      const response = await fetch(
+        `/api/deployments/${encodeURIComponent(name)}/restart?namespace=${deployment?.namespace}`,
+        { method: 'POST' }
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to restart deployment')
+      }
+
+      setRestartSuccess(true)
+      // Refetch deployment data after restart
+      setTimeout(() => {
+        refetch()
+        setRestartSuccess(false)
+      }, 2000)
+    } catch (err) {
+      setRestartError(err instanceof Error ? err.message : 'Failed to restart deployment')
+    } finally {
+      setRestarting(false)
+    }
+  }
+
   const topologyData = useMemo(() => {
     if (!deployment || !pods) return null
 
@@ -83,13 +115,35 @@ export default function DeploymentDetailPage() {
 
   return (
     <Box>
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => router.push('/deployments')}
-        sx={{ mb: 2 }}
-      >
-        Back to Deployments
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => router.push('/deployments')}
+        >
+          Back to Deployments
+        </Button>
+        <Button
+          variant="outlined"
+          color="warning"
+          startIcon={<RestartAltIcon />}
+          onClick={handleRestart}
+          disabled={restarting}
+        >
+          {restarting ? 'Restarting...' : 'Restart Deployment'}
+        </Button>
+      </Box>
+
+      {restartSuccess && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          Deployment restart initiated successfully!
+        </Alert>
+      )}
+
+      {restartError && (
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setRestartError(null)}>
+          {restartError}
+        </Alert>
+      )}
 
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
@@ -97,7 +151,7 @@ export default function DeploymentDetailPage() {
           <StatusBadge status={deployment.status} size="medium" />
         </Box>
         <Typography variant="body2" color="text.secondary">
-          Namespace: {deployment.namespace} • Age: {formatAge(deployment.age)}
+          Namespace: {deployment.namespace} • Age: {deployment.age}
         </Typography>
       </Box>
 
@@ -215,21 +269,7 @@ export default function DeploymentDetailPage() {
         </Grid>
       </Grid>
 
-      {/* Topology Graph Section */}
-      {topologyData && (
-        <Box sx={{ mb: 3 }}>
-          <Paper sx={{ p: 2, mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Topology
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Visual representation of deployment resources and their relationships
-            </Typography>
-          </Paper>
-          <TopologyGraph data={topologyData} height={500} />
-        </Box>
-      )}
-
+      {/* Pods Section */}
       <Paper sx={{ mb: 3 }}>
         <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
           <Typography variant="h6">Pods</Typography>
@@ -265,7 +305,7 @@ export default function DeploymentDetailPage() {
                     <TableCell>{pod.nodeName}</TableCell>
                     <TableCell>{pod.ip}</TableCell>
                     <TableCell align="center">{pod.restartCount}</TableCell>
-                    <TableCell>{formatAge(pod.age)}</TableCell>
+                    <TableCell>{pod.age}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -278,59 +318,21 @@ export default function DeploymentDetailPage() {
         )}
       </Paper>
 
-      <Paper>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Events</Typography>
+      {/* Topology Graph Section */}
+      {topologyData && (
+        <Box sx={{ mb: 3 }}>
+          <Paper sx={{ p: 2, mb: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Topology
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Visual representation of deployment resources and their relationships
+            </Typography>
+          </Paper>
+          <TopologyGraph data={topologyData} height={500} />
         </Box>
-        {eventsLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-            <CircularProgress />
-          </Box>
-        ) : events && events.length > 0 ? (
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell width={100}>Type</TableCell>
-                  <TableCell>Reason</TableCell>
-                  <TableCell>Message</TableCell>
-                  <TableCell width={80} align="center">
-                    Count
-                  </TableCell>
-                  <TableCell width={100}>Age</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {events.map((event, index) => (
-                  <TableRow key={index} hover>
-                    <TableCell>
-                      <Chip
-                        label={event.type}
-                        size="small"
-                        color={event.type === 'Warning' ? 'warning' : 'success'}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" fontWeight="medium">
-                        {event.reason}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">{event.message}</Typography>
-                    </TableCell>
-                    <TableCell align="center">{event.count}</TableCell>
-                    <TableCell>{formatAge(event.lastTimestamp)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <Box sx={{ p: 2 }}>
-            <Alert severity="info">No events found for this deployment</Alert>
-          </Box>
-        )}
-      </Paper>
+      )}
+
     </Box>
   )
 }
