@@ -15,6 +15,8 @@ import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useDeployment, useDeploymentPods, useDeploymentEvents } from '@/lib/hooks/use-deployments'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
@@ -171,12 +173,50 @@ export default function DeploymentDetailPage() {
               Resources
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {deployment.configMaps.map((cm) => (
-                <Chip key={cm} label={`ConfigMap: ${cm}`} size="small" color="info" />
-              ))}
-              {deployment.secrets.map((secret) => (
-                <Chip key={secret} label={`Secret: ${secret}`} size="small" color="warning" />
-              ))}
+              {deployment.configMaps.length > 0 ? (
+                deployment.configMaps.map((cm) => (
+                  <Link
+                    key={cm}
+                    href={`/configmaps/${encodeURIComponent(cm)}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Chip
+                      label={`ConfigMap: ${cm}`}
+                      size="small"
+                      color="info"
+                      clickable
+                      icon={<OpenInNewIcon fontSize="small" />}
+                      sx={{ cursor: 'pointer' }}
+                    />
+                  </Link>
+                ))
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  No ConfigMaps
+                </Typography>
+              )}
+              {deployment.secrets.length > 0 ? (
+                deployment.secrets.map((secret) => (
+                  <Link
+                    key={secret}
+                    href={`/secrets/${encodeURIComponent(secret)}` as any}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Chip
+                      label={`Secret: ${secret}`}
+                      size="small"
+                      color="warning"
+                      clickable
+                      icon={<OpenInNewIcon fontSize="small" />}
+                      sx={{ cursor: 'pointer' }}
+                    />
+                  </Link>
+                ))
+              ) : deployment.configMaps.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  No Secrets
+                </Typography>
+              ) : null}
             </Box>
           </Paper>
         </Grid>
