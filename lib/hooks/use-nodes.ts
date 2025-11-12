@@ -1,0 +1,120 @@
+import { useQuery } from '@tanstack/react-query'
+import { useModeStore } from '@/lib/store'
+import { generateMockNodes, generateMockEvents } from '@/lib/mock-data'
+import type { Node, Event, NodeStatus } from '@/types/kubernetes'
+
+/**
+ * Hook to fetch all nodes
+ * @param statusFilter - Optional status filter
+ */
+export function useNodes(statusFilter?: NodeStatus) {
+  const mode = useModeStore((state) => state.mode)
+
+  return useQuery<Node[]>({
+    queryKey: ['nodes', mode, statusFilter],
+    queryFn: async () => {
+      if (mode === 'mock') {
+        await new Promise((resolve) => setTimeout(resolve, 300))
+        const nodes = generateMockNodes()
+
+        if (statusFilter) {
+          return nodes.filter((node) => node.status === statusFilter)
+        }
+
+        return nodes
+      }
+
+      
+      const url = statusFilter
+        ? `/api/nodes?status=${statusFilter}`
+        : '/api/nodes'
+      const response = await fetch(url)
+      if (!response.ok) throw new Error('Failed to fetch nodes')
+      return response.json()
+    },
+  })
+}
+
+/**
+ * Hook to fetch a single node by name
+ * @param name - Node name
+ */
+export function useNode(name: string) {
+  const mode = useModeStore((state) => state.mode)
+
+  return useQuery<Node>({
+    queryKey: ['node', name, mode],
+    queryFn: async () => {
+      if (mode === 'mock') {
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        const nodes = generateMockNodes()
+        const node = nodes.find((n) => n.name === name)
+        if (!node) throw new Error('Node not found')
+        return node
+      }
+
+      
+      const response = await fetch(`/api/nodes/${name}`)
+      if (!response.ok) throw new Error('Failed to fetch node')
+      return response.json()
+    },
+    enabled: !!name,
+  })
+}
+
+/**
+ * Hook to fetch events for a specific node
+ * @param nodeName - Name of the node
+ */
+export function useNodeEvents(nodeName: string) {
+  const mode = useModeStore((state) => state.mode)
+
+  return useQuery<Event[]>({
+    queryKey: ['node-events', nodeName, mode],
+    queryFn: async () => {
+      if (mode === 'mock') {
+        await new Promise((resolve) => setTimeout(resolve, 150))
+        const allEvents = generateMockEvents()
+        // Filter events related to this node
+        return allEvents.filter(
+          (event) =>
+            event.kind === 'Node' &&
+            event.name === nodeName
+        )
+      }
+
+      
+      const response = await fetch(`/api/nodes/${nodeName}/events`)
+      if (!response.ok) throw new Error('Failed to fetch node events')
+      return response.json()
+    },
+    enabled: !!nodeName,
+  })
+}
+
+/**
+ * Hook to fetch pods running on a specific node
+ * @param nodeName - Name of the node
+ */
+export function useNodePods(nodeName: string) {
+  const mode = useModeStore((state) => state.mode)
+
+  return useQuery({
+    queryKey: ['node-pods', nodeName, mode],
+    queryFn: async () => {
+      if (mode === 'mock') {
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        const { generateMockPods } = await import('@/lib/mock-data')
+        const allPods = generateMockPods()
+        // Filter pods running on this node
+        return allPods.filter((pod) => pod.nodeName === nodeName)
+      }
+
+      
+      const response = await fetch(`/api/nodes/${nodeName}/pods`)
+      if (!response.ok) throw new Error('Failed to fetch node pods')
+      return response.json()
+    },
+    enabled: !!nodeName,
+  })
+}

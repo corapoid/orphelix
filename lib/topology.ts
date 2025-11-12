@@ -1,0 +1,354 @@
+import type { Deployment, Pod, ConfigMap, Secret } from '@/types/kubernetes'
+import type {
+  TopologyNode,
+  TopologyEdge,
+  TopologyGraphData,
+  ResourceStatus,
+  ResourceType,
+} from '@/types/topology'
+
+/**
+ * Map Kubernetes resource status to topology status
+ */
+function getResourceStatus(
+  resourceType: ResourceType,
+  resource: Deployment | Pod | ConfigMap | Secret
+): ResourceStatus {
+  if (resourceType === 'Deployment') {
+    const deployment = resource as Deployment
+    if (deployment.status === 'Available') return 'healthy'
+    if (deployment.status === 'Progressing') return 'warning'
+    if (deployment.status === 'Degraded') return 'error'
+    return 'unknown'
+  }
+
+  if (resourceType === 'Pod') {
+    const pod = resource as Pod
+    if (pod.status === 'Running') return 'healthy'
+    if (pod.status === 'Pending') return 'warning'
+    if (pod.status === 'Failed' || pod.status === 'CrashLoopBackOff') return 'error'
+    return 'unknown'
+  }
+
+  return 'healthy' // ConfigMaps and Secrets are always healthy
+}
+
+/**
+ * Build topology graph for a deployment and its related resources
+ */
+export function buildDeploymentTopology(
+  deployment: Deployment,
+  pods: Pod[],
+  configMaps: ConfigMap[],
+  secrets: Secret[]
+): TopologyGraphData {
+  const nodes: TopologyNode[] = []
+  const edges: TopologyEdge[] = []
+
+  // Add deployment node (center)
+  nodes.push({
+    id: `deployment-${deployment.name}`,
+    type: 'default',
+    position: { x: 400, y: 200 },
+    data: {
+      label: deployment.name,
+      resourceType: 'Deployment',
+      status: getResourceStatus('Deployment', deployment),
+      namespace: deployment.namespace,
+      details: {
+        replicas: `${deployment.replicas.ready}/${deployment.replicas.desired}`,
+        strategy: deployment.strategy,
+      },
+    },
+  })
+
+  // Add ConfigMap nodes (left side)
+  configMaps.forEach((cm, index) => {
+    const nodeId = `configmap-${cm.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 50, y: 100 + index * 100 },
+      data: {
+        label: cm.name,
+        resourceType: 'ConfigMap',
+        status: 'healthy',
+        namespace: cm.namespace,
+        details: {
+          keys: `${Object.keys(cm.data).length} keys`,
+        },
+      },
+    })
+
+    // Connect ConfigMap to Deployment
+    edges.push({
+      id: `${nodeId}-deployment`,
+      source: nodeId,
+      target: `deployment-${deployment.name}`,
+      type: 'default',
+      animated: false,
+    })
+  })
+
+  // Add Secret nodes (left side, below ConfigMaps)
+  secrets.forEach((secret, index) => {
+    const nodeId = `secret-${secret.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 50, y: 100 + (configMaps.length + index) * 100 },
+      data: {
+        label: secret.name,
+        resourceType: 'Secret',
+        status: 'healthy',
+        namespace: secret.namespace,
+        details: {
+          type: secret.type,
+          keys: `${secret.keys.length} keys`,
+        },
+      },
+    })
+
+    // Connect Secret to Deployment
+    edges.push({
+      id: `${nodeId}-deployment`,
+      source: nodeId,
+      target: `deployment-${deployment.name}`,
+      type: 'default',
+      animated: false,
+    })
+  })
+
+  // Add Pod nodes (right side)
+  pods.forEach((pod, index) => {
+    const nodeId = `pod-${pod.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 750, y: 50 + index * 100 },
+      data: {
+        label: pod.name,
+        resourceType: 'Pod',
+        status: getResourceStatus('Pod', pod),
+        namespace: pod.namespace,
+        details: {
+          node: pod.nodeName,
+          restarts: `${pod.restartCount}`,
+        },
+      },
+    })
+
+    // Connect Deployment to Pod
+    edges.push({
+      id: `deployment-${nodeId}`,
+      source: `deployment-${deployment.name}`,
+      target: nodeId,
+      type: 'default',
+      animated: pod.status === 'Running',
+    })
+  })
+
+  return { nodes, edges }
+}
+
+/**
+ * Build topology graph for a pod and its related resources
+ */
+export function buildPodTopology(
+  pod: Pod,
+  configMaps: ConfigMap[],
+  secrets: Secret[]
+): TopologyGraphData {
+  const nodes: TopologyNode[] = []
+  const edges: TopologyEdge[] = []
+
+  // Add pod node (center)
+  nodes.push({
+    id: `pod-${pod.name}`,
+    type: 'default',
+    position: { x: 400, y: 200 },
+    data: {
+      label: pod.name,
+      resourceType: 'Pod',
+      status: getResourceStatus('Pod', pod),
+      namespace: pod.namespace,
+      details: {
+        node: pod.nodeName,
+        ip: pod.ip,
+        restarts: `${pod.restartCount}`,
+      },
+    },
+  })
+
+  // Add ConfigMap nodes (left side)
+  configMaps.forEach((cm, index) => {
+    const nodeId = `configmap-${cm.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 50, y: 100 + index * 120 },
+      data: {
+        label: cm.name,
+        resourceType: 'ConfigMap',
+        status: 'healthy',
+        namespace: cm.namespace,
+      },
+    })
+
+    edges.push({
+      id: `${nodeId}-pod`,
+      source: nodeId,
+      target: `pod-${pod.name}`,
+      type: 'default',
+      animated: false,
+    })
+  })
+
+  // Add Secret nodes (left side, below ConfigMaps)
+  secrets.forEach((secret, index) => {
+    const nodeId = `secret-${secret.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 50, y: 100 + (configMaps.length + index) * 120 },
+      data: {
+        label: secret.name,
+        resourceType: 'Secret',
+        status: 'healthy',
+        namespace: secret.namespace,
+      },
+    })
+
+    edges.push({
+      id: `${nodeId}-pod`,
+      source: nodeId,
+      target: `pod-${pod.name}`,
+      type: 'default',
+      animated: false,
+    })
+  })
+
+  // Add container nodes (right side)
+  pod.containers.forEach((container, index) => {
+    const nodeId = `container-${pod.name}-${container.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 750, y: 100 + index * 120 },
+      data: {
+        label: container.name,
+        resourceType: 'Pod', // Use Pod type for containers
+        status: container.ready ? 'healthy' : 'error',
+        namespace: pod.namespace,
+        details: {
+          image: container.image,
+          restarts: `${container.restartCount}`,
+        },
+      },
+    })
+
+    edges.push({
+      id: `pod-${nodeId}`,
+      source: `pod-${pod.name}`,
+      target: nodeId,
+      type: 'default',
+      animated: container.ready,
+    })
+  })
+
+  return { nodes, edges }
+}
+
+/**
+ * Build namespace-wide topology graph
+ */
+export function buildNamespaceTopology(
+  deployments: Deployment[],
+  pods: Pod[],
+  configMaps: ConfigMap[],
+  secrets: Secret[]
+): TopologyGraphData {
+  const nodes: TopologyNode[] = []
+  const edges: TopologyEdge[] = []
+
+  // Add Deployment nodes (top row)
+  deployments.forEach((deployment, index) => {
+    const nodeId = `deployment-${deployment.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 200 + index * 250, y: 50 },
+      data: {
+        label: deployment.name,
+        resourceType: 'Deployment',
+        status: getResourceStatus('Deployment', deployment),
+        namespace: deployment.namespace,
+        details: {
+          replicas: `${deployment.replicas.ready}/${deployment.replicas.desired}`,
+        },
+      },
+    })
+
+    // Find and add pods for this deployment
+    const deploymentPods = pods.filter((pod) =>
+      pod.labels.app === deployment.name
+    )
+
+    deploymentPods.forEach((pod, podIndex) => {
+      const podNodeId = `pod-${pod.name}`
+      nodes.push({
+        id: podNodeId,
+        type: 'default',
+        position: { x: 200 + index * 250, y: 200 + podIndex * 100 },
+        data: {
+          label: pod.name,
+          resourceType: 'Pod',
+          status: getResourceStatus('Pod', pod),
+          namespace: pod.namespace,
+        },
+      })
+
+      edges.push({
+        id: `${nodeId}-${podNodeId}`,
+        source: nodeId,
+        target: podNodeId,
+        type: 'default',
+        animated: pod.status === 'Running',
+      })
+    })
+  })
+
+  // Add ConfigMap nodes (left column)
+  configMaps.forEach((cm, index) => {
+    const nodeId = `configmap-${cm.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 50, y: 50 + index * 100 },
+      data: {
+        label: cm.name,
+        resourceType: 'ConfigMap',
+        status: 'healthy',
+        namespace: cm.namespace,
+      },
+    })
+  })
+
+  // Add Secret nodes (left column, below ConfigMaps)
+  secrets.forEach((secret, index) => {
+    const nodeId = `secret-${secret.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 50, y: 50 + (configMaps.length + index) * 100 },
+      data: {
+        label: secret.name,
+        resourceType: 'Secret',
+        status: 'healthy',
+        namespace: secret.namespace,
+      },
+    })
+  })
+
+  return { nodes, edges }
+}

@@ -1,0 +1,38 @@
+# Kubernetes Dashboard Configuration
+
+kubernetes:
+  # List of Kubernetes contexts from your kubeconfig
+  # Leave empty to auto-detect all contexts
+  contexts:
+    - name: production
+      context: arn:aws:eks:us-east-1:123456789:cluster/prod-cluster
+      namespace: my-app
+
+    - name: development
+      context: minikube
+      namespace: my-app-dev
+
+# Flux GitOps Integration (optional)
+flux:
+  enabled: false
+  github:
+    # GitHub Personal Access Token with repo permissions
+    # Can also be set via K8S_DASHBOARD_GITHUB_TOKEN environment variable
+    token: ghp_xxxxxxxxxxxxxxxxxxxx
+
+    repos:
+      - url: https://github.com/username/k8s-manifests
+        branch: main
+        path: k8s/overlays/production
+        autoMerge: false  # If true, PRs will be auto-merged
+
+# UI Configuration
+ui:
+  # How often to refresh data (in seconds)
+  refreshInterval: 30
+
+  # How long to keep events history (in hours)
+  eventsHistory: 24
+
+  # Default theme: 'light', 'dark', or 'system'
+  theme: system
