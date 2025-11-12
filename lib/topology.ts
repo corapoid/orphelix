@@ -45,11 +45,15 @@ export function buildDeploymentTopology(
   const nodes: TopologyNode[] = []
   const edges: TopologyEdge[] = []
 
+  // Calculate vertical centering based on number of resources on left
+  const leftResourcesCount = configMaps.length + secrets.length
+  const deploymentY = Math.max(300, leftResourcesCount * 80)
+
   // Add deployment node (center)
   nodes.push({
     id: `deployment-${deployment.name}`,
     type: 'default',
-    position: { x: 400, y: 200 },
+    position: { x: 500, y: deploymentY },
     data: {
       label: deployment.name,
       resourceType: 'Deployment',
@@ -62,13 +66,13 @@ export function buildDeploymentTopology(
     },
   })
 
-  // Add ConfigMap nodes (left side)
+  // Add ConfigMap nodes (left side) - increased spacing to 150px
   configMaps.forEach((cm, index) => {
     const nodeId = `configmap-${cm.name}`
     nodes.push({
       id: nodeId,
       type: 'default',
-      position: { x: 50, y: 100 + index * 100 },
+      position: { x: 50, y: 50 + index * 150 },
       data: {
         label: cm.name,
         resourceType: 'ConfigMap',
@@ -90,13 +94,13 @@ export function buildDeploymentTopology(
     })
   })
 
-  // Add Secret nodes (left side, below ConfigMaps)
+  // Add Secret nodes (left side, below ConfigMaps) - increased spacing to 150px
   secrets.forEach((secret, index) => {
     const nodeId = `secret-${secret.name}`
     nodes.push({
       id: nodeId,
       type: 'default',
-      position: { x: 50, y: 100 + (configMaps.length + index) * 100 },
+      position: { x: 50, y: 50 + (configMaps.length + index) * 150 },
       data: {
         label: secret.name,
         resourceType: 'Secret',
@@ -119,13 +123,13 @@ export function buildDeploymentTopology(
     })
   })
 
-  // Add Pod nodes (right side)
+  // Add Pod nodes (right side) - increased spacing to 150px
   pods.forEach((pod, index) => {
     const nodeId = `pod-${pod.name}`
     nodes.push({
       id: nodeId,
       type: 'default',
-      position: { x: 750, y: 50 + index * 100 },
+      position: { x: 950, y: 50 + index * 150 },
       data: {
         label: pod.name,
         resourceType: 'Pod',
