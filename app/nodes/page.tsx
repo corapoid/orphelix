@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -17,12 +16,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useNodes } from '@/lib/hooks/use-nodes'
 import { StatusBadge } from '@/components/common/status-badge'
+import { TableSkeleton } from '@/components/common/table-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 
 export default function NodesPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
-  const { data: nodes, isLoading, error } = useNodes()
+  const { data: nodes, isLoading, error, refetch } = useNodes()
 
   // Filter nodes by search query
   const filteredNodes = nodes?.filter((node) =>
@@ -35,9 +36,7 @@ export default function NodesPage() {
         <Typography variant="h4" gutterBottom>
           Nodes
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
+        <TableSkeleton rows={5} columns={6} />
       </Box>
     )
   }
@@ -48,9 +47,7 @@ export default function NodesPage() {
         <Typography variant="h4" gutterBottom>
           Nodes
         </Typography>
-        <Alert severity="error">
-          Failed to load nodes: {error instanceof Error ? error.message : 'Unknown error'}
-        </Alert>
+        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Nodes" />
       </Box>
     )
   }

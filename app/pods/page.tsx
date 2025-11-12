@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -24,6 +23,8 @@ import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePods } from '@/lib/hooks/use-pods'
 import { StatusBadge } from '@/components/common/status-badge'
+import { TableSkeleton } from '@/components/common/table-skeleton'
+import { ErrorState } from '@/components/common/error-state'
 import { formatAge } from '@/lib/utils'
 import type { PodStatus } from '@/types/kubernetes'
 
@@ -32,7 +33,7 @@ export default function PodsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<PodStatus | ''>('')
 
-  const { data: pods, isLoading, error } = usePods(statusFilter || undefined)
+  const { data: pods, isLoading, error, refetch } = usePods(statusFilter || undefined)
 
   const filteredPods = useMemo(() => {
     if (!pods) return []
@@ -49,9 +50,7 @@ export default function PodsPage() {
         <Typography variant="h4" gutterBottom>
           Pods
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <CircularProgress />
-        </Box>
+        <TableSkeleton rows={10} columns={7} />
       </Box>
     )
   }
@@ -62,9 +61,7 @@ export default function PodsPage() {
         <Typography variant="h4" gutterBottom>
           Pods
         </Typography>
-        <Alert severity="error">
-          Failed to load pods: {error instanceof Error ? error.message : 'Unknown error'}
-        </Alert>
+        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Pods" />
       </Box>
     )
   }
