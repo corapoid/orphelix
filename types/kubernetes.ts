@@ -101,6 +101,7 @@ export interface Secret {
   type: string
   age: string
   keys: string[]
+  data: Record<string, string>
   labels: Record<string, string>
 }
 

@@ -429,14 +429,25 @@ export async function fetchSecrets(namespace: string): Promise<Secret[]> {
   const coreApi = getCoreApi()
   const response = await coreApi.listNamespacedSecret({ namespace })
 
-  return response.items.map((secret) => ({
-    name: secret.metadata?.name || '',
-    namespace: secret.metadata?.namespace || namespace,
-    type: secret.type || 'Opaque',
-    keys: Object.keys(secret.data || {}),
-    age: calculateAge(secret.metadata?.creationTimestamp),
-    labels: secret.metadata?.labels || {},
-  }))
+  return response.items.map((secret) => {
+    // For list view, we don't include the actual data (only for detail view)
+    const data: Record<string, string> = {}
+    if (secret.data) {
+      for (const key of Object.keys(secret.data)) {
+        data[key] = '' // Empty placeholder for list view
+      }
+    }
+
+    return {
+      name: secret.metadata?.name || '',
+      namespace: secret.metadata?.namespace || namespace,
+      type: secret.type || 'Opaque',
+      keys: Object.keys(secret.data || {}),
+      data,
+      age: calculateAge(secret.metadata?.creationTimestamp),
+      labels: secret.metadata?.labels || {},
+    }
+  })
 }
 
 export async function fetchSecret(name: string, namespace: string): Promise<Secret | null> {
@@ -445,11 +456,20 @@ export async function fetchSecret(name: string, namespace: string): Promise<Secr
     const response = await coreApi.readNamespacedSecret({ name, namespace })
     const secret = response
 
+    // Convert data to Record<string, string> (values are base64 encoded)
+    const data: Record<string, string> = {}
+    if (secret.data) {
+      for (const [key, value] of Object.entries(secret.data)) {
+        data[key] = value as string
+      }
+    }
+
     return {
       name: secret.metadata?.name || '',
       namespace: secret.metadata?.namespace || namespace,
       type: secret.type || 'Opaque',
       keys: Object.keys(secret.data || {}),
+      data,
       age: calculateAge(secret.metadata?.creationTimestamp),
       labels: secret.metadata?.labels || {},
     }

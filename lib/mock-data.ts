@@ -248,6 +248,11 @@ export function generateMockSecrets(): Secret[] {
     type: randomItem(types),
     age: calculateAge(randomDate(60)),
     keys: ['password', 'api-key', 'token'],
+    data: {
+      password: btoa('super-secret-password-123'),
+      'api-key': btoa('ak-1234567890abcdef'),
+      token: btoa('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U'),
+    },
     labels: {
       app,
     },
