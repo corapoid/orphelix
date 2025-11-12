@@ -48,7 +48,7 @@ function calculateAge(timestamp: Date | string | undefined): string {
 /**
  * Deployments API
  */
-export async function fetchDeployments(namespace = 'default'): Promise<Deployment[]> {
+export async function fetchDeployments(namespace: string): Promise<Deployment[]> {
   const appsApi = getAppsApi()
   const response = await appsApi.listNamespacedDeployment({ namespace })
 
@@ -84,7 +84,7 @@ export async function fetchDeployments(namespace = 'default'): Promise<Deploymen
   })
 }
 
-export async function fetchDeployment(name: string, namespace = 'default'): Promise<Deployment | null> {
+export async function fetchDeployment(name: string, namespace: string): Promise<Deployment | null> {
   try {
     const appsApi = getAppsApi()
     const response = await appsApi.readNamespacedDeployment({ name, namespace })
@@ -200,7 +200,7 @@ function extractSecretNames(dep: k8s.V1Deployment): string[] {
 /**
  * Pods API
  */
-export async function fetchPods(namespace = 'default', labelSelector?: string): Promise<Pod[]> {
+export async function fetchPods(namespace: string, labelSelector?: string): Promise<Pod[]> {
   const coreApi = getCoreApi()
   const response = await coreApi.listNamespacedPod({
     namespace,
@@ -233,7 +233,7 @@ export async function fetchPods(namespace = 'default', labelSelector?: string): 
   })
 }
 
-export async function fetchPod(name: string, namespace = 'default'): Promise<Pod | null> {
+export async function fetchPod(name: string, namespace: string): Promise<Pod | null> {
   try {
     const coreApi = getCoreApi()
     const response = await coreApi.readNamespacedPod({ name, namespace })
@@ -269,7 +269,7 @@ export async function fetchPod(name: string, namespace = 'default'): Promise<Pod
 
 export async function fetchPodLogs(
   name: string,
-  namespace = 'default',
+  namespace: string,
   container?: string,
   tail = 100
 ): Promise<string> {
@@ -390,7 +390,7 @@ export async function fetchNode(name: string): Promise<Node | null> {
 /**
  * ConfigMaps API
  */
-export async function fetchConfigMaps(namespace = 'default'): Promise<ConfigMap[]> {
+export async function fetchConfigMaps(namespace: string): Promise<ConfigMap[]> {
   const coreApi = getCoreApi()
   const response = await coreApi.listNamespacedConfigMap({ namespace })
 
@@ -403,7 +403,7 @@ export async function fetchConfigMaps(namespace = 'default'): Promise<ConfigMap[
   }))
 }
 
-export async function fetchConfigMap(name: string, namespace = 'default'): Promise<ConfigMap | null> {
+export async function fetchConfigMap(name: string, namespace: string): Promise<ConfigMap | null> {
   try {
     const coreApi = getCoreApi()
     const response = await coreApi.readNamespacedConfigMap({ name, namespace })
@@ -425,7 +425,7 @@ export async function fetchConfigMap(name: string, namespace = 'default'): Promi
 /**
  * Secrets API
  */
-export async function fetchSecrets(namespace = 'default'): Promise<Secret[]> {
+export async function fetchSecrets(namespace: string): Promise<Secret[]> {
   const coreApi = getCoreApi()
   const response = await coreApi.listNamespacedSecret({ namespace })
 
@@ -439,7 +439,7 @@ export async function fetchSecrets(namespace = 'default'): Promise<Secret[]> {
   }))
 }
 
-export async function fetchSecret(name: string, namespace = 'default'): Promise<Secret | null> {
+export async function fetchSecret(name: string, namespace: string): Promise<Secret | null> {
   try {
     const coreApi = getCoreApi()
     const response = await coreApi.readNamespacedSecret({ name, namespace })
@@ -462,7 +462,7 @@ export async function fetchSecret(name: string, namespace = 'default'): Promise<
 /**
  * HPAs API
  */
-export async function fetchHPAs(namespace = 'default'): Promise<HPA[]> {
+export async function fetchHPAs(namespace: string): Promise<HPA[]> {
   const autoscalingApi = getAutoscalingApi()
   const response = await autoscalingApi.listNamespacedHorizontalPodAutoscaler({ namespace })
 
@@ -539,7 +539,7 @@ export async function fetchPVs(): Promise<PersistentVolume[]> {
 /**
  * PersistentVolumeClaims API
  */
-export async function fetchPVCs(namespace = 'default'): Promise<PersistentVolumeClaim[]> {
+export async function fetchPVCs(namespace: string): Promise<PersistentVolumeClaim[]> {
   const coreApi = getCoreApi()
   const response = await coreApi.listNamespacedPersistentVolumeClaim({ namespace })
 
@@ -581,7 +581,7 @@ export async function fetchEvents(namespace?: string): Promise<Event[]> {
 export async function fetchResourceEvents(
   kind: string,
   name: string,
-  namespace = 'default'
+  namespace: string
 ): Promise<Event[]> {
   const coreApi = getCoreApi()
   const fieldSelector = `involvedObject.kind=${kind},involvedObject.name=${name}`

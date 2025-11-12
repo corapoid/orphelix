@@ -8,20 +8,25 @@ import type { HPA } from '@/types/kubernetes'
  */
 export function useHPAs() {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<HPA[]>({
-    queryKey: ['hpas', mode],
+    queryKey: ['hpas', mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockHPAs()
       }
 
-      
-      const response = await fetch('/api/hpas')
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/hpa?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch HPAs')
       return response.json()
     },
+    enabled: mode === 'mock' || !!namespace,
   })
 }
 
@@ -31,9 +36,10 @@ export function useHPAs() {
  */
 export function useHPA(name: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<HPA>({
-    queryKey: ['hpa', name, mode],
+    queryKey: ['hpa', name, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -43,11 +49,14 @@ export function useHPA(name: string) {
         return hpa
       }
 
-      
-      const response = await fetch(`/api/hpas/${name}`)
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/hpa/${name}?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch HPA')
       return response.json()
     },
-    enabled: !!name,
+    enabled: !!name && (mode === 'mock' || !!namespace),
   })
 }

@@ -182,6 +182,20 @@ describe('usePods', () => {
 
   it('should use correct query key with mode and status filter', () => {
     // Arrange
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'mock',
+        selectedNamespace: 'mock',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn()
+      })
+    )
+
     const mockPods = [
       {
         name: 'test-pod',
@@ -196,7 +210,6 @@ describe('usePods', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
     // Act
@@ -208,7 +221,7 @@ describe('usePods', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pods', 'mock', 'Running'])
+    expect(queries[0].queryKey).toEqual(['pods', 'mock', 'mock', 'Running'])
   })
 
   it('should simulate network delay', async () => {
@@ -355,7 +368,19 @@ describe('usePod', () => {
 
   it('should use correct query key', () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'mock',
+        selectedNamespace: 'mock',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn()
+      })
+    )
 
     // Act
     renderHook(() => usePod('test-pod'), { wrapper })
@@ -363,7 +388,7 @@ describe('usePod', () => {
     // Assert - verify the query key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pod', 'test-pod', 'mock'])
+    expect(queries[0].queryKey).toEqual(['pod', 'test-pod', 'mock', 'mock'])
   })
 })
 
@@ -454,7 +479,19 @@ describe('usePodEvents', () => {
 
   it('should use correct query key', () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'mock',
+        selectedNamespace: 'mock',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn()
+      })
+    )
 
     // Act
     renderHook(() => usePodEvents('test-pod'), { wrapper })
@@ -462,7 +499,7 @@ describe('usePodEvents', () => {
     // Assert - verify the query key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pod-events', 'test-pod', 'mock'])
+    expect(queries[0].queryKey).toEqual(['pod-events', 'test-pod', 'mock', 'mock'])
   })
 
   it('should handle loading states', async () => {
@@ -605,7 +642,19 @@ describe('usePodLogs', () => {
 
   it('should use correct query key', () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'mock',
+        selectedNamespace: 'mock',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn()
+      })
+    )
 
     // Act
     renderHook(() => usePodLogs('test-pod', 'test-container', 50), { wrapper })
@@ -618,6 +667,7 @@ describe('usePodLogs', () => {
       'test-pod',
       'test-container',
       50,
+      'mock',
       'mock',
     ])
   })

@@ -5,33 +5,28 @@ import type { ConfigMap, Event } from '@/types/kubernetes'
 
 /**
  * Hook to fetch all ConfigMaps
- * @param namespace - Optional namespace filter
  */
-export function useConfigMaps(namespace?: string) {
+export function useConfigMaps() {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<ConfigMap[]>({
     queryKey: ['configmaps', mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
-        const configMaps = generateMockConfigMaps()
-
-        if (namespace) {
-          return configMaps.filter((cm) => cm.namespace === namespace)
-        }
-
-        return configMaps
+        return generateMockConfigMaps()
       }
 
-      
-      const url = namespace
-        ? `/api/configmaps?namespace=${namespace}`
-        : '/api/configmaps'
-      const response = await fetch(url)
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/configmaps?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch ConfigMaps')
       return response.json()
     },
+    enabled: mode === 'mock' || !!namespace,
   })
 }
 
@@ -41,9 +36,10 @@ export function useConfigMaps(namespace?: string) {
  */
 export function useConfigMap(name: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<ConfigMap>({
-    queryKey: ['configmap', name, mode],
+    queryKey: ['configmap', name, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -53,12 +49,15 @@ export function useConfigMap(name: string) {
         return configMap
       }
 
-      
-      const response = await fetch(`/api/configmaps/${name}`)
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/configmaps/${name}?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch ConfigMap')
       return response.json()
     },
-    enabled: !!name,
+    enabled: !!name && (mode === 'mock' || !!namespace),
   })
 }
 
@@ -68,9 +67,10 @@ export function useConfigMap(name: string) {
  */
 export function useConfigMapEvents(configMapName: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Event[]>({
-    queryKey: ['configmap-events', configMapName, mode],
+    queryKey: ['configmap-events', configMapName, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 150))
@@ -83,11 +83,14 @@ export function useConfigMapEvents(configMapName: string) {
         )
       }
 
-      
-      const response = await fetch(`/api/configmaps/${configMapName}/events`)
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/configmaps/${configMapName}/events?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch ConfigMap events')
       return response.json()
     },
-    enabled: !!configMapName,
+    enabled: !!configMapName && (mode === 'mock' || !!namespace),
   })
 }

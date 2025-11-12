@@ -10,14 +10,20 @@ import { getCoreApi, initK8sClient } from '@/lib/k8s-client'
  * Standalone pods will be permanently deleted!
  */
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
   try {
     const { name } = await params
+    const { searchParams } = new URL(request.url)
+    const namespace = searchParams.get('namespace') || ''
 
     if (!name) {
       return NextResponse.json({ error: 'Pod name is required' }, { status: 400 })
+    }
+
+    if (!namespace) {
+      return NextResponse.json({ error: 'Namespace parameter is required' }, { status: 400 })
     }
 
     // Initialize Kubernetes client
@@ -27,7 +33,7 @@ export async function POST(
     // Delete the pod - Kubernetes will recreate it if managed by a controller
     await coreApi.deleteNamespacedPod({
       name,
-      namespace: 'default',
+      namespace,
     })
 
     return NextResponse.json({

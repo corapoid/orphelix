@@ -13,6 +13,18 @@ import * as k8s from '@kubernetes/client-node'
 export async function GET(request: NextRequest) {
   const encoder = new TextEncoder()
 
+  // Get namespace from query parameters
+  const searchParams = request.nextUrl.searchParams
+  const namespace = searchParams.get('namespace') || ''
+
+  // Namespace is required for SSE
+  if (!namespace) {
+    return new Response(
+      JSON.stringify({ error: 'Namespace parameter is required' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
+
   // Create ReadableStream for SSE
   const stream = new ReadableStream({
     async start(controller) {
@@ -23,7 +35,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Send initial connection message
-      sendEvent('connected', { timestamp: new Date().toISOString() })
+      sendEvent('connected', { timestamp: new Date().toISOString(), namespace })
 
       // Heartbeat interval to keep connection alive
       const heartbeatInterval = setInterval(() => {
@@ -51,7 +63,7 @@ export async function GET(request: NextRequest) {
         // Watch for Deployment changes
         const deploymentWatch = new k8s.Watch(kc)
         const deploymentWatchRequest = deploymentWatch.watch(
-          '/apis/apps/v1/namespaces/default/deployments',
+          `/apis/apps/v1/namespaces/${namespace}/deployments`,
           {},
           (type, apiObj) => {
             sendEvent('deployment', {
@@ -78,7 +90,7 @@ export async function GET(request: NextRequest) {
         // Watch for Pod changes
         const podWatch = new k8s.Watch(kc)
         const podWatchRequest = podWatch.watch(
-          '/api/v1/namespaces/default/pods',
+          `/api/v1/namespaces/${namespace}/pods`,
           {},
           (type, apiObj) => {
             sendEvent('pod', {
@@ -102,7 +114,7 @@ export async function GET(request: NextRequest) {
         // Watch for Kubernetes Events
         const eventWatch = new k8s.Watch(kc)
         const eventWatchRequest = eventWatch.watch(
-          '/api/v1/namespaces/default/events',
+          `/api/v1/namespaces/${namespace}/events`,
           {},
           (type, apiObj) => {
             sendEvent('event', {

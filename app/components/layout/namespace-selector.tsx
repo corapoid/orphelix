@@ -1,10 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
+import TextField from '@mui/material/TextField'
+import Autocomplete from '@mui/material/Autocomplete'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
@@ -20,12 +18,17 @@ export function NamespaceSelector() {
   const { mode, selectedNamespace, setNamespace } = useModeStore()
   const [namespaces, setNamespaces] = useState<Namespace[]>([])
   const [loading, setLoading] = useState(false)
+  const [inputValue, setInputValue] = useState(selectedNamespace)
 
   useEffect(() => {
     if (mode === 'real') {
       fetchNamespaces()
     }
   }, [mode])
+
+  useEffect(() => {
+    setInputValue(selectedNamespace)
+  }, [selectedNamespace])
 
   const fetchNamespaces = async () => {
     setLoading(true)
@@ -41,61 +44,92 @@ export function NamespaceSelector() {
     }
   }
 
-  const handleChange = (event: { target: { value: string } }) => {
-    setNamespace(event.target.value)
+  const handleChange = (_event: unknown, newValue: string | null) => {
+    if (newValue) {
+      setNamespace(newValue)
+    }
+  }
+
+  const handleInputChange = (_event: unknown, newInputValue: string) => {
+    setInputValue(newInputValue)
   }
 
   if (mode === 'mock') {
     return null
   }
 
+  const options = namespaces.length > 0
+    ? namespaces.map((ns) => ns.name)
+    : []
+
   return (
-    <Tooltip title="Select Kubernetes namespace" arrow>
-      <FormControl size="small" sx={{ minWidth: 150 }}>
-        <InputLabel id="namespace-selector-label" sx={{ color: 'inherit' }}>
-          Namespace
-        </InputLabel>
-        <Select
-          labelId="namespace-selector-label"
-          id="namespace-selector"
+    <Tooltip
+      title={namespaces.length === 0
+        ? "Type namespace name manually (API list unavailable)"
+        : "Select or type namespace"
+      }
+      arrow
+    >
+      <Box sx={{ minWidth: 200 }}>
+        <Autocomplete
+          freeSolo
+          size="small"
+          options={options}
           value={selectedNamespace}
-          label="Namespace"
+          inputValue={inputValue}
           onChange={handleChange}
-          disabled={loading}
-          sx={{
-            color: 'inherit',
-            '.MuiOutlinedInput-notchedOutline': {
-              borderColor: 'rgba(255, 255, 255, 0.23)',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'rgba(255, 255, 255, 0.4)',
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'primary.main',
-            },
-            '.MuiSvgIcon-root': {
-              color: 'inherit',
-            },
+          onInputChange={handleInputChange}
+          onBlur={() => {
+            if (inputValue && inputValue !== selectedNamespace) {
+              setNamespace(inputValue)
+            }
           }}
-        >
-          {loading ? (
-            <MenuItem value={selectedNamespace}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <CircularProgress size={16} />
-                Loading...
-              </Box>
-            </MenuItem>
-          ) : namespaces.length === 0 ? (
-            <MenuItem value="default">default</MenuItem>
-          ) : (
-            namespaces.map((ns) => (
-              <MenuItem key={ns.name} value={ns.name}>
-                {ns.name}
-              </MenuItem>
-            ))
+          disabled={loading}
+          loading={loading}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Namespace"
+              placeholder="Enter namespace..."
+              required
+              error={!selectedNamespace}
+              helperText={!selectedNamespace ? 'Required' : ''}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading ? <CircularProgress size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+              sx={{
+                '& .MuiInputLabel-root': {
+                  color: 'inherit',
+                },
+                '& .MuiOutlinedInput-root': {
+                  color: 'inherit',
+                  '& fieldset': {
+                    borderColor: !selectedNamespace ? 'error.main' : 'rgba(255, 255, 255, 0.23)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: !selectedNamespace ? 'error.main' : 'rgba(255, 255, 255, 0.4)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: !selectedNamespace ? 'error.main' : 'primary.main',
+                  },
+                },
+                '& .MuiSvgIcon-root': {
+                  color: 'inherit',
+                },
+                '& .MuiFormHelperText-root': {
+                  color: 'error.main',
+                },
+              }}
+            />
           )}
-        </Select>
-      </FormControl>
+        />
+      </Box>
     </Tooltip>
   )
 }

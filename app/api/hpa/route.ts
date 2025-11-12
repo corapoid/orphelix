@@ -5,6 +5,14 @@ import { fetchHPAs } from '@/lib/k8s-api'
 export async function GET(request: NextRequest) {
   try {
     const namespace = getNamespaceFromRequest(request)
+
+    if (!namespace) {
+      return NextResponse.json(
+        { error: 'Namespace parameter is required' },
+        { status: 400 }
+      )
+    }
+
     const hpas = await fetchHPAs(namespace)
     return NextResponse.json(hpas)
   } catch (error) {

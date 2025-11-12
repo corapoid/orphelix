@@ -19,32 +19,36 @@ let k8sEventsApi: k8s.EventsV1Api | null = null
 /**
  * Initialize Kubernetes client
  * Tries in-cluster config first, then falls back to kubeconfig file
+ * IMPORTANT: For AWS EKS, we must reload config on every call to refresh tokens
  */
 export function initK8sClient(): void {
-  if (kc) {
-    return // Already initialized
-  }
-
+  // Reset client to force reload (needed for AWS EKS exec auth)
   kc = new k8s.KubeConfig()
 
+  // Always use kubeconfig file for development (not in-cluster)
+  // In-cluster config is only for when running inside Kubernetes pod
   try {
-    // Try in-cluster configuration first (when running inside a pod)
-    kc.loadFromCluster()
+    // Load from kubeconfig file (~/.kube/config)
+    kc.loadFromDefault()
+    const currentContext = kc.getCurrentContext()
+    const cluster = kc.getCurrentCluster()
     // eslint-disable-next-line no-console
-    console.log('[K8s] Using in-cluster configuration')
-  } catch {
-    try {
-      // Fall back to kubeconfig file
-      kc.loadFromDefault()
-      // eslint-disable-next-line no-console
-      console.log('[K8s] Using kubeconfig file')
-    } catch (error) {
-      console.error('[K8s] Failed to load Kubernetes configuration:', error)
-      throw new Error('Failed to initialize Kubernetes client. Make sure kubeconfig is properly configured.')
+    console.log('[K8s] Using kubeconfig file', {
+      context: currentContext,
+      cluster: cluster?.name,
+      server: cluster?.server,
+    })
+
+    // Validate cluster configuration
+    if (!cluster?.server) {
+      throw new Error('Cluster server URL is not configured in kubeconfig')
     }
+  } catch (error) {
+    console.error('[K8s] Failed to load Kubernetes configuration:', error)
+    throw new Error('Failed to initialize Kubernetes client. Make sure kubeconfig is properly configured.')
   }
 
-  // Initialize API clients
+  // Initialize API clients (recreate on every call for fresh tokens)
   k8sAppsApi = kc.makeApiClient(k8s.AppsV1Api)
   k8sCoreApi = kc.makeApiClient(k8s.CoreV1Api)
   k8sAutoscalingApi = kc.makeApiClient(k8s.AutoscalingV2Api)
@@ -55,9 +59,8 @@ export function initK8sClient(): void {
  * Get Apps V1 API client (for Deployments, StatefulSets, DaemonSets)
  */
 export function getAppsApi(): k8s.AppsV1Api {
-  if (!k8sAppsApi) {
-    initK8sClient()
-  }
+  // Always reinitialize for AWS EKS to refresh tokens
+  initK8sClient()
   return k8sAppsApi!
 }
 
@@ -65,9 +68,8 @@ export function getAppsApi(): k8s.AppsV1Api {
  * Get Core V1 API client (for Pods, Services, ConfigMaps, Secrets, Nodes, PVs, PVCs)
  */
 export function getCoreApi(): k8s.CoreV1Api {
-  if (!k8sCoreApi) {
-    initK8sClient()
-  }
+  // Always reinitialize for AWS EKS to refresh tokens
+  initK8sClient()
   return k8sCoreApi!
 }
 
@@ -75,9 +77,8 @@ export function getCoreApi(): k8s.CoreV1Api {
  * Get Autoscaling V2 API client (for HPAs)
  */
 export function getAutoscalingApi(): k8s.AutoscalingV2Api {
-  if (!k8sAutoscalingApi) {
-    initK8sClient()
-  }
+  // Always reinitialize for AWS EKS to refresh tokens
+  initK8sClient()
   return k8sAutoscalingApi!
 }
 
@@ -85,9 +86,8 @@ export function getAutoscalingApi(): k8s.AutoscalingV2Api {
  * Get Events V1 API client
  */
 export function getEventsApi(): k8s.EventsV1Api {
-  if (!k8sEventsApi) {
-    initK8sClient()
-  }
+  // Always reinitialize for AWS EKS to refresh tokens
+  initK8sClient()
   return k8sEventsApi!
 }
 

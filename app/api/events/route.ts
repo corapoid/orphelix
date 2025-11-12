@@ -5,6 +5,15 @@ import { fetchEvents } from '@/lib/k8s-api'
 export async function GET(request: NextRequest) {
   try {
     const namespace = getNamespaceFromRequest(request)
+
+    // Require namespace for events (no cluster-wide access)
+    if (!namespace) {
+      return NextResponse.json(
+        { error: 'Namespace parameter is required' },
+        { status: 400 }
+      )
+    }
+
     const events = await fetchEvents(namespace)
     return NextResponse.json(events)
   } catch (error) {

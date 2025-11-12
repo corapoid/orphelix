@@ -2,11 +2,11 @@ import { NextRequest } from 'next/server'
 
 /**
  * Extract namespace from request query parameters
- * Falls back to 'default' if not provided
+ * Returns empty string if not provided
  */
 export function getNamespaceFromRequest(request: NextRequest): string {
   const searchParams = request.nextUrl.searchParams
-  return searchParams.get('namespace') || 'default'
+  return searchParams.get('namespace') || ''
 }
 
 /**

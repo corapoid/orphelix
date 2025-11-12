@@ -23,6 +23,7 @@ interface RestartPodError {
 export function useRestartPod(podName: string) {
   const queryClient = useQueryClient()
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useMutation<RestartPodResponse, RestartPodError, void>({
     mutationFn: async () => {
@@ -36,8 +37,12 @@ export function useRestartPod(podName: string) {
         }
       }
 
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
       // Real mode: Call restart API
-      const response = await fetch(`/api/pods/${podName}/restart`, {
+      const response = await fetch(`/api/pods/${podName}/restart?namespace=${encodeURIComponent(namespace)}`, {
         method: 'POST',
       })
 

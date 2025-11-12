@@ -32,9 +32,10 @@ export function useDeployments() {
  */
 export function useDeployment(name: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Deployment>({
-    queryKey: ['deployment', name, mode],
+    queryKey: ['deployment', name, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -45,11 +46,11 @@ export function useDeployment(name: string) {
       }
 
       // Real mode: fetch from API route (server-side)
-      const response = await fetch(`/api/deployments/${name}`)
+      const response = await fetch(`/api/deployments/${name}?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch deployment')
       return response.json()
     },
-    enabled: !!name,
+    enabled: !!name && (mode === 'mock' || !!namespace),
   })
 }
 
@@ -59,9 +60,10 @@ export function useDeployment(name: string) {
  */
 export function useDeploymentPods(deploymentName: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Pod[]>({
-    queryKey: ['deployment-pods', deploymentName, mode],
+    queryKey: ['deployment-pods', deploymentName, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -79,11 +81,11 @@ export function useDeploymentPods(deploymentName: string) {
       }
 
       // Real mode: fetch from API route
-      const response = await fetch(`/api/deployments/${deploymentName}/pods`)
+      const response = await fetch(`/api/deployments/${deploymentName}/pods?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch deployment pods')
       return response.json()
     },
-    enabled: !!deploymentName,
+    enabled: !!deploymentName && (mode === 'mock' || !!namespace),
   })
 }
 
@@ -93,9 +95,10 @@ export function useDeploymentPods(deploymentName: string) {
  */
 export function useDeploymentEvents(deploymentName: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Event[]>({
-    queryKey: ['deployment-events', deploymentName, mode],
+    queryKey: ['deployment-events', deploymentName, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 150))
@@ -109,10 +112,10 @@ export function useDeploymentEvents(deploymentName: string) {
       }
 
       // Real mode: fetch from API route
-      const response = await fetch(`/api/deployments/${deploymentName}/events`)
+      const response = await fetch(`/api/deployments/${deploymentName}/events?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch deployment events')
       return response.json()
     },
-    enabled: !!deploymentName,
+    enabled: !!deploymentName && (mode === 'mock' || !!namespace),
   })
 }

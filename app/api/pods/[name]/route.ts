@@ -1,13 +1,23 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { getNamespaceFromRequest } from '@/lib/api-helpers'
 import { fetchPod } from '@/lib/k8s-api'
 
 export async function GET(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
   try {
     const { name } = await params
-    const pod = await fetchPod(name)
+    const namespace = getNamespaceFromRequest(request)
+
+    if (!namespace) {
+      return NextResponse.json(
+        { error: 'Namespace parameter is required' },
+        { status: 400 }
+      )
+    }
+
+    const pod = await fetchPod(name, namespace)
     if (!pod) {
       return NextResponse.json(
         { error: 'Pod not found' },

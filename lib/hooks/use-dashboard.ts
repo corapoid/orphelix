@@ -9,9 +9,10 @@ import type { DashboardSummary, Event } from '@/types/kubernetes'
  */
 export function useDashboardSummary() {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<DashboardSummary>({
-    queryKey: ['dashboard-summary', mode],
+    queryKey: ['dashboard-summary', mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         // Simulate network delay
@@ -19,11 +20,15 @@ export function useDashboardSummary() {
         return generateMockDashboardSummary()
       }
 
-      
-      const response = await fetch('/api/dashboard/summary')
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/dashboard/summary?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch dashboard summary')
       return response.json()
     },
+    enabled: mode === 'mock' || !!namespace,
   })
 }
 
@@ -33,9 +38,10 @@ export function useDashboardSummary() {
  */
 export function useRecentEvents(limit = 10) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Event[]>({
-    queryKey: ['recent-events', mode, limit],
+    queryKey: ['recent-events', mode, namespace, limit],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -43,10 +49,14 @@ export function useRecentEvents(limit = 10) {
         return events.slice(0, limit)
       }
 
-      
-      const response = await fetch(`/api/events?limit=${limit}`)
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/events?namespace=${encodeURIComponent(namespace)}&limit=${limit}`)
       if (!response.ok) throw new Error('Failed to fetch events')
       return response.json()
     },
+    enabled: mode === 'mock' || !!namespace,
   })
 }

@@ -25,6 +25,7 @@ export function useRealtimeUpdates() {
   const queryClient = useQueryClient()
   const mode = useModeStore((state) => state.mode)
   const realtimeEnabled = useModeStore((state) => state.realtimeEnabled)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
   const [lastEvent, setLastEvent] = useState<RealtimeEvent | null>(null)
@@ -69,7 +70,7 @@ export function useRealtimeUpdates() {
     setError(null)
 
     try {
-      const eventSource = new EventSource('/api/stream')
+      const eventSource = new EventSource(`/api/stream?namespace=${encodeURIComponent(namespace)}`)
       eventSourceRef.current = eventSource
 
       // Connection opened
@@ -153,7 +154,7 @@ export function useRealtimeUpdates() {
       setStatus('error')
       setError(err instanceof Error ? err.message : 'Failed to connect')
     }
-  }, [mode, realtimeEnabled, disconnect, queryClient])
+  }, [mode, realtimeEnabled, namespace, disconnect, queryClient])
 
   /**
    * Manual reconnect
@@ -163,7 +164,7 @@ export function useRealtimeUpdates() {
     connect()
   }, [connect])
 
-  // Connect/disconnect on mode or realtime changes
+  // Connect/disconnect on mode, realtime, or namespace changes
   useEffect(() => {
     if (mode === 'real' && realtimeEnabled) {
       connect()
@@ -175,7 +176,7 @@ export function useRealtimeUpdates() {
     return () => {
       disconnect()
     }
-  }, [mode, realtimeEnabled, connect, disconnect])
+  }, [mode, realtimeEnabled, namespace, connect, disconnect])
 
   return {
     status,

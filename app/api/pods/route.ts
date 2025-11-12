@@ -5,6 +5,14 @@ import { fetchPods } from '@/lib/k8s-api'
 export async function GET(request: NextRequest) {
   try {
     const namespace = getNamespaceFromRequest(request)
+
+    if (!namespace) {
+      return NextResponse.json(
+        { error: 'Namespace parameter is required' },
+        { status: 400 }
+      )
+    }
+
     const pods = await fetchPods(namespace)
     return NextResponse.json(pods)
   } catch (error) {

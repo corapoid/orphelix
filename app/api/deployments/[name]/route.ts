@@ -1,13 +1,23 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { getNamespaceFromRequest } from '@/lib/api-helpers'
 import { fetchDeployment } from '@/lib/k8s-api'
 
 export async function GET(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
   try {
     const { name } = await params
-    const deployment = await fetchDeployment(name)
+    const namespace = getNamespaceFromRequest(request)
+
+    if (!namespace) {
+      return NextResponse.json(
+        { error: 'Namespace parameter is required' },
+        { status: 400 }
+      )
+    }
+
+    const deployment = await fetchDeployment(name, namespace)
     if (!deployment) {
       return NextResponse.json(
         { error: 'Deployment not found' },

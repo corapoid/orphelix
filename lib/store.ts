@@ -23,13 +23,13 @@ export const useModeStore = create<ModeStore>()(
     (set) => ({
       mode: 'mock',
       selectedContext: null,
-      selectedNamespace: 'default',
+      selectedNamespace: '',
       realtimeEnabled: false,
       setMode: (mode) => set({ mode }),
       setContext: (context) => set({ selectedContext: context }),
       setNamespace: (namespace) => set({ selectedNamespace: namespace }),
       setRealtimeEnabled: (enabled) => set({ realtimeEnabled: enabled }),
-      reset: () => set({ mode: 'mock', selectedContext: null, selectedNamespace: 'default', realtimeEnabled: false }),
+      reset: () => set({ mode: 'mock', selectedContext: null, selectedNamespace: '', realtimeEnabled: false }),
     }),
     {
       name: 'k8s-dashboard-mode',

@@ -9,9 +9,10 @@ import type { Pod, Event, PodStatus } from '@/types/kubernetes'
  */
 export function usePods(statusFilter?: PodStatus) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Pod[]>({
-    queryKey: ['pods', mode, statusFilter],
+    queryKey: ['pods', mode, namespace, statusFilter],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
@@ -24,14 +25,18 @@ export function usePods(statusFilter?: PodStatus) {
         return pods
       }
 
-      
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
       const url = statusFilter
-        ? `/api/pods?status=${statusFilter}`
-        : '/api/pods'
+        ? `/api/pods?namespace=${encodeURIComponent(namespace)}&status=${statusFilter}`
+        : `/api/pods?namespace=${encodeURIComponent(namespace)}`
       const response = await fetch(url)
       if (!response.ok) throw new Error('Failed to fetch pods')
       return response.json()
     },
+    enabled: mode === 'mock' || !!namespace,
   })
 }
 
@@ -41,9 +46,10 @@ export function usePods(statusFilter?: PodStatus) {
  */
 export function usePod(name: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Pod>({
-    queryKey: ['pod', name, mode],
+    queryKey: ['pod', name, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -53,12 +59,15 @@ export function usePod(name: string) {
         return pod
       }
 
-      
-      const response = await fetch(`/api/pods/${name}`)
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/pods/${name}?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch pod')
       return response.json()
     },
-    enabled: !!name,
+    enabled: !!name && (mode === 'mock' || !!namespace),
   })
 }
 
@@ -68,9 +77,10 @@ export function usePod(name: string) {
  */
 export function usePodEvents(podName: string) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Event[]>({
-    queryKey: ['pod-events', podName, mode],
+    queryKey: ['pod-events', podName, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 150))
@@ -83,12 +93,15 @@ export function usePodEvents(podName: string) {
         )
       }
 
-      
-      const response = await fetch(`/api/pods/${podName}/events`)
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
+      const response = await fetch(`/api/pods/${podName}/events?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) throw new Error('Failed to fetch pod events')
       return response.json()
     },
-    enabled: !!podName,
+    enabled: !!podName && (mode === 'mock' || !!namespace),
   })
 }
 
@@ -100,9 +113,10 @@ export function usePodEvents(podName: string) {
  */
 export function usePodLogs(podName: string, containerName: string, tail = 100) {
   const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<string>({
-    queryKey: ['pod-logs', podName, containerName, tail, mode],
+    queryKey: ['pod-logs', podName, containerName, tail, mode, namespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 400))
@@ -132,14 +146,17 @@ export function usePodLogs(podName: string, containerName: string, tail = 100) {
         return logLines.join('\n')
       }
 
-      
+      if (!namespace) {
+        throw new Error('Namespace is required')
+      }
+
       const response = await fetch(
-        `/api/pods/${podName}/logs?container=${containerName}&tail=${tail}`
+        `/api/pods/${podName}/logs?namespace=${encodeURIComponent(namespace)}&container=${containerName}&tail=${tail}`
       )
       if (!response.ok) throw new Error('Failed to fetch pod logs')
       return response.text()
     },
-    enabled: !!podName && !!containerName,
+    enabled: !!podName && !!containerName && (mode === 'mock' || !!namespace),
     refetchInterval: false, // Don't auto-refresh logs
     staleTime: Infinity, // Logs don't go stale
   })
