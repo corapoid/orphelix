@@ -21,7 +21,10 @@ import { StatusBadge } from '@/components/common/status-badge'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
 import { ClusterConnectionAlert } from '@/components/common/cluster-connection-alert'
+import { SortableTableCell } from '@/components/common/sortable-table-cell'
+import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import { formatAge } from '@/lib/utils'
+import type { Deployment } from '@/types/kubernetes'
 
 export default function DeploymentsPage() {
   const router = useRouter()
@@ -36,6 +39,12 @@ export default function DeploymentsPage() {
       deployment.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
   }, [deployments, searchQuery])
+
+  const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Deployment>(
+    filteredDeployments,
+    'name',
+    'asc'
+  )
 
   if (isLoading) {
     return (
@@ -90,18 +99,42 @@ export default function DeploymentsPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Status</TableCell>
+                <SortableTableCell
+                  field="name"
+                  label="Name"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="status"
+                  label="Status"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell align="center">Replicas</TableCell>
                 <TableCell align="center">Available</TableCell>
                 <TableCell align="center">Unavailable</TableCell>
-                <TableCell>Age</TableCell>
-                <TableCell>Strategy</TableCell>
+                <SortableTableCell
+                  field="age"
+                  label="Age"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableTableCell
+                  field="strategy"
+                  label="Strategy"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredDeployments.map((deployment) => (
+              {sortedData.map((deployment) => (
                 <TableRow
                   key={deployment.name}
                   hover
