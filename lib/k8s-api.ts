@@ -742,25 +742,31 @@ export async function fetchResourceEvents(
   name: string,
   namespace: string
 ): Promise<Event[]> {
-  const coreApi = getCoreApi()
-  const fieldSelector = `involvedObject.kind=${kind},involvedObject.name=${name}`
-  const response = await coreApi.listNamespacedEvent({
-    namespace,
-    fieldSelector,
-  })
+  try {
+    const coreApi = getCoreApi()
+    const fieldSelector = `involvedObject.kind=${kind},involvedObject.name=${name}`
+    const response = await coreApi.listNamespacedEvent({
+      namespace,
+      fieldSelector,
+    })
 
-  return response.items.map((event) => ({
-    type: (event.type as 'Normal' | 'Warning') || 'Normal',
-    reason: event.reason || '',
-    message: event.message || '',
-    kind: event.involvedObject?.kind || '',
-    name: event.involvedObject?.name || '',
-    namespace: event.involvedObject?.namespace || '',
-    count: event.count || 1,
-    firstTimestamp: event.firstTimestamp?.toString() || '',
-    lastTimestamp: event.lastTimestamp?.toString() || '',
-  }))
+    return response.items.map((event) => ({
+      type: (event.type as 'Normal' | 'Warning') || 'Normal',
+      reason: event.reason || '',
+      message: event.message || '',
+      kind: event.involvedObject?.kind || '',
+      name: event.involvedObject?.name || '',
+      namespace: event.involvedObject?.namespace || '',
+      count: event.count || 1,
+      firstTimestamp: event.firstTimestamp?.toString() || '',
+      lastTimestamp: event.lastTimestamp?.toString() || '',
+    }))
+  } catch (error) {
+    console.error(`[API] Failed to fetch Node events:`, error)
+    return []
+  }
 }
+
 /**
  * Fetch deployment as raw YAML string
  */
