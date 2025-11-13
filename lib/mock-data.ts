@@ -451,3 +451,73 @@ export function generateMockDashboardSummary(): DashboardSummary {
     },
   }
 }
+
+export function generateMockPodMetrics(deploymentName: string, namespace: string = 'default') {
+  const pods = generateMockPods().filter(p =>
+    p.namespace === namespace &&
+    p.labels['app'] &&
+    deploymentName.includes(p.labels['app'])
+  )
+
+  if (pods.length === 0) {
+    // If no matching pods, generate some generic ones
+    const genericPod = {
+      name: `${deploymentName}-abc123-xyz`,
+      namespace,
+      labels: { app: deploymentName },
+    }
+    pods.push(genericPod as any)
+  }
+
+  const metrics = pods.flatMap(pod => {
+    const containerCount = Math.floor(Math.random() * 2) + 1
+    return Array.from({ length: containerCount }, (_, i) => {
+      const cpuMillicores = Math.floor(Math.random() * 500) + 50 // 50-550m
+      const memoryBytes = Math.floor(Math.random() * 500 * 1024 * 1024) + 100 * 1024 * 1024 // 100-600MB
+
+      return {
+        podName: pod.name,
+        containerName: i === 0 ? pod.name.split('-')[0] : `sidecar-${i}`,
+        cpu: `${cpuMillicores}m`,
+        memory: `${Math.floor(memoryBytes / (1024 * 1024))}Mi`,
+        cpuValue: cpuMillicores,
+        memoryValue: memoryBytes,
+      }
+    })
+  })
+
+  const requirements = pods.flatMap(pod => {
+    const containerCount = Math.floor(Math.random() * 2) + 1
+    return Array.from({ length: containerCount }, (_, i) => {
+      const cpuRequest = Math.floor(Math.random() * 300) + 100 // 100-400m
+      const cpuLimit = cpuRequest + Math.floor(Math.random() * 500) + 200 // higher than request
+      const memRequest = Math.floor(Math.random() * 300) + 200 // 200-500MB
+      const memLimit = memRequest + Math.floor(Math.random() * 500) + 200 // higher than request
+
+      return {
+        podName: pod.name,
+        containerName: i === 0 ? pod.name.split('-')[0] : `sidecar-${i}`,
+        requests: {
+          cpu: `${cpuRequest}m`,
+          memory: `${memRequest}Mi`,
+          cpuValue: cpuRequest,
+          memoryValue: memRequest * 1024 * 1024,
+        },
+        limits: {
+          cpu: `${cpuLimit}m`,
+          memory: `${memLimit}Mi`,
+          cpuValue: cpuLimit,
+          memoryValue: memLimit * 1024 * 1024,
+        },
+      }
+    })
+  })
+
+  return {
+    deployment: deploymentName,
+    namespace,
+    metrics,
+    requirements,
+    timestamp: new Date().toISOString(),
+  }
+}

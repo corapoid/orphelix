@@ -90,17 +90,17 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
   const ns = namespace || selectedNamespace || 'default'
 
   const { data, isLoading, error } = useQuery<MetricsResponse>({
-    queryKey: ['pod-metrics', deploymentName, ns],
+    queryKey: ['pod-metrics', deploymentName, ns, mode],
     queryFn: async () => {
-      const response = await fetch(`/api/metrics/pods?deployment=${deploymentName}&namespace=${ns}`)
+      const response = await fetch(`/api/metrics/pods?deployment=${deploymentName}&namespace=${ns}&mode=${mode}`)
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.details || errorData.error || 'Failed to fetch metrics')
       }
       return response.json()
     },
-    enabled: mode === 'real',
-    refetchInterval: 30000, // Refresh every 30 seconds
+    enabled: true, // Enable for both demo and real modes
+    refetchInterval: mode === 'real' ? 30000 : false, // Refresh every 30 seconds only in real mode
   })
 
   const aggregatedMetrics = useMemo(() => {

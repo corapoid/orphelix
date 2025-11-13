@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { exec } from 'child_process'
 import { promisify } from 'util'
+import { generateMockPodMetrics } from '@/lib/mock-data'
 
 const execAsync = promisify(exec)
 
@@ -77,12 +78,19 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const namespace = searchParams.get('namespace') || 'default'
   const deploymentName = searchParams.get('deployment')
+  const mode = searchParams.get('mode') || 'real'
 
   if (!deploymentName) {
     return NextResponse.json(
       { error: 'deployment parameter is required' },
       { status: 400 }
     )
+  }
+
+  // Return mock data in demo mode
+  if (mode === 'demo') {
+    const mockData = generateMockPodMetrics(deploymentName, namespace)
+    return NextResponse.json(mockData)
   }
 
   try {
