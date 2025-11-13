@@ -34,6 +34,9 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { ResourceUsageChart } from '@/app/components/metrics/resource-usage-chart'
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { DeploymentManifestViewer } from '@/app/components/deployments/deployment-manifest-viewer'
+import { RestartDeploymentDialog } from '@/app/components/deployments/restart-deployment-dialog'
+import { RefreshButton } from '@/app/components/common/refresh-button'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 
 export default function DeploymentDetailPage() {
   const params = useParams()
@@ -43,15 +46,23 @@ export default function DeploymentDetailPage() {
   const [restartError, setRestartError] = useState<string | null>(null)
   const [restartSuccess, setRestartSuccess] = useState(false)
   const [editorOpen, setEditorOpen] = useState(false)
+  const [restartDialogOpen, setRestartDialogOpen] = useState(false)
 
   const { data: deployment, isLoading, error, refetch } = useDeployment(name)
+
+  // Auto-refresh
+  useAutoRefresh(refetch)
   const { data: pods, isLoading: podsLoading } = useDeploymentPods(name)
   const { data: allConfigMaps } = useConfigMaps()
   const { data: allSecrets } = useSecrets()
   const { data: allHPAs } = useHPAs()
 
   // Build topology graph data
-  const handleRestart = async () => {
+  const handleRestartClick = () => {
+    setRestartDialogOpen(true)
+  }
+
+  const handleRestartConfirm = async () => {
     setRestarting(true)
     setRestartError(null)
     setRestartSuccess(false)
@@ -68,6 +79,7 @@ export default function DeploymentDetailPage() {
       }
 
       setRestartSuccess(true)
+      setRestartDialogOpen(false)
       // Refetch deployment data after restart
       setTimeout(() => {
         refetch()
@@ -78,6 +90,10 @@ export default function DeploymentDetailPage() {
     } finally {
       setRestarting(false)
     }
+  }
+
+  const handleRestartCancel = () => {
+    setRestartDialogOpen(false)
   }
 
   const topologyData = useMemo(() => {
@@ -129,7 +145,8 @@ export default function DeploymentDetailPage() {
         >
           Back to Deployments
         </Button>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <RefreshButton onRefresh={refetch} isLoading={isLoading} />
           <Button
             variant="outlined"
             startIcon={<EditIcon />}
@@ -141,10 +158,10 @@ export default function DeploymentDetailPage() {
             variant="outlined"
             color="warning"
             startIcon={<RestartAltIcon />}
-            onClick={handleRestart}
+            onClick={handleRestartClick}
             disabled={restarting}
           >
-            {restarting ? 'Restarting...' : 'Restart Deployment'}
+            Restart Deployment
           </Button>
         </Box>
       </Box>
@@ -155,6 +172,14 @@ export default function DeploymentDetailPage() {
         resourceName={deployment.name}
         namespace={deployment.namespace}
         resourceType="deployment"
+      />
+
+      <RestartDeploymentDialog
+        open={restartDialogOpen}
+        deploymentName={deployment.name}
+        isLoading={restarting}
+        onConfirm={handleRestartConfirm}
+        onCancel={handleRestartCancel}
       />
 
       {restartSuccess && (

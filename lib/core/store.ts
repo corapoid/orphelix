@@ -7,10 +7,14 @@ interface ModeStore {
   selectedContext: KubernetesContext | null
   selectedNamespace: string
   realtimeEnabled: boolean
+  autoRefreshEnabled: boolean
+  autoRefreshInterval: number // seconds
   setMode: (mode: AppMode) => void
   setContext: (context: KubernetesContext | null) => void
   setNamespace: (namespace: string) => void
   setRealtimeEnabled: (enabled: boolean) => void
+  setAutoRefreshEnabled: (enabled: boolean) => void
+  setAutoRefreshInterval: (interval: number) => void
   reset: () => void
 }
 
@@ -40,11 +44,22 @@ export const useModeStore = create<ModeStore>()(
       selectedContext: null,
       selectedNamespace: '',
       realtimeEnabled: false,
+      autoRefreshEnabled: false,
+      autoRefreshInterval: 30, // 30 seconds default
       setMode: (mode) => set({ mode }),
       setContext: (context) => set({ selectedContext: context }),
       setNamespace: (namespace) => set({ selectedNamespace: namespace }),
       setRealtimeEnabled: (enabled) => set({ realtimeEnabled: enabled }),
-      reset: () => set({ mode: 'mock', selectedContext: null, selectedNamespace: '', realtimeEnabled: false }),
+      setAutoRefreshEnabled: (enabled) => set({ autoRefreshEnabled: enabled }),
+      setAutoRefreshInterval: (interval) => set({ autoRefreshInterval: interval }),
+      reset: () => set({
+        mode: 'mock',
+        selectedContext: null,
+        selectedNamespace: '',
+        realtimeEnabled: false,
+        autoRefreshEnabled: false,
+        autoRefreshInterval: 30,
+      }),
     }),
     {
       name: 'k8s-dashboard-mode',
