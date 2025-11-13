@@ -180,11 +180,11 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
         })}
       </List>
 
-      {/* Settings at bottom */}
+      {/* Bottom Actions: Settings & Collapse */}
       <Divider />
-      <List sx={{ px: 1, py: 1 }}>
+      <Box sx={{ px: 1, py: 1 }}>
         {collapsed ? (
-          <ListItem disablePadding>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
             <Tooltip title="Settings" placement="right">
               <ListItemButton
                 selected={pathname === '/settings'}
@@ -218,9 +218,32 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
                 </ListItemIcon>
               </ListItemButton>
             </Tooltip>
-          </ListItem>
+            <Tooltip title="Expand sidebar" placement="right">
+              <ListItemButton
+                onClick={toggleCollapse}
+                sx={{
+                  borderRadius: 2,
+                  minHeight: 48,
+                  justifyContent: 'center',
+                  px: 2,
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    color: 'text.secondary',
+                  }}
+                >
+                  <ChevronRightIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            </Tooltip>
+          </Box>
         ) : (
-          <ListItem disablePadding>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
             <ListItemButton
               selected={pathname === '/settings'}
               onClick={() => handleNavigate('/settings')}
@@ -259,22 +282,10 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
                 }}
               />
             </ListItemButton>
-          </ListItem>
-        )}
-      </List>
-
-      {/* Collapse Toggle at bottom */}
-      <Divider />
-      <Box sx={{ p: 1 }}>
-        {collapsed ? (
-          <Tooltip title="Expand sidebar" placement="right">
             <ListItemButton
               onClick={toggleCollapse}
               sx={{
                 borderRadius: 2,
-                minHeight: 48,
-                justifyContent: 'center',
-                px: 2,
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },
@@ -282,40 +293,21 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
             >
               <ListItemIcon
                 sx={{
-                  minWidth: 0,
+                  minWidth: 40,
                   color: 'text.secondary',
                 }}
               >
-                <ChevronRightIcon />
+                <ChevronLeftIcon />
               </ListItemIcon>
+              <ListItemText
+                primary="Collapse"
+                primaryTypographyProps={{
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                }}
+              />
             </ListItemButton>
-          </Tooltip>
-        ) : (
-          <ListItemButton
-            onClick={toggleCollapse}
-            sx={{
-              borderRadius: 2,
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 40,
-                color: 'text.secondary',
-              }}
-            >
-              <ChevronLeftIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Collapse"
-              primaryTypographyProps={{
-                fontSize: '0.875rem',
-                fontWeight: 500,
-              }}
-            />
-          </ListItemButton>
+          </Box>
         )}
       </Box>
     </Drawer>
