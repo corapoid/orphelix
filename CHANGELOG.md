@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **AI-Powered File Matching (OpenAI Integration)**: Intelligent YAML file matching
+  - OpenAI GPT-4o-mini integration for smart deployment-to-file matching
+  - User-configurable OpenAI API key in Settings (stored in localStorage)
+  - Automatic exclusion of base/ directory files when environment files exist
+  - Confidence scoring and reasoning display for AI matches
+  - Fallback to pattern matching when OpenAI key not configured
+  - `/api/ai/match-file` endpoint with structured AI prompts
+  - AI settings panel in Settings page
+  - Match info alerts showing method (AI/pattern) and confidence
+  - Support for complex repository structures (Kustomize, multi-environment)
+  - Intelligent handling of naming patterns (hyphens, underscores, suffixes)
+
 - **GitHub App Integration (Granular Permissions)**: Major security improvement
   - GitHub App authentication with fine-grained repository permissions
   - Users can select specific repositories to grant access (not all or nothing)
@@ -47,7 +59,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Dependencies**: Added `next-auth@beta`, `@octokit/rest`, `@octokit/app`, `@octokit/auth-app`, `@monaco-editor/react`
+- **Nodes UI Improvements**:
+  - Removed 'Roles' column from nodes table and details page
+  - Removed 'Conditions' section from node details
+  - Added CPU and memory usage percentages (allocatable/capacity)
+  - Simplified node details with single Resources section
+  - Namespace-scoped nodes filtering (show only nodes with pods in selected namespace)
+- **Secrets Details Page**: Standardized styling to match app design (removed gradient header)
+- **YAML Editor**: Removed unnecessary Kustomize tabs (Base/Overlay)
+- **Dependencies**: Added `next-auth@beta`, `@octokit/rest`, `@octokit/app`, `@octokit/auth-app`, `@monaco-editor/react`, `ai`, `@ai-sdk/openai`
 - **Store**: Extended with GitHub repository and PR tracking state
 - **Environment**: Added GitHub App and OAuth configuration variables (.env.example updated)
 - **Settings Page**: Now includes tabbed interface for GitHub App vs OAuth selection
@@ -55,6 +75,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **AI Matcher**: Fixed OpenAI API key parameter passing (use `createOpenAI` client)
+- **YAML Editor UI**: Fixed empty blue alert bar (added AI method support)
+- **YAML Editor UI**: Removed confusing Base/Overlay tabs for non-Kustomize repos
+- **Nodes Filtering**: Use namespace-scoped pod API for better permission handling
+- **Permission Errors**: Graceful 403 handling for node events and pods
+- **ESLint**: Fixed unused Chip import and let→const warnings
 - All TypeScript compilation errors in GitHub integration code
 - Import cleanup in repo-selector, yaml-editor-modal, and GitHub App components
 - NextAuth handler exports for route compatibility
