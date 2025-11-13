@@ -18,7 +18,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useParams, useRouter } from 'next/navigation'
-import { useNode, useNodeEvents, useNodePods } from '@/lib/hooks/use-nodes'
+import { useNode, useNodePods } from '@/lib/hooks/use-nodes'
 import { StatusBadge } from '@/components/common/status-badge'
 import { formatAge } from '@/lib/utils'
 import type { Pod } from '@/types/kubernetes'
@@ -31,7 +31,6 @@ export default function NodeDetailPage() {
   const name = params.name as string
 
   const { data: node, isLoading, error, refetch } = useNode(name)
-  const { data: events, isLoading: eventsLoading } = useNodeEvents(name)
   const { data: pods, isLoading: podsLoading } = useNodePods(name)
 
   if (isLoading) {
@@ -183,50 +182,6 @@ export default function NodeDetailPage() {
           </TableContainer>
         ) : (
           <Alert severity="info">No pods running on this node</Alert>
-        )}
-      </Paper>
-
-      <Paper sx={{ p: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Events
-        </Typography>
-        {eventsLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-            <CircularProgress size={24} />
-          </Box>
-        ) : events && events.length > 0 ? (
-          <TableContainer>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Reason</TableCell>
-                  <TableCell>Message</TableCell>
-                  <TableCell>Count</TableCell>
-                  <TableCell>Age</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {events.map((event, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Chip
-                        label={event.type}
-                        color={event.type === 'Warning' ? 'warning' : 'default'}
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell>{event.reason}</TableCell>
-                    <TableCell sx={{ maxWidth: 400 }}>{event.message}</TableCell>
-                    <TableCell>{event.count}</TableCell>
-                    <TableCell>{formatAge(event.lastTimestamp)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <Alert severity="info">No events found for this node</Alert>
         )}
       </Paper>
     </Box>
