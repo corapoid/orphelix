@@ -56,12 +56,35 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.fleet/
+*.swp
+*.swo
+*~
 
 # Temporary files
 *.tmp
 *.temp
 *.log
 
+# Backup files
+*.bak
+*.bak[0-9]
+*.backup
+*.orig
+
 # K8s config (sensitive)
 kubeconfig
 *.kubeconfig
+
+# Claude Code (local settings)
+.claude/
+
+# npm/yarn/pnpm backup lockfiles
+package-lock.json.bak*
+yarn.lock.bak*
+pnpm-lock.yaml.bak*
+
+# Test artifacts (already covered above but explicit)
+playwright-report/
+test-results/
+coverage/
