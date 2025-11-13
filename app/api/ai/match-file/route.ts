@@ -76,7 +76,7 @@ If no good match is found, set matchedFile to null and confidence to 0.`
 
     const result = await generateText({
       model: openai('gpt-4o-mini', {
-        user: apiKey,
+        apiKey,
       }),
       prompt,
       temperature: 0.1, // Low temperature for consistent results

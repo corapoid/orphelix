@@ -12,9 +12,11 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Chip from '@mui/material/Chip'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useNodes } from '@/lib/hooks/use-nodes'
+import { usePods } from '@/lib/hooks/use-pods'
+import { useModeStore } from '@/lib/store'
 import { StatusBadge } from '@/components/common/status-badge'
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { ErrorState } from '@/components/common/error-state'
@@ -25,12 +27,39 @@ import type { Node } from '@/types/kubernetes'
 export default function NodesPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
-  const { data: nodes, isLoading, error, refetch } = useNodes()
+  const selectedNamespace = useModeStore((state) => state.selectedNamespace)
 
-  // Filter nodes by search query
-  const filteredNodes = nodes?.filter((node) =>
-    node.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || []
+  const { data: nodes, isLoading, error, refetch } = useNodes()
+  const { data: pods } = usePods()
+
+  // Get unique node names from pods in selected namespace
+  const nodesWithPods = useMemo(() => {
+    if (!pods || !selectedNamespace) return new Set<string>()
+    return new Set(pods.map(pod => pod.nodeName).filter(Boolean))
+  }, [pods, selectedNamespace])
+
+  // Filter nodes by:
+  // 1. Search query
+  // 2. Only show nodes with pods in selected namespace (if namespace is set)
+  const filteredNodes = useMemo(() => {
+    if (!nodes) return []
+
+    let filtered = nodes
+
+    // Filter by namespace (only show nodes with pods in selected namespace)
+    if (selectedNamespace && nodesWithPods.size > 0) {
+      filtered = filtered.filter(node => nodesWithPods.has(node.name))
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter((node) =>
+        node.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+
+    return filtered
+  }, [nodes, selectedNamespace, nodesWithPods, searchQuery])
 
   const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Node>(
     filteredNodes,
@@ -63,7 +92,14 @@ export default function NodesPage() {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Nodes</Typography>
+        <Box>
+          <Typography variant="h4">Nodes</Typography>
+          {selectedNamespace && (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              Showing nodes with pods in namespace: <strong>{selectedNamespace}</strong>
+            </Typography>
+          )}
+        </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <TextField
             size="small"
