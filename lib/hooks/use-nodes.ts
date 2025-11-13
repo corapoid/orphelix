@@ -106,9 +106,10 @@ export function useNodeEvents(nodeName: string) {
  */
 export function useNodePods(nodeName: string) {
   const mode = useModeStore((state) => state.mode)
+  const selectedNamespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery({
-    queryKey: ['node-pods', nodeName, mode],
+    queryKey: ['node-pods', nodeName, mode, selectedNamespace],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -118,8 +119,11 @@ export function useNodePods(nodeName: string) {
         return allPods.filter((pod) => pod.nodeName === nodeName)
       }
 
-
-      const response = await fetch(`/api/nodes/${nodeName}/pods`)
+      // Pass namespace to API to scope pod list to user's selected namespace
+      const url = selectedNamespace
+        ? `/api/nodes/${nodeName}/pods?namespace=${selectedNamespace}`
+        : `/api/nodes/${nodeName}/pods`
+      const response = await fetch(url)
       // If 403 (forbidden), return empty array instead of throwing
       if (!response.ok) {
         if (response.status === 403) {

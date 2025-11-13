@@ -468,10 +468,19 @@ export async function fetchNodeEvents(nodeName: string): Promise<Event[]> {
   return fetchResourceEvents('Node', nodeName, '')
 }
 
-export async function fetchNodePods(nodeName: string): Promise<Pod[]> {
+export async function fetchNodePods(nodeName: string, namespace?: string): Promise<Pod[]> {
   try {
     const coreApi = getCoreApi()
-    const response = await coreApi.listPodForAllNamespaces({
+
+    // If no namespace provided, we can't list pods (no cluster-level permission)
+    if (!namespace) {
+      console.warn('[K8s] Cannot fetch node pods without namespace (no cluster-level permission)')
+      return []
+    }
+
+    // List pods in the specified namespace only
+    const response = await coreApi.listNamespacedPod({
+      namespace,
       fieldSelector: `spec.nodeName=${nodeName}`,
     })
 

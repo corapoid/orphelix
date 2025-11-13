@@ -2,19 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { fetchNodePods } from '@/lib/k8s-api'
 
 /**
- * GET /api/nodes/[name]/pods
+ * GET /api/nodes/[name]/pods?namespace=xxx
  *
- * Fetches all Pods running on a specific Node
- * Returns pods from all namespaces on this node
+ * Fetches all Pods running on a specific Node in the specified namespace
+ * Requires namespace query parameter as user doesn't have cluster-level permissions
  */
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
   try {
     const { name } = await params
+    const { searchParams } = new URL(request.url)
+    const namespace = searchParams.get('namespace')
 
-    const pods = await fetchNodePods(name)
+    const pods = await fetchNodePods(name, namespace || undefined)
     return NextResponse.json(pods)
   } catch (error) {
     console.error('[API] Failed to fetch Node pods:', error)
