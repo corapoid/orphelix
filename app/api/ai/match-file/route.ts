@@ -51,11 +51,11 @@ DEPLOYED RESOURCE TO FIND:
 IMPORTANT MATCHING LOGIC:
 1. The resource name "${resourceName}" may appear in the file path or directory name
 2. Common patterns:
-   - Resource "video-cms-api-main" → directory "videocmsapi/" or "video-cms-api/"
-   - Resource "my-service-main" → directory "myservice/" or "my-service/"
-   - Suffixes like "-main" are often NOT in the directory name
+   - Suffixes like "-main", "-dev", "-prod" are often NOT in the directory name
+   - Hyphens may be removed or converted to underscores in directory names
+   - Case may differ between resource name and directory name
 3. Look for these typical file names: helm-release.yaml, application.yaml, deployment.yaml, kustomization.yaml
-4. ALWAYS prefer environment-specific directories (c2a-int/, prod/, dev/, staging/) over base/
+4. ALWAYS prefer environment-specific directories over base/
 
 AVAILABLE FILES IN REPOSITORY:
 ${fileList}
