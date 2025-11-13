@@ -1,8 +1,7 @@
 'use client'
 
-import { Box, Chip, CircularProgress, Tooltip, IconButton } from '@mui/material'
-import WifiIcon from '@mui/icons-material/Wifi'
-import WifiOffIcon from '@mui/icons-material/WifiOff'
+import { Box, CircularProgress, Tooltip, IconButton, Typography } from '@mui/material'
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
 import SyncIcon from '@mui/icons-material/Sync'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useRealtimeUpdates } from '@/lib/hooks/use-realtime'
@@ -19,7 +18,7 @@ import { useModeStore } from '@/lib/core/store'
 export function RealtimeStatus() {
   const mode = useModeStore((state) => state.mode)
   const realtimeEnabled = useModeStore((state) => state.realtimeEnabled)
-  const { status, error, reconnect, isConnected } = useRealtimeUpdates()
+  const { status, error, reconnect } = useRealtimeUpdates()
 
   // Don't show in mock mode or when realtime is disabled
   if (mode !== 'real' || !realtimeEnabled) {
@@ -29,30 +28,30 @@ export function RealtimeStatus() {
   const getStatusColor = () => {
     switch (status) {
       case 'connected':
-        return 'success'
+        return '#10b981' // green
       case 'connecting':
-        return 'info'
+        return '#3b82f6' // blue
       case 'error':
-        return 'error'
+        return '#ef4444' // red
       case 'disconnected':
-        return 'default'
+        return '#6b7280' // gray
       default:
-        return 'default'
+        return '#6b7280'
     }
   }
 
   const getStatusIcon = () => {
     switch (status) {
       case 'connected':
-        return <WifiIcon fontSize="small" />
+        return <FiberManualRecordIcon sx={{ fontSize: 10 }} />
       case 'connecting':
-        return <CircularProgress size={16} />
+        return <CircularProgress size={10} />
       case 'error':
-        return <ErrorIcon fontSize="small" />
+        return <ErrorIcon sx={{ fontSize: 12 }} />
       case 'disconnected':
-        return <WifiOffIcon fontSize="small" />
+        return <FiberManualRecordIcon sx={{ fontSize: 10 }} />
       default:
-        return <WifiOffIcon fontSize="small" />
+        return <FiberManualRecordIcon sx={{ fontSize: 10 }} />
     }
   }
 
@@ -90,29 +89,59 @@ export function RealtimeStatus() {
   }
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
       <Tooltip title={getTooltipTitle()} arrow>
-        <Chip
-          icon={getStatusIcon()}
-          label={getStatusLabel()}
-          color={getStatusColor()}
-          size="small"
-          variant={isConnected ? 'filled' : 'outlined'}
+        <Box
           sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.75,
+            px: 1.5,
+            py: 0.5,
+            borderRadius: 1.5,
+            bgcolor: status === 'connected' ? 'rgba(16, 185, 129, 0.1)' : 'background.default',
+            border: '1px solid',
+            borderColor: status === 'connected' ? 'rgba(16, 185, 129, 0.3)' : 'divider',
+            cursor: status === 'disconnected' || status === 'error' ? 'pointer' : 'default',
+            transition: 'all 0.2s ease',
             animation: status === 'connecting' ? 'pulse 2s infinite' : 'none',
             '@keyframes pulse': {
               '0%, 100%': { opacity: 1 },
               '50%': { opacity: 0.6 },
             },
+            '&:hover': status === 'disconnected' || status === 'error' ? {
+              bgcolor: 'action.hover',
+            } : {},
           }}
-        />
+          onClick={status === 'disconnected' || status === 'error' ? reconnect : undefined}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              color: getStatusColor(),
+            }}
+          >
+            {getStatusIcon()}
+          </Box>
+          <Typography
+            variant="caption"
+            sx={{
+              fontWeight: 500,
+              color: status === 'connected' ? getStatusColor() : 'text.secondary',
+              fontSize: '0.75rem',
+            }}
+          >
+            {getStatusLabel()}
+          </Typography>
+        </Box>
       </Tooltip>
 
       {/* Reconnect button when disconnected or error */}
       {(status === 'disconnected' || status === 'error') && (
         <Tooltip title="Retry connection" arrow>
-          <IconButton size="small" onClick={reconnect} color="primary">
-            <SyncIcon fontSize="small" />
+          <IconButton size="small" onClick={reconnect} sx={{ color: 'text.secondary' }}>
+            <SyncIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
       )}
