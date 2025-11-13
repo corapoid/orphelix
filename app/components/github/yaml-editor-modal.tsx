@@ -48,7 +48,7 @@ export function YamlEditorModal({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [isMergingPR, setIsMergingPR] = useState(false)
   const [matchingFile, setMatchingFile] = useState(false)
-  const [matchInfo, setMatchInfo] = useState<{ method: string } | null>(null)
+  const [matchInfo, setMatchInfo] = useState<{ method: string; confidence?: number; reasoning?: string } | null>(null)
 
   // Check authentication status (both OAuth and GitHub App)
   const { data: authStatus } = useQuery({
@@ -150,12 +150,13 @@ export function YamlEditorModal({
         }
 
         if (!response.ok) {
-          console.error('Failed to match file')
+          const errorText = await response.text()
+          console.error('[YamlEditor] Failed to match file:', response.status, errorText)
           return
         }
 
         const data = await response.json()
-        console.log('[YamlEditor] Match result:', data)
+        console.log('[YamlEditor] Match result:', JSON.stringify(data, null, 2))
 
         // Handle different response formats (AI vs pattern matching)
         const matchedFilePath = openaiKey
