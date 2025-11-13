@@ -14,7 +14,11 @@ interface Namespace {
   age: string
 }
 
-export function NamespaceSelector() {
+interface NamespaceSelectorProps {
+  fullWidth?: boolean
+}
+
+export function NamespaceSelector({ fullWidth = false }: NamespaceSelectorProps) {
   const { mode, selectedNamespace, setNamespace } = useModeStore()
   const [namespaces, setNamespaces] = useState<Namespace[]>([])
   const [loading, setLoading] = useState(false)
@@ -70,7 +74,7 @@ export function NamespaceSelector() {
       }
       arrow
     >
-      <Box sx={{ minWidth: 200 }}>
+      <Box sx={{ minWidth: fullWidth ? undefined : 200, width: fullWidth ? '100%' : undefined }}>
         <Autocomplete
           freeSolo
           size="small"

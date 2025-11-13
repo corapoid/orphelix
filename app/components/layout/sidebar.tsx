@@ -16,12 +16,13 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import DeploymentIcon from '@mui/icons-material/AccountTree'
 import PodIcon from '@mui/icons-material/Widgets'
 import NodeIcon from '@mui/icons-material/Storage'
-import ConfigIcon from '@mui/icons-material/Settings'
+import ConfigIcon from '@mui/icons-material/Description'
 import SecretIcon from '@mui/icons-material/Lock'
 import HpaIcon from '@mui/icons-material/TrendingUp'
 import PvIcon from '@mui/icons-material/FolderOpen'
 import EventIcon from '@mui/icons-material/EventNote'
 import GitHubIcon from '@mui/icons-material/GitHub'
+import SettingsIcon from '@mui/icons-material/SettingsOutlined'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -63,7 +64,7 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
   const handleNavigate = (path: string) => {
     router.push(path)
     if (window.innerWidth < 1024) {
-      onClose()
+      _onClose()
     }
   }
 
@@ -177,6 +178,89 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
             </ListItem>
           )
         })}
+      </List>
+
+      {/* Settings at bottom */}
+      <Divider />
+      <List sx={{ px: 1, py: 1 }}>
+        {collapsed ? (
+          <ListItem disablePadding>
+            <Tooltip title="Settings" placement="right">
+              <ListItemButton
+                selected={pathname === '/settings'}
+                onClick={() => handleNavigate('/settings')}
+                sx={{
+                  borderRadius: 2,
+                  minHeight: 48,
+                  justifyContent: 'center',
+                  px: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                    },
+                  },
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    color: pathname === '/settings' ? 'white' : 'text.secondary',
+                    transition: 'color 0.2s ease-in-out',
+                  }}
+                >
+                  <SettingsIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+        ) : (
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={pathname === '/settings'}
+              onClick={() => handleNavigate('/settings')}
+              sx={{
+                borderRadius: 2,
+                transition: 'all 0.2s ease-in-out',
+                '&.Mui-selected': {
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                  },
+                  '& .MuiListItemIcon-root': {
+                    color: 'white',
+                  },
+                },
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 40,
+                  color: pathname === '/settings' ? 'white' : 'text.secondary',
+                  transition: 'color 0.2s ease-in-out',
+                }}
+              >
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Settings"
+                primaryTypographyProps={{
+                  fontSize: '0.875rem',
+                  fontWeight: pathname === '/settings' ? 600 : 400,
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
 
       {/* Collapse Toggle at bottom */}
