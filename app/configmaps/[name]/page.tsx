@@ -16,11 +16,13 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import SearchIcon from '@mui/icons-material/Search'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import EditIcon from '@mui/icons-material/Edit'
 import { useState, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useConfigMap } from '@/lib/hooks/use-configmaps'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
+import { YamlEditorModal } from '@/app/components/github/yaml-editor-modal'
 
 const MAX_PREVIEW_LINES = 10
 
@@ -35,6 +37,7 @@ export default function ConfigMapDetailPage() {
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set())
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [editorOpen, setEditorOpen] = useState(false)
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -129,8 +132,15 @@ export default function ConfigMapDetailPage() {
       </Button>
 
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h4">{configMap.name}</Typography>
+          <Button
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => setEditorOpen(true)}
+          >
+            Edit YAML
+          </Button>
         </Box>
         <Typography variant="body2" color="text.secondary">
           Namespace: {configMap.namespace} • Age: {configMap.age}
@@ -273,6 +283,14 @@ export default function ConfigMapDetailPage() {
           </Box>
         )}
       </Paper>
+
+      <YamlEditorModal
+        open={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        resourceName={configMap.name}
+        namespace={configMap.namespace}
+        resourceType="configmap"
+      />
 
       <Snackbar
         open={snackbarOpen}

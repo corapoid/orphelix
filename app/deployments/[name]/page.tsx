@@ -149,8 +149,9 @@ export default function DeploymentDetailPage() {
       <YamlEditorModal
         open={editorOpen}
         onClose={() => setEditorOpen(false)}
-        deploymentName={deployment.name}
+        resourceName={deployment.name}
         namespace={deployment.namespace}
+        resourceType="deployment"
       />
 
       {restartSuccess && (

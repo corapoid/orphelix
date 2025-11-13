@@ -29,9 +29,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import EditIcon from '@mui/icons-material/Edit'
 import { useSecret } from '@/lib/hooks/use-secrets'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
+import { YamlEditorModal } from '@/app/components/github/yaml-editor-modal'
 
 const MAX_PREVIEW_LINES = 10
 
@@ -54,6 +56,7 @@ export default function SecretDetailPage({
   const [pendingRevealKey, setPendingRevealKey] = useState<string | null>(null)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [editorOpen, setEditorOpen] = useState(false)
 
   // Decode base64 value
   const decodeValue = (value: string): string => {
@@ -209,13 +212,21 @@ export default function SecretDetailPage({
           mb: 3,
         }}
       >
-        <Box display="flex" alignItems="center" gap={2} mb={2}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
           <Button
             startIcon={<ArrowBackIcon />}
             onClick={() => router.back()}
             sx={{ color: 'white' }}
           >
             Back
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={() => setEditorOpen(true)}
+            sx={{ bgcolor: 'rgba(255,255,255,0.2)', '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }}
+          >
+            Edit YAML
           </Button>
         </Box>
         <Typography variant="h4" fontWeight="bold">
@@ -474,6 +485,14 @@ export default function SecretDetailPage({
           </Button>
         </DialogActions>
       </Dialog>
+
+      <YamlEditorModal
+        open={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        resourceName={secret.name}
+        namespace={secret.namespace}
+        resourceType="secret"
+      />
 
       {/* Snackbar for copy feedback */}
       <Snackbar

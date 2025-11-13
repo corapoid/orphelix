@@ -23,11 +23,18 @@ import { useGitHubStore } from '@/lib/store'
 interface YamlEditorModalProps {
   open: boolean
   onClose: () => void
-  deploymentName: string
+  resourceName: string
   namespace: string
+  resourceType?: 'deployment' | 'configmap' | 'secret'
 }
 
-export function YamlEditorModal({ open, onClose, deploymentName, namespace }: YamlEditorModalProps) {
+export function YamlEditorModal({
+  open,
+  onClose,
+  resourceName,
+  namespace,
+  resourceType = 'deployment'
+}: YamlEditorModalProps) {
   const { selectedRepo, setPendingPR } = useGitHubStore()
 
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
@@ -121,7 +128,7 @@ export function YamlEditorModal({ open, onClose, deploymentName, namespace }: Ya
           repo: selectedRepo.repo,
           filePath: selectedFile,
           content: yamlContent,
-          deploymentName,
+          deploymentName: resourceName,
           namespace,
           baseBranch: selectedRepo.branch,
         }),
@@ -134,7 +141,7 @@ export function YamlEditorModal({ open, onClose, deploymentName, namespace }: Ya
 
       const data = await response.json()
       setPrCreated(data.pr)
-      setPendingPR(deploymentName, namespace, data.pr.number)
+      setPendingPR(resourceName, namespace, data.pr.number)
     } catch (error) {
       console.error('Failed to create PR:', error)
       alert(error instanceof Error ? error.message : 'Failed to create PR')
@@ -275,9 +282,11 @@ export function YamlEditorModal({ open, onClose, deploymentName, namespace }: Ya
     )
   }
 
+  const resourceTypeLabel = resourceType === 'configmap' ? 'ConfigMap' : resourceType === 'secret' ? 'Secret' : 'Deployment'
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>Edit YAML - {deploymentName}</DialogTitle>
+      <DialogTitle>Edit YAML - {resourceName} ({resourceTypeLabel})</DialogTitle>
       <DialogContent>
         {filesLoading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>

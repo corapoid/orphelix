@@ -50,7 +50,15 @@
 - Confirmation dialog with consequence warnings
 - Multi-container pod support
 
-### 📝 Flux GitOps Integration
+### 📝 GitHub Integration & YAML Editor
+- **GitHub OAuth & GitHub App** - Dual authentication support
+- **YAML Editor** - Edit Kubernetes manifests directly from the dashboard
+- **Pull Request Creation** - Automatically create PRs for changes
+- **PR Merge** - Merge pull requests directly from the application
+- **Kustomization Support** - Detect and edit kustomize base & overlays
+- **Support for Deployments, ConfigMaps & Secrets** - Edit YAML for all resource types
+
+### 🔄 Flux GitOps Integration
 - Support for Flux resources (GitRepository, Kustomization, HelmRelease)
 - GitOps synchronization status information
 
@@ -63,6 +71,7 @@
 
 - **Node.js** 20 or higher
 - **kubectl** configured with cluster access (for real mode)
+- (Optional) **GitHub OAuth App** or **GitHub App** (for YAML editor and PR workflow)
 - (Optional) **GitHub Personal Access Token** (for Flux integration)
 
 ## 🚀 Quick Start
@@ -217,6 +226,37 @@ The application automatically detects kubectl configuration:
 
 By default, the application connects to the **default** namespace. You can change this via the namespace selector in the UI.
 
+### GitHub Integration (for YAML Editor)
+
+KubeVista supports two methods for GitHub authentication:
+
+#### Option 1: GitHub App (Recommended)
+
+1. Create a GitHub App in your organization or personal account
+2. Configure environment variables:
+   ```bash
+   GITHUB_APP_ID=your_app_id
+   GITHUB_APP_INSTALLATION_ID=your_installation_id
+   GITHUB_APP_PRIVATE_KEY_PATH=/path/to/private-key.pem
+   # or
+   GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n..."
+   ```
+
+3. See [docs/github-setup.md](docs/github-setup.md) for detailed setup instructions
+
+#### Option 2: GitHub OAuth
+
+1. Create a GitHub OAuth App
+2. Configure environment variables:
+   ```bash
+   GITHUB_CLIENT_ID=your_oauth_client_id
+   GITHUB_CLIENT_SECRET=your_oauth_client_secret
+   NEXTAUTH_SECRET=generate_random_secret
+   NEXTAUTH_URL=http://localhost:3000
+   ```
+
+3. Required scopes: `repo`, `read:user`, `user:email`
+
 ### GitHub Token (for Flux)
 
 If you want to use Flux GitOps features:
@@ -309,6 +349,7 @@ See the [LICENSE](LICENSE) file for full details.
 - **[CHANGELOG.md](CHANGELOG.md)** - Complete version history
 - **[TECHNICAL.md](TECHNICAL.md)** - Technical documentation for developers
 - **[TESTING.md](TESTING.md)** - Testing instructions with cluster
+- **[docs/github-setup.md](docs/github-setup.md)** - GitHub App & OAuth setup guide
 
 ---
 
