@@ -65,3 +65,6 @@ Thumbs.db
 # K8s config (sensitive)
 kubeconfig
 *.kubeconfig
+
+# AI model cache (Transformers.js)
+.cache/

@@ -1,37 +1,70 @@
 /**
- * AI Configuration for Local LLM
+ * AI Configuration for Embedded LLM
  *
- * This module configures a local Ollama instance for AI-powered file matching.
- * Ollama runs locally and doesn't send data to external services.
+ * This module configures an embedded LLM using Transformers.js (ONNX).
+ * The model is downloaded automatically and runs entirely locally.
+ * No external services or data transmission required.
  */
 
-import { ollama } from 'ollama-ai-provider'
+import { pipeline, env } from '@xenova/transformers'
 
-// Default Ollama configuration
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434'
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:1b' // Small, fast model
+// Configure transformers to cache models in .cache directory
+env.cacheDir = './.cache/transformers'
+
+// Default model - small and fast for text generation
+const DEFAULT_MODEL = process.env.AI_MODEL || 'Xenova/Qwen2.5-0.5B-Instruct'
+
+// Singleton pipeline instance
+let textGenerationPipeline: any = null
 
 /**
- * Check if Ollama is available and configured
+ * Check if AI is enabled
+ * AI is always available with embedded model (can be disabled via env var)
  */
 export function isAIEnabled(): boolean {
-  // AI is enabled if OLLAMA_ENABLED is explicitly set to 'true'
-  // or if OLLAMA_HOST/OLLAMA_MODEL are provided
-  const explicitlyEnabled = process.env.OLLAMA_ENABLED === 'true'
-  const hasCustomConfig = !!(process.env.OLLAMA_HOST || process.env.OLLAMA_MODEL)
-
-  return explicitlyEnabled || hasCustomConfig
+  return process.env.AI_ENABLED !== 'false' // Enabled by default
 }
 
 /**
- * Get configured Ollama model instance
+ * Get or initialize the text generation pipeline
  */
-export function getAIModel() {
+export async function getAIPipeline() {
   if (!isAIEnabled()) {
-    throw new Error('AI is not enabled. Set OLLAMA_ENABLED=true or configure OLLAMA_HOST/OLLAMA_MODEL')
+    throw new Error('AI is disabled. Set AI_ENABLED=true to enable.')
   }
 
-  return ollama(OLLAMA_MODEL)
+  if (!textGenerationPipeline) {
+    console.log(`[AI] Initializing embedded LLM: ${DEFAULT_MODEL}`)
+    console.log('[AI] First run will download the model (~200-500MB), subsequent runs use cache')
+
+    textGenerationPipeline = await pipeline('text-generation', DEFAULT_MODEL, {
+      dtype: 'q8', // Quantized to 8-bit for smaller size and faster inference
+    } as any)
+
+    console.log('[AI] Model loaded successfully')
+  }
+
+  return textGenerationPipeline
+}
+
+/**
+ * Generate text using the embedded LLM
+ */
+export async function generateText(prompt: string, options?: {
+  maxNewTokens?: number
+  temperature?: number
+  doSample?: boolean
+}): Promise<string> {
+  const generator = await getAIPipeline()
+
+  const result = await generator(prompt, {
+    max_new_tokens: options?.maxNewTokens || 50,
+    temperature: options?.temperature || 0.1,
+    do_sample: options?.doSample || false,
+    return_full_text: false,
+  })
+
+  return result[0].generated_text.trim()
 }
 
 /**
@@ -40,47 +73,29 @@ export function getAIModel() {
 export function getAIConfig() {
   return {
     enabled: isAIEnabled(),
-    host: OLLAMA_HOST,
-    model: OLLAMA_MODEL,
+    model: DEFAULT_MODEL,
+    type: 'embedded-onnx',
+    cacheDir: env.cacheDir,
   }
 }
 
 /**
- * Check if Ollama server is reachable
+ * Check if the embedded model is ready
+ * For embedded models, we just check if AI is enabled
  */
-export async function checkOllamaHealth(): Promise<{ available: boolean; error?: string }> {
+export async function checkModelHealth(): Promise<{ available: boolean; error?: string }> {
   if (!isAIEnabled()) {
-    return { available: false, error: 'AI is not enabled' }
+    return { available: false, error: 'AI is disabled via environment variable' }
   }
 
   try {
-    const response = await fetch(`${OLLAMA_HOST}/api/tags`, {
-      method: 'GET',
-      signal: AbortSignal.timeout(5000), // 5 second timeout
-    })
-
-    if (!response.ok) {
-      return { available: false, error: `Ollama server returned ${response.status}` }
-    }
-
-    const data = await response.json()
-    const models = data.models || []
-
-    // Check if the configured model is available
-    const modelAvailable = models.some((m: any) => m.name === OLLAMA_MODEL || m.name.startsWith(OLLAMA_MODEL))
-
-    if (!modelAvailable) {
-      return {
-        available: false,
-        error: `Model '${OLLAMA_MODEL}' not found. Available models: ${models.map((m: any) => m.name).join(', ')}`
-      }
-    }
-
+    // Try to initialize the pipeline
+    await getAIPipeline()
     return { available: true }
   } catch (error) {
     return {
       available: false,
-      error: error instanceof Error ? error.message : 'Unknown error connecting to Ollama'
+      error: error instanceof Error ? error.message : 'Unknown error initializing model'
     }
   }
 }

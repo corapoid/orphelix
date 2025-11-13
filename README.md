@@ -53,7 +53,7 @@
 ### 📝 GitHub Integration & YAML Editor
 - **GitHub OAuth & GitHub App** - Dual authentication support
 - **YAML Editor** - Edit Kubernetes manifests directly from the dashboard
-- **AI-Powered File Matching** - Automatic file matching using local LLM (Ollama)
+- **AI-Powered File Matching** - Automatic file matching using embedded LLM (Transformers.js)
 - **Pull Request Creation** - Automatically create PRs for changes
 - **PR Merge** - Merge pull requests directly from the application
 - **Kustomization Support** - Detect and edit kustomize base & overlays
@@ -73,7 +73,7 @@
 - **Node.js** 20 or higher
 - **kubectl** configured with cluster access (for real mode)
 - (Optional) **GitHub OAuth App** or **GitHub App** (for YAML editor and PR workflow)
-- (Optional) **Ollama** with a local LLM (for AI-powered file matching)
+- (Optional) **Custom AI model** configuration (embedded LLM included by default)
 - (Optional) **GitHub Personal Access Token** (for Flux integration)
 
 ## 🚀 Quick Start
@@ -259,54 +259,41 @@ KubeVista supports two methods for GitHub authentication:
 
 3. Required scopes: `repo`, `read:user`, `user:email`
 
-### AI-Powered File Matching (Optional)
+### AI-Powered File Matching (Built-in)
 
-KubeVista can intelligently match Kubernetes resources to their YAML files using a local LLM.
+KubeVista includes an **embedded AI model** that intelligently matches Kubernetes resources to their YAML files.
 
-#### Setup Ollama
+#### Features
 
-1. **Install Ollama** (runs locally - no data sent externally):
-   ```bash
-   # macOS
-   brew install ollama
+- ✅ **Built-in LLM** - No external installation required
+- ✅ **Automatic setup** - Model downloads on first use (~200-500MB)
+- ✅ **Fully offline** - No data sent to external services
+- ✅ **Fast & efficient** - Quantized models for optimal performance
+- ✅ **Persistent cache** - Subsequent runs use cached model
 
-   # Linux
-   curl -fsSL https://ollama.ai/install.sh | sh
+#### Configuration (Optional)
 
-   # Windows
-   # Download from https://ollama.ai
-   ```
+By default, AI matching is **enabled automatically**. You can customize it:
 
-2. **Pull a lightweight model**:
-   ```bash
-   # Recommended: Fast and accurate (1.3GB)
-   ollama pull llama3.2:1b
+```bash
+# In .env.local (optional)
+AI_ENABLED=true  # Set to false to disable AI matching
+AI_MODEL=Xenova/Qwen2.5-0.5B-Instruct  # Change model (see options below)
+```
 
-   # Alternatives:
-   # ollama pull llama3.2:3b  # Better accuracy (2GB)
-   # ollama pull qwen2.5:3b   # Good for technical tasks (2GB)
-   ```
-
-3. **Start Ollama**:
-   ```bash
-   ollama serve  # Runs on http://localhost:11434
-   ```
-
-4. **Configure environment**:
-   ```bash
-   # In .env.local
-   OLLAMA_ENABLED=true
-   OLLAMA_HOST=http://localhost:11434
-   OLLAMA_MODEL=llama3.2:1b
-   ```
+**Available models:**
+- `Xenova/Qwen2.5-0.5B-Instruct` (~200MB) - **Default** - Fast, good for file matching
+- `Xenova/Llama-3.2-1B-Instruct` (~1.2GB) - Better accuracy, slower
+- `Xenova/Phi-3-mini-4k-instruct` (~2.5GB) - Best accuracy, slowest
 
 #### How It Works
 
 When you click "Edit YAML", KubeVista will:
-1. **Try pattern matching first** (exact name, namespace/name patterns)
-2. **Fallback to AI matching** if pattern matching fails
-3. **Use local Ollama** - no data sent to external services
+1. **Try pattern matching first** (exact name, namespace/name patterns) - instant
+2. **Fallback to AI matching** if pattern matching fails - ~1-3 seconds
+3. **Use embedded ONNX model** - runs entirely in Node.js, no external services
 4. **Show match method** in UI (exact, namespace, or AI-powered)
+5. **Cache model files** in `.cache/transformers` for subsequent runs
 
 ### GitHub Token (for Flux)
 

@@ -69,7 +69,7 @@ export async function GET() {
   return NextResponse.json({
     aiEnabled: aiConfig.enabled,
     aiConfig: {
-      host: aiConfig.host,
+      type: aiConfig.type,
       model: aiConfig.model,
     },
   })

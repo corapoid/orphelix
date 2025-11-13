@@ -4,11 +4,10 @@
  * This module provides intelligent file matching for Kubernetes resources.
  * It uses a two-tier approach:
  * 1. Fast pattern matching (exact name, namespace/name)
- * 2. AI-powered matching with local LLM (Ollama) as fallback
+ * 2. AI-powered matching with embedded LLM (Transformers.js) as fallback
  */
 
-import { generateText } from 'ai'
-import { isAIEnabled, getAIModel } from '@/lib/ai/config'
+import { isAIEnabled, generateText } from '@/lib/ai/config'
 
 export interface YamlFile {
   path: string
@@ -113,23 +112,20 @@ export class FileMatcher {
   }
 
   /**
-   * AI-powered matching using local Ollama model
+   * AI-powered matching using embedded Transformers.js model
    */
   private async aiMatch(resource: KubernetesResource, files: YamlFile[]): Promise<MatchResult | null> {
     try {
-      const model = getAIModel()
-
       // Limit to top 20 files to avoid context overflow
       const filesToAnalyze = files.slice(0, 20)
 
       const prompt = this.buildPrompt(resource, filesToAnalyze)
 
-      const { text } = await generateText({
-        model: model as any, // Type assertion for ollama-ai-provider compatibility
-        prompt,
-        maxTokens: 50, // Maximum tokens to generate
-        temperature: 0.1, // Low temperature for more deterministic results
-      } as any) // Type assertion needed for ollama-ai-provider
+      const text = await generateText(prompt, {
+        maxNewTokens: 50,
+        temperature: 0.1,
+        doSample: false,
+      })
 
       // Parse AI response
       const matchIndex = this.parseAIResponse(text, filesToAnalyze.length)
