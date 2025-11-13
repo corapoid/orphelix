@@ -11,27 +11,30 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import Snackbar from '@mui/material/Snackbar'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import SearchIcon from '@mui/icons-material/Search'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import EditIcon from '@mui/icons-material/Edit'
 import { useState, useMemo } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useConfigMap } from '@/lib/hooks/use-configmaps'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
+import { PageHeader } from '@/app/components/common/page-header'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 
 const MAX_PREVIEW_LINES = 10
 
 export default function ConfigMapDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const name = params.name as string
 
   const { data: configMap, isLoading, error, refetch } = useConfigMap(name)
+
+  // Auto-refresh
+  useAutoRefresh(refetch)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set())
@@ -105,13 +108,13 @@ export default function ConfigMapDetailPage() {
   if (error || !configMap) {
     return (
       <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/configmaps')}
-          sx={{ mb: 2 }}
-        >
-          Back to ConfigMaps
-        </Button>
+        <PageHeader
+          title="ConfigMap Details"
+          breadcrumbs={[
+            { label: 'ConfigMaps', href: '/configmaps' },
+            { label: name },
+          ]}
+        />
         <ErrorState
           error={error || new Error('ConfigMap not found')}
           onRetry={() => refetch()}
@@ -123,17 +126,16 @@ export default function ConfigMapDetailPage() {
 
   return (
     <Box>
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => router.push('/configmaps')}
-        sx={{ mb: 2 }}
-      >
-        Back to ConfigMaps
-      </Button>
-
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="h4">{configMap.name}</Typography>
+      <PageHeader
+        title={configMap.name}
+        subtitle={`ConfigMap in ${configMap.namespace} namespace`}
+        breadcrumbs={[
+          { label: 'ConfigMaps', href: '/configmaps' },
+          { label: configMap.name },
+        ]}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+        actions={
           <Button
             variant="outlined"
             startIcon={<EditIcon />}
@@ -141,11 +143,8 @@ export default function ConfigMapDetailPage() {
           >
             Edit YAML
           </Button>
-        </Box>
-        <Typography variant="body2" color="text.secondary">
-          Namespace: {configMap.namespace} • Age: {configMap.age}
-        </Typography>
-      </Box>
+        }
+      />
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, md: 6 }}>

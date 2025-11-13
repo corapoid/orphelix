@@ -2,7 +2,6 @@
 
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Alert from '@mui/material/Alert'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -10,19 +9,26 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
 import LinearProgress from '@mui/material/LinearProgress'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import { useState } from 'react'
 import { useHPAs } from '@/lib/hooks/use-hpa'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
+import { PageHeader } from '@/app/components/common/page-header'
+import { SearchBar } from '@/app/components/common/search-bar'
+import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import type { HPA } from '@/types/kubernetes'
 
 export default function HPAPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const { data: hpas, isLoading, error, refetch } = useHPAs()
+
+  // Auto-refresh
+  useAutoRefresh(refetch)
 
   const filteredHPAs = hpas?.filter((hpa) =>
     hpa.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -37,9 +43,7 @@ export default function HPAPage() {
   if (isLoading) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          HPA (Horizontal Pod Autoscaler)
-        </Typography>
+        <PageHeader title="HPA (Horizontal Pod Autoscaler)" onRefresh={refetch} />
         <TableSkeleton rows={6} columns={7} />
       </Box>
     )
@@ -48,9 +52,7 @@ export default function HPAPage() {
   if (error) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          HPA (Horizontal Pod Autoscaler)
-        </Typography>
+        <PageHeader title="HPA (Horizontal Pod Autoscaler)" onRefresh={refetch} />
         <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load HPAs" />
       </Box>
     )
@@ -58,23 +60,37 @@ export default function HPAPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">HPA (Horizontal Pod Autoscaler)</Typography>
-        <TextField
-          size="small"
-          placeholder="Search HPAs..."
+      <PageHeader
+        title="HPA (Horizontal Pod Autoscaler)"
+        subtitle={`${hpas?.length || 0} HPA${hpas?.length === 1 ? '' : 's'} in this namespace`}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+      />
+
+      <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
+        <SearchBar
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ minWidth: 250 }}
+          onChange={setSearchQuery}
+          placeholder="Search HPAs..."
         />
       </Box>
 
-      {filteredHPAs && filteredHPAs.length === 0 ? (
-        <Alert severity="info">
-          {searchQuery
-            ? `No HPAs match your search "${searchQuery}"`
-            : 'No HPAs found'}
-        </Alert>
+      {!hpas || hpas.length === 0 ? (
+        <EmptyState
+          icon={TrendingUpIcon}
+          title="No HPAs found"
+          description="There are no Horizontal Pod Autoscalers in this namespace."
+        />
+      ) : filteredHPAs.length === 0 ? (
+        <EmptyState
+          icon={TrendingUpIcon}
+          title="No matching HPAs"
+          description={`No HPAs match "${searchQuery}". Try adjusting your search.`}
+          action={{
+            label: 'Clear search',
+            onClick: () => setSearchQuery(''),
+          }}
+        />
       ) : (
         <TableContainer component={Paper}>
           <Table>

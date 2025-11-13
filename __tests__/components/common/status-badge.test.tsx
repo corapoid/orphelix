@@ -79,19 +79,21 @@ describe('StatusBadge', () => {
 
   describe('Badge Sizes', () => {
     it('should render small badge by default', () => {
-      const { container } = render(<StatusBadge status="Available" />)
-      expect(container.firstChild).toBeInTheDocument()
+      render(<StatusBadge status="Available" />)
+      const badge = screen.getByText('Available')
+      expect(badge).toBeInTheDocument()
     })
 
     it('should render medium badge when specified', () => {
-      const { container } = render(<StatusBadge status="Available" size="medium" />)
-      expect(container.firstChild).toBeInTheDocument()
+      render(<StatusBadge status="Available" size="medium" />)
+      const badge = screen.getByText('Available')
+      expect(badge).toBeInTheDocument()
     })
   })
 
   describe('Multiple Instances', () => {
     it('should render multiple badges with different statuses', () => {
-      const { container } = render(
+      render(
         <div>
           <StatusBadge status="Running" />
           <StatusBadge status="Pending" />

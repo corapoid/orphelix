@@ -1,8 +1,6 @@
 'use client'
 
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Alert from '@mui/material/Alert'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -10,15 +8,19 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
 import Chip from '@mui/material/Chip'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
+import StorageIcon from '@mui/icons-material/Storage'
 import { useState } from 'react'
 import { usePVs, usePVCs } from '@/lib/hooks/use-pv'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
+import { PageHeader } from '@/app/components/common/page-header'
+import { SearchBar } from '@/app/components/common/search-bar'
+import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import type { PersistentVolume, PersistentVolumeClaim } from '@/types/kubernetes'
 
@@ -28,6 +30,12 @@ export default function PersistentVolumesPage() {
 
   const { data: pvs, isLoading: pvsLoading, error: pvsError, refetch: refetchPVs } = usePVs()
   const { data: pvcs, isLoading: pvcsLoading, error: pvcsError, refetch: refetchPVCs } = usePVCs()
+
+  // Auto-refresh
+  useAutoRefresh(() => {
+    refetchPVs()
+    refetchPVCs()
+  })
 
   const filteredPVs = pvs?.filter((pv) =>
     pv.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -56,9 +64,7 @@ export default function PersistentVolumesPage() {
   if (isLoading) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Persistent Volumes
-        </Typography>
+        <PageHeader title="Persistent Volumes" onRefresh={refetch} />
         <TableSkeleton rows={5} columns={5} />
       </Box>
     )
@@ -67,9 +73,7 @@ export default function PersistentVolumesPage() {
   if (error) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Persistent Volumes
-        </Typography>
+        <PageHeader title="Persistent Volumes" onRefresh={refetch} />
         <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Persistent Volumes" />
       </Box>
     )
@@ -77,14 +81,21 @@ export default function PersistentVolumesPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4">Persistent Volumes</Typography>
-        <TextField
-          size="small"
-          placeholder="Search..."
+      <PageHeader
+        title="Persistent Volumes"
+        subtitle={tab === 0
+          ? `${pvs?.length || 0} PersistentVolume${pvs?.length === 1 ? '' : 's'}`
+          : `${pvcs?.length || 0} PersistentVolumeClaim${pvcs?.length === 1 ? '' : 's'} in this namespace`
+        }
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+      />
+
+      <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
+        <SearchBar
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ minWidth: 250 }}
+          onChange={setSearchQuery}
+          placeholder="Search..."
         />
       </Box>
 
@@ -97,12 +108,22 @@ export default function PersistentVolumesPage() {
 
       {tab === 0 ? (
         // PersistentVolumes tab
-        filteredPVs && filteredPVs.length === 0 ? (
-          <Alert severity="info">
-            {searchQuery
-              ? `No PersistentVolumes match your search "${searchQuery}"`
-              : 'No PersistentVolumes found'}
-          </Alert>
+        !pvs || pvs.length === 0 ? (
+          <EmptyState
+            icon={StorageIcon}
+            title="No PersistentVolumes found"
+            description="There are no PersistentVolumes in the cluster."
+          />
+        ) : filteredPVs.length === 0 ? (
+          <EmptyState
+            icon={StorageIcon}
+            title="No matching PersistentVolumes"
+            description={`No PersistentVolumes match "${searchQuery}". Try adjusting your search.`}
+            action={{
+              label: 'Clear search',
+              onClick: () => setSearchQuery(''),
+            }}
+          />
         ) : (
           <TableContainer component={Paper}>
             <Table>
@@ -179,12 +200,22 @@ export default function PersistentVolumesPage() {
         )
       ) : (
         // PersistentVolumeClaims tab
-        filteredPVCs && filteredPVCs.length === 0 ? (
-          <Alert severity="info">
-            {searchQuery
-              ? `No PersistentVolumeClaims match your search "${searchQuery}"`
-              : 'No PersistentVolumeClaims found'}
-          </Alert>
+        !pvcs || pvcs.length === 0 ? (
+          <EmptyState
+            icon={StorageIcon}
+            title="No PersistentVolumeClaims found"
+            description="There are no PersistentVolumeClaims in this namespace."
+          />
+        ) : filteredPVCs.length === 0 ? (
+          <EmptyState
+            icon={StorageIcon}
+            title="No matching PersistentVolumeClaims"
+            description={`No PersistentVolumeClaims match "${searchQuery}". Try adjusting your search.`}
+            action={{
+              label: 'Clear search',
+              onClick: () => setSearchQuery(''),
+            }}
+          />
         ) : (
           <TableContainer component={Paper}>
             <Table>

@@ -1,8 +1,6 @@
 'use client'
 
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Alert from '@mui/material/Alert'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -11,17 +9,20 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
+import Typography from '@mui/material/Typography'
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDeployments } from '@/lib/hooks/use-deployments'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
+import { PageHeader } from '@/app/components/common/page-header'
+import { SearchBar } from '@/app/components/common/search-bar'
+import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import type { Deployment } from '@/types/kubernetes'
 
@@ -29,6 +30,9 @@ export default function DeploymentsPage() {
   const router = useRouter()
   const { data: deployments, isLoading, error, refetch } = useDeployments()
   const [searchQuery, setSearchQuery] = useState('')
+
+  // Auto-refresh
+  useAutoRefresh(refetch)
 
   const filteredDeployments = useMemo(() => {
     if (!deployments) return []
@@ -61,9 +65,7 @@ export default function DeploymentsPage() {
   if (isLoading) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Deployments
-        </Typography>
+        <PageHeader title="Deployments" onRefresh={refetch} />
         <TableSkeleton rows={8} columns={8} />
       </Box>
     )
@@ -72,9 +74,7 @@ export default function DeploymentsPage() {
   if (error) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Deployments
-        </Typography>
+        <PageHeader title="Deployments" onRefresh={refetch} />
         <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Deployments" />
       </Box>
     )
@@ -82,30 +82,39 @@ export default function DeploymentsPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Deployments</Typography>
-        <TextField
-          size="small"
-          placeholder="Search deployments..."
+      <PageHeader
+        title="Deployments"
+        subtitle={`${deployments?.length || 0} deployment${deployments?.length === 1 ? '' : 's'} in this namespace`}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+      />
+
+      <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
+        <SearchBar
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-          sx={{ width: 300 }}
+          onChange={setSearchQuery}
+          placeholder="Search deployments..."
         />
       </Box>
 
       <ClusterConnectionAlert minimal />
 
-      {filteredDeployments.length === 0 ? (
-        <Alert severity="info">
-          {searchQuery ? 'No deployments match your search' : 'No deployments found'}
-        </Alert>
+      {!deployments || deployments.length === 0 ? (
+        <EmptyState
+          icon={RocketLaunchIcon}
+          title="No deployments found"
+          description="There are no deployments in this namespace. Deploy your first application to get started."
+        />
+      ) : filteredDeployments.length === 0 ? (
+        <EmptyState
+          icon={RocketLaunchIcon}
+          title="No matching deployments"
+          description={`No deployments match "${searchQuery}". Try adjusting your search.`}
+          action={{
+            label: 'Clear search',
+            onClick: () => setSearchQuery(''),
+          }}
+        />
       ) : (
         <TableContainer component={Paper}>
           <Table>

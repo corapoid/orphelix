@@ -6,21 +6,21 @@ import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useNode, useNodePods } from '@/lib/hooks/use-nodes'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { formatAge } from '@/lib/core/utils'
 import type { Pod } from '@/types/kubernetes'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
+import { PageHeader } from '@/app/components/common/page-header'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 
 // Helper function to parse Kubernetes resource quantities
 function parseQuantity(value: string): number {
@@ -55,11 +55,13 @@ function calculatePercentage(allocatable: string, capacity: string): number {
 
 export default function NodeDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const name = params.name as string
 
   const { data: node, isLoading, error, refetch } = useNode(name)
   const { data: pods, isLoading: podsLoading } = useNodePods(name)
+
+  // Auto-refresh
+  useAutoRefresh(refetch)
 
   if (isLoading) {
     return <DetailSkeleton />
@@ -68,15 +70,13 @@ export default function NodeDetailPage() {
   if (error || !node) {
     return (
       <Box>
-        <Box p={3}>
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => router.push('/nodes')}
-            sx={{ mb: 2 }}
-          >
-            Back to Nodes
-          </Button>
-        </Box>
+        <PageHeader
+          title="Node Details"
+          breadcrumbs={[
+            { label: 'Nodes', href: '/nodes' },
+            { label: name },
+          ]}
+        />
         <ErrorState
           error={error || new Error('Node not found')}
           onRetry={() => refetch()}
@@ -88,13 +88,16 @@ export default function NodeDetailPage() {
 
   return (
     <Box>
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => router.push('/nodes')}
-        sx={{ mb: 2 }}
-      >
-        Back to Nodes
-      </Button>
+      <PageHeader
+        title={node.name}
+        subtitle={`Node (Version: ${node.version})`}
+        breadcrumbs={[
+          { label: 'Nodes', href: '/nodes' },
+          { label: node.name },
+        ]}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+      />
 
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>

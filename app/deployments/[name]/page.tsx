@@ -14,13 +14,12 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import EditIcon from '@mui/icons-material/Edit'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useDeployment, useDeploymentPods } from '@/lib/hooks/use-deployments'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
 import { useSecrets } from '@/lib/hooks/use-secrets'
@@ -35,12 +34,11 @@ import { ResourceUsageChart } from '@/app/components/metrics/resource-usage-char
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { DeploymentManifestViewer } from '@/app/components/deployments/deployment-manifest-viewer'
 import { RestartDeploymentDialog } from '@/app/components/deployments/restart-deployment-dialog'
-import { RefreshButton } from '@/app/components/common/refresh-button'
+import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 
 export default function DeploymentDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const name = params.name as string
   const [restarting, setRestarting] = useState(false)
   const [restartError, setRestartError] = useState<string | null>(null)
@@ -118,15 +116,13 @@ export default function DeploymentDetailPage() {
   if (error || !deployment) {
     return (
       <Box>
-        <Box p={3}>
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => router.push('/deployments')}
-            sx={{ mb: 2 }}
-          >
-            Back to Deployments
-          </Button>
-        </Box>
+        <PageHeader
+          title="Deployment Details"
+          breadcrumbs={[
+            { label: 'Deployments', href: '/deployments' },
+            { label: name },
+          ]}
+        />
         <ErrorState
           error={error || new Error('Deployment not found')}
           onRetry={() => refetch()}
@@ -138,33 +134,36 @@ export default function DeploymentDetailPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('/deployments')}
-        >
-          Back to Deployments
-        </Button>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <RefreshButton onRefresh={refetch} isLoading={isLoading} />
-          <Button
-            variant="outlined"
-            startIcon={<EditIcon />}
-            onClick={() => setEditorOpen(true)}
-          >
-            Edit YAML
-          </Button>
-          <Button
-            variant="outlined"
-            color="warning"
-            startIcon={<RestartAltIcon />}
-            onClick={handleRestartClick}
-            disabled={restarting}
-          >
-            Restart Deployment
-          </Button>
-        </Box>
-      </Box>
+      <PageHeader
+        title={deployment.name}
+        subtitle={`Deployment in ${deployment.namespace} namespace`}
+        breadcrumbs={[
+          { label: 'Deployments', href: '/deployments' },
+          { label: deployment.name },
+        ]}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+        actions={
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={() => setEditorOpen(true)}
+            >
+              Edit YAML
+            </Button>
+            <Button
+              variant="outlined"
+              color="warning"
+              startIcon={<RestartAltIcon />}
+              onClick={handleRestartClick}
+              disabled={restarting}
+            >
+              Restart
+            </Button>
+          </Box>
+        }
+      />
 
       <YamlEditorModal
         open={editorOpen}

@@ -22,7 +22,6 @@ import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
@@ -35,6 +34,8 @@ import { LogsViewer } from '@/app/components/pods/logs-viewer'
 import { RestartPodDialog } from '@/app/components/pods/restart-pod-dialog'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
+import { PageHeader } from '@/app/components/common/page-header'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 
 export default function PodDetailPage() {
   const params = useParams()
@@ -42,6 +43,9 @@ export default function PodDetailPage() {
   const name = params.name as string
 
   const { data: pod, isLoading, error, refetch } = usePod(name)
+
+  // Auto-refresh
+  useAutoRefresh(refetch)
 
   const [selectedContainer, setSelectedContainer] = useState('')
   const [restartDialogOpen, setRestartDialogOpen] = useState(false)
@@ -103,15 +107,13 @@ export default function PodDetailPage() {
   if (error || !pod) {
     return (
       <Box>
-        <Box p={3}>
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => router.push('/pods')}
-            sx={{ mb: 2 }}
-          >
-            Back to Pods
-          </Button>
-        </Box>
+        <PageHeader
+          title="Pod Details"
+          breadcrumbs={[
+            { label: 'Pods', href: '/pods' },
+            { label: name },
+          ]}
+        />
         <ErrorState
           error={error || new Error('Pod not found')}
           onRetry={() => refetch()}
@@ -123,19 +125,26 @@ export default function PodDetailPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Button startIcon={<ArrowBackIcon />} onClick={() => router.push('/pods')}>
-          Back to Pods
-        </Button>
-        <Button
-          variant="outlined"
-          color="warning"
-          startIcon={<RestartAltIcon />}
-          onClick={handleRestartClick}
-        >
-          Restart Pod
-        </Button>
-      </Box>
+      <PageHeader
+        title={pod.name}
+        subtitle={`Pod in ${pod.namespace} namespace`}
+        breadcrumbs={[
+          { label: 'Pods', href: '/pods' },
+          { label: pod.name },
+        ]}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+        actions={
+          <Button
+            variant="outlined"
+            color="warning"
+            startIcon={<RestartAltIcon />}
+            onClick={handleRestartClick}
+          >
+            Restart Pod
+          </Button>
+        }
+      />
 
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>

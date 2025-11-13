@@ -1,7 +1,6 @@
 'use client'
 
 import { use, useState, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
 import {
   Box,
   Typography,
@@ -21,7 +20,6 @@ import {
   Tooltip,
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SearchIcon from '@mui/icons-material/Search'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -34,6 +32,7 @@ import { useSecret } from '@/lib/hooks/use-secrets'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
+import { PageHeader } from '@/app/components/common/page-header'
 
 const MAX_PREVIEW_LINES = 10
 
@@ -44,7 +43,6 @@ export default function SecretDetailPage({
 }) {
   const resolvedParams = use(params)
   const name = resolvedParams.name
-  const router = useRouter()
 
   const { data: secret, isLoading, error, refetch } = useSecret(name)
 
@@ -181,15 +179,13 @@ export default function SecretDetailPage({
   if (error || !secret) {
     return (
       <Box>
-        <Box p={3}>
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => router.back()}
-            sx={{ mb: 2 }}
-          >
-            Back to Secrets
-          </Button>
-        </Box>
+        <PageHeader
+          title="Secret Details"
+          breadcrumbs={[
+            { label: 'Secrets', href: '/secrets' },
+            { label: name },
+          ]}
+        />
         <ErrorState
           error={error || new Error('Secret not found')}
           onRetry={() => refetch()}
@@ -203,17 +199,16 @@ export default function SecretDetailPage({
 
   return (
     <Box>
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => router.back()}
-        sx={{ mb: 2 }}
-      >
-        Back to Secrets
-      </Button>
-
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="h4">{secret.name}</Typography>
+      <PageHeader
+        title={secret.name}
+        subtitle={`Secret in ${secret.namespace} namespace • Type: ${secret.type} • Age: ${secret.age}`}
+        breadcrumbs={[
+          { label: 'Secrets', href: '/secrets' },
+          { label: secret.name },
+        ]}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+        actions={
           <Button
             variant="outlined"
             startIcon={<EditIcon />}
@@ -221,13 +216,8 @@ export default function SecretDetailPage({
           >
             Edit YAML
           </Button>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Typography variant="body2" color="text.secondary">
-            Namespace: <strong>{secret.namespace}</strong> • Type: <strong>{secret.type}</strong> • Age: {secret.age}
-          </Typography>
-        </Box>
-      </Box>
+        }
+      />
       {/* Security Warning */}
       <Alert severity="warning" icon={<WarningAmberIcon />} sx={{ mb: 3 }}>
         <Typography variant="body2" fontWeight="bold">

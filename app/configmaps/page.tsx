@@ -1,8 +1,6 @@
 'use client'
 
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Alert from '@mui/material/Alert'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -10,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
+import SettingsIcon from '@mui/icons-material/Settings'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
@@ -18,12 +16,19 @@ import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
+import { PageHeader } from '@/app/components/common/page-header'
+import { SearchBar } from '@/app/components/common/search-bar'
+import { EmptyState } from '@/app/components/common/empty-state'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { ConfigMap } from '@/types/kubernetes'
 
 export default function ConfigMapsPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const { data: configMaps, isLoading, error, refetch } = useConfigMaps()
+
+  // Auto-refresh
+  useAutoRefresh(refetch)
 
   const filteredConfigMaps = configMaps?.filter((cm) =>
     cm.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -45,9 +50,11 @@ export default function ConfigMapsPage() {
   if (isLoading) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          ConfigMaps
-        </Typography>
+        <PageHeader
+          title="ConfigMaps"
+          onRefresh={refetch}
+          isRefreshing={isLoading}
+        />
         <TableSkeleton rows={8} columns={4} />
       </Box>
     )
@@ -56,9 +63,11 @@ export default function ConfigMapsPage() {
   if (error) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          ConfigMaps
-        </Typography>
+        <PageHeader
+          title="ConfigMaps"
+          onRefresh={refetch}
+          isRefreshing={isLoading}
+        />
         <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load ConfigMaps" />
       </Box>
     )
@@ -66,23 +75,35 @@ export default function ConfigMapsPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">ConfigMaps</Typography>
-        <TextField
-          size="small"
-          placeholder="Search ConfigMaps..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ minWidth: 250 }}
-        />
-      </Box>
+      <PageHeader
+        title="ConfigMaps"
+        subtitle={`${configMaps?.length || 0} ConfigMap${configMaps?.length === 1 ? '' : 's'} in this namespace`}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+      />
 
-      {filteredConfigMaps && filteredConfigMaps.length === 0 ? (
-        <Alert severity="info">
-          {searchQuery
-            ? `No ConfigMaps match your search "${searchQuery}"`
-            : 'No ConfigMaps found'}
-        </Alert>
+      <SearchBar
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search ConfigMaps..."
+      />
+
+      {!configMaps || configMaps.length === 0 ? (
+        <EmptyState
+          icon={SettingsIcon}
+          title="No ConfigMaps found"
+          description="There are no ConfigMaps in this namespace yet."
+        />
+      ) : filteredConfigMaps.length === 0 ? (
+        <EmptyState
+          icon={SettingsIcon}
+          title="No matching ConfigMaps"
+          description={`No ConfigMaps match your search "${searchQuery}".`}
+          action={{
+            label: 'Clear search',
+            onClick: () => setSearchQuery(''),
+          }}
+        />
       ) : (
         <TableContainer component={Paper}>
           <Table>

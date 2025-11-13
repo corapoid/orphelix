@@ -1,8 +1,6 @@
 'use client'
 
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Alert from '@mui/material/Alert'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -10,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
+import DnsIcon from '@mui/icons-material/Dns'
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useNodes } from '@/lib/hooks/use-nodes'
@@ -21,6 +19,10 @@ import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
+import { PageHeader } from '@/app/components/common/page-header'
+import { SearchBar } from '@/app/components/common/search-bar'
+import { EmptyState } from '@/app/components/common/empty-state'
+import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { Node } from '@/types/kubernetes'
 
 // Helper function to parse Kubernetes resource quantities
@@ -62,6 +64,9 @@ export default function NodesPage() {
   const { data: nodes, isLoading, error, refetch } = useNodes()
   const { data: pods } = usePods()
 
+  // Auto-refresh
+  useAutoRefresh(refetch)
+
   // Get unique node names from pods in selected namespace
   const nodesWithPods = useMemo(() => {
     if (!pods || !selectedNamespace) return new Set<string>()
@@ -100,9 +105,11 @@ export default function NodesPage() {
   if (isLoading) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Nodes
-        </Typography>
+        <PageHeader
+          title="Nodes"
+          onRefresh={refetch}
+          isRefreshing={isLoading}
+        />
         <TableSkeleton rows={5} columns={6} />
       </Box>
     )
@@ -111,42 +118,51 @@ export default function NodesPage() {
   if (error) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Nodes
-        </Typography>
+        <PageHeader
+          title="Nodes"
+          onRefresh={refetch}
+          isRefreshing={isLoading}
+        />
         <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Nodes" />
       </Box>
     )
   }
 
+  const subtitle = selectedNamespace
+    ? `Showing nodes with pods in namespace: ${selectedNamespace}`
+    : `${nodes?.length || 0} node${nodes?.length === 1 ? '' : 's'} in this cluster`
+
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4">Nodes</Typography>
-          {selectedNamespace && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              Showing nodes with pods in namespace: <strong>{selectedNamespace}</strong>
-            </Typography>
-          )}
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <TextField
-            size="small"
-            placeholder="Search nodes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ minWidth: 250 }}
-          />
-        </Box>
-      </Box>
+      <PageHeader
+        title="Nodes"
+        subtitle={subtitle}
+        onRefresh={refetch}
+        isRefreshing={isLoading}
+      />
 
-      {filteredNodes && filteredNodes.length === 0 ? (
-        <Alert severity="info">
-          {searchQuery
-            ? `No nodes match your search "${searchQuery}"`
-            : 'No nodes found'}
-        </Alert>
+      <SearchBar
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search nodes..."
+      />
+
+      {!nodes || nodes.length === 0 ? (
+        <EmptyState
+          icon={DnsIcon}
+          title="No nodes found"
+          description="There are no nodes in this cluster yet."
+        />
+      ) : filteredNodes.length === 0 ? (
+        <EmptyState
+          icon={DnsIcon}
+          title="No matching nodes"
+          description={`No nodes match your search "${searchQuery}".`}
+          action={{
+            label: 'Clear search',
+            onClick: () => setSearchQuery(''),
+          }}
+        />
       ) : (
         <TableContainer component={Paper}>
           <Table>
