@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useModeStore } from '@/lib/core/store'
+import { useModeStore, useGitHubStore } from '@/lib/core/store'
 import type { AppMode, KubernetesContext } from '@/types/app'
 
 describe('useModeStore', () => {
@@ -369,6 +369,190 @@ describe('useModeStore', () => {
       // Assert - should have the last values
       expect(mode).toBe('real') // 9 % 2 === 1
       expect(selectedContext?.name).toBe('context-9')
+    })
+  })
+})
+
+describe('useGitHubStore', () => {
+  beforeEach(() => {
+    // Reset store before each test
+    const store = useGitHubStore.getState()
+    store.setSelectedRepo(null)
+    // Clear all pending PRs
+    const allPRs = store.pendingPRs
+    allPRs.forEach((_, key) => {
+      const [namespace, name] = key.split('/')
+      store.removePendingPR(name, namespace)
+    })
+  })
+
+  describe('initial state', () => {
+    it('should initialize with null selectedRepo', () => {
+      const { selectedRepo } = useGitHubStore.getState()
+      expect(selectedRepo).toBeNull()
+    })
+
+    it('should initialize with empty pendingPRs Map', () => {
+      const { pendingPRs } = useGitHubStore.getState()
+      expect(pendingPRs).toBeInstanceOf(Map)
+      expect(pendingPRs.size).toBe(0)
+    })
+  })
+
+  describe('setSelectedRepo', () => {
+    it('should set a GitHub repository', () => {
+      const { setSelectedRepo } = useGitHubStore.getState()
+      const repo = { owner: 'kubernetes', repo: 'kubernetes', branch: 'main' }
+
+      setSelectedRepo(repo)
+      const { selectedRepo } = useGitHubStore.getState()
+
+      expect(selectedRepo).toEqual(repo)
+    })
+
+    it('should update existing repository', () => {
+      const { setSelectedRepo } = useGitHubStore.getState()
+      const repo1 = { owner: 'facebook', repo: 'react', branch: 'main' }
+      const repo2 = { owner: 'vercel', repo: 'next.js', branch: 'canary' }
+
+      setSelectedRepo(repo1)
+      setSelectedRepo(repo2)
+      const { selectedRepo } = useGitHubStore.getState()
+
+      expect(selectedRepo).toEqual(repo2)
+    })
+
+    it('should set repository to null', () => {
+      const { setSelectedRepo } = useGitHubStore.getState()
+      const repo = { owner: 'test', repo: 'test', branch: 'main' }
+
+      setSelectedRepo(repo)
+      setSelectedRepo(null)
+      const { selectedRepo } = useGitHubStore.getState()
+
+      expect(selectedRepo).toBeNull()
+    })
+  })
+
+  describe('setPendingPR', () => {
+    it('should add a pending PR', () => {
+      const { setPendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('my-deployment', 'default', 123)
+      const prNumber = getPendingPR('my-deployment', 'default')
+
+      expect(prNumber).toBe(123)
+    })
+
+    it('should handle multiple pending PRs', () => {
+      const { setPendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('deployment-1', 'ns1', 100)
+      setPendingPR('deployment-2', 'ns2', 200)
+      setPendingPR('deployment-3', 'ns1', 300)
+
+      expect(getPendingPR('deployment-1', 'ns1')).toBe(100)
+      expect(getPendingPR('deployment-2', 'ns2')).toBe(200)
+      expect(getPendingPR('deployment-3', 'ns1')).toBe(300)
+    })
+
+    it('should update existing PR number', () => {
+      const { setPendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('my-deployment', 'default', 123)
+      setPendingPR('my-deployment', 'default', 456)
+
+      expect(getPendingPR('my-deployment', 'default')).toBe(456)
+    })
+
+    it('should use namespace/deployment as key', () => {
+      const { setPendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('nginx', 'prod', 111)
+      setPendingPR('nginx', 'dev', 222)
+
+      expect(getPendingPR('nginx', 'prod')).toBe(111)
+      expect(getPendingPR('nginx', 'dev')).toBe(222)
+    })
+  })
+
+  describe('removePendingPR', () => {
+    it('should remove a pending PR', () => {
+      const { setPendingPR, removePendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('my-deployment', 'default', 123)
+      removePendingPR('my-deployment', 'default')
+
+      expect(getPendingPR('my-deployment', 'default')).toBeNull()
+    })
+
+    it('should only remove specified PR', () => {
+      const { setPendingPR, removePendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('deployment-1', 'ns1', 100)
+      setPendingPR('deployment-2', 'ns2', 200)
+
+      removePendingPR('deployment-1', 'ns1')
+
+      expect(getPendingPR('deployment-1', 'ns1')).toBeNull()
+      expect(getPendingPR('deployment-2', 'ns2')).toBe(200)
+    })
+
+    it('should handle removing non-existent PR gracefully', () => {
+      const { removePendingPR, getPendingPR } = useGitHubStore.getState()
+
+      removePendingPR('non-existent', 'default')
+
+      expect(getPendingPR('non-existent', 'default')).toBeNull()
+    })
+  })
+
+  describe('getPendingPR', () => {
+    it('should return null for non-existent PR', () => {
+      const { getPendingPR } = useGitHubStore.getState()
+
+      expect(getPendingPR('non-existent', 'default')).toBeNull()
+    })
+
+    it('should distinguish between namespaces', () => {
+      const { setPendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('app', 'production', 999)
+
+      expect(getPendingPR('app', 'production')).toBe(999)
+      expect(getPendingPR('app', 'staging')).toBeNull()
+    })
+  })
+
+  describe('complex scenarios', () => {
+    it('should handle full workflow: add, update, remove PRs', () => {
+      const { setPendingPR, getPendingPR, removePendingPR } = useGitHubStore.getState()
+
+      // Add PRs
+      setPendingPR('frontend', 'prod', 101)
+      setPendingPR('backend', 'prod', 102)
+
+      // Update PR
+      setPendingPR('frontend', 'prod', 201)
+
+      // Verify
+      expect(getPendingPR('frontend', 'prod')).toBe(201)
+      expect(getPendingPR('backend', 'prod')).toBe(102)
+
+      // Remove one
+      removePendingPR('frontend', 'prod')
+
+      expect(getPendingPR('frontend', 'prod')).toBeNull()
+      expect(getPendingPR('backend', 'prod')).toBe(102)
+    })
+
+    it('should maintain separate state from repo selection', () => {
+      const { setSelectedRepo, setPendingPR, getPendingPR } = useGitHubStore.getState()
+
+      setPendingPR('deployment', 'default', 123)
+      setSelectedRepo({ owner: 'test', repo: 'test', branch: 'main' })
+
+      expect(getPendingPR('deployment', 'default')).toBe(123)
     })
   })
 })
