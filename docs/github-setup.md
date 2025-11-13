@@ -1,18 +1,11 @@
 # GitHub Integration Setup Guide
 
-This guide explains how to set up GitHub authentication for KubeVista's YAML editor and Pull Request workflow.
-
-## Authentication Methods
-
-KubeVista supports two authentication methods:
-- **GitHub App** (Recommended) - More secure, granular permissions, better for organizations
-- **GitHub OAuth** - Simpler setup, good for personal use
+This guide explains how to set up GitHub App authentication for KubeVista's YAML editor and Pull Request workflow.
 
 ## Table of Contents
 
 - [Why GitHub Integration?](#why-github-integration)
-- [GitHub App Setup (Recommended)](#github-app-setup-recommended)
-- [GitHub OAuth Setup](#github-oauth-setup)
+- [GitHub App Setup](#github-app-setup)
 - [Environment Variables](#environment-variables)
 - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
@@ -30,14 +23,14 @@ GitHub integration enables:
 
 ---
 
-## GitHub App Setup (Recommended)
+## GitHub App Setup
 
 ### Why GitHub App?
 
-- ✅ **More secure** - Fine-grained repository access
+- ✅ **Secure** - Fine-grained repository access
 - ✅ **No personal tokens** - App has its own identity
-- ✅ **Better for organizations** - Centralized permission management
-- ✅ **Rate limits** - Higher API rate limits
+- ✅ **Organization-friendly** - Centralized permission management
+- ✅ **Higher rate limits** - Better API rate limits than OAuth
 
 ### Step 1: Create a GitHub App
 
@@ -117,60 +110,6 @@ GITHUB_APP_PRIVATE_KEY_PATH=/path/to/your-app-name.2024-01-01.private-key.pem
 
 ---
 
-## GitHub OAuth Setup
-
-### Why OAuth?
-
-- ✅ **Simpler setup** - Fewer steps
-- ✅ **Good for personal use** - Quick to get started
-- ❌ **Uses personal token** - Tied to your GitHub account
-- ❌ **Broader permissions** - Less granular control
-
-### Step 1: Create an OAuth App
-
-1. Go to [GitHub Settings → Developer settings → OAuth Apps](https://github.com/settings/developers)
-2. Click **"New OAuth App"**
-
-### Step 2: Configure OAuth App
-
-| Field | Value |
-|-------|-------|
-| **Application name** | `KubeVista` |
-| **Homepage URL** | `http://localhost:3000` |
-| **Authorization callback URL** | `http://localhost:3000/api/auth/callback/github` |
-| **Application description** | (Optional) `Kubernetes Dashboard` |
-
-Click **"Register application"**
-
-### Step 3: Get Credentials
-
-1. Note your **Client ID** (e.g., `Iv1.a1b2c3d4e5f6g7h8`)
-2. Click **"Generate a new client secret"**
-3. Copy the **Client Secret** immediately (you won't be able to see it again!)
-
-### Step 4: Configure Environment Variables
-
-Create a `.env.local` file in your project root:
-
-```bash
-# GitHub OAuth Configuration
-GITHUB_CLIENT_ID=Iv1.a1b2c3d4e5f6g7h8
-GITHUB_CLIENT_SECRET=your_secret_here
-
-# NextAuth Configuration
-NEXTAUTH_SECRET=your_random_secret_here
-NEXTAUTH_URL=http://localhost:3000
-```
-
-#### Generate NEXTAUTH_SECRET
-
-Run this command to generate a random secret:
-
-```bash
-openssl rand -base64 32
-```
-
----
 
 ## Environment Variables
 
@@ -184,11 +123,7 @@ GITHUB_APP_PRIVATE_KEY_PATH=/path/to/private-key.pem
 # Or use inline key:
 # GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----"
 
-# === GitHub OAuth Configuration (Option 2) ===
-# GITHUB_CLIENT_ID=Iv1.a1b2c3d4e5f6g7h8
-# GITHUB_CLIENT_SECRET=your_secret_here
-# NEXTAUTH_SECRET=your_random_secret
-# NEXTAUTH_URL=http://localhost:3000
+# Note: OAuth support has been removed. GitHub App is the only supported method.
 
 # === Other GitHub Settings (Optional) ===
 # GITHUB_TOKEN=ghp_your_token_here  # For Flux GitOps
@@ -231,15 +166,6 @@ NEXTAUTH_URL=https://your-domain.com
 6. Select repositories and click **"Install"**
 7. You'll be redirected back to KubeVista - you're connected!
 
-#### Using GitHub OAuth
-
-1. Start KubeVista: `npm run dev`
-2. Open http://localhost:3000
-3. Go to **Settings** (top-right menu)
-4. Under **GitHub Integration**, click **"Connect GitHub (OAuth)"**
-5. Authorize the application on GitHub
-6. You'll be redirected back to KubeVista - you're connected!
-
 ### Select Repository
 
 1. In Settings, under **GitHub Integration**
@@ -272,7 +198,7 @@ NEXTAUTH_URL=https://your-domain.com
 
 **Solution**:
 1. Go to Settings
-2. Follow the connection steps above (GitHub App or OAuth)
+2. Follow the GitHub App connection steps above
 
 ### "401 Unauthorized" when clicking Edit YAML
 
@@ -280,7 +206,7 @@ NEXTAUTH_URL=https://your-domain.com
 
 **Solutions**:
 - **For GitHub App**: Re-install the app from Settings
-- **For OAuth**: Disconnect and reconnect your GitHub account
+
 - Check environment variables are correctly set
 - Restart the development server
 
@@ -291,7 +217,7 @@ NEXTAUTH_URL=https://your-domain.com
 **Solutions**:
 1. Verify the repository is accessible:
    - For GitHub App: Check installation covers the repository
-   - For OAuth: Ensure you have `repo` permission
+
 2. Check the repository exists and you have access
 3. Try selecting a different repository
 

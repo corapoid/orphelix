@@ -31,7 +31,7 @@ import { useMemo } from 'react'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { ResourceUsageChart } from '@/app/components/metrics/resource-usage-chart'
-import { YamlEditorModal } from '@/app/components/github/yaml-editor-modal'
+import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { DeploymentManifestViewer } from '@/app/components/deployments/deployment-manifest-viewer'
 
 export default function DeploymentDetailPage() {

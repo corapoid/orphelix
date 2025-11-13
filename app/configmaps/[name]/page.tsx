@@ -22,7 +22,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useConfigMap } from '@/lib/hooks/use-configmaps'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
-import { YamlEditorModal } from '@/app/components/github/yaml-editor-modal'
+import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 
 const MAX_PREVIEW_LINES = 10
 
