@@ -2,24 +2,37 @@ import { Handle, Position } from '@xyflow/react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
-import DeploymentIcon from '@mui/icons-material/CloudQueue'
-import PodIcon from '@mui/icons-material/Widgets'
-import ConfigMapIcon from '@mui/icons-material/Description'
-import SecretIcon from '@mui/icons-material/Lock'
+import LayersIcon from '@mui/icons-material/Layers'
+import ViewInArIcon from '@mui/icons-material/ViewInAr'
+import CloudIcon from '@mui/icons-material/Cloud'
+import DescriptionIcon from '@mui/icons-material/Description'
+import LockIcon from '@mui/icons-material/Lock'
+import StorageIcon from '@mui/icons-material/Storage'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import WarningIcon from '@mui/icons-material/Warning'
 import ErrorIcon from '@mui/icons-material/Error'
 import HelpIcon from '@mui/icons-material/Help'
-import type { ResourceStatus } from '@/types/topology'
+import type { ResourceStatus, ResourceType } from '@/types/topology'
 
-const resourceIcons = {
-  Deployment: DeploymentIcon,
-  Pod: PodIcon,
-  Service: PodIcon,
-  ConfigMap: ConfigMapIcon,
-  Secret: SecretIcon,
-  PersistentVolumeClaim: ConfigMapIcon,
-  HPA: DeploymentIcon,
+const resourceIcons: Record<ResourceType, any> = {
+  Deployment: LayersIcon,
+  Pod: ViewInArIcon,
+  Service: CloudIcon,
+  ConfigMap: DescriptionIcon,
+  Secret: LockIcon,
+  PersistentVolumeClaim: StorageIcon,
+  HPA: TrendingUpIcon,
+}
+
+const resourceColors: Record<ResourceType, string> = {
+  Deployment: '#3F51B5', // Indigo
+  Pod: '#9C27B0', // Purple
+  Service: '#00BCD4', // Teal
+  ConfigMap: '#4CAF50', // Green
+  Secret: '#F44336', // Red
+  PersistentVolumeClaim: '#FF9800', // Orange
+  HPA: '#FFEB3B', // Yellow
 }
 
 const statusColors: Record<ResourceStatus, string> = {
@@ -37,9 +50,10 @@ const statusIcons = {
 }
 
 function TopologyNodeComponent({ data, selected }: any) {
-  const Icon = resourceIcons[data.resourceType as keyof typeof resourceIcons]
+  const Icon = resourceIcons[data.resourceType as ResourceType]
   const StatusIcon = statusIcons[data.status as ResourceStatus]
   const statusColor = statusColors[data.status as ResourceStatus]
+  const resourceColor = resourceColors[data.resourceType as ResourceType] || '#9e9e9e'
 
   return (
     <>
@@ -52,15 +66,15 @@ function TopologyNodeComponent({ data, selected }: any) {
           borderRadius: 1.5,
           border: '1px solid',
           borderColor: 'divider',
-          borderLeft: `3px solid ${statusColor}`,
+          borderLeft: `3px solid ${resourceColor}`,
           transition: 'all 0.2s',
           backgroundColor: 'background.paper',
           ...(selected && {
-            borderColor: statusColor,
-            boxShadow: `0 0 0 1px ${statusColor}`,
+            borderColor: resourceColor,
+            boxShadow: `0 0 0 2px ${resourceColor}40`,
           }),
           '&:hover': {
-            borderColor: statusColor,
+            borderColor: resourceColor,
             boxShadow: 1,
           },
         }}
@@ -75,10 +89,10 @@ function TopologyNodeComponent({ data, selected }: any) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: `${statusColor}15`,
+                backgroundColor: `${resourceColor}20`,
               }}
             >
-              <Icon sx={{ fontSize: 16, color: statusColor }} />
+              <Icon sx={{ fontSize: 16, color: resourceColor }} />
             </Box>
             <Typography
               variant="body2"
@@ -102,8 +116,8 @@ function TopologyNodeComponent({ data, selected }: any) {
               height: 18,
               fontSize: '0.65rem',
               fontWeight: 500,
-              backgroundColor: `${statusColor}10`,
-              color: statusColor,
+              backgroundColor: `${resourceColor}15`,
+              color: resourceColor,
               border: 'none',
               '& .MuiChip-label': {
                 px: 1,
