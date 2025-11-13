@@ -29,6 +29,7 @@ import { buildDeploymentTopology } from '@/lib/topology'
 import { useMemo } from 'react'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
+import { ResourceUsageChart } from '@/app/components/metrics/resource-usage-chart'
 
 export default function DeploymentDetailPage() {
   const params = useParams()
@@ -317,6 +318,14 @@ export default function DeploymentDetailPage() {
           </Box>
         )}
       </Paper>
+
+      {/* Resource Metrics Section */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Resource Metrics
+        </Typography>
+        <ResourceUsageChart deploymentName={name} namespace={deployment.namespace} />
+      </Box>
 
       {/* Topology Graph Section */}
       {topologyData && (
