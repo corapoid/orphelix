@@ -141,26 +141,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
   return (
     <Paper>
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-          <Typography variant="h6">Container Logs: {containerName}</Typography>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Chip
-              label="Formatted"
-              size="small"
-              color={viewMode === 'formatted' ? 'primary' : 'default'}
-              onClick={() => setViewMode('formatted')}
-              sx={{ cursor: 'pointer' }}
-            />
-            <Chip
-              label="Raw"
-              size="small"
-              color={viewMode === 'raw' ? 'primary' : 'default'}
-              onClick={() => setViewMode('raw')}
-              sx={{ cursor: 'pointer' }}
-            />
-          </Box>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           <TextField
             size="small"
             placeholder="Search logs..."
@@ -174,6 +155,20 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
               ),
             }}
             sx={{ flex: 1 }}
+          />
+          <Chip
+            label="Formatted"
+            size="small"
+            color={viewMode === 'formatted' ? 'primary' : 'default'}
+            onClick={() => setViewMode('formatted')}
+            sx={{ cursor: 'pointer' }}
+          />
+          <Chip
+            label="Raw"
+            size="small"
+            color={viewMode === 'raw' ? 'primary' : 'default'}
+            onClick={() => setViewMode('raw')}
+            sx={{ cursor: 'pointer' }}
           />
           {onRefresh && (
             <IconButton onClick={onRefresh} size="small" title="Refresh logs">
