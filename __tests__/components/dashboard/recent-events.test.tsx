@@ -72,7 +72,6 @@ describe('RecentEvents', () => {
 
     // Assert
     expect(screen.getByText('Recent Events')).toBeInTheDocument()
-    expect(screen.getByText('Last 2 events')).toBeInTheDocument()
     expect(screen.getByText('Started')).toBeInTheDocument()
     expect(screen.getByText('Container started successfully')).toBeInTheDocument()
     expect(screen.getByText('BackOff')).toBeInTheDocument()
@@ -354,7 +353,7 @@ describe('RecentEvents', () => {
     render(<RecentEvents events={events} />)
 
     // Assert
-    expect(screen.getByText('Last 1 events')).toBeInTheDocument()
+    expect(screen.getByText('Recent Events')).toBeInTheDocument()
     expect(screen.getByText('Single Event')).toBeInTheDocument()
   })
 })

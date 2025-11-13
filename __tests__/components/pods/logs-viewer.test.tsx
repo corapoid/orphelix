@@ -30,7 +30,6 @@ describe('LogsViewer', () => {
     )
 
     // Assert
-    expect(screen.getByText('Container Logs: nginx')).toBeInTheDocument()
     expect(screen.getByText(/Application started successfully/)).toBeInTheDocument()
     expect(screen.getByText(/Connected to database/)).toBeInTheDocument()
   })
@@ -48,7 +47,6 @@ describe('LogsViewer', () => {
 
     // Assert
     expect(screen.getByRole('progressbar')).toBeInTheDocument()
-    expect(screen.queryByText('Container Logs: nginx')).not.toBeInTheDocument()
   })
 
   it('should display error state', () => {

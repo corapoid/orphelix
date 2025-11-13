@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import { useSearchParams, useRouter } from 'next/navigation'
 
-export function GitHubAppInstallButton() {
+function GitHubAppInstallButtonContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [installations, setInstallations] = useState<any[]>([])
@@ -170,5 +170,20 @@ export function GitHubAppInstallButton() {
         </Typography>
       </Alert>
     </Box>
+  )
+}
+
+export function GitHubAppInstallButton() {
+  return (
+    <Suspense fallback={
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <CircularProgress size={24} />
+        <Typography variant="body2" color="text.secondary">
+          Loading...
+        </Typography>
+      </Box>
+    }>
+      <GitHubAppInstallButtonContent />
+    </Suspense>
   )
 }

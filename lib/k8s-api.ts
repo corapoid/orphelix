@@ -791,6 +791,7 @@ export async function fetchDeploymentYaml(name: string, namespace: string): Prom
     const response = await appsApi.readNamespacedDeployment({ name, namespace })
     
     // Convert to YAML using js-yaml
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const yaml = require('js-yaml')
     const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
     
@@ -809,6 +810,7 @@ export async function fetchConfigMapYaml(name: string, namespace: string): Promi
     const coreApi = getCoreApi()
     const response = await coreApi.readNamespacedConfigMap({ name, namespace })
     
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const yaml = require('js-yaml')
     const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
     
@@ -827,6 +829,7 @@ export async function fetchSecretYaml(name: string, namespace: string): Promise<
     const coreApi = getCoreApi()
     const response = await coreApi.readNamespacedSecret({ name, namespace })
     
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const yaml = require('js-yaml')
     const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
     
