@@ -41,8 +41,6 @@ export function YamlEditorModal({
   const [yamlContent, setYamlContent] = useState('')
   const [originalContent, setOriginalContent] = useState('')
   const [_fileSha, setFileSha] = useState('')
-  const [kustomizeTab, setKustomizeTab] = useState<'base' | 'overlay'>('base')
-  const [selectedOverlay, setSelectedOverlay] = useState('')
   const [isCreatingPR, setIsCreatingPR] = useState(false)
   const [prCreated, setPrCreated] = useState<{ number: number; url: string } | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
@@ -183,20 +181,6 @@ export function YamlEditorModal({
     autoMatchFile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files, open])
-
-  // Fetch Kustomize structure when file is selected
-  const { data: kustomize } = useQuery({
-    queryKey: ['kustomize', selectedRepo?.owner, selectedRepo?.repo, selectedFile],
-    queryFn: async () => {
-      if (!selectedRepo || !selectedFile) return null
-      const response = await fetch(
-        `/api/github/kustomize?owner=${selectedRepo.owner}&repo=${selectedRepo.repo}&filePath=${selectedFile}&ref=${selectedRepo.branch}`
-      )
-      if (!response.ok) return null
-      return response.json()
-    },
-    enabled: !!selectedRepo && !!selectedFile && open,
-  })
 
   // Load file content
   const loadFile = async (path: string) => {
@@ -404,16 +388,23 @@ export function YamlEditorModal({
             {/* Match Info Alert */}
             {matchInfo && (
               <Alert
-                severity={matchInfo.method === 'content' || matchInfo.method === 'exact' || matchInfo.method === 'directory' ? 'success' : 'info'}
+                severity={matchInfo.method === 'content' || matchInfo.method === 'exact' || matchInfo.method === 'directory' || matchInfo.method === 'ai' ? 'success' : 'info'}
                 sx={{ mb: 2 }}
               >
                 <Typography variant="body2">
+                  {matchInfo.method === 'ai' && `✓ File matched by AI (confidence: ${matchInfo.confidence}%)`}
                   {matchInfo.method === 'content' && '✓ File matched by cluster YAML comparison (exact match!)'}
                   {matchInfo.method === 'exact' && '✓ File automatically matched by exact name'}
                   {matchInfo.method === 'directory' && '✓ File automatically matched by directory structure'}
                   {matchInfo.method === 'namespace' && '✓ File automatically matched by namespace pattern'}
                   {matchInfo.method === 'fuzzy' && '✓ File automatically matched by similarity'}
+                  {matchInfo.method === 'pattern' && '✓ File automatically matched by pattern matching'}
                 </Typography>
+                {matchInfo.reasoning && (
+                  <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}>
+                    {matchInfo.reasoning}
+                  </Typography>
+                )}
               </Alert>
             )}
 
@@ -433,32 +424,6 @@ export function YamlEditorModal({
               </Select>
             </FormControl>
 
-            {/* Kustomization Tabs */}
-            {kustomize?.hasKustomization && (
-              <Box sx={{ mb: 2 }}>
-                <Tabs value={kustomizeTab} onChange={(_, v) => setKustomizeTab(v)}>
-                  <Tab label="Base" value="base" />
-                  {kustomize.overlays.length > 0 && <Tab label="Overlays" value="overlay" />}
-                </Tabs>
-
-                {kustomizeTab === 'overlay' && kustomize.overlays.length > 0 && (
-                  <FormControl fullWidth sx={{ mt: 1 }}>
-                    <InputLabel>Select Overlay</InputLabel>
-                    <Select
-                      value={selectedOverlay}
-                      onChange={(e) => setSelectedOverlay(e.target.value)}
-                      label="Select Overlay"
-                    >
-                      {kustomize.overlays.map((overlay: string) => (
-                        <MenuItem key={overlay} value={overlay}>
-                          {overlay}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-              </Box>
-            )}
 
             {/* Monaco Editor */}
             {selectedFile && (
