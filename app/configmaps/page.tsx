@@ -17,7 +17,6 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import { PageHeader } from '@/app/components/common/page-header'
-import { SearchBar } from '@/app/components/common/search-bar'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { ConfigMap } from '@/types/kubernetes'
@@ -80,12 +79,9 @@ export default function ConfigMapsPage() {
         subtitle={`${configMaps?.length || 0} ConfigMap${configMaps?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
-      />
-
-      <SearchBar
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search ConfigMaps..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search ConfigMaps..."
       />
 
       {!configMaps || configMaps.length === 0 ? (

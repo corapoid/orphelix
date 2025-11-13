@@ -21,7 +21,6 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { PageHeader } from '@/app/components/common/page-header'
-import { SearchBar } from '@/app/components/common/search-bar'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import type { Deployment } from '@/types/kubernetes'
@@ -87,15 +86,10 @@ export default function DeploymentsPage() {
         subtitle={`${deployments?.length || 0} deployment${deployments?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search deployments..."
       />
-
-      <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search deployments..."
-        />
-      </Box>
 
       <ClusterConnectionAlert minimal />
 

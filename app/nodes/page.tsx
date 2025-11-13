@@ -20,7 +20,6 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import { PageHeader } from '@/app/components/common/page-header'
-import { SearchBar } from '@/app/components/common/search-bar'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { Node } from '@/types/kubernetes'
@@ -139,12 +138,9 @@ export default function NodesPage() {
         subtitle={subtitle}
         onRefresh={refetch}
         isRefreshing={isLoading}
-      />
-
-      <SearchBar
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search nodes..."
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search nodes..."
       />
 
       {!nodes || nodes.length === 0 ? (

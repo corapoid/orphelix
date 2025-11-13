@@ -25,7 +25,6 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import { PageHeader } from '@/app/components/common/page-header'
-import { SearchBar } from '@/app/components/common/search-bar'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { PodStatus, Pod } from '@/types/kubernetes'
@@ -95,32 +94,29 @@ export default function PodsPage() {
         subtitle={`${pods?.length || 0} pod${pods?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search pods..."
+        filters={
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel id="status-filter-label">Status</InputLabel>
+            <Select
+              labelId="status-filter-label"
+              id="status-filter-select"
+              value={statusFilter}
+              label="Status"
+              onChange={(e) => setStatusFilter(e.target.value as PodStatus | '')}
+            >
+              <MenuItem value="">All Statuses</MenuItem>
+              <MenuItem value="Running">Running</MenuItem>
+              <MenuItem value="Pending">Pending</MenuItem>
+              <MenuItem value="Failed">Failed</MenuItem>
+              <MenuItem value="Succeeded">Succeeded</MenuItem>
+              <MenuItem value="CrashLoopBackOff">CrashLoopBackOff</MenuItem>
+            </Select>
+          </FormControl>
+        }
       />
-
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-        <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel id="status-filter-label">Status Filter</InputLabel>
-          <Select
-            labelId="status-filter-label"
-            id="status-filter-select"
-            value={statusFilter}
-            label="Status Filter"
-            onChange={(e) => setStatusFilter(e.target.value as PodStatus | '')}
-          >
-            <MenuItem value="">All Statuses</MenuItem>
-            <MenuItem value="Running">Running</MenuItem>
-            <MenuItem value="Pending">Pending</MenuItem>
-            <MenuItem value="Failed">Failed</MenuItem>
-            <MenuItem value="Succeeded">Succeeded</MenuItem>
-            <MenuItem value="CrashLoopBackOff">CrashLoopBackOff</MenuItem>
-          </Select>
-        </FormControl>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search pods..."
-        />
-      </Box>
 
       {!pods || pods.length === 0 ? (
         <EmptyState

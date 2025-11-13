@@ -21,7 +21,6 @@ import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { PageHeader } from '@/app/components/common/page-header'
-import { SearchBar } from '@/app/components/common/search-bar'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import { formatAge } from '@/lib/core/utils'
@@ -82,40 +81,39 @@ export default function EventsPage() {
         subtitle={`${events?.length || 0} event${events?.length === 1 ? '' : 's'} in the last ${timeRange} hour${timeRange === 1 ? '' : 's'}`}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search events..."
+        filters={
+          <>
+            <FormControl size="small" sx={{ minWidth: 150 }}>
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={typeFilter}
+                label="Type"
+                onChange={(e) => setTypeFilter(e.target.value as 'Normal' | 'Warning' | '')}
+              >
+                <MenuItem value="">All Types</MenuItem>
+                <MenuItem value="Normal">Normal</MenuItem>
+                <MenuItem value="Warning">Warning</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl size="small" sx={{ minWidth: 150 }}>
+              <InputLabel>Time Range</InputLabel>
+              <Select
+                value={timeRange}
+                label="Time Range"
+                onChange={(e) => setTimeRange(e.target.value as number)}
+              >
+                <MenuItem value={1}>Last 1 Hour</MenuItem>
+                <MenuItem value={6}>Last 6 Hours</MenuItem>
+                <MenuItem value={12}>Last 12 Hours</MenuItem>
+                <MenuItem value={24}>Last 24 Hours</MenuItem>
+              </Select>
+            </FormControl>
+          </>
+        }
       />
-
-      <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search events..."
-        />
-        <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel>Type Filter</InputLabel>
-          <Select
-            value={typeFilter}
-            label="Type Filter"
-            onChange={(e) => setTypeFilter(e.target.value as 'Normal' | 'Warning' | '')}
-          >
-            <MenuItem value="">All Types</MenuItem>
-            <MenuItem value="Normal">Normal</MenuItem>
-            <MenuItem value="Warning">Warning</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel>Time Range</InputLabel>
-          <Select
-            value={timeRange}
-            label="Time Range"
-            onChange={(e) => setTimeRange(e.target.value as number)}
-          >
-            <MenuItem value={1}>Last 1 Hour</MenuItem>
-            <MenuItem value={6}>Last 6 Hours</MenuItem>
-            <MenuItem value={12}>Last 12 Hours</MenuItem>
-            <MenuItem value={24}>Last 24 Hours</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
 
       {!events || events.length === 0 ? (
         <EmptyState

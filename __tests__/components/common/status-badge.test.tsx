@@ -1,79 +1,110 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
 import { StatusBadge } from '@/app/components/common/status-badge'
 
 describe('StatusBadge', () => {
   describe('Deployment Statuses', () => {
-    it('should render Available status', () => {
+    it('should render Available status with success color', () => {
       render(<StatusBadge status="Available" />)
       const badge = screen.getByText('Available')
       expect(badge).toBeInTheDocument()
+      // MUI Chip renders with MuiChip-root class
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorSuccess')
     })
 
-    it('should render Progressing status', () => {
+    it('should render Progressing status with info color', () => {
       render(<StatusBadge status="Progressing" />)
       const badge = screen.getByText('Progressing')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorInfo')
     })
 
-    it('should render Degraded status', () => {
+    it('should render Degraded status with error color', () => {
       render(<StatusBadge status="Degraded" />)
       const badge = screen.getByText('Degraded')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorError')
     })
   })
 
   describe('Pod Statuses', () => {
-    it('should render Running status', () => {
+    it('should render Running status with success color', () => {
       render(<StatusBadge status="Running" />)
       const badge = screen.getByText('Running')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorSuccess')
     })
 
-    it('should render Pending status', () => {
+    it('should render Pending status with warning color', () => {
       render(<StatusBadge status="Pending" />)
       const badge = screen.getByText('Pending')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorWarning')
     })
 
-    it('should render Failed status', () => {
+    it('should render Failed status with error color', () => {
       render(<StatusBadge status="Failed" />)
       const badge = screen.getByText('Failed')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorError')
     })
 
-    it('should render Succeeded status', () => {
+    it('should render Succeeded status with success color', () => {
       render(<StatusBadge status="Succeeded" />)
       const badge = screen.getByText('Succeeded')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorSuccess')
     })
 
-    it('should render CrashLoopBackOff status', () => {
+    it('should render CrashLoopBackOff status with error color', () => {
       render(<StatusBadge status="CrashLoopBackOff" />)
       const badge = screen.getByText('CrashLoopBackOff')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorError')
     })
   })
 
   describe('Node Statuses', () => {
-    it('should render Ready status', () => {
+    it('should render Ready status with success color', () => {
       render(<StatusBadge status="Ready" />)
       const badge = screen.getByText('Ready')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorSuccess')
     })
 
-    it('should render NotReady status', () => {
+    it('should render NotReady status with error color', () => {
       render(<StatusBadge status="NotReady" />)
       const badge = screen.getByText('NotReady')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorError')
     })
   })
 
-  describe('Unknown Status', () => {
-    it('should render Unknown status for unrecognized statuses', () => {
-      render(<StatusBadge status="SomeUnknownStatus" />)
-      const badge = screen.getByText('SomeUnknownStatus')
+  describe('Generic Statuses', () => {
+    it('should render Unknown status with default color', () => {
+      render(<StatusBadge status="Unknown" />)
+      const badge = screen.getByText('Unknown')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorDefault')
+    })
+
+    it('should handle custom status as Unknown with default color', () => {
+      render(<StatusBadge status="CustomStatus" />)
+      const badge = screen.getByText('CustomStatus')
+      expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-colorDefault')
     })
   })
 
@@ -82,12 +113,16 @@ describe('StatusBadge', () => {
       render(<StatusBadge status="Available" />)
       const badge = screen.getByText('Available')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-sizeSmall')
     })
 
     it('should render medium badge when specified', () => {
       render(<StatusBadge status="Available" size="medium" />)
       const badge = screen.getByText('Available')
       expect(badge).toBeInTheDocument()
+      const chip = badge.closest('.MuiChip-root')
+      expect(chip).toHaveClass('MuiChip-sizeMedium')
     })
   })
 
@@ -110,12 +145,12 @@ describe('StatusBadge', () => {
       render(
         <div>
           <StatusBadge status="Available" size="small" />
-          <StatusBadge status="Degraded" size="medium" />
+          <StatusBadge status="Available" size="medium" />
         </div>
       )
 
-      expect(screen.getByText('Available')).toBeInTheDocument()
-      expect(screen.getByText('Degraded')).toBeInTheDocument()
+      const badges = screen.getAllByText('Available')
+      expect(badges).toHaveLength(2)
     })
   })
 })
