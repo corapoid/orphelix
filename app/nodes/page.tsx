@@ -24,6 +24,37 @@ import { SortableTableCell } from '@/components/common/sortable-table-cell'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import type { Node } from '@/types/kubernetes'
 
+// Helper function to parse Kubernetes resource quantities
+function parseQuantity(value: string): number {
+  const units: Record<string, number> = {
+    'Ki': 1024,
+    'Mi': 1024 * 1024,
+    'Gi': 1024 * 1024 * 1024,
+    'Ti': 1024 * 1024 * 1024 * 1024,
+    'k': 1000,
+    'M': 1000 * 1000,
+    'G': 1000 * 1000 * 1000,
+    'T': 1000 * 1000 * 1000 * 1000,
+    'm': 0.001, // milli (for CPU)
+  }
+
+  const match = value.match(/^(\d+(?:\.\d+)?)(.*?)$/)
+  if (!match) return 0
+
+  const num = parseFloat(match[1])
+  const unit = match[2]
+
+  return unit ? num * (units[unit] || 1) : num
+}
+
+// Calculate percentage used
+function calculatePercentage(allocatable: string, capacity: string): number {
+  const allocNum = parseQuantity(allocatable)
+  const capNum = parseQuantity(capacity)
+  if (capNum === 0) return 0
+  return Math.round((allocNum / capNum) * 100)
+}
+
 export default function NodesPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
@@ -136,7 +167,6 @@ export default function NodesPage() {
                   sortOrder={sortOrder}
                   onSort={handleSort}
                 />
-                <TableCell>Roles</TableCell>
                 <SortableTableCell
                   field="version"
                   label="Version"
@@ -168,24 +198,12 @@ export default function NodesPage() {
                   <TableCell>
                     <StatusBadge status={node.status} />
                   </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                      {node.roles.map((role) => (
-                        <Chip
-                          key={role}
-                          label={role}
-                          size="small"
-                          variant="outlined"
-                        />
-                      ))}
-                    </Box>
-                  </TableCell>
                   <TableCell>{node.version}</TableCell>
                   <TableCell>
-                    {node.allocatable.cpu} / {node.capacity.cpu}
+                    {node.allocatable.cpu} / {node.capacity.cpu} ({calculatePercentage(node.allocatable.cpu, node.capacity.cpu)}%)
                   </TableCell>
                   <TableCell>
-                    {node.allocatable.memory} / {node.capacity.memory}
+                    {node.allocatable.memory} / {node.capacity.memory} ({calculatePercentage(node.allocatable.memory, node.capacity.memory)}%)
                   </TableCell>
                   <TableCell>
                     {node.allocatable.pods} / {node.capacity.pods}

@@ -203,55 +203,43 @@ export default function SecretDetailPage({
 
   return (
     <Box>
-      {/* Header */}
-      <Box
-        sx={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
-          p: 3,
-          mb: 3,
-        }}
+      <Button
+        startIcon={<ArrowBackIcon />}
+        onClick={() => router.back()}
+        sx={{ mb: 2 }}
       >
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+        Back to Secrets
+      </Button>
+
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+          <Typography variant="h4">{secret.name}</Typography>
           <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => router.back()}
-            sx={{ color: 'white' }}
-          >
-            Back
-          </Button>
-          <Button
-            variant="contained"
+            variant="outlined"
             startIcon={<EditIcon />}
             onClick={() => setEditorOpen(true)}
-            sx={{ bgcolor: 'rgba(255,255,255,0.2)', '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }}
           >
             Edit YAML
           </Button>
         </Box>
-        <Typography variant="h4" fontWeight="bold">
-          {secret.name}
-        </Typography>
-        <Box display="flex" gap={1} mt={2}>
-          <Chip label={secret.namespace} color="primary" size="small" />
-          <Chip label={secret.type} color="secondary" size="small" />
-          <Chip label={secret.age} size="small" sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }} />
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Typography variant="body2" color="text.secondary">
+            Namespace: <strong>{secret.namespace}</strong> • Type: <strong>{secret.type}</strong> • Age: {secret.age}
+          </Typography>
         </Box>
       </Box>
+      {/* Security Warning */}
+      <Alert severity="warning" icon={<WarningAmberIcon />} sx={{ mb: 3 }}>
+        <Typography variant="body2" fontWeight="bold">
+          Sensitive Data
+        </Typography>
+        <Typography variant="body2">
+          This Secret contains sensitive information. Values are masked by default for security.
+          Only reveal values when necessary and ensure you&apos;re in a secure environment.
+        </Typography>
+      </Alert>
 
-      <Box p={3}>
-        {/* Security Warning */}
-        <Alert severity="warning" icon={<WarningAmberIcon />} sx={{ mb: 3 }}>
-          <Typography variant="body2" fontWeight="bold">
-            Sensitive Data
-          </Typography>
-          <Typography variant="body2">
-            This Secret contains sensitive information. Values are masked by default for security.
-            Only reveal values when necessary and ensure you&apos;re in a secure environment.
-          </Typography>
-        </Alert>
-
-        <Grid container spacing={3}>
+      <Grid container spacing={3}>
           {/* Details Panel */}
           <Grid size={{ xs: 12, md: 6 }}>
             <Paper sx={{ p: 3 }}>
@@ -456,7 +444,6 @@ export default function SecretDetailPage({
             </Paper>
           </Grid>
         </Grid>
-      </Box>
 
       {/* Warning Dialog */}
       <Dialog open={warningDialogOpen} onClose={() => setWarningDialogOpen(false)}>

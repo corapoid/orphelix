@@ -13,10 +13,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Chip from '@mui/material/Chip'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import ErrorIcon from '@mui/icons-material/Error'
 import { useParams, useRouter } from 'next/navigation'
 import { useNode, useNodePods } from '@/lib/hooks/use-nodes'
 import { StatusBadge } from '@/components/common/status-badge'
@@ -24,6 +21,37 @@ import { formatAge } from '@/lib/utils'
 import type { Pod } from '@/types/kubernetes'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
+
+// Helper function to parse Kubernetes resource quantities
+function parseQuantity(value: string): number {
+  const units: Record<string, number> = {
+    'Ki': 1024,
+    'Mi': 1024 * 1024,
+    'Gi': 1024 * 1024 * 1024,
+    'Ti': 1024 * 1024 * 1024 * 1024,
+    'k': 1000,
+    'M': 1000 * 1000,
+    'G': 1000 * 1000 * 1000,
+    'T': 1000 * 1000 * 1000 * 1000,
+    'm': 0.001, // milli (for CPU)
+  }
+
+  const match = value.match(/^(\d+(?:\.\d+)?)(.*?)$/)
+  if (!match) return 0
+
+  const num = parseFloat(match[1])
+  const unit = match[2]
+
+  return unit ? num * (units[unit] || 1) : num
+}
+
+// Calculate percentage used
+function calculatePercentage(allocatable: string, capacity: string): number {
+  const allocNum = parseQuantity(allocatable)
+  const capNum = parseQuantity(capacity)
+  if (capNum === 0) return 0
+  return Math.round((allocNum / capNum) * 100)
+}
 
 export default function NodeDetailPage() {
   const params = useParams()
@@ -79,28 +107,18 @@ export default function NodeDetailPage() {
       </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
-              Details
+              Resources
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Roles:
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 0.5 }}>
-                  {node.roles.map((role) => (
-                    <Chip key={role} label={role} size="small" variant="outlined" />
-                  ))}
-                </Box>
-              </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2" color="text.secondary">
                   CPU:
                 </Typography>
                 <Typography variant="body2" fontWeight="medium">
-                  {node.allocatable.cpu} / {node.capacity.cpu}
+                  {node.allocatable.cpu} / {node.capacity.cpu} ({calculatePercentage(node.allocatable.cpu, node.capacity.cpu)}%)
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -108,7 +126,7 @@ export default function NodeDetailPage() {
                   Memory:
                 </Typography>
                 <Typography variant="body2" fontWeight="medium">
-                  {node.allocatable.memory} / {node.capacity.memory}
+                  {node.allocatable.memory} / {node.capacity.memory} ({calculatePercentage(node.allocatable.memory, node.capacity.memory)}%)
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -119,29 +137,6 @@ export default function NodeDetailPage() {
                   {node.allocatable.pods} / {node.capacity.pods}
                 </Typography>
               </Box>
-            </Box>
-          </Paper>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Conditions
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {node.conditions.map((condition, index) => (
-                <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  {condition.status === 'True' ? (
-                    <CheckCircleIcon color="success" fontSize="small" />
-                  ) : (
-                    <ErrorIcon color="error" fontSize="small" />
-                  )}
-                  <Typography variant="body2">{condition.type}</Typography>
-                  {condition.reason && (
-                    <Chip label={condition.reason} size="small" variant="outlined" />
-                  )}
-                </Box>
-              ))}
             </Box>
           </Paper>
         </Grid>
