@@ -2,6 +2,8 @@
 
 This guide explains how to set up GitHub authentication for KubeVista's YAML editor and Pull Request workflow.
 
+## Authentication Methods
+
 KubeVista supports two authentication methods:
 - **GitHub App** (Recommended) - More secure, granular permissions, better for organizations
 - **GitHub OAuth** - Simpler setup, good for personal use
