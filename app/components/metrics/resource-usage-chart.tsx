@@ -9,6 +9,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import LinearProgress from '@mui/material/LinearProgress'
 import Grid from '@mui/material/Grid2'
 import Chip from '@mui/material/Chip'
+import Tooltip from '@mui/material/Tooltip'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useQuery } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/store'
 
@@ -187,14 +189,28 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                CPU Usage
-              </Typography>
-              <Chip
-                label={`${aggregatedMetrics.cpu.usagePercent.toFixed(1)}%`}
-                color={getUsageColor(aggregatedMetrics.cpu.usagePercent)}
-                size="small"
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  CPU Usage
+                </Typography>
+                <Tooltip
+                  title="Percentage of current usage vs. resource limit (Current / Limit × 100%)"
+                  arrow
+                  placement="top"
+                >
+                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'text.secondary', cursor: 'help' }} />
+                </Tooltip>
+              </Box>
+              <Tooltip
+                title={`${formatCPU(aggregatedMetrics.cpu.current)} / ${formatCPU(aggregatedMetrics.cpu.limit)}`}
+                arrow
+              >
+                <Chip
+                  label={`${aggregatedMetrics.cpu.usagePercent.toFixed(1)}%`}
+                  color={getUsageColor(aggregatedMetrics.cpu.usagePercent)}
+                  size="small"
+                />
+              </Tooltip>
             </Box>
 
             <Box sx={{ mb: 3 }}>
@@ -239,14 +255,28 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
         <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Memory Usage
-              </Typography>
-              <Chip
-                label={`${aggregatedMetrics.memory.usagePercent.toFixed(1)}%`}
-                color={getUsageColor(aggregatedMetrics.memory.usagePercent)}
-                size="small"
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  Memory Usage
+                </Typography>
+                <Tooltip
+                  title="Percentage of current usage vs. resource limit (Current / Limit × 100%)"
+                  arrow
+                  placement="top"
+                >
+                  <InfoOutlinedIcon fontSize="small" sx={{ color: 'text.secondary', cursor: 'help' }} />
+                </Tooltip>
+              </Box>
+              <Tooltip
+                title={`${formatMemory(aggregatedMetrics.memory.current)} / ${formatMemory(aggregatedMetrics.memory.limit)}`}
+                arrow
+              >
+                <Chip
+                  label={`${aggregatedMetrics.memory.usagePercent.toFixed(1)}%`}
+                  color={getUsageColor(aggregatedMetrics.memory.usagePercent)}
+                  size="small"
+                />
+              </Tooltip>
             </Box>
 
             <Box sx={{ mb: 3 }}>
