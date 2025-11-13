@@ -85,12 +85,47 @@ export function YamlEditorModal({
   // Auto-match file when files are loaded
   useEffect(() => {
     const autoMatchFile = async () => {
-      if (!files || files.length === 0 || selectedFile || !open) return
+      if (!files || files.length === 0 || selectedFile || !open || !selectedRepo) return
 
       setMatchingFile(true)
       setMatchInfo(null)
 
       try {
+        // Step 1: Fetch cluster YAML from Kubernetes
+        let clusterYaml: string | undefined
+        try {
+          const yamlResponse = await fetch(
+            `/api/resources/${resourceType}s/${resourceName}/yaml?namespace=${namespace}`
+          )
+          if (yamlResponse.ok) {
+            const yamlData = await yamlResponse.json()
+            clusterYaml = yamlData.yaml
+          }
+        } catch (error) {
+          console.warn('Could not fetch cluster YAML, falling back to pattern matching:', error)
+        }
+
+        // Step 2: Fetch file contents from GitHub for top 10 candidate files
+        // (Limit to 10 to avoid rate limits and improve performance)
+        const candidateFiles = files.slice(0, 10)
+        const filesWithContent = await Promise.all(
+          candidateFiles.map(async (file: any) => {
+            try {
+              const response = await fetch(
+                `/api/github/file?owner=${selectedRepo.owner}&repo=${selectedRepo.repo}&path=${file.path}&ref=${selectedRepo.branch}`
+              )
+              if (response.ok) {
+                const data = await response.json()
+                return { ...file, content: data.content }
+              }
+            } catch (error) {
+              console.warn(`Could not fetch content for ${file.path}:`, error)
+            }
+            return file
+          })
+        )
+
+        // Step 3: Send to match-file API with clusterYaml and file contents
         const response = await fetch('/api/github/match-file', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -99,8 +134,9 @@ export function YamlEditorModal({
               name: resourceName,
               namespace,
               type: resourceType,
+              clusterYaml, // NEW: cluster YAML for comparison
             },
-            yamlFiles: files,
+            yamlFiles: filesWithContent, // NEW: files with content
           }),
         })
 
