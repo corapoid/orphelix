@@ -6,21 +6,93 @@ import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid2'
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import Button from '@mui/material/Button'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import CircularProgress from '@mui/material/CircularProgress'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemText from '@mui/material/ListItemText'
 import Chip from '@mui/material/Chip'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LaptopOutlinedIcon from '@mui/icons-material/LaptopOutlined'
 import { useThemeMode } from '../components/theme-provider'
 import { useModeStore } from '@/lib/store'
-import { ModeSelector } from '../components/layout/mode-selector'
 import { NamespaceSelector } from '../components/layout/namespace-selector'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+interface KubeContext {
+  name: string
+  cluster: string
+  user: string
+  namespace?: string
+  current: boolean
+}
 
 export default function SettingsPage() {
   const { mode: themeMode, setThemeMode, actualTheme } = useThemeMode()
-  const { mode: appMode, realtimeEnabled, setRealtimeEnabled, selectedNamespace } = useModeStore()
-  const [modeSelectorOpen, setModeSelectorOpen] = useState(false)
+  const { mode: appMode, setMode, realtimeEnabled, setRealtimeEnabled, selectedNamespace, selectedContext, setContext } = useModeStore()
+  const [contexts, setContexts] = useState<KubeContext[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (appMode === 'real') {
+      fetchContexts()
+    }
+  }, [appMode])
+
+  const fetchContexts = async () => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch('/api/contexts')
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch contexts')
+      }
+
+      setContexts(data.contexts || [])
+
+      // Auto-select current context if available and no context selected
+      const currentContext = data.contexts.find((ctx: KubeContext) => ctx.current)
+      if (currentContext && !selectedContext) {
+        setContext({
+          name: currentContext.name,
+          cluster: currentContext.cluster,
+          user: currentContext.user,
+        })
+      }
+    } catch (err) {
+      console.error('Failed to fetch kubectl contexts:', err)
+      setError(err instanceof Error ? err.message : 'Failed to fetch contexts')
+      setContexts([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleModeChange = (newMode: 'mock' | 'real') => {
+    setMode(newMode)
+    if (newMode === 'mock') {
+      setContext(null)
+    }
+  }
+
+  const handleContextSelect = (context: KubeContext) => {
+    setContext({
+      name: context.name,
+      cluster: context.cluster,
+      user: context.user,
+    })
+  }
 
   const handleRealtimeToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRealtimeEnabled(event.target.checked)
@@ -39,60 +111,8 @@ export default function SettingsPage() {
       </Box>
 
       <Grid container spacing={3}>
-        {/* Appearance Section */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 3 }}>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-                Appearance
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Customize the look and feel of the dashboard
-              </Typography>
-            </Box>
-
-            {/* Theme Mode */}
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
-                Theme Mode
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button
-                  variant={themeMode === 'light' ? 'contained' : 'outlined'}
-                  startIcon={<LightModeOutlinedIcon />}
-                  onClick={() => setThemeMode('light')}
-                  sx={{ flex: 1 }}
-                >
-                  Light
-                </Button>
-                <Button
-                  variant={themeMode === 'dark' ? 'contained' : 'outlined'}
-                  startIcon={<DarkModeOutlinedIcon />}
-                  onClick={() => setThemeMode('dark')}
-                  sx={{ flex: 1 }}
-                >
-                  Dark
-                </Button>
-                <Button
-                  variant={themeMode === 'system' ? 'contained' : 'outlined'}
-                  startIcon={<LaptopOutlinedIcon />}
-                  onClick={() => setThemeMode('system')}
-                  sx={{ flex: 1 }}
-                >
-                  System
-                </Button>
-              </Box>
-              {themeMode === 'system' && (
-                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                  Currently using: {actualTheme === 'dark' ? 'Dark' : 'Light'} (from system)
-                </Typography>
-              )}
-            </Box>
-          </Paper>
-        </Grid>
-
         {/* Cluster Configuration */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ p: 3 }}>
             <Box sx={{ mb: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
@@ -108,30 +128,107 @@ export default function SettingsPage() {
               <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
                 Connection Mode
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Chip
-                  label={appMode === 'mock' ? 'DEMO MODE' : 'REAL CLUSTER'}
-                  color={appMode === 'mock' ? 'warning' : 'success'}
-                  onClick={() => setModeSelectorOpen(true)}
-                  sx={{ cursor: 'pointer' }}
+              <RadioGroup
+                value={appMode}
+                onChange={(e) => handleModeChange(e.target.value as 'mock' | 'real')}
+              >
+                <FormControlLabel
+                  value="mock"
+                  control={<Radio />}
+                  label={
+                    <Box>
+                      <Typography variant="body2">Demo Mode</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Use realistic mock data - no cluster required
+                      </Typography>
+                    </Box>
+                  }
                 />
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => setModeSelectorOpen(true)}
-                >
-                  Change Mode
-                </Button>
-              </Box>
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                {appMode === 'mock'
-                  ? 'Using demo data for preview'
-                  : 'Connected to live Kubernetes cluster'}
-              </Typography>
+                <FormControlLabel
+                  value="real"
+                  control={<Radio />}
+                  label={
+                    <Box>
+                      <Typography variant="body2">Real Cluster</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Connect to a live Kubernetes cluster
+                      </Typography>
+                    </Box>
+                  }
+                />
+              </RadioGroup>
             </Box>
 
-            {/* Namespace Selector */}
+            {/* Context Selection - shown when Real Cluster is selected */}
             {appMode === 'real' && (
+              <Box sx={{ mb: 3 }}>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  <AlertTitle>Kubernetes Context Required</AlertTitle>
+                  Select a context from your kubeconfig. Make sure kubectl is configured and you have access to the cluster.
+                </Alert>
+
+                {loading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+                    <CircularProgress />
+                  </Box>
+                ) : error ? (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    <AlertTitle>Failed to Load Contexts</AlertTitle>
+                    {error}
+                    <Button size="small" onClick={fetchContexts} sx={{ mt: 1 }}>
+                      Retry
+                    </Button>
+                  </Alert>
+                ) : contexts.length === 0 ? (
+                  <Alert severity="error">
+                    No Kubernetes contexts found. Please configure kubectl first.
+                  </Alert>
+                ) : (
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
+                      Select Context
+                    </Typography>
+                    <List sx={{ bgcolor: 'background.default', borderRadius: 1 }}>
+                      {contexts.map((context) => (
+                        <ListItem key={context.name} disablePadding>
+                          <ListItemButton
+                            onClick={() => handleContextSelect(context)}
+                            selected={selectedContext?.name === context.name}
+                          >
+                            <Radio
+                              checked={selectedContext?.name === context.name}
+                              onChange={() => handleContextSelect(context)}
+                              value={context.name}
+                            />
+                            <ListItemText
+                              primary={
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                  {context.name}
+                                  {context.current && (
+                                    <Chip label="Current" size="small" color="primary" />
+                                  )}
+                                </Box>
+                              }
+                              secondary={
+                                <Box component="span">
+                                  Cluster: {context.cluster}
+                                  {context.namespace && ` • Namespace: ${context.namespace}`}
+                                </Box>
+                              }
+                              primaryTypographyProps={{ component: 'div' }}
+                              secondaryTypographyProps={{ component: 'div' }}
+                            />
+                          </ListItemButton>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                )}
+              </Box>
+            )}
+
+            {/* Namespace Selector */}
+            {appMode === 'real' && selectedContext && (
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
                   Namespace
@@ -144,7 +241,7 @@ export default function SettingsPage() {
             )}
 
             {/* Real-time Updates */}
-            {appMode === 'real' && (
+            {appMode === 'real' && selectedContext && (
               <Box>
                 <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
                   Real-time Updates
@@ -173,33 +270,44 @@ export default function SettingsPage() {
           </Paper>
         </Grid>
 
-        {/* About Section */}
+        {/* Appearance Section - minimized */}
         <Grid size={{ xs: 12 }}>
-          <Paper sx={{ p: 3 }}>
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-                About KubeVista
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Modern Kubernetes dashboard for cluster management
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Typography variant="body2" color="text.secondary">
-                Version: 1.1.0
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                •
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Built with Next.js & Material-UI
-              </Typography>
+          <Paper sx={{ p: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  Appearance
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {themeMode === 'system'
+                    ? `System (currently ${actualTheme})`
+                    : themeMode.charAt(0).toUpperCase() + themeMode.slice(1)}
+                </Typography>
+              </Box>
+              <ButtonGroup size="small" variant="outlined">
+                <Button
+                  variant={themeMode === 'light' ? 'contained' : 'outlined'}
+                  onClick={() => setThemeMode('light')}
+                >
+                  <LightModeOutlinedIcon fontSize="small" />
+                </Button>
+                <Button
+                  variant={themeMode === 'dark' ? 'contained' : 'outlined'}
+                  onClick={() => setThemeMode('dark')}
+                >
+                  <DarkModeOutlinedIcon fontSize="small" />
+                </Button>
+                <Button
+                  variant={themeMode === 'system' ? 'contained' : 'outlined'}
+                  onClick={() => setThemeMode('system')}
+                >
+                  <LaptopOutlinedIcon fontSize="small" />
+                </Button>
+              </ButtonGroup>
             </Box>
           </Paper>
         </Grid>
       </Grid>
-
-      <ModeSelector open={modeSelectorOpen} onClose={() => setModeSelectorOpen(false)} />
     </Box>
   )
 }
