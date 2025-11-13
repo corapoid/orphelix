@@ -32,6 +32,7 @@ import { useSession } from 'next-auth/react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { useState, useEffect } from 'react'
+import { AISettings } from '@/app/components/settings/ai-settings'
 
 interface KubeContext {
   name: string
@@ -367,6 +368,16 @@ export default function SettingsPage() {
                 </Button>
               </ButtonGroup>
             </Box>
+          </Paper>
+        </Grid>
+
+        {/* AI Features */}
+        <Grid size={{ xs: 12 }}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              AI Features
+            </Typography>
+            <AISettings />
           </Paper>
         </Grid>
 

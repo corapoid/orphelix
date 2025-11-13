@@ -108,16 +108,44 @@ export function YamlEditorModal({
         // Step 2: Fetch file contents from GitHub for candidate files
         // Prioritize environment-specific files over base files
         // Note: overlays might be in /overlays/, /prod/, /dev/, /staging/, c2a-int/, etc.
+
+        // Normalize resource name for fuzzy matching (remove separators, lowercase)
+        const normalizedResourceName = resourceName
+          .toLowerCase()
+          .replace(/[-_\s]/g, '')
+          .replace(/-main$/, '') // Remove -main suffix if present
+
+        console.log('[YamlEditor] Searching for resource:', resourceName, '(normalized:', normalizedResourceName + ')')
+
         const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
         const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
 
-        // Take up to 20 files: prioritize env-specific files, then base files
-        const candidateFiles = [...envFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
+        // Smart filtering: prioritize files that match the resource name
+        const matchingEnvFiles = envFiles.filter((f: any) => {
+          const normalizedPath = f.path.toLowerCase().replace(/[-_\s]/g, '')
+          return normalizedPath.includes(normalizedResourceName)
+        })
+
+        const otherEnvFiles = envFiles.filter((f: any) => {
+          const normalizedPath = f.path.toLowerCase().replace(/[-_\s]/g, '')
+          return !normalizedPath.includes(normalizedResourceName)
+        })
+
+        // Take files in priority order:
+        // 1. Environment files matching resource name (all of them)
+        // 2. Other environment files (up to 5)
+        // 3. Base files (up to 5)
+        const candidateFiles = [
+          ...matchingEnvFiles,
+          ...otherEnvFiles.slice(0, 5),
+          ...baseFiles.slice(0, 5)
+        ]
 
         console.log('[YamlEditor] Total files from GitHub:', files.length)
         console.log('[YamlEditor] Base files count:', baseFiles.length)
         console.log('[YamlEditor] Environment files count:', envFiles.length)
-        console.log('[YamlEditor] First 5 env files:', envFiles.slice(0, 5).map((f: any) => f.path))
+        console.log('[YamlEditor] Matching env files:', matchingEnvFiles.length, matchingEnvFiles.map((f: any) => f.path))
+        console.log('[YamlEditor] Other env files (taking 5):', otherEnvFiles.length)
         console.log('[YamlEditor] Candidate files for content fetching:', candidateFiles.length)
         const filesWithContent = await Promise.all(
           candidateFiles.map(async (file: any) => {
