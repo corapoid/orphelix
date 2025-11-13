@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { openai } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai'
 import { generateText } from 'ai'
 
 export const runtime = 'nodejs'
@@ -74,10 +74,13 @@ If no good match is found, set matchedFile to null and confidence to 0.`
 
     const startTime = Date.now()
 
+    // Create OpenAI client with user's API key
+    const openaiClient = createOpenAI({
+      apiKey,
+    })
+
     const result = await generateText({
-      model: openai('gpt-4o-mini', {
-        apiKey,
-      }),
+      model: openaiClient('gpt-4o-mini'),
       prompt,
       temperature: 0.1, // Low temperature for consistent results
     })
