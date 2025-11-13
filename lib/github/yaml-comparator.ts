@@ -102,7 +102,7 @@ function compareMaps(map1: any, map2: any): number {
   if (keys1.length === 0 || keys2.length === 0) return 0
 
   let matches = 0
-  let total = Math.max(keys1.length, keys2.length)
+  const total = Math.max(keys1.length, keys2.length)
 
   for (const key of keys1) {
     if (map2[key] === map1[key]) {
