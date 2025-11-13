@@ -348,12 +348,14 @@ export function YamlEditorModal({
             {/* Match Info Alert */}
             {matchInfo && (
               <Alert
-                severity={matchInfo.method === 'exact' ? 'success' : 'info'}
+                severity={matchInfo.method === 'exact' ? 'success' : matchInfo.method === 'directory' ? 'success' : 'info'}
                 sx={{ mb: 2 }}
               >
                 <Typography variant="body2">
                   {matchInfo.method === 'exact' && '✓ File automatically matched by exact name'}
-                  {matchInfo.method === 'namespace' && '✓ File automatically matched by namespace and name pattern'}
+                  {matchInfo.method === 'directory' && '✓ File automatically matched by directory structure'}
+                  {matchInfo.method === 'namespace' && '✓ File automatically matched by namespace pattern'}
+                  {matchInfo.method === 'fuzzy' && '✓ File automatically matched by similarity'}
                 </Typography>
               </Alert>
             )}
