@@ -501,8 +501,11 @@ export async function fetchNodePods(nodeName: string): Promise<Pod[]> {
         secrets: extractSecretNamesFromPod(pod),
       }
     })
-  } catch (error) {
-    console.error(`[K8s] Failed to fetch pods for node ${nodeName}:`, error)
+  } catch (error: any) {
+    // Silently handle 403 (permission denied) - just return empty array
+    if (error?.code !== 403) {
+      console.error(`[K8s] Failed to fetch pods for node ${nodeName}:`, error)
+    }
     return []
   }
 }
@@ -761,8 +764,11 @@ export async function fetchResourceEvents(
       firstTimestamp: event.firstTimestamp?.toString() || '',
       lastTimestamp: event.lastTimestamp?.toString() || '',
     }))
-  } catch (error) {
-    console.error(`[API] Failed to fetch Node events:`, error)
+  } catch (error: any) {
+    // Silently handle 403 (permission denied) - just return empty array
+    if (error?.code !== 403) {
+      console.error(`[API] Failed to fetch Node events:`, error)
+    }
     return []
   }
 }
