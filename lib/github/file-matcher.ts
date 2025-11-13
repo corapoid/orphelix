@@ -9,6 +9,8 @@
  * - Scoring system for best match
  */
 
+import { compareYaml } from './yaml-comparator'
+
 export interface YamlFile {
   path: string
   name: string
@@ -20,6 +22,7 @@ export interface KubernetesResource {
   name: string
   namespace: string
   type: 'deployment' | 'configmap' | 'secret'
+  clusterYaml?: string // Optional: YAML from cluster for content comparison
 }
 
 export interface MatchResult {
@@ -169,7 +172,32 @@ export class FileMatcher {
       return { file: filteredFiles[0], method: 'exact', confidence: 1.0, score: 100 }
     }
 
-    // Score filtered files
+    // If cluster YAML provided and files have content, use YAML comparison
+    if (resource.clusterYaml) {
+      const filesWithContent = filteredFiles.filter(f => f.content)
+      if (filesWithContent.length > 0) {
+        const contentMatches = filesWithContent.map(file => ({
+          file,
+          score: compareYaml(resource.clusterYaml!, file.content!)
+        }))
+
+        // Sort by score
+        contentMatches.sort((a, b) => b.score - a.score)
+        const best = contentMatches[0]
+
+        // If content match score is high enough (>= 70), use it
+        if (best.score >= 70) {
+          return {
+            file: best.file,
+            method: 'content',
+            confidence: best.score / 100,
+            score: best.score
+          }
+        }
+      }
+    }
+
+    // Score filtered files using pattern matching
     const scoredMatches = this.scoreAllFiles(resource, filteredFiles)
 
     // Sort by score (highest first)
