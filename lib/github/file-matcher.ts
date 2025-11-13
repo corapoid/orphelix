@@ -5,6 +5,7 @@
  * - Name normalization (case, separators: -, _, etc.)
  * - Directory path matching
  * - Namespace matching
+ * - YAML content comparison (when cluster YAML provided)
  * - Scoring system for best match
  */
 
@@ -12,6 +13,7 @@ export interface YamlFile {
   path: string
   name: string
   sha?: string
+  content?: string // Optional: YAML content for comparison
 }
 
 export interface KubernetesResource {
@@ -22,7 +24,7 @@ export interface KubernetesResource {
 
 export interface MatchResult {
   file: YamlFile | null
-  method: 'exact' | 'directory' | 'namespace' | 'fuzzy' | 'none'
+  method: 'content' | 'exact' | 'directory' | 'namespace' | 'fuzzy' | 'none'
   confidence?: number
   score?: number
 }
