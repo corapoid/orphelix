@@ -88,6 +88,25 @@ function matchesResourceType(file: YamlFile, resourceType: string): boolean {
   const path = file.path.toLowerCase()
   const name = file.name.toLowerCase()
 
+  // Blacklist: files that are NOT Kubernetes resources
+  const blacklist = [
+    'kustomization.yaml',
+    'kustomization.yml',
+    'kustomize.yaml',
+    'kustomize.yml',
+    '.helmignore',
+    'chart.yaml',
+    'chart.yml',
+    'values.yaml',
+    'values.yml',
+    'readme.md',
+    'readme.txt',
+  ]
+
+  if (blacklist.includes(name)) {
+    return false
+  }
+
   // Define patterns for each resource type
   const patterns: Record<string, string[]> = {
     deployment: ['deployment', 'deploy'],
