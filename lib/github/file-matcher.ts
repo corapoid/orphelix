@@ -81,6 +81,45 @@ function similarity(a: string, b: string): number {
 }
 
 /**
+ * Check if file likely contains a specific resource type
+ * Based on filename and path patterns
+ */
+function matchesResourceType(file: YamlFile, resourceType: string): boolean {
+  const path = file.path.toLowerCase()
+  const name = file.name.toLowerCase()
+
+  // Define patterns for each resource type
+  const patterns: Record<string, string[]> = {
+    deployment: ['deployment', 'deploy'],
+    configmap: ['configmap', 'config-map', 'cm'],
+    secret: ['secret', 'sec'],
+  }
+
+  const typePatterns = patterns[resourceType] || []
+
+  // Check if filename or path contains type indicators
+  for (const pattern of typePatterns) {
+    if (name.includes(pattern) || path.includes(`/${pattern}/`) || path.includes(`/${pattern}s/`)) {
+      return true
+    }
+  }
+
+  // If filename explicitly mentions another type, exclude it
+  const otherTypes = Object.keys(patterns).filter(t => t !== resourceType)
+  for (const otherType of otherTypes) {
+    for (const pattern of patterns[otherType]) {
+      // Exclude files that explicitly mention another resource type
+      if (name.includes(pattern)) {
+        return false
+      }
+    }
+  }
+
+  // Default: include (could be generic like "app.yaml")
+  return true
+}
+
+/**
  * File Matcher class with intelligent pattern matching
  */
 export class FileMatcher {
@@ -96,13 +135,21 @@ export class FileMatcher {
       return { file: null, method: 'none', score: 0 }
     }
 
-    // If only one file, return it
-    if (yamlFiles.length === 1) {
-      return { file: yamlFiles[0], method: 'exact', confidence: 1.0, score: 100 }
+    // Filter files by resource type first
+    const filteredFiles = yamlFiles.filter(f => matchesResourceType(f, resource.type))
+
+    if (filteredFiles.length === 0) {
+      // No files match the resource type - return none
+      return { file: null, method: 'none', score: 0 }
     }
 
-    // Score all files
-    const scoredMatches = this.scoreAllFiles(resource, yamlFiles)
+    // If only one file matches, return it
+    if (filteredFiles.length === 1) {
+      return { file: filteredFiles[0], method: 'exact', confidence: 1.0, score: 100 }
+    }
+
+    // Score filtered files
+    const scoredMatches = this.scoreAllFiles(resource, filteredFiles)
 
     // Sort by score (highest first)
     scoredMatches.sort((a, b) => b.score - a.score)
