@@ -329,7 +329,25 @@ export default function DeploymentDetailPage() {
                     <TableCell>
                       <StatusBadge status={pod.status} />
                     </TableCell>
-                    <TableCell>{pod.nodeName}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/nodes/${encodeURIComponent(pod.nodeName)}`}
+                        style={{ textDecoration: 'none' }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: 'primary.main',
+                            '&:hover': {
+                              textDecoration: 'underline',
+                            },
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {pod.nodeName}
+                        </Typography>
+                      </Link>
+                    </TableCell>
                     <TableCell>{pod.ip}</TableCell>
                     <TableCell align="center">{pod.restartCount}</TableCell>
                     <TableCell>{pod.age}</TableCell>
