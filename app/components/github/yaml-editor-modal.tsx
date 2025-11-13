@@ -91,93 +91,63 @@ export function YamlEditorModal({
       setMatchInfo(null)
 
       try {
-        // Step 1: Fetch cluster YAML from Kubernetes
-        let clusterYaml: string | undefined
-        try {
-          const yamlResponse = await fetch(
-            `/api/resources/${resourceType}s/${resourceName}/yaml?namespace=${namespace}`
-          )
-          if (yamlResponse.ok) {
-            const yamlData = await yamlResponse.json()
-            clusterYaml = yamlData.yaml
-          }
-        } catch (error) {
-          console.warn('Could not fetch cluster YAML, falling back to pattern matching:', error)
-        }
+        // Check if AI is available (OpenAI key configured)
+        const openaiKey = localStorage.getItem('kubevista_openai_key')
 
-        // Step 2: Fetch file contents from GitHub for candidate files
-        // Prioritize environment-specific files over base files
-        // Note: overlays might be in /overlays/, /prod/, /dev/, /staging/, c2a-int/, etc.
+        console.log('[YamlEditor] Starting file matching for:', resourceName)
+        console.log('[YamlEditor] Total files:', files.length)
+        console.log('[YamlEditor] AI available:', !!openaiKey)
 
-        // Normalize resource name for fuzzy matching (remove separators, lowercase)
-        const normalizedResourceName = resourceName
-          .toLowerCase()
-          .replace(/[-_\s]/g, '')
-          .replace(/-main$/, '') // Remove -main suffix if present
+        let response: Response
 
-        console.log('[YamlEditor] Searching for resource:', resourceName, '(normalized:', normalizedResourceName + ')')
-
-        const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
-        const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
-
-        // Smart filtering: prioritize files that match the resource name
-        const matchingEnvFiles = envFiles.filter((f: any) => {
-          const normalizedPath = f.path.toLowerCase().replace(/[-_\s]/g, '')
-          return normalizedPath.includes(normalizedResourceName)
-        })
-
-        const otherEnvFiles = envFiles.filter((f: any) => {
-          const normalizedPath = f.path.toLowerCase().replace(/[-_\s]/g, '')
-          return !normalizedPath.includes(normalizedResourceName)
-        })
-
-        // Take files in priority order:
-        // 1. Environment files matching resource name (all of them)
-        // 2. Other environment files (up to 5)
-        // 3. Base files (up to 5)
-        const candidateFiles = [
-          ...matchingEnvFiles,
-          ...otherEnvFiles.slice(0, 5),
-          ...baseFiles.slice(0, 5)
-        ]
-
-        console.log('[YamlEditor] Total files from GitHub:', files.length)
-        console.log('[YamlEditor] Base files count:', baseFiles.length)
-        console.log('[YamlEditor] Environment files count:', envFiles.length)
-        console.log('[YamlEditor] Matching env files:', matchingEnvFiles.length, matchingEnvFiles.map((f: any) => f.path))
-        console.log('[YamlEditor] Other env files (taking 5):', otherEnvFiles.length)
-        console.log('[YamlEditor] Candidate files for content fetching:', candidateFiles.length)
-        const filesWithContent = await Promise.all(
-          candidateFiles.map(async (file: any) => {
-            try {
-              const response = await fetch(
-                `/api/github/file?owner=${selectedRepo.owner}&repo=${selectedRepo.repo}&path=${file.path}&ref=${selectedRepo.branch}`
-              )
-              if (response.ok) {
-                const data = await response.json()
-                return { ...file, content: data.content }
-              }
-            } catch (error) {
-              console.warn(`Could not fetch content for ${file.path}:`, error)
-            }
-            return file
-          })
-        )
-
-        // Step 3: Send to match-file API with clusterYaml and file contents
-        const response = await fetch('/api/github/match-file', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            resource: {
-              name: resourceName,
+        if (openaiKey) {
+          // AI-powered matching
+          console.log('[YamlEditor] Using AI-powered matching')
+          response = await fetch('/api/ai/match-file', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              resourceName,
               namespace,
-              type: resourceType,
-              clusterYaml, // NEW: cluster YAML for comparison
-            },
-            yamlFiles: filesWithContent, // NEW: files with content
-          }),
-        })
+              resourceType,
+              files: files.map((f: any) => ({ path: f.path, name: f.name })),
+              apiKey: openaiKey,
+            }),
+          })
+        } else {
+          // Fallback: pattern matching (old method)
+          console.log('[YamlEditor] AI not available, using pattern matching')
+
+          const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
+          const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
+          const candidateFiles = [...envFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
+
+          const filesWithContent = await Promise.all(
+            candidateFiles.map(async (file: any) => {
+              try {
+                const res = await fetch(
+                  `/api/github/file?owner=${selectedRepo.owner}&repo=${selectedRepo.repo}&path=${file.path}&ref=${selectedRepo.branch}`
+                )
+                if (res.ok) {
+                  const data = await res.json()
+                  return { ...file, content: data.content }
+                }
+              } catch (error) {
+                console.warn(`Could not fetch content for ${file.path}:`, error)
+              }
+              return file
+            })
+          )
+
+          response = await fetch('/api/github/match-file', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              resource: { name: resourceName, namespace, type: resourceType },
+              yamlFiles: filesWithContent,
+            }),
+          })
+        }
 
         if (!response.ok) {
           console.error('Failed to match file')
@@ -185,12 +155,22 @@ export function YamlEditorModal({
         }
 
         const data = await response.json()
+        console.log('[YamlEditor] Match result:', data)
 
-        if (data.matchedFile) {
+        // Handle different response formats (AI vs pattern matching)
+        const matchedFilePath = openaiKey
+          ? data.matchedFile  // AI returns direct path string
+          : data.matchedFile?.path  // Pattern matcher returns object
+
+        if (matchedFilePath) {
           setMatchInfo({
-            method: data.method,
+            method: openaiKey ? 'ai' : (data.method || 'pattern'),
+            confidence: data.confidence,
+            reasoning: data.reasoning,
           })
-          await loadFile(data.matchedFile.path)
+          await loadFile(matchedFilePath)
+        } else {
+          console.warn('[YamlEditor] No match found')
         }
       } catch (error) {
         console.error('Error matching file:', error)
