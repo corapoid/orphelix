@@ -761,3 +761,57 @@ export async function fetchResourceEvents(
     lastTimestamp: event.lastTimestamp?.toString() || '',
   }))
 }
+/**
+ * Fetch deployment as raw YAML string
+ */
+export async function fetchDeploymentYaml(name: string, namespace: string): Promise<string | null> {
+  try {
+    const appsApi = getAppsApi()
+    const response = await appsApi.readNamespacedDeployment({ name, namespace })
+    
+    // Convert to YAML using js-yaml
+    const yaml = require('js-yaml')
+    const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
+    
+    return yamlString
+  } catch (error) {
+    console.error('[API] Failed to fetch deployment YAML:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch configmap as raw YAML string
+ */
+export async function fetchConfigMapYaml(name: string, namespace: string): Promise<string | null> {
+  try {
+    const coreApi = getCoreApi()
+    const response = await coreApi.readNamespacedConfigMap({ name, namespace })
+    
+    const yaml = require('js-yaml')
+    const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
+    
+    return yamlString
+  } catch (error) {
+    console.error('[API] Failed to fetch configmap YAML:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch secret as raw YAML string
+ */
+export async function fetchSecretYaml(name: string, namespace: string): Promise<string | null> {
+  try {
+    const coreApi = getCoreApi()
+    const response = await coreApi.readNamespacedSecret({ name, namespace })
+    
+    const yaml = require('js-yaml')
+    const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
+    
+    return yamlString
+  } catch (error) {
+    console.error('[API] Failed to fetch secret YAML:', error)
+    return null
+  }
+}
