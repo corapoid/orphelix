@@ -322,12 +322,14 @@ export class FileMatcher {
         }
       }
 
-      // 5. Overlay preference (STRONG bonus - overlays are environment-specific)
-      if (file.path.includes('/overlays/') || file.path.includes('/overlay/')) {
-        score += 30 // Strong preference for overlay files
-        if (method === 'none') method = 'overlay'
-      } else if (file.path.includes('/base/')) {
+      // 5. Environment-specific file preference (STRONG bonus)
+      // Files NOT in /base/ are usually environment-specific (prod, dev, staging, etc.)
+      if (file.path.includes('/base/')) {
         score += 5 // Base gets small bonus (generic configs)
+      } else {
+        // Not in base = likely environment-specific (prod/, dev/, overlays/, etc.)
+        score += 35 // Strong preference for environment-specific files
+        if (method === 'none') method = 'environment'
       }
 
       return { file, score, method }

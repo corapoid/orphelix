@@ -106,12 +106,18 @@ export function YamlEditorModal({
         }
 
         // Step 2: Fetch file contents from GitHub for candidate files
-        // Prioritize overlay files over base files
-        const overlayFiles = files.filter((f: any) => f.path.includes('/overlays/') || f.path.includes('/overlay/'))
-        const baseFiles = files.filter((f: any) => !f.path.includes('/overlays/') && !f.path.includes('/overlay/'))
+        // Prioritize environment-specific files over base files
+        // Note: overlays might be in /overlays/, /prod/, /dev/, /staging/, etc.
+        const baseFiles = files.filter((f: any) => f.path.includes('/base/'))
+        const envFiles = files.filter((f: any) => !f.path.includes('/base/'))
 
-        // Take up to 20 files: prioritize overlays, then base files
-        const candidateFiles = [...overlayFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
+        // Take up to 20 files: prioritize env-specific files, then base files
+        const candidateFiles = [...envFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
+
+        console.log('[YamlEditor] Total files:', files.length)
+        console.log('[YamlEditor] Base files:', baseFiles.length)
+        console.log('[YamlEditor] Environment files:', envFiles.length)
+        console.log('[YamlEditor] Candidate files for matching:', candidateFiles.length)
         const filesWithContent = await Promise.all(
           candidateFiles.map(async (file: any) => {
             try {
