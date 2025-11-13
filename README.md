@@ -23,11 +23,15 @@
 - **Persistent Volumes** - Persistent storage management
 - **Events** - Chronological cluster event timeline
 
-### 📊 Real-time Updates
+### 📊 Real-time Updates & Metrics
 - Automatic cluster synchronization via Server-Sent Events (SSE)
 - Visual connection status indicator
 - Automatic reconnection on connection loss
 - Heartbeat monitoring (every 30s)
+- **Resource usage metrics** with CPU/Memory monitoring
+- Progress bars showing Current/Requested/Limit values
+- Color-coded usage indicators (green/yellow/red)
+- Auto-refresh metrics every 30 seconds
 
 ### 🎨 Demo Mode
 - Demonstration mode with realistic test data

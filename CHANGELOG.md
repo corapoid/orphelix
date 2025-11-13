@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-11-13
+
+### Added
+
+- **Resource Metrics Visualization**: Added real-time resource usage monitoring
+  - New `ResourceUsageChart` component with CPU/Memory metrics
+  - Card-based progress bars showing Current/Requested/Limit resources
+  - Color-coded usage indicators (green/yellow/red)
+  - Tooltips explaining percentage calculations
+  - `/api/metrics/pods` endpoint for fetching pod metrics via kubectl top
+  - Support for both real cluster metrics and demo mode with mock data
+  - Auto-refresh every 30 seconds in real mode
+  - Metrics displayed on deployment detail pages
+- **Collapsible Sections**: Improved UX with collapsible components
+  - Topology section on dashboard (collapsed by default)
+  - Recent Events with "Show N More" expansion (displays 3 by default)
+  - Container Logs section on pod details (collapsed by default)
+  - Smooth transitions and hover effects
+- **Enhanced Detail Pages**:
+  - Vertical layout for metadata (namespace, age, node) - one item per line
+  - Unified resource display (ConfigMaps & Secrets in single section)
+  - Consistent styling between deployment and pod details
+  - Improved logs viewer with inline controls (Formatted/Raw chips)
+- **Settings Page Improvements**:
+  - Dedicated `/settings` route with centralized configuration
+  - Inline mode selection (Demo/Real Cluster) without modal
+  - Connection testing before switching to real cluster
+  - Minimized Appearance section with icon-based theme selection
+- **Connection Validation**: `/api/test-connection` endpoint to validate cluster connectivity
+- **Footer Component**: Global footer with version info and GitHub link
+
+### Changed
+
+- **Sidebar Bottom Section**: Redesigned Settings and Collapse buttons layout
+  - Combined into single section with horizontal layout
+  - Settings button on left, Collapse chevron on right (when expanded)
+  - Single chevron button when collapsed
+  - Consistent font weights and styling across menu items
+- **Topology Graph**: Disabled scroll-based zoom/pan for better UX
+  - `zoomOnScroll={false}` and `panOnScroll={false}`
+  - Manual dragging still enabled with `panOnDrag={true}`
+  - Fixed hover artifacts with proper overflow handling
+- **Loading Skeleton**: Removed colorful gradient, replaced with neutral MUI Skeleton
+- **Pod Details**: Fixed Age display (was showing N/A, now correctly formatted)
+- **Logs Viewer**: Removed duplicate "Container Logs" header
+  - Moved Formatted/Raw chips to toolbar
+  - Cleaner single-header layout in collapsible section
+
+### Fixed
+
+- **Demo Mode Metrics**: Fixed metrics API to support both 'mock' and 'demo' mode values
+  - Prevents kubectl errors in console during demo mode
+  - Properly returns mock data when mode parameter is set
+- **Topology Section**: Removed hover artifacts on edges with `overflow: 'hidden'`
+- **Expand Button**: Fixed unwanted square highlight with `disableRipple` and transparent hover
+- **Age Formatting**: Removed duplicate `formatAge()` call in pod details
+- **Resource Display**: Unified ConfigMaps/Secrets sections between deployment and pod pages
+- **ESLint**: Fixed unused import warnings (removed unused `Collapse` import)
+
 ## [1.1.0] - 2025-11-12
 
 ### Added
@@ -285,6 +344,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 **Version History:**
+- **1.2.0** (2025-11-13) - Resource metrics, collapsible sections, enhanced UX, settings page improvements
 - **1.1.0** (2025-11-12) - Namespace support, real context detection, rebranding to KubeVista
 - **1.0.0** (2025-11-12) - Production release with full K8s integration, real-time updates, and GitOps support
 - **0.1.0** (2025-11-11) - Initial release with mock data and core UI features
