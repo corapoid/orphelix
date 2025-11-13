@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState, useRef } from 'react'
+import { useCallback, useMemo, useState, useRef, useEffect } from 'react'
 import {
   ReactFlow,
   Controls,
@@ -8,6 +8,7 @@ import {
   useEdgesState,
   ReactFlowProvider,
   Panel,
+  useReactFlow,
   type OnNodesChange,
   type OnEdgesChange,
 } from '@xyflow/react'
@@ -34,6 +35,7 @@ const nodeTypes = {
 function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
   const router = useRouter()
   const reactFlowRef = useRef<HTMLDivElement>(null)
+  const { fitView } = useReactFlow()
   const [fullscreen, setFullscreen] = useState(false)
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
   const [nodes, setNodes, onNodesChange] = useNodesState(data.nodes)
@@ -44,6 +46,15 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
     setNodes(data.nodes)
     setEdges(data.edges)
   }, [data, setNodes, setEdges])
+
+  // Fit view whenever nodes change
+  useEffect(() => {
+    if (nodes.length > 0) {
+      setTimeout(() => {
+        fitView({ padding: 0.2, duration: 200 })
+      }, 0)
+    }
+  }, [nodes, fitView])
 
   // Get connected node IDs for a given node
   const getConnectedNodeIds = useCallback((nodeId: string): Set<string> => {
