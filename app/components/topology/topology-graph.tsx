@@ -173,7 +173,8 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
         minZoom={0.2}
         maxZoom={2}
         zoomOnScroll={false}
-        panOnScroll={true}
+        panOnScroll={false}
+        panOnDrag={true}
       >
         <Controls />
         <Panel position="top-right">
