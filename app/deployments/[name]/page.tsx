@@ -151,9 +151,14 @@ export default function DeploymentDetailPage() {
           <Typography variant="h4">{deployment.name}</Typography>
           <StatusBadge status={deployment.status} size="medium" />
         </Box>
-        <Typography variant="body2" color="text.secondary">
-          Namespace: {deployment.namespace} • Age: {deployment.age}
-        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography variant="body2" color="text.secondary">
+            Namespace: {deployment.namespace}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Age: {deployment.age}
+          </Typography>
+        </Box>
       </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>

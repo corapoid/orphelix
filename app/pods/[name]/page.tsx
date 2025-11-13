@@ -18,6 +18,10 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Snackbar from '@mui/material/Snackbar'
+import Collapse from '@mui/material/Collapse'
+import IconButton from '@mui/material/IconButton'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
@@ -28,7 +32,6 @@ import { usePod, usePodLogs } from '@/lib/hooks/use-pods'
 import { useRestartPod } from '@/lib/hooks/use-restart-pod'
 import { StatusBadge } from '@/components/common/status-badge'
 import { LogsViewer } from '@/app/components/pods/logs-viewer'
-import { formatAge } from '@/lib/utils'
 import { RestartPodDialog } from '@/app/components/pods/restart-pod-dialog'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
@@ -45,6 +48,7 @@ export default function PodDetailPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success')
+  const [logsExpanded, setLogsExpanded] = useState(false)
 
   const restartMutation = useRestartPod(name)
 
@@ -138,9 +142,17 @@ export default function PodDetailPage() {
           <Typography variant="h4">{pod.name}</Typography>
           <StatusBadge status={pod.status} size="medium" />
         </Box>
-        <Typography variant="body2" color="text.secondary">
-          Namespace: {pod.namespace} • Node: {pod.nodeName} • Age: {formatAge(pod.age)}
-        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography variant="body2" color="text.secondary">
+            Namespace: {pod.namespace}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Node: {pod.nodeName}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Age: {pod.age}
+          </Typography>
+        </Box>
       </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
@@ -303,34 +315,67 @@ export default function PodDetailPage() {
       </Paper>
 
       {pod.containers.length > 0 && (
-        <Box sx={{ mb: 3 }}>
-          {pod.containers.length > 1 && (
-            <Box sx={{ mb: 2 }}>
-              <FormControl size="small" sx={{ minWidth: 200 }}>
-                <InputLabel>Select Container</InputLabel>
-                <Select
-                  value={selectedContainer}
-                  label="Select Container"
-                  onChange={(e) => setSelectedContainer(e.target.value)}
-                >
-                  {pod.containers.map((container) => (
-                    <MenuItem key={container.name} value={container.name}>
-                      {container.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+        <Paper sx={{ mb: 3, overflow: 'hidden' }}>
+          <Box
+            sx={{
+              p: 2,
+              borderBottom: logsExpanded ? 1 : 0,
+              borderColor: 'divider',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s',
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+            }}
+            onClick={() => setLogsExpanded(!logsExpanded)}
+          >
+            <Typography variant="h6">Container Logs</Typography>
+            <IconButton
+              size="small"
+              disableRipple
+              sx={{
+                '&:hover': {
+                  bgcolor: 'transparent',
+                },
+              }}
+            >
+              {logsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
+          </Box>
+          <Collapse in={logsExpanded}>
+            <Box sx={{ p: 2 }}>
+              {pod.containers.length > 1 && (
+                <Box sx={{ mb: 2 }}>
+                  <FormControl size="small" sx={{ minWidth: 200 }}>
+                    <InputLabel>Select Container</InputLabel>
+                    <Select
+                      value={selectedContainer}
+                      label="Select Container"
+                      onChange={(e) => setSelectedContainer(e.target.value)}
+                    >
+                      {pod.containers.map((container) => (
+                        <MenuItem key={container.name} value={container.name}>
+                          {container.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+              )}
+              <LogsViewer
+                logs={logs}
+                parsed={parsedLogs}
+                isLoading={logsLoading}
+                error={logsError}
+                containerName={selectedContainer}
+                onRefresh={() => refetchLogs()}
+              />
             </Box>
-          )}
-          <LogsViewer
-            logs={logs}
-            parsed={parsedLogs}
-            isLoading={logsLoading}
-            error={logsError}
-            containerName={selectedContainer}
-            onRefresh={() => refetchLogs()}
-          />
-        </Box>
+          </Collapse>
+        </Paper>
       )}
 
       {/* Restart confirmation dialog */}
