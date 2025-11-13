@@ -83,12 +83,20 @@ export function useNodeEvents(nodeName: string) {
         )
       }
 
-      
+
       const response = await fetch(`/api/nodes/${nodeName}/events`)
-      if (!response.ok) throw new Error('Failed to fetch node events')
+      // If 403 (forbidden), return empty array instead of throwing
+      if (!response.ok) {
+        if (response.status === 403) {
+          console.warn('Node events: insufficient permissions (403)')
+          return []
+        }
+        throw new Error('Failed to fetch node events')
+      }
       return response.json()
     },
     enabled: !!nodeName,
+    retry: false, // Don't retry on 403 errors
   })
 }
 
