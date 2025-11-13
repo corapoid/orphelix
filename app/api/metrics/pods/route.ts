@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  // Return mock data in demo mode
-  if (mode === 'demo') {
+  // Return mock data in demo/mock mode
+  if (mode === 'demo' || mode === 'mock') {
     const mockData = generateMockPodMetrics(deploymentName, namespace)
     return NextResponse.json(mockData)
   }
