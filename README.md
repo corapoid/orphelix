@@ -53,6 +53,7 @@
 ### 📝 GitHub Integration & YAML Editor
 - **GitHub OAuth & GitHub App** - Dual authentication support
 - **YAML Editor** - Edit Kubernetes manifests directly from the dashboard
+- **AI-Powered File Matching** - Automatic file matching using local LLM (Ollama)
 - **Pull Request Creation** - Automatically create PRs for changes
 - **PR Merge** - Merge pull requests directly from the application
 - **Kustomization Support** - Detect and edit kustomize base & overlays
@@ -72,6 +73,7 @@
 - **Node.js** 20 or higher
 - **kubectl** configured with cluster access (for real mode)
 - (Optional) **GitHub OAuth App** or **GitHub App** (for YAML editor and PR workflow)
+- (Optional) **Ollama** with a local LLM (for AI-powered file matching)
 - (Optional) **GitHub Personal Access Token** (for Flux integration)
 
 ## 🚀 Quick Start
@@ -256,6 +258,55 @@ KubeVista supports two methods for GitHub authentication:
    ```
 
 3. Required scopes: `repo`, `read:user`, `user:email`
+
+### AI-Powered File Matching (Optional)
+
+KubeVista can intelligently match Kubernetes resources to their YAML files using a local LLM.
+
+#### Setup Ollama
+
+1. **Install Ollama** (runs locally - no data sent externally):
+   ```bash
+   # macOS
+   brew install ollama
+
+   # Linux
+   curl -fsSL https://ollama.ai/install.sh | sh
+
+   # Windows
+   # Download from https://ollama.ai
+   ```
+
+2. **Pull a lightweight model**:
+   ```bash
+   # Recommended: Fast and accurate (1.3GB)
+   ollama pull llama3.2:1b
+
+   # Alternatives:
+   # ollama pull llama3.2:3b  # Better accuracy (2GB)
+   # ollama pull qwen2.5:3b   # Good for technical tasks (2GB)
+   ```
+
+3. **Start Ollama**:
+   ```bash
+   ollama serve  # Runs on http://localhost:11434
+   ```
+
+4. **Configure environment**:
+   ```bash
+   # In .env.local
+   OLLAMA_ENABLED=true
+   OLLAMA_HOST=http://localhost:11434
+   OLLAMA_MODEL=llama3.2:1b
+   ```
+
+#### How It Works
+
+When you click "Edit YAML", KubeVista will:
+1. **Try pattern matching first** (exact name, namespace/name patterns)
+2. **Fallback to AI matching** if pattern matching fails
+3. **Use local Ollama** - no data sent to external services
+4. **Show match method** in UI (exact, namespace, or AI-powered)
 
 ### GitHub Token (for Flux)
 

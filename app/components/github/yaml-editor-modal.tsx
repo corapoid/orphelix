@@ -47,6 +47,8 @@ export function YamlEditorModal({
   const [prCreated, setPrCreated] = useState<{ number: number; url: string } | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [isMergingPR, setIsMergingPR] = useState(false)
+  const [matchingFile, setMatchingFile] = useState(false)
+  const [matchInfo, setMatchInfo] = useState<{ method: string; aiUsed: boolean } | null>(null)
 
   // Check authentication status (both OAuth and GitHub App)
   const { data: authStatus } = useQuery({
@@ -58,13 +60,6 @@ export function YamlEditorModal({
     },
     enabled: open,
   })
-
-  // Update authentication state when authStatus changes
-  useEffect(() => {
-    if (authStatus) {
-      setIsAuthenticated(authStatus.authenticated)
-    }
-  }, [authStatus])
 
   // Fetch YAML files
   const { data: files, isLoading: filesLoading } = useQuery({
@@ -79,6 +74,60 @@ export function YamlEditorModal({
     },
     enabled: !!selectedRepo && open,
   })
+
+  // Update authentication state when authStatus changes
+  useEffect(() => {
+    if (authStatus) {
+      setIsAuthenticated(authStatus.authenticated)
+    }
+  }, [authStatus])
+
+  // Auto-match file when files are loaded
+  useEffect(() => {
+    const autoMatchFile = async () => {
+      if (!files || files.length === 0 || selectedFile || !open) return
+
+      setMatchingFile(true)
+      setMatchInfo(null)
+
+      try {
+        const response = await fetch('/api/github/match-file', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            resource: {
+              name: resourceName,
+              namespace,
+              type: resourceType,
+            },
+            yamlFiles: files,
+          }),
+        })
+
+        if (!response.ok) {
+          console.error('Failed to match file')
+          return
+        }
+
+        const data = await response.json()
+
+        if (data.matchedFile) {
+          setMatchInfo({
+            method: data.method,
+            aiUsed: data.aiUsed,
+          })
+          await loadFile(data.matchedFile.path)
+        }
+      } catch (error) {
+        console.error('Error matching file:', error)
+      } finally {
+        setMatchingFile(false)
+      }
+    }
+
+    autoMatchFile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files, open])
 
   // Fetch Kustomize structure when file is selected
   const { data: kustomize } = useQuery({
@@ -288,12 +337,34 @@ export function YamlEditorModal({
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>Edit YAML - {resourceName} ({resourceTypeLabel})</DialogTitle>
       <DialogContent>
-        {filesLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        {filesLoading || matchingFile ? (
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, p: 4 }}>
             <CircularProgress />
+            <Typography variant="body2" color="text.secondary">
+              {matchingFile ? 'Finding best matching file...' : 'Loading files...'}
+            </Typography>
           </Box>
         ) : (
           <>
+            {/* Match Info Alert */}
+            {matchInfo && (
+              <Alert
+                severity={matchInfo.method === 'exact' ? 'success' : matchInfo.aiUsed ? 'info' : 'warning'}
+                sx={{ mb: 2 }}
+              >
+                <Typography variant="body2">
+                  {matchInfo.method === 'exact' && '✓ File matched by exact name'}
+                  {matchInfo.method === 'namespace' && '✓ File matched by namespace and name pattern'}
+                  {matchInfo.method === 'ai' && '🤖 File matched using local AI model'}
+                </Typography>
+                {matchInfo.aiUsed && (
+                  <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                    Powered by local Ollama - no data sent externally
+                  </Typography>
+                )}
+              </Alert>
+            )}
+
             {/* File Selector */}
             <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Select YAML File</InputLabel>
