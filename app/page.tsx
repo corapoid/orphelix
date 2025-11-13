@@ -384,7 +384,7 @@ export default function DashboardPage() {
 
       {/* ConfigMaps/Secrets to Deployments Topology */}
       {topologyData && topologyData.nodes.length > 0 && (
-        <Paper sx={{ mb: 4 }}>
+        <Paper sx={{ mb: 4, overflow: 'hidden' }}>
           <Box
             sx={{
               p: 2,
@@ -394,6 +394,7 @@ export default function DashboardPage() {
               justifyContent: 'space-between',
               alignItems: 'center',
               cursor: 'pointer',
+              transition: 'background-color 0.2s',
               '&:hover': {
                 bgcolor: 'action.hover',
               }
