@@ -22,9 +22,13 @@ import { useConfigMaps } from '@/lib/hooks/use-configmaps'
 import { useSecrets } from '@/lib/hooks/use-secrets'
 import { useModeStore } from '@/lib/store'
 import { buildConfigSecretsTopology } from '@/lib/topology'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { ClusterConnectionAlert } from '@/components/common/cluster-connection-alert'
 import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
+import IconButton from '@mui/material/IconButton'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import Collapse from '@mui/material/Collapse'
 
 export default function DashboardPage() {
   const { data: health } = useClusterHealth()
@@ -32,6 +36,7 @@ export default function DashboardPage() {
   const selectedContext = useModeStore((state) => state.selectedContext)
   const namespace = useModeStore((state) => state.selectedNamespace)
   const { data: summary, isLoading, error } = useDashboardSummary()
+  const [topologyExpanded, setTopologyExpanded] = useState(false)
   const {
     data: events,
     isLoading: eventsLoading,
@@ -380,12 +385,31 @@ export default function DashboardPage() {
       {/* ConfigMaps/Secrets to Deployments Topology */}
       {topologyData && topologyData.nodes.length > 0 && (
         <Paper sx={{ mb: 4 }}>
-          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+          <Box
+            sx={{
+              p: 2,
+              borderBottom: topologyExpanded ? 1 : 0,
+              borderColor: 'divider',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              cursor: 'pointer',
+              '&:hover': {
+                bgcolor: 'action.hover',
+              }
+            }}
+            onClick={() => setTopologyExpanded(!topologyExpanded)}
+          >
             <Typography variant="h6">Topology</Typography>
+            <IconButton size="small">
+              {topologyExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
           </Box>
-          <Box>
-            <TopologyGraph data={topologyData} height={500} />
-          </Box>
+          <Collapse in={topologyExpanded}>
+            <Box>
+              <TopologyGraph data={topologyData} height={500} />
+            </Box>
+          </Collapse>
         </Paper>
       )}
 
