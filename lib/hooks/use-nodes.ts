@@ -118,11 +118,19 @@ export function useNodePods(nodeName: string) {
         return allPods.filter((pod) => pod.nodeName === nodeName)
       }
 
-      
+
       const response = await fetch(`/api/nodes/${nodeName}/pods`)
-      if (!response.ok) throw new Error('Failed to fetch node pods')
+      // If 403 (forbidden), return empty array instead of throwing
+      if (!response.ok) {
+        if (response.status === 403) {
+          console.warn('Node pods: insufficient permissions (403)')
+          return []
+        }
+        throw new Error('Failed to fetch node pods')
+      }
       return response.json()
     },
     enabled: !!nodeName,
+    retry: false, // Don't retry on 403 errors
   })
 }
