@@ -21,7 +21,6 @@ import SecretIcon from '@mui/icons-material/Lock'
 import HpaIcon from '@mui/icons-material/TrendingUp'
 import PvIcon from '@mui/icons-material/FolderOpen'
 import EventIcon from '@mui/icons-material/EventNote'
-import GitHubIcon from '@mui/icons-material/GitHub'
 import SettingsIcon from '@mui/icons-material/SettingsOutlined'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
@@ -53,7 +52,6 @@ const navItems: NavItem[] = [
   { label: 'HPA', icon: <HpaIcon />, path: '/hpa', color: '#64748B' },
   { label: 'Persistent Volumes', icon: <PvIcon />, path: '/pv', color: '#F59E0B' },
   { label: 'Events', icon: <EventIcon />, path: '/events', color: '#06B6D4' },
-  { label: 'Flux GitOps', icon: <GitHubIcon />, path: '/flux', color: '#8B5CF6' },
 ]
 
 export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
