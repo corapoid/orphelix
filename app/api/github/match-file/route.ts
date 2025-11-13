@@ -1,76 +1,59 @@
 /**
- * API Route: Match YAML file to Kubernetes resource
+ * File Matching API
  *
- * This endpoint uses AI-powered file matching to find the best YAML file
- * for a given Kubernetes resource (Deployment, ConfigMap, or Secret).
+ * Matches Kubernetes resources to YAML files using pattern matching.
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { matchFileToResource, KubernetesResource, YamlFile } from '@/lib/github/file-matcher'
-import { getAIConfig } from '@/lib/ai/config'
+import { matchFileToResource } from '@/lib/github/file-matcher'
+import type { KubernetesResource, YamlFile } from '@/lib/github/file-matcher'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
+/**
+ * POST /api/github/match-file
+ * Match a Kubernetes resource to a YAML file
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { resource, yamlFiles } = body
 
-    // Validate input
-    if (!resource || !resource.name || !resource.namespace || !resource.type) {
+    if (!resource || !yamlFiles) {
       return NextResponse.json(
-        { error: 'Invalid resource. Required: name, namespace, type' },
+        { error: 'Missing required fields: resource, yamlFiles' },
         { status: 400 }
       )
     }
 
-    if (!yamlFiles || !Array.isArray(yamlFiles)) {
-      return NextResponse.json(
-        { error: 'Invalid yamlFiles. Expected an array' },
-        { status: 400 }
-      )
-    }
-
-    // Perform matching
+    // Perform matching using pattern matching only
     const result = await matchFileToResource(
       resource as KubernetesResource,
       yamlFiles as YamlFile[]
     )
 
-    // Get AI config for debugging
-    const aiConfig = getAIConfig()
-
     return NextResponse.json({
       matchedFile: result.file,
       method: result.method,
       confidence: result.confidence,
-      aiUsed: result.aiUsed,
-      aiConfig: {
-        enabled: aiConfig.enabled,
-        model: aiConfig.model,
-      },
     })
   } catch (error) {
-    console.error('File matching error:', error)
+    console.error('Error matching file:', error)
     return NextResponse.json(
-      {
-        error: 'Failed to match file',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
+      { error: 'Failed to match file' },
       { status: 500 }
     )
   }
 }
 
 /**
- * GET endpoint to check if AI matching is available
+ * GET /api/github/match-file
+ * Health check endpoint
  */
 export async function GET() {
-  const aiConfig = getAIConfig()
-
   return NextResponse.json({
-    aiEnabled: aiConfig.enabled,
-    aiConfig: {
-      type: aiConfig.type,
-      model: aiConfig.model,
-    },
+    status: 'ok',
+    method: 'pattern-matching',
   })
 }

@@ -53,7 +53,7 @@
 ### 📝 GitHub Integration & YAML Editor
 - **GitHub OAuth & GitHub App** - Dual authentication support
 - **YAML Editor** - Edit Kubernetes manifests directly from the dashboard
-- **AI-Powered File Matching** - Automatic file matching using embedded LLM (Transformers.js)
+- **Smart File Matching** - Automatic file matching using pattern recognition
 - **Pull Request Creation** - Automatically create PRs for changes
 - **PR Merge** - Merge pull requests directly from the application
 - **Kustomization Support** - Detect and edit kustomize base & overlays
@@ -73,7 +73,6 @@
 - **Node.js** 20 or higher
 - **kubectl** configured with cluster access (for real mode)
 - (Optional) **GitHub OAuth App** or **GitHub App** (for YAML editor and PR workflow)
-- (Optional) **Custom AI model** configuration (embedded LLM included by default)
 - (Optional) **GitHub Personal Access Token** (for Flux integration)
 
 ## 🚀 Quick Start
@@ -258,42 +257,6 @@ KubeVista supports two methods for GitHub authentication:
    ```
 
 3. Required scopes: `repo`, `read:user`, `user:email`
-
-### AI-Powered File Matching (Built-in)
-
-KubeVista includes an **embedded AI model** that intelligently matches Kubernetes resources to their YAML files.
-
-#### Features
-
-- ✅ **Built-in LLM** - No external installation required
-- ✅ **Automatic setup** - Model downloads on first use (~200-500MB)
-- ✅ **Fully offline** - No data sent to external services
-- ✅ **Fast & efficient** - Quantized models for optimal performance
-- ✅ **Persistent cache** - Subsequent runs use cached model
-
-#### Configuration (Optional)
-
-By default, AI matching is **enabled automatically**. You can customize it:
-
-```bash
-# In .env.local (optional)
-AI_ENABLED=true  # Set to false to disable AI matching
-AI_MODEL=onnx-community/Qwen2.5-0.5B-Instruct  # Change model (see options below)
-```
-
-**Available models:**
-- `onnx-community/Qwen2.5-0.5B-Instruct` (~200MB) - **Default** - Fast, good for file matching
-- `onnx-community/Llama-3.2-1B-Instruct` (~1.2GB) - Better accuracy, slower
-- `onnx-community/gemma-3-270m-it-ONNX` (~270MB) - Alternative small model
-
-#### How It Works
-
-When you click "Edit YAML", KubeVista will:
-1. **Try pattern matching first** (exact name, namespace/name patterns) - instant
-2. **Fallback to AI matching** if pattern matching fails - ~1-3 seconds
-3. **Use embedded ONNX model** - runs entirely in Node.js, no external services
-4. **Show match method** in UI (exact, namespace, or AI-powered)
-5. **Cache model files** in `.cache/transformers` for subsequent runs
 
 ### GitHub Token (for Flux)
 

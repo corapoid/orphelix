@@ -48,7 +48,7 @@ export function YamlEditorModal({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [isMergingPR, setIsMergingPR] = useState(false)
   const [matchingFile, setMatchingFile] = useState(false)
-  const [matchInfo, setMatchInfo] = useState<{ method: string; aiUsed: boolean } | null>(null)
+  const [matchInfo, setMatchInfo] = useState<{ method: string } | null>(null)
 
   // Check authentication status (both OAuth and GitHub App)
   const { data: authStatus } = useQuery({
@@ -114,7 +114,6 @@ export function YamlEditorModal({
         if (data.matchedFile) {
           setMatchInfo({
             method: data.method,
-            aiUsed: data.aiUsed,
           })
           await loadFile(data.matchedFile.path)
         }
@@ -349,19 +348,13 @@ export function YamlEditorModal({
             {/* Match Info Alert */}
             {matchInfo && (
               <Alert
-                severity={matchInfo.method === 'exact' ? 'success' : matchInfo.aiUsed ? 'info' : 'warning'}
+                severity={matchInfo.method === 'exact' ? 'success' : 'info'}
                 sx={{ mb: 2 }}
               >
                 <Typography variant="body2">
-                  {matchInfo.method === 'exact' && '✓ File matched by exact name'}
-                  {matchInfo.method === 'namespace' && '✓ File matched by namespace and name pattern'}
-                  {matchInfo.method === 'ai' && '🤖 File matched using local AI model'}
+                  {matchInfo.method === 'exact' && '✓ File automatically matched by exact name'}
+                  {matchInfo.method === 'namespace' && '✓ File automatically matched by namespace and name pattern'}
                 </Typography>
-                {matchInfo.aiUsed && (
-                  <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
-                    Powered by local Ollama - no data sent externally
-                  </Typography>
-                )}
               </Alert>
             )}
 
