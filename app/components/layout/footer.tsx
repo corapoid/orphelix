@@ -3,13 +3,15 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
+import GitHubIcon from '@mui/icons-material/GitHub'
+import IconButton from '@mui/material/IconButton'
 
 export function Footer() {
   return (
     <Box
       component="footer"
       sx={{
-        py: 3,
+        py: 2,
         px: 3,
         mt: 'auto',
         borderTop: 1,
@@ -23,18 +25,17 @@ export function Footer() {
             KubeVista v1.1.0 - Modern Kubernetes Dashboard
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-          <Typography variant="body2" color="text.secondary">
-            Built with Next.js & Material-UI
-          </Typography>
-          <Link
+        <Box>
+          <IconButton
+            component={Link}
             href="https://github.com/dmakowski-rasp/kubevista"
             target="_blank"
             rel="noopener noreferrer"
-            sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'primary.main' } }}
+            sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+            size="small"
           >
-            <Typography variant="body2">GitHub</Typography>
-          </Link>
+            <GitHubIcon />
+          </IconButton>
         </Box>
       </Box>
     </Box>

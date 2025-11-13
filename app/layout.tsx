@@ -26,14 +26,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 component="main"
                 sx={{
                   flexGrow: 1,
-                  p: 3,
                   width: { sm: '100%' },
                   display: 'flex',
                   flexDirection: 'column',
                 }}
               >
                 <Toolbar />
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ flexGrow: 1, p: 3 }}>
                   {children}
                 </Box>
                 <Footer />

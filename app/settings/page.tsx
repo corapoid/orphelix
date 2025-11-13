@@ -43,12 +43,6 @@ export default function SettingsPage() {
   const [testingConnection, setTestingConnection] = useState(false)
   const [connectionError, setConnectionError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (appMode === 'real') {
-      fetchContexts()
-    }
-  }, [appMode])
-
   const fetchContexts = async () => {
     setLoading(true)
     setError(null)
@@ -80,6 +74,13 @@ export default function SettingsPage() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (appMode === 'real') {
+      fetchContexts()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appMode])
 
   const handleModeChange = (newMode: 'mock' | 'real') => {
     setMode(newMode)
