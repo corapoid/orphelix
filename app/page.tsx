@@ -401,7 +401,15 @@ export default function DashboardPage() {
             onClick={() => setTopologyExpanded(!topologyExpanded)}
           >
             <Typography variant="h6">Topology</Typography>
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              disableRipple
+              sx={{
+                '&:hover': {
+                  bgcolor: 'transparent',
+                }
+              }}
+            >
               {topologyExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
           </Box>
