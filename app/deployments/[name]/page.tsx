@@ -24,6 +24,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useDeployment, useDeploymentPods } from '@/lib/hooks/use-deployments'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
 import { useSecrets } from '@/lib/hooks/use-secrets'
+import { useHPAs } from '@/lib/hooks/use-hpa'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { TopologyGraph } from '@/app/components/topology/topology-graph'
 import { buildDeploymentTopology } from '@/lib/ui/topology'
@@ -47,6 +48,7 @@ export default function DeploymentDetailPage() {
   const { data: pods, isLoading: podsLoading } = useDeploymentPods(name)
   const { data: allConfigMaps } = useConfigMaps()
   const { data: allSecrets } = useSecrets()
+  const { data: allHPAs } = useHPAs()
 
   // Build topology graph data
   const handleRestart = async () => {
@@ -90,8 +92,8 @@ export default function DeploymentDetailPage() {
       deployment.secrets.includes(s.name)
     ) || []
 
-    return buildDeploymentTopology(deployment, pods, relatedConfigMaps, relatedSecrets)
-  }, [deployment, pods, allConfigMaps, allSecrets])
+    return buildDeploymentTopology(deployment, pods, relatedConfigMaps, relatedSecrets, allHPAs || [])
+  }, [deployment, pods, allConfigMaps, allSecrets, allHPAs])
 
   if (isLoading) {
     return <DetailSkeleton />

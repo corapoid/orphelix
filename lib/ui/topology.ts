@@ -1,4 +1,4 @@
-import type { Deployment, Pod, ConfigMap, Secret } from '@/types/kubernetes'
+import type { Deployment, Pod, ConfigMap, Secret, HPA } from '@/types/kubernetes'
 import type {
   TopologyNode,
   TopologyEdge,
@@ -40,14 +40,50 @@ export function buildDeploymentTopology(
   deployment: Deployment,
   pods: Pod[],
   configMaps: ConfigMap[],
-  secrets: Secret[]
+  secrets: Secret[],
+  hpas: HPA[] = []
 ): TopologyGraphData {
   const nodes: TopologyNode[] = []
   const edges: TopologyEdge[] = []
 
+  // Filter HPAs that target this deployment
+  const relatedHPAs = hpas.filter(
+    (hpa) => hpa.targetRef.kind === 'Deployment' && hpa.targetRef.name === deployment.name
+  )
+
   // Calculate vertical centering based on number of resources on left
   const leftResourcesCount = configMaps.length + secrets.length
   const deploymentY = Math.max(300, leftResourcesCount * 80)
+
+  // Add HPA nodes (above deployment)
+  relatedHPAs.forEach((hpa, index) => {
+    const nodeId = `hpa-${hpa.name}`
+    nodes.push({
+      id: nodeId,
+      type: 'default',
+      position: { x: 500, y: deploymentY - 200 - index * 150 },
+      data: {
+        label: hpa.name,
+        resourceType: 'HPA',
+        status: 'healthy',
+        namespace: hpa.namespace,
+        details: {
+          min: `${hpa.minReplicas}`,
+          max: `${hpa.maxReplicas}`,
+          current: `${hpa.currentReplicas}`,
+        },
+      },
+    })
+
+    // Connect HPA to Deployment
+    edges.push({
+      id: `${nodeId}-deployment`,
+      source: nodeId,
+      target: `deployment-${deployment.name}`,
+      type: 'default',
+      animated: true,
+    })
+  })
 
   // Add deployment node (center)
   nodes.push({
