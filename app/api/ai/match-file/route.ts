@@ -38,8 +38,17 @@ export async function POST(request: NextRequest) {
     console.log('[AI Matcher] Matching resource:', resourceName, 'type:', resourceType, 'namespace:', namespace)
     console.log('[AI Matcher] Total files:', files.length)
 
+    // Filter out base/ files if there are environment-specific files available
+    const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
+    const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
+
+    // Use only environment files if available, otherwise include base files
+    const filesToSearch = envFiles.length > 0 ? envFiles : files
+
+    console.log('[AI Matcher] Files after filtering:', filesToSearch.length, '(env:', envFiles.length, 'base:', baseFiles.length, ')')
+
     // Prepare file list for AI (limit to first 100 for token efficiency)
-    const fileList = files.slice(0, 100).map(f => f.path).join('\n')
+    const fileList = filesToSearch.slice(0, 100).map((f: any) => f.path).join('\n')
 
     const prompt = `You are a Kubernetes GitOps expert. Your task is to find which YAML file in a Git repository defines a specific deployed Kubernetes resource.
 
@@ -55,16 +64,15 @@ IMPORTANT MATCHING LOGIC:
    - Hyphens may be removed or converted to underscores in directory names
    - Case may differ between resource name and directory name
 3. Look for these typical file names: helm-release.yaml, application.yaml, deployment.yaml, kustomization.yaml
-4. ALWAYS prefer environment-specific directories over base/
+4. Files from base/ directory have been excluded - only environment-specific files are listed below
 
-AVAILABLE FILES IN REPOSITORY:
+AVAILABLE FILES IN REPOSITORY (environment-specific only):
 ${fileList}
 
 STEP-BY-STEP ANALYSIS:
 1. Extract the base name from "${resourceName}" (remove suffixes like -main, -dev, etc.)
 2. Find directories that match this base name (ignoring case and separators - vs _)
 3. In those directories, look for typical deployment definition files
-4. Prefer environment-specific paths over base/
 
 RESPONSE FORMAT (return ONLY valid JSON, no markdown):
 {
