@@ -31,8 +31,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import EditIcon from '@mui/icons-material/Edit'
 import { useSecret } from '@/lib/hooks/use-secrets'
-import { DetailSkeleton } from '@/components/common/detail-skeleton'
-import { ErrorState } from '@/components/common/error-state'
+import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
+import { ErrorState } from '@/app/components/common/error-state'
 import { YamlEditorModal } from '@/app/components/github/yaml-editor-modal'
 
 const MAX_PREVIEW_LINES = 10

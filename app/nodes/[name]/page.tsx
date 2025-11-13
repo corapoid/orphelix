@@ -16,11 +16,11 @@ import TableRow from '@mui/material/TableRow'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useParams, useRouter } from 'next/navigation'
 import { useNode, useNodePods } from '@/lib/hooks/use-nodes'
-import { StatusBadge } from '@/components/common/status-badge'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import { formatAge } from '@/lib/utils'
 import type { Pod } from '@/types/kubernetes'
-import { DetailSkeleton } from '@/components/common/detail-skeleton'
-import { ErrorState } from '@/components/common/error-state'
+import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
+import { ErrorState } from '@/app/components/common/error-state'
 
 // Helper function to parse Kubernetes resource quantities
 function parseQuantity(value: string): number {

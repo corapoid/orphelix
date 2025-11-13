@@ -30,11 +30,11 @@ import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { usePod, usePodLogs } from '@/lib/hooks/use-pods'
 import { useRestartPod } from '@/lib/hooks/use-restart-pod'
-import { StatusBadge } from '@/components/common/status-badge'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import { LogsViewer } from '@/app/components/pods/logs-viewer'
 import { RestartPodDialog } from '@/app/components/pods/restart-pod-dialog'
-import { DetailSkeleton } from '@/components/common/detail-skeleton'
-import { ErrorState } from '@/components/common/error-state'
+import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
+import { ErrorState } from '@/app/components/common/error-state'
 
 export default function PodDetailPage() {
   const params = useParams()
