@@ -202,60 +202,45 @@ export default function PodDetailPage() {
                 <Chip key={key} label={`${key}: ${value}`} size="small" variant="outlined" />
               ))}
             </Box>
-          </Paper>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              ConfigMaps
+            <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+              Resources
             </Typography>
-            {pod.configMaps.length > 0 ? (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {pod.configMaps.map((cm) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {pod.configMaps.length > 0 ? (
+                pod.configMaps.map((cm) => (
                   <Chip
                     key={cm}
-                    label={cm}
+                    label={`ConfigMap: ${cm}`}
                     size="small"
-                    color="primary"
-                    variant="outlined"
+                    color="info"
+                    clickable
                     onClick={() => router.push(`/configmaps/${encodeURIComponent(cm)}`)}
                     sx={{ cursor: 'pointer' }}
                   />
-                ))}
-              </Box>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                No ConfigMaps
-              </Typography>
-            )}
-          </Paper>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Secrets
-            </Typography>
-            {pod.secrets.length > 0 ? (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {pod.secrets.map((secret) => (
+                ))
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  No ConfigMaps
+                </Typography>
+              )}
+              {pod.secrets.length > 0 ? (
+                pod.secrets.map((secret) => (
                   <Chip
                     key={secret}
-                    label={secret}
+                    label={`Secret: ${secret}`}
                     size="small"
-                    color="secondary"
-                    variant="outlined"
+                    color="warning"
+                    clickable
                     onClick={() => router.push(`/secrets/${encodeURIComponent(secret)}`)}
                     sx={{ cursor: 'pointer' }}
                   />
-                ))}
-              </Box>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                No Secrets
-              </Typography>
-            )}
+                ))
+              ) : pod.configMaps.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  No Secrets
+                </Typography>
+              ) : null}
+            </Box>
           </Paper>
         </Grid>
       </Grid>
