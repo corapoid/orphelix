@@ -320,17 +320,14 @@ export default function DeploymentDetailPage() {
 
       {/* Topology Graph Section */}
       {topologyData && (
-        <Box sx={{ mb: 3 }}>
-          <Paper sx={{ p: 2, mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Topology
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Visual representation of deployment resources and their relationships
-            </Typography>
-          </Paper>
-          <TopologyGraph data={topologyData} height={500} />
-        </Box>
+        <Paper sx={{ mb: 3 }}>
+          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+            <Typography variant="h6">Topology</Typography>
+          </Box>
+          <Box>
+            <TopologyGraph data={topologyData} height={500} />
+          </Box>
+        </Paper>
       )}
 
     </Box>

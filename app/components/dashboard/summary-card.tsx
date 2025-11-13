@@ -10,6 +10,8 @@ interface SummaryCardProps {
   total: number
   icon: SvgIconComponent
   href?: string
+  iconColor?: string
+  iconBgColor?: string
   details?: Array<{
     label: string
     value: number
@@ -18,73 +20,88 @@ interface SummaryCardProps {
 }
 
 const colorMap = {
-  success: '#4caf50',
-  warning: '#ff9800',
-  error: '#f44336',
-  info: '#2196f3',
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#F43F5E',
+  info: '#06B6D4',
 }
 
-export function SummaryCard({ title, total, icon: Icon, href, details }: SummaryCardProps) {
+export function SummaryCard({
+  title,
+  total,
+  icon: Icon,
+  href,
+  iconColor = '#FFFFFF',
+  iconBgColor,
+  details
+}: SummaryCardProps) {
   const cardContent = (
     <Card
       sx={{
         height: '100%',
         cursor: href ? 'pointer' : 'default',
-        transition: 'transform 0.2s, box-shadow 0.2s',
+        transition: 'all 0.3s ease-in-out',
+        border: '1px solid',
+        borderColor: 'divider',
         '&:hover': href
           ? {
               transform: 'translateY(-4px)',
-              boxShadow: 4,
+              boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.12)',
+              borderColor: iconBgColor || 'primary.main',
             }
           : {},
       }}
     >
-      <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
+          <Box>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mb: 1, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '0.75rem' }}
+            >
+              {title}
+            </Typography>
+            <Typography variant="h3" component="div" sx={{ fontWeight: 700, lineHeight: 1 }}>
+              {total}
+            </Typography>
+          </Box>
           <Box
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 48,
-              height: 48,
-              borderRadius: 2,
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
-              mr: 2,
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              bgcolor: iconBgColor || 'primary.main',
+              color: iconColor,
+              flexShrink: 0,
+              boxShadow: iconBgColor ? `0 4px 14px ${iconBgColor}40` : '0 4px 14px rgba(139, 92, 246, 0.25)',
             }}
           >
-            <Icon />
-          </Box>
-          <Box>
-            <Typography variant="h4" component="div">
-              {total}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {title}
-            </Typography>
+            <Icon sx={{ fontSize: 28 }} />
           </Box>
         </Box>
 
         {details && details.length > 0 && (
-          <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             {details.map((detail) => (
               <Box
                 key={detail.label}
                 sx={{
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 0.5,
+                  flexDirection: 'column',
+                  gap: 0.5,
                 }}
               >
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
                   {detail.label}
                 </Typography>
                 <Typography
-                  variant="body2"
-                  fontWeight="bold"
+                  variant="h6"
                   sx={{
+                    fontWeight: 700,
                     color: detail.color ? colorMap[detail.color] : 'text.primary',
                   }}
                 >

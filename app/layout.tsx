@@ -20,7 +20,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Box sx={{ display: 'flex' }}>
             <Header onMenuClick={toggleSidebar} />
             <Sidebar open={sidebarOpen} onClose={closeSidebar} />
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                p: 3,
+                width: { sm: '100%' },
+                minHeight: '100vh',
+              }}
+            >
               <Toolbar />
               {children}
             </Box>

@@ -2,34 +2,66 @@
 
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import { useState, useMemo, createContext, useContext, ReactNode } from 'react'
+import { useState, useMemo, createContext, useContext, ReactNode, useEffect } from 'react'
 import { lightTheme, darkTheme } from '@/lib/theme'
 
-type ThemeMode = 'light' | 'dark'
+type ThemeMode = 'light' | 'dark' | 'system'
 
 interface ThemeContextType {
   mode: ThemeMode
-  toggleTheme: () => void
+  setThemeMode: (mode: ThemeMode) => void
+  actualTheme: 'light' | 'dark'
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  mode: 'light',
-  toggleTheme: () => {},
+  mode: 'system',
+  setThemeMode: () => {},
+  actualTheme: 'light',
 })
 
 export const useThemeMode = () => useContext(ThemeContext)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<ThemeMode>('light')
+  const [mode, setMode] = useState<ThemeMode>('dark') // Default to dark instead of system
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light')
+  const [_mounted, setMounted] = useState(false)
 
-  const theme = useMemo(() => (mode === 'light' ? lightTheme : darkTheme), [mode])
+  // Initialize on client side only
+  useEffect(() => {
+    setMounted(true)
 
-  const toggleTheme = () => {
-    setMode((prev) => (prev === 'light' ? 'dark' : 'light'))
+    // Detect system theme preference
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    setSystemTheme(mediaQuery.matches ? 'dark' : 'light')
+
+    const handler = (e: MediaQueryListEvent) => {
+      setSystemTheme(e.matches ? 'dark' : 'light')
+    }
+
+    mediaQuery.addEventListener('change', handler)
+
+    // Load saved preference from localStorage
+    const saved = localStorage.getItem('theme-mode') as ThemeMode | null
+    if (saved && (saved === 'light' || saved === 'dark' || saved === 'system')) {
+      setMode(saved)
+    }
+
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+
+  // Save preference to localStorage
+  const setThemeMode = (newMode: ThemeMode) => {
+    setMode(newMode)
+    localStorage.setItem('theme-mode', newMode)
   }
 
+  // Determine actual theme to use
+  const actualTheme = mode === 'system' ? systemTheme : mode
+
+  const theme = useMemo(() => (actualTheme === 'light' ? lightTheme : darkTheme), [actualTheme])
+
   return (
-    <ThemeContext.Provider value={{ mode, toggleTheme }}>
+    <ThemeContext.Provider value={{ mode, setThemeMode, actualTheme }}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         {children}

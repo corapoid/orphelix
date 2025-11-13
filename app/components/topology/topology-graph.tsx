@@ -3,9 +3,7 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import {
   ReactFlow,
-  Background,
   Controls,
-  MiniMap,
   useNodesState,
   useEdgesState,
   ReactFlowProvider,
@@ -14,7 +12,6 @@ import {
   type OnEdgesChange,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
@@ -144,7 +141,24 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
   )
 
   const graphContent = (
-    <Box ref={reactFlowRef} sx={{ height: fullscreen ? '100vh' : height, position: 'relative' }}>
+    <Box
+      ref={reactFlowRef}
+      sx={{
+        height: fullscreen ? '100vh' : height,
+        position: 'relative',
+        '& .react-flow__node': {
+          background: 'transparent !important',
+          border: 'none !important',
+          padding: 0,
+        },
+        '& .react-flow__node-default': {
+          background: 'transparent !important',
+          border: 'none !important',
+          boxShadow: 'none !important',
+          padding: 0,
+        },
+      }}
+    >
       <ReactFlow
         nodes={styledNodes}
         edges={styledEdges}
@@ -159,16 +173,7 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
         minZoom={0.2}
         maxZoom={2}
       >
-        <Background />
         <Controls />
-        <MiniMap
-          nodeStrokeWidth={3}
-          zoomable
-          pannable
-          style={{
-            backgroundColor: '#f5f5f5',
-          }}
-        />
         <Panel position="top-right">
           <Box sx={{ display: 'flex', gap: 1 }}>
             {/* Download button temporarily disabled due to technical issues */}
@@ -212,7 +217,7 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
     )
   }
 
-  return <Paper sx={{ height, position: 'relative' }}>{graphContent}</Paper>
+  return graphContent
 }
 
 export function TopologyGraph(props: TopologyGraphProps) {

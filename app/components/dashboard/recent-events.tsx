@@ -1,6 +1,4 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
+import Paper from '@mui/material/Paper'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
@@ -21,38 +19,53 @@ interface RecentEventsProps {
 export function RecentEvents({ events, loading, error }: RecentEventsProps) {
   if (loading) {
     return (
-      <Card>
-        <CardHeader title="Recent Events" />
-        <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-            <CircularProgress />
-          </Box>
-        </CardContent>
-      </Card>
+      <Paper>
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+          <Typography variant="h6">Recent Events</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Latest cluster events from the last 24 hours
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+          <CircularProgress />
+        </Box>
+      </Paper>
     )
   }
 
   if (error) {
     return (
-      <Card>
-        <CardHeader title="Recent Events" />
-        <CardContent>
+      <Paper>
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+          <Typography variant="h6">Recent Events</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Latest cluster events from the last 24 hours
+          </Typography>
+        </Box>
+        <Box sx={{ p: 2 }}>
           <Alert severity="error">Failed to load events: {error.message}</Alert>
-        </CardContent>
-      </Card>
+        </Box>
+      </Paper>
     )
   }
 
   return (
-    <Card>
-      <CardHeader title="Recent Events" subheader={`Last ${events.length} events`} />
-      <CardContent sx={{ pt: 0 }}>
+    <Paper>
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <Typography variant="h6">Recent Events</Typography>
+        <Typography variant="body2" color="text.secondary">
+          Latest cluster events from the last 24 hours • {events.length} events
+        </Typography>
+      </Box>
+      <Box>
         {events.length === 0 ? (
-          <Typography variant="body2" color="text.secondary" align="center" sx={{ py: 4 }}>
-            No events found
-          </Typography>
+          <Box sx={{ p: 3 }}>
+            <Typography variant="body2" color="text.secondary" align="center">
+              No events found
+            </Typography>
+          </Box>
         ) : (
-          <List sx={{ pt: 0 }}>
+          <List sx={{ p: 0 }}>
             {events.map((event, index) => (
               <ListItem
                 key={`${event.name}-${event.reason}-${index}`}
@@ -60,7 +73,8 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
                 sx={{
                   borderBottom: index < events.length - 1 ? 1 : 0,
                   borderColor: 'divider',
-                  px: 0,
+                  px: 3,
+                  py: 2,
                 }}
               >
                 <ListItemText
@@ -98,7 +112,7 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
             ))}
           </List>
         )}
-      </CardContent>
-    </Card>
+      </Box>
+    </Paper>
   )
 }

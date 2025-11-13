@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid2'
 import Table from '@mui/material/Table'
@@ -25,7 +24,7 @@ import ErrorIcon from '@mui/icons-material/Error'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { usePod, usePodEvents, usePodLogs } from '@/lib/hooks/use-pods'
+import { usePod, usePodLogs } from '@/lib/hooks/use-pods'
 import { useRestartPod } from '@/lib/hooks/use-restart-pod'
 import { StatusBadge } from '@/components/common/status-badge'
 import { LogsViewer } from '@/app/components/pods/logs-viewer'
@@ -40,7 +39,6 @@ export default function PodDetailPage() {
   const name = params.name as string
 
   const { data: pod, isLoading, error, refetch } = usePod(name)
-  const { data: events, isLoading: eventsLoading } = usePodEvents(name)
 
   const [selectedContainer, setSelectedContainer] = useState('')
   const [restartDialogOpen, setRestartDialogOpen] = useState(false)
@@ -334,60 +332,6 @@ export default function PodDetailPage() {
           />
         </Box>
       )}
-
-      <Paper>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Events</Typography>
-        </Box>
-        {eventsLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-            <CircularProgress />
-          </Box>
-        ) : events && events.length > 0 ? (
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell width={100}>Type</TableCell>
-                  <TableCell>Reason</TableCell>
-                  <TableCell>Message</TableCell>
-                  <TableCell width={80} align="center">
-                    Count
-                  </TableCell>
-                  <TableCell width={100}>Age</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {events.map((event, index) => (
-                  <TableRow key={index} hover>
-                    <TableCell>
-                      <Chip
-                        label={event.type}
-                        size="small"
-                        color={event.type === 'Warning' ? 'warning' : 'success'}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" fontWeight="medium">
-                        {event.reason}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">{event.message}</Typography>
-                    </TableCell>
-                    <TableCell align="center">{event.count}</TableCell>
-                    <TableCell>{formatAge(event.lastTimestamp)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <Box sx={{ p: 2 }}>
-            <Alert severity="info">No events found for this pod</Alert>
-          </Box>
-        )}
-      </Paper>
 
       {/* Restart confirmation dialog */}
       <RestartPodDialog

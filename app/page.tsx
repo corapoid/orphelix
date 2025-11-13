@@ -13,7 +13,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import LockIcon from '@mui/icons-material/Lock'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
-import { SummaryCard } from './components/dashboard/summary-card'
+import EventNoteIcon from '@mui/icons-material/EventNote'
 import { RecentEvents } from './components/dashboard/recent-events'
 import { TopologyGraph } from './components/topology/topology-graph'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
@@ -28,6 +28,8 @@ import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
 
 export default function DashboardPage() {
   const { data: health } = useClusterHealth()
+  const mode = useModeStore((state) => state.mode)
+  const selectedContext = useModeStore((state) => state.selectedContext)
   const namespace = useModeStore((state) => state.selectedNamespace)
   const { data: summary, isLoading, error } = useDashboardSummary()
   const {
@@ -81,88 +83,310 @@ export default function DashboardPage() {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Dashboard Overview
-      </Typography>
+      {/* Clean Header */}
+      <Box sx={{ mb: 5 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          Cluster Overview
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <strong>Cluster:</strong> {mode === 'mock' ? 'Demo' : (selectedContext?.cluster || 'Unknown')}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <strong>Namespace:</strong> {mode === 'mock' ? 'demo' : (namespace || 'All namespaces')}
+        </Typography>
+      </Box>
 
-      <Grid container spacing={3} sx={{ mb: 3 }}>
+      {/* Minimalist Stats Grid - Only Primary Accent */}
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        {/* Deployments - Main Card */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <SummaryCard
-            title="Deployments"
-            total={summary.deployments.total}
-            icon={AccountTreeIcon}
-            href="/deployments"
-            details={[
-              { label: 'Healthy', value: summary.deployments.healthy, color: 'success' },
-              { label: 'Degraded', value: summary.deployments.degraded, color: 'error' },
-            ]}
-          />
+          <Paper
+            sx={{
+              p: 2,
+              height: '100%',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              border: '1px solid',
+              borderColor: 'divider',
+              '&:hover': {
+                borderColor: 'primary.main',
+                boxShadow: 1,
+              },
+            }}
+            onClick={() => (window.location.href = '/deployments')}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+              <AccountTreeIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Deployments
+              </Typography>
+            </Box>
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
+              {summary.deployments.total}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                  Healthy
+                </Typography>
+                <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
+                  {summary.deployments.healthy}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                  Degraded
+                </Typography>
+                <Typography variant="body1" color="error.main" sx={{ fontWeight: 600 }}>
+                  {summary.deployments.degraded}
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
         </Grid>
 
+        {/* Pods */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <SummaryCard
-            title="Pods"
-            total={summary.pods.total}
-            icon={WidgetsIcon}
-            href="/pods"
-            details={[
-              { label: 'Running', value: summary.pods.running, color: 'success' },
-              { label: 'Pending', value: summary.pods.pending, color: 'warning' },
-              { label: 'Failed', value: summary.pods.failed, color: 'error' },
-            ]}
-          />
+          <Paper
+            sx={{
+              p: 2,
+              height: '100%',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              border: '1px solid',
+              borderColor: 'divider',
+              '&:hover': {
+                borderColor: 'primary.main',
+                boxShadow: 1,
+              },
+            }}
+            onClick={() => (window.location.href = '/pods')}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+              <WidgetsIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Pods
+              </Typography>
+            </Box>
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
+              {summary.pods.total}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1.5 }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                  Running
+                </Typography>
+                <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
+                  {summary.pods.running}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                  Pending
+                </Typography>
+                <Typography variant="body1" color="warning.main" sx={{ fontWeight: 600 }}>
+                  {summary.pods.pending}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                  Failed
+                </Typography>
+                <Typography variant="body1" color="error.main" sx={{ fontWeight: 600 }}>
+                  {summary.pods.failed}
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
         </Grid>
 
+        {/* Nodes */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <SummaryCard
-            title="Nodes"
-            total={summary.nodes.total}
-            icon={StorageIcon}
-            href="/nodes"
-            details={[
-              { label: 'Ready', value: summary.nodes.ready, color: 'success' },
-              { label: 'Not Ready', value: summary.nodes.notReady, color: 'error' },
-            ]}
-          />
+          <Paper
+            sx={{
+              p: 2,
+              height: '100%',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              border: '1px solid',
+              borderColor: 'divider',
+              '&:hover': {
+                borderColor: 'primary.main',
+                boxShadow: 1,
+              },
+            }}
+            onClick={() => (window.location.href = '/nodes')}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+              <StorageIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Nodes
+              </Typography>
+            </Box>
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
+              {summary.nodes.total}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                  Ready
+                </Typography>
+                <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
+                  {summary.nodes.ready}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                  Not Ready
+                </Typography>
+                <Typography variant="body1" color="error.main" sx={{ fontWeight: 600 }}>
+                  {summary.nodes.notReady}
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
         </Grid>
 
+        {/* Storage */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <SummaryCard
-            title="Persistent Volumes"
-            total={summary.pv.total}
-            icon={FolderOpenIcon}
-            href="/pv"
-            details={[{ label: 'Bound', value: summary.pv.bound, color: 'success' }]}
-          />
+          <Paper
+            sx={{
+              p: 2,
+              height: '100%',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              border: '1px solid',
+              borderColor: 'divider',
+              '&:hover': {
+                borderColor: 'primary.main',
+                boxShadow: 1,
+              },
+            }}
+            onClick={() => (window.location.href = '/pv')}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+              <FolderOpenIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Volumes
+              </Typography>
+            </Box>
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
+              {summary.pv.total}
+            </Typography>
+            <Box>
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
+                Bound
+              </Typography>
+              <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
+                {summary.pv.bound}
+              </Typography>
+            </Box>
+          </Paper>
         </Grid>
+      </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <SummaryCard title="ConfigMaps" total={summary.configMaps} icon={SettingsIcon} href="/configmaps" />
+      {/* Secondary Resources - Compact Row */}
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid size={{ xs: 6, sm: 3 }}>
+          <Paper
+            sx={{
+              p: 2,
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: '1px solid',
+              borderColor: 'divider',
+              transition: 'all 0.2s',
+              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
+            }}
+            onClick={() => (window.location.href = '/configmaps')}
+          >
+            <SettingsIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+              {summary.configMaps}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+              ConfigMaps
+            </Typography>
+          </Paper>
         </Grid>
-
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <SummaryCard title="Secrets" total={summary.secrets} icon={LockIcon} href="/secrets" />
+        <Grid size={{ xs: 6, sm: 3 }}>
+          <Paper
+            sx={{
+              p: 2,
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: '1px solid',
+              borderColor: 'divider',
+              transition: 'all 0.2s',
+              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
+            }}
+            onClick={() => (window.location.href = '/secrets')}
+          >
+            <LockIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+              {summary.secrets}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+              Secrets
+            </Typography>
+          </Paper>
         </Grid>
-
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <SummaryCard title="HPA" total={summary.hpa} icon={TrendingUpIcon} href="/hpa" />
+        <Grid size={{ xs: 6, sm: 3 }}>
+          <Paper
+            sx={{
+              p: 2,
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: '1px solid',
+              borderColor: 'divider',
+              transition: 'all 0.2s',
+              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
+            }}
+            onClick={() => (window.location.href = '/hpa')}
+          >
+            <TrendingUpIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+              {summary.hpa}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+              HPA
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid size={{ xs: 6, sm: 3 }}>
+          <Paper
+            sx={{
+              p: 2,
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: '1px solid',
+              borderColor: 'divider',
+              transition: 'all 0.2s',
+              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
+            }}
+            onClick={() => (window.location.href = '/events')}
+          >
+            <EventNoteIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+              {events?.length || 0}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+              Events (24h)
+            </Typography>
+          </Paper>
         </Grid>
       </Grid>
 
       {/* ConfigMaps/Secrets to Deployments Topology */}
       {topologyData && topologyData.nodes.length > 0 && (
-        <Box sx={{ mb: 3 }}>
-          <Paper sx={{ p: 2, mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Configuration Dependencies
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              ConfigMaps and Secrets connected to Deployments (filtered by Flux kustomize namespace:{' '}
-              <strong>{namespace}</strong>)
-            </Typography>
-          </Paper>
-          <TopologyGraph data={topologyData} height={500} />
-        </Box>
+        <Paper sx={{ mb: 4 }}>
+          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+            <Typography variant="h6">Topology</Typography>
+          </Box>
+          <Box>
+            <TopologyGraph data={topologyData} height={500} />
+          </Box>
+        </Paper>
       )}
 
       <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
