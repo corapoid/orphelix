@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAppsApi } from '@/lib/k8s/client'
+import { getKubeConfig } from '@/lib/k8s/client'
 import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import * as https from 'https'
 
 /**
  * POST /api/deployments/[name]/restart
- * Restart a deployment by updating its annotation to trigger a rollout
+ * Restart a deployment using Strategic Merge Patch (same as kubectl rollout restart)
+ *
+ * This adds/updates the kubectl.kubernetes.io/restartedAt annotation to trigger a rollout
  */
 export async function POST(
   request: NextRequest,
@@ -21,35 +24,78 @@ export async function POST(
       )
     }
 
-    const appsApi = getAppsApi()
+    const kc = getKubeConfig()
+    const cluster = kc.getCurrentCluster()
 
-    // Read current deployment
-    const deployment = await appsApi.readNamespacedDeployment({ name, namespace })
+    if (!cluster) {
+      throw new Error('Kubernetes configuration not found')
+    }
 
-    // Add/update restart annotation to trigger rollout
+    // Prepare the patch payload (same as kubectl rollout restart)
     const now = new Date().toISOString()
-    const annotations = deployment.spec?.template?.metadata?.annotations || {}
-    annotations['kubectl.kubernetes.io/restartedAt'] = now
-
-    // Patch the deployment
-    await appsApi.patchNamespacedDeployment({
-      name,
-      namespace,
-      body: {
-        spec: {
-          template: {
-            metadata: {
-              annotations,
+    const patch = {
+      spec: {
+        template: {
+          metadata: {
+            annotations: {
+              'kubectl.kubernetes.io/restartedAt': now,
             },
           },
         },
       },
-    })
+    }
 
-    return NextResponse.json({
-      success: true,
-      message: `Deployment ${name} restart initiated`,
-      restartedAt: now,
+    // Get authentication options from kubeconfig
+    const opts: Record<string, unknown> = {}
+    await kc.applyToHTTPSOptions(opts)
+
+    // Make HTTPS request to Kubernetes API with Strategic Merge Patch
+    const url = new URL(`/apis/apps/v1/namespaces/${namespace}/deployments/${name}`, cluster.server)
+
+    return new Promise<Response>((resolve, reject) => {
+      const requestOptions: https.RequestOptions = {
+        hostname: url.hostname,
+        port: url.port || 443,
+        path: url.pathname,
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/strategic-merge-patch+json',
+          ...(opts.headers as Record<string, string> || {}),
+        },
+        ca: opts.ca as Buffer | undefined,
+        cert: opts.cert as Buffer | undefined,
+        key: opts.key as Buffer | undefined,
+        rejectUnauthorized: cluster.skipTLSVerify ? false : true,
+      }
+
+      const req = https.request(requestOptions, (res) => {
+        let data = ''
+
+        res.on('data', (chunk) => {
+          data += chunk
+        })
+
+        res.on('end', () => {
+          if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(
+              NextResponse.json({
+                success: true,
+                message: `Deployment ${name} restart initiated`,
+                restartedAt: now,
+              })
+            )
+          } else {
+            reject(new Error(`Kubernetes API error: ${res.statusCode} - ${data}`))
+          }
+        })
+      })
+
+      req.on('error', (error) => {
+        reject(error)
+      })
+
+      req.write(JSON.stringify(patch))
+      req.end()
     })
   } catch (error: unknown) {
     const err = error as { body?: { message?: string }; message?: string }
