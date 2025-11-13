@@ -12,7 +12,7 @@ import { pipeline, env } from '@xenova/transformers'
 env.cacheDir = './.cache/transformers'
 
 // Default model - small and fast for text generation
-const DEFAULT_MODEL = process.env.AI_MODEL || 'Xenova/Qwen2.5-0.5B-Instruct'
+const DEFAULT_MODEL = process.env.AI_MODEL || 'onnx-community/Qwen2.5-0.5B-Instruct'
 
 // Singleton pipeline instance
 let textGenerationPipeline: any = null

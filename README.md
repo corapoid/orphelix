@@ -278,13 +278,13 @@ By default, AI matching is **enabled automatically**. You can customize it:
 ```bash
 # In .env.local (optional)
 AI_ENABLED=true  # Set to false to disable AI matching
-AI_MODEL=Xenova/Qwen2.5-0.5B-Instruct  # Change model (see options below)
+AI_MODEL=onnx-community/Qwen2.5-0.5B-Instruct  # Change model (see options below)
 ```
 
 **Available models:**
-- `Xenova/Qwen2.5-0.5B-Instruct` (~200MB) - **Default** - Fast, good for file matching
-- `Xenova/Llama-3.2-1B-Instruct` (~1.2GB) - Better accuracy, slower
-- `Xenova/Phi-3-mini-4k-instruct` (~2.5GB) - Best accuracy, slowest
+- `onnx-community/Qwen2.5-0.5B-Instruct` (~200MB) - **Default** - Fast, good for file matching
+- `onnx-community/Llama-3.2-1B-Instruct` (~1.2GB) - Better accuracy, slower
+- `onnx-community/gemma-3-270m-it-ONNX` (~270MB) - Alternative small model
 
 #### How It Works
 
