@@ -16,7 +16,7 @@ import InputLabel from '@mui/material/InputLabel'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import Editor from '@monaco-editor/react'
-import { useGitHubStore } from '@/lib/store'
+import { useGitHubStore } from '@/lib/core/store'
 
 interface YamlEditorModalProps {
   open: boolean

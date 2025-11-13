@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useModeStore } from '@/lib/store'
-import { generateMockPVs, generateMockPVCs } from '@/lib/mock-data'
+import { useModeStore } from '@/lib/core/store'
+import { generateMockPVs, generateMockPVCs } from '@/lib/mocks/data'
 import type { PersistentVolume, PersistentVolumeClaim } from '@/types/kubernetes'
 
 /**

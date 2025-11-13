@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getCoreApi } from '@/lib/k8s-client'
+import { getCoreApi } from '@/lib/k8s/client'
 
 export const dynamic = 'force-dynamic'
 

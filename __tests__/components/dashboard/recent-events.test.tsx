@@ -4,7 +4,7 @@ import { RecentEvents } from '@/app/components/dashboard/recent-events'
 import type { Event } from '@/types/kubernetes'
 
 // Mock the formatAge utility
-vi.mock('@/lib/utils', () => ({
+vi.mock('@/lib/core/utils', () => ({
   formatAge: vi.fn((date: Date) => {
     // Simple mock implementation for testing
     const now = new Date('2024-01-15T12:00:00Z')

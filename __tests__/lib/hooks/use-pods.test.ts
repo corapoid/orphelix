@@ -2,17 +2,17 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { usePods, usePod, usePodEvents, usePodLogs } from '@/lib/hooks/use-pods'
-import { useModeStore } from '@/lib/store'
-import * as mockData from '@/lib/mock-data'
+import { useModeStore } from '@/lib/core/store'
+import * as mockData from '@/lib/mocks/data'
 import React, { type ReactNode } from 'react'
 
 // Mock the store
-vi.mock('@/lib/store', () => ({
+vi.mock('@/lib/core/store', () => ({
   useModeStore: vi.fn(),
 }))
 
 // Mock the mock-data module
-vi.mock('@/lib/mock-data', () => ({
+vi.mock('@/lib/mocks/data', () => ({
   generateMockPods: vi.fn(),
   generateMockEvents: vi.fn(),
 }))

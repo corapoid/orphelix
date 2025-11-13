@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useModeStore } from '@/lib/store'
+import { useModeStore } from '@/lib/core/store'
 import type { AppMode, KubernetesContext } from '@/types/app'
 
 describe('useModeStore', () => {

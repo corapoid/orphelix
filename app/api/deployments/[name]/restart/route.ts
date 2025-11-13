@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAppsApi } from '@/lib/k8s-client'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
+import { getAppsApi } from '@/lib/k8s/client'
+import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
 
 /**
  * POST /api/deployments/[name]/restart

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { initK8sClient, getCoreApi } from '@/lib/k8s-client'
+import { initK8sClient, getCoreApi } from '@/lib/k8s/client'
 
 export async function GET() {
   try {

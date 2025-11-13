@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { fetchPVs } from '@/lib/k8s-api'
+import { fetchPVs } from '@/lib/k8s/api'
 
 export async function GET() {
   try {

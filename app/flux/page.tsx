@@ -7,7 +7,7 @@ import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Chip from '@mui/material/Chip'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import { useModeStore } from '@/lib/store'
+import { useModeStore } from '@/lib/core/store'
 
 /**
  * Flux GitOps integration page

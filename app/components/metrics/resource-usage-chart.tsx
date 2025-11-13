@@ -12,7 +12,7 @@ import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useQuery } from '@tanstack/react-query'
-import { useModeStore } from '@/lib/store'
+import { useModeStore } from '@/lib/core/store'
 
 interface ResourceUsageChartProps {
   deploymentName: string

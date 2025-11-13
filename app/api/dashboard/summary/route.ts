@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
-import { fetchDeployments, fetchPods, fetchNodes, fetchConfigMaps, fetchSecrets, fetchHPAs, fetchPVs } from '@/lib/k8s-api'
+import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { fetchDeployments, fetchPods, fetchNodes, fetchConfigMaps, fetchSecrets, fetchHPAs, fetchPVs } from '@/lib/k8s/api'
 import type { DashboardSummary } from '@/types/kubernetes'
 
 export async function GET(request: NextRequest) {

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useModeStore } from '@/lib/store'
+import { useModeStore } from '@/lib/core/store'
 
 export interface ClusterHealthResponse {
   status: 'connected' | 'disconnected'

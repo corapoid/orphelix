@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchSecret } from '@/lib/k8s-api'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
+import { fetchSecret } from '@/lib/k8s/api'
+import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
 
 /**
  * GET /api/secrets/[name]

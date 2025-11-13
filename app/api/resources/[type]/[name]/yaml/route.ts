@@ -6,12 +6,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
+import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
 import {
   fetchDeploymentYaml,
   fetchConfigMapYaml,
   fetchSecretYaml
-} from '@/lib/k8s-api'
+} from '@/lib/k8s/api'
 
 export async function GET(
   request: NextRequest,

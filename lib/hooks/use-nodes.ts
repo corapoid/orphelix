@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useModeStore } from '@/lib/store'
-import { generateMockNodes, generateMockEvents } from '@/lib/mock-data'
+import { useModeStore } from '@/lib/core/store'
+import { generateMockNodes, generateMockEvents } from '@/lib/mocks/data'
 import type { Node, Event, NodeStatus } from '@/types/kubernetes'
 
 /**
@@ -113,7 +113,7 @@ export function useNodePods(nodeName: string) {
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
-        const { generateMockPods } = await import('@/lib/mock-data')
+        const { generateMockPods } = await import('@/lib/mocks/data')
         const allPods = generateMockPods()
         // Filter pods running on this node
         return allPods.filter((pod) => pod.nodeName === nodeName)

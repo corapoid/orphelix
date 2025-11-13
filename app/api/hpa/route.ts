@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest, handleK8sError } from '@/lib/api-helpers'
-import { fetchHPAs } from '@/lib/k8s-api'
+import { getNamespaceFromRequest, handleK8sError } from '@/lib/core/api-helpers'
+import { fetchHPAs } from '@/lib/k8s/api'
 
 export async function GET(request: NextRequest) {
   try {

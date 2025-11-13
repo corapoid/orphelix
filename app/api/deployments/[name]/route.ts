@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
-import { fetchDeployment } from '@/lib/k8s-api'
+import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { fetchDeployment } from '@/lib/k8s/api'
 
 export async function GET(
   request: NextRequest,

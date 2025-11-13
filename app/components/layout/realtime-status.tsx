@@ -6,7 +6,7 @@ import WifiOffIcon from '@mui/icons-material/WifiOff'
 import SyncIcon from '@mui/icons-material/Sync'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useRealtimeUpdates } from '@/lib/hooks/use-realtime'
-import { useModeStore } from '@/lib/store'
+import { useModeStore } from '@/lib/core/store'
 
 /**
  * Real-time connection status indicator

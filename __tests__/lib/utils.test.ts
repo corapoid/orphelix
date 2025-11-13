@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { formatAge, formatBytes } from '@/lib/utils'
+import { formatAge, formatBytes } from '@/lib/core/utils'
 
 describe('formatAge', () => {
   let mockNow: Date

@@ -7,18 +7,18 @@ import {
   useDeploymentPods,
   useDeploymentEvents,
 } from '@/lib/hooks/use-deployments'
-import { useModeStore } from '@/lib/store'
-import * as mockData from '@/lib/mock-data'
+import { useModeStore } from '@/lib/core/store'
+import * as mockData from '@/lib/mocks/data'
 import React, { type ReactNode } from 'react'
 import type { Deployment, Pod, Event } from '@/types/kubernetes'
 
 // Mock the store
-vi.mock('@/lib/store', () => ({
+vi.mock('@/lib/core/store', () => ({
   useModeStore: vi.fn(),
 }))
 
 // Mock the mock-data module
-vi.mock('@/lib/mock-data', () => ({
+vi.mock('@/lib/mocks/data', () => ({
   generateMockDeployments: vi.fn(),
   generateMockPods: vi.fn(),
   generateMockEvents: vi.fn(),

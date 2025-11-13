@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { fetchPodLogs } from '@/lib/k8s-api'
+import { fetchPodLogs } from '@/lib/k8s/api'
 
 interface LogLine {
   line: number

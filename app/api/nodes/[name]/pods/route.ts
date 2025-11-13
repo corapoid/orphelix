@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchNodePods } from '@/lib/k8s-api'
+import { fetchNodePods } from '@/lib/k8s/api'
 
 /**
  * GET /api/nodes/[name]/pods?namespace=xxx

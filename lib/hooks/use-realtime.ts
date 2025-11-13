@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { useModeStore } from '@/lib/store'
+import { useModeStore } from '@/lib/core/store'
 
 export type ConnectionStatus = 'connected' | 'connecting' | 'disconnected' | 'error'
 

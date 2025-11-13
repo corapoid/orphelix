@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
-import { useGitHubStore } from '@/lib/store'
+import { useGitHubStore } from '@/lib/core/store'
 
 export function GitHubAppRepoSelector() {
   const { selectedRepo, setSelectedRepo } = useGitHubStore()

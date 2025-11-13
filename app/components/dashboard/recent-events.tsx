@@ -11,7 +11,7 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import { formatAge } from '@/lib/utils'
+import { formatAge } from '@/lib/core/utils'
 import type { Event } from '@/types/kubernetes'
 
 interface RecentEventsProps {

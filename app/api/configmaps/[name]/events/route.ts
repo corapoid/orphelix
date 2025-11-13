@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchResourceEvents } from '@/lib/k8s-api'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
+import { fetchResourceEvents } from '@/lib/k8s/api'
+import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
 
 /**
  * GET /api/configmaps/[name]/events

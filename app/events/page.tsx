@@ -21,7 +21,7 @@ import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
-import { formatAge } from '@/lib/utils'
+import { formatAge } from '@/lib/core/utils'
 import type { Event } from '@/types/kubernetes'
 
 export default function EventsPage() {

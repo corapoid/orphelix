@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchNodeEvents } from '@/lib/k8s-api'
+import { fetchNodeEvents } from '@/lib/k8s/api'
 
 /**
  * GET /api/nodes/[name]/events

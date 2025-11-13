@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { initK8sClient } from '@/lib/k8s-client'
+import { initK8sClient } from '@/lib/k8s/client'
 import * as k8s from '@kubernetes/client-node'
 
 /**

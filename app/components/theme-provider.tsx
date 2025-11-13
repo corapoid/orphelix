@@ -3,7 +3,7 @@
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { useState, useMemo, createContext, useContext, ReactNode, useEffect } from 'react'
-import { lightTheme, darkTheme } from '@/lib/theme'
+import { lightTheme, darkTheme } from '@/lib/ui/theme'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useModeStore } from '@/lib/store'
-import { generateMockHPAs } from '@/lib/mock-data'
+import { useModeStore } from '@/lib/core/store'
+import { generateMockHPAs } from '@/lib/mocks/data'
 import type { HPA } from '@/types/kubernetes'
 
 /**

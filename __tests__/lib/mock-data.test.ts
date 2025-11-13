@@ -10,7 +10,7 @@ import {
   generateMockPVs,
   generateMockPVCs,
   generateMockEvents,
-} from '@/lib/mock-data'
+} from '@/lib/mocks/data'
 import type {
   Pod,
   Deployment,

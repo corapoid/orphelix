@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCoreApi, initK8sClient } from '@/lib/k8s-client'
+import { getCoreApi, initK8sClient } from '@/lib/k8s/client'
 
 /**
  * POST /api/pods/[name]/restart

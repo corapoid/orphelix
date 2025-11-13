@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useModeStore } from '@/lib/store'
-import { generateMockDeployments, generateMockPods, generateMockEvents } from '@/lib/mock-data'
+import { useModeStore } from '@/lib/core/store'
+import { generateMockDeployments, generateMockPods, generateMockEvents } from '@/lib/mocks/data'
 import type { Deployment, Pod, Event } from '@/types/kubernetes'
 
 /**

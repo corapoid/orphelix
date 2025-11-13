@@ -8,7 +8,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
-import { useGitHubStore } from '@/lib/store'
+import { useGitHubStore } from '@/lib/core/store'
 
 export function RepoSelector() {
   const { data: session } = useSession()

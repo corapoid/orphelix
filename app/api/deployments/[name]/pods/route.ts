@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/api-helpers'
-import { getCoreApi } from '@/lib/k8s-client'
+import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { getCoreApi } from '@/lib/k8s/client'
 import type { Pod } from '@/types/kubernetes'
 
 export const dynamic = 'force-dynamic'

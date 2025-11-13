@@ -6,7 +6,7 @@
  */
 
 import * as k8s from '@kubernetes/client-node'
-import { getAppsApi, getCoreApi, getAutoscalingApi } from './k8s-client'
+import { getAppsApi, getCoreApi, getAutoscalingApi } from './client'
 import type {
   Deployment,
   Pod,
