@@ -40,6 +40,8 @@ export default function SettingsPage() {
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [testingConnection, setTestingConnection] = useState(false)
+  const [connectionError, setConnectionError] = useState<string | null>(null)
 
   useEffect(() => {
     if (appMode === 'real') {
@@ -86,12 +88,38 @@ export default function SettingsPage() {
     }
   }
 
-  const handleContextSelect = (context: KubeContext) => {
+  const testConnection = async () => {
+    setTestingConnection(true)
+    setConnectionError(null)
+
+    try {
+      const response = await fetch('/api/test-connection')
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || data.details || 'Failed to connect to cluster')
+      }
+
+      return true
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to connect to cluster'
+      setConnectionError(errorMsg)
+      return false
+    } finally {
+      setTestingConnection(false)
+    }
+  }
+
+  const handleContextSelect = async (context: KubeContext) => {
+    // First set the context
     setContext({
       name: context.name,
       cluster: context.cluster,
       user: context.user,
     })
+
+    // Then test the connection
+    await testConnection()
   }
 
   const handleRealtimeToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,8 +255,31 @@ export default function SettingsPage() {
               </Box>
             )}
 
+            {/* Connection Status */}
+            {appMode === 'real' && selectedContext && testingConnection && (
+              <Box sx={{ mb: 3 }}>
+                <Alert severity="info">
+                  <AlertTitle>Testing Connection</AlertTitle>
+                  Verifying connection to cluster...
+                </Alert>
+              </Box>
+            )}
+
+            {/* Connection Error */}
+            {appMode === 'real' && selectedContext && connectionError && (
+              <Box sx={{ mb: 3 }}>
+                <Alert severity="error">
+                  <AlertTitle>Connection Failed</AlertTitle>
+                  {connectionError}
+                  <Button size="small" onClick={testConnection} sx={{ mt: 1 }}>
+                    Retry Connection
+                  </Button>
+                </Alert>
+              </Box>
+            )}
+
             {/* Namespace Selector */}
-            {appMode === 'real' && selectedContext && (
+            {appMode === 'real' && selectedContext && !connectionError && (
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
                   Namespace
@@ -241,7 +292,7 @@ export default function SettingsPage() {
             )}
 
             {/* Real-time Updates */}
-            {appMode === 'real' && selectedContext && (
+            {appMode === 'real' && selectedContext && !connectionError && (
               <Box>
                 <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
                   Real-time Updates
@@ -252,6 +303,7 @@ export default function SettingsPage() {
                       checked={realtimeEnabled}
                       onChange={handleRealtimeToggle}
                       color="primary"
+                      disabled={!!connectionError}
                     />
                   }
                   label={

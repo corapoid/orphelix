@@ -14,6 +14,7 @@ export interface RealtimeEvent {
  *
  * Automatically connects to SSE endpoint when:
  * - mode is 'real'
+ * - selectedContext is set
  * - realtimeEnabled is true
  *
  * Features:
@@ -26,6 +27,7 @@ export function useRealtimeUpdates() {
   const mode = useModeStore((state) => state.mode)
   const realtimeEnabled = useModeStore((state) => state.realtimeEnabled)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
   const [lastEvent, setLastEvent] = useState<RealtimeEvent | null>(null)
@@ -57,8 +59,8 @@ export function useRealtimeUpdates() {
    * Connect to SSE endpoint
    */
   const connect = useCallback(() => {
-    // Only connect in real mode with realtime enabled
-    if (mode !== 'real' || !realtimeEnabled) {
+    // Only connect in real mode with realtime enabled and context selected
+    if (mode !== 'real' || !realtimeEnabled || !selectedContext) {
       disconnect()
       return
     }
@@ -154,7 +156,7 @@ export function useRealtimeUpdates() {
       setStatus('error')
       setError(err instanceof Error ? err.message : 'Failed to connect')
     }
-  }, [mode, realtimeEnabled, namespace, disconnect, queryClient])
+  }, [mode, realtimeEnabled, selectedContext, namespace, disconnect, queryClient])
 
   /**
    * Manual reconnect
@@ -164,9 +166,9 @@ export function useRealtimeUpdates() {
     connect()
   }, [connect])
 
-  // Connect/disconnect on mode, realtime, or namespace changes
+  // Connect/disconnect on mode, realtime, context, or namespace changes
   useEffect(() => {
-    if (mode === 'real' && realtimeEnabled) {
+    if (mode === 'real' && realtimeEnabled && selectedContext) {
       connect()
     } else {
       disconnect()
@@ -176,7 +178,7 @@ export function useRealtimeUpdates() {
     return () => {
       disconnect()
     }
-  }, [mode, realtimeEnabled, namespace, connect, disconnect])
+  }, [mode, realtimeEnabled, selectedContext, namespace, connect, disconnect])
 
   return {
     status,
