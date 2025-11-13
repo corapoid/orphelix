@@ -2,14 +2,13 @@
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { useTheme } from '@mui/material/styles'
 
 interface LogoProps {
   collapsed?: boolean
 }
 
 export function Logo({ collapsed = false }: LogoProps) {
-  const _theme = useTheme()
+  // Theme is available via useTheme() if needed for future enhancements
 
   if (collapsed) {
     return (

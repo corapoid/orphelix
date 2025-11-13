@@ -40,7 +40,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
   const logsEndRef = useRef<HTMLDivElement>(null)
   const logsContainerRef = useRef<HTMLDivElement>(null)
 
-  const logLines = useMemo(() => {
+  const logLines = useMemo((): LogLine[] => {
     if (parsed && parsed.length > 0) {
       return parsed
     }
@@ -50,6 +50,8 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
       message: line,
       raw: line,
       isJson: false,
+      timestamp: undefined,
+      level: undefined,
     }))
   }, [logs, parsed])
 

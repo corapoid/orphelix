@@ -14,6 +14,21 @@ interface ModeStore {
   reset: () => void
 }
 
+interface GitHubRepo {
+  owner: string
+  repo: string
+  branch: string
+}
+
+interface GitHubStore {
+  selectedRepo: GitHubRepo | null
+  pendingPRs: Map<string, number> // deploymentKey -> PR number
+  setSelectedRepo: (repo: GitHubRepo | null) => void
+  setPendingPR: (deploymentName: string, namespace: string, prNumber: number) => void
+  removePendingPR: (deploymentName: string, namespace: string) => void
+  getPendingPR: (deploymentName: string, namespace: string) => number | null
+}
+
 /**
  * Global store for application mode (mock vs real)
  * Persisted to localStorage
@@ -33,6 +48,66 @@ export const useModeStore = create<ModeStore>()(
     }),
     {
       name: 'k8s-dashboard-mode',
+    }
+  )
+)
+
+/**
+ * Global store for GitHub integration
+ * Persisted to localStorage
+ */
+export const useGitHubStore = create<GitHubStore>()(
+  persist(
+    (set, get) => ({
+      selectedRepo: null,
+      pendingPRs: new Map(),
+      setSelectedRepo: (repo) => set({ selectedRepo: repo }),
+      setPendingPR: (deploymentName, namespace, prNumber) => {
+        const key = `${namespace}/${deploymentName}`
+        const newMap = new Map(get().pendingPRs)
+        newMap.set(key, prNumber)
+        set({ pendingPRs: newMap })
+      },
+      removePendingPR: (deploymentName, namespace) => {
+        const key = `${namespace}/${deploymentName}`
+        const newMap = new Map(get().pendingPRs)
+        newMap.delete(key)
+        set({ pendingPRs: newMap })
+      },
+      getPendingPR: (deploymentName, namespace) => {
+        const key = `${namespace}/${deploymentName}`
+        return get().pendingPRs.get(key) || null
+      },
+    }),
+    {
+      name: 'kubevista-github',
+      // Convert Map to Array for JSON serialization
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name)
+          if (!str) return null
+          const { state } = JSON.parse(str)
+          return {
+            state: {
+              ...state,
+              pendingPRs: new Map(state.pendingPRs || []),
+            },
+          }
+        },
+        setItem: (name, value) => {
+          const { state } = value
+          localStorage.setItem(
+            name,
+            JSON.stringify({
+              state: {
+                ...state,
+                pendingPRs: Array.from(state.pendingPRs.entries()),
+              },
+            })
+          )
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
     }
   )
 )

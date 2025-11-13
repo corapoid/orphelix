@@ -16,6 +16,7 @@ import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
+import EditIcon from '@mui/icons-material/Edit'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -30,6 +31,7 @@ import { useMemo } from 'react'
 import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
 import { ResourceUsageChart } from '@/app/components/metrics/resource-usage-chart'
+import { YamlEditorModal } from '@/app/components/github/yaml-editor-modal'
 
 export default function DeploymentDetailPage() {
   const params = useParams()
@@ -38,6 +40,7 @@ export default function DeploymentDetailPage() {
   const [restarting, setRestarting] = useState(false)
   const [restartError, setRestartError] = useState<string | null>(null)
   const [restartSuccess, setRestartSuccess] = useState(false)
+  const [editorOpen, setEditorOpen] = useState(false)
 
   const { data: deployment, isLoading, error, refetch } = useDeployment(name)
   const { data: pods, isLoading: podsLoading } = useDeploymentPods(name)
@@ -123,16 +126,32 @@ export default function DeploymentDetailPage() {
         >
           Back to Deployments
         </Button>
-        <Button
-          variant="outlined"
-          color="warning"
-          startIcon={<RestartAltIcon />}
-          onClick={handleRestart}
-          disabled={restarting}
-        >
-          {restarting ? 'Restarting...' : 'Restart Deployment'}
-        </Button>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => setEditorOpen(true)}
+          >
+            Edit YAML
+          </Button>
+          <Button
+            variant="outlined"
+            color="warning"
+            startIcon={<RestartAltIcon />}
+            onClick={handleRestart}
+            disabled={restarting}
+          >
+            {restarting ? 'Restarting...' : 'Restart Deployment'}
+          </Button>
+        </Box>
       </Box>
+
+      <YamlEditorModal
+        open={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        deploymentName={deployment.name}
+        namespace={deployment.namespace}
+      />
 
       {restartSuccess && (
         <Alert severity="success" sx={{ mb: 2 }}>

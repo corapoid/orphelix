@@ -5,6 +5,63 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **GitHub App Integration (Granular Permissions)**: Major security improvement
+  - GitHub App authentication with fine-grained repository permissions
+  - Users can select specific repositories to grant access (not all or nothing)
+  - Installation-based token system with automatic 8-hour refresh
+  - Support for both GitHub App (recommended) and OAuth (legacy) methods
+  - Tabbed interface in Settings to choose between GitHub App and OAuth
+  - Installation management UI with repository counts and access control
+  - 3 new API routes: `/api/github-app/*` (callback, installations, logout)
+  - GitHubAppInstallButton and GitHubAppRepoSelector components
+  - HTTP-only cookie storage for GitHub App tokens (more secure)
+  - Support for multiple installations (personal + organization accounts)
+  - Grouped repository dropdown by installation
+  - Private/public repository badges in UI
+  - "Add More Repositories" workflow integration
+  - Comprehensive GitHub App setup guide (GITHUB_APP_SETUP_PL.md)
+  - @octokit/app and @octokit/auth-app dependencies
+
+- **GitHub Integration & YAML Editor**: Complete GitOps workflow integration
+  - NextAuth GitHub OAuth authentication with session management (legacy method)
+  - Repository selection with localStorage persistence
+  - YAML file browser with recursive directory scanning
+  - Monaco Editor integration for YAML editing
+  - Kustomization structure detection and parsing
+  - Base + Overlays tab navigation for Kustomize projects
+  - Automatic Pull Request creation with formatted messages
+  - PR tracking in Zustand store (pending PRs per deployment)
+  - GitHub API client with full Octokit integration
+  - 5 new API routes: `/api/auth`, `/api/github/*`
+  - GitHubLoginButton, RepoSelector, and YamlEditorModal components
+  - "Edit YAML" button on deployment details page
+  - GitHub Integration section in Settings page with method selection
+  - Comprehensive setup guides (GITHUB_SETUP.md, GITHUB_SETUP_PL.md)
+  - Map serialization support in Zustand for localStorage
+  - Session provider integration with NextAuth
+  - Type definitions for NextAuth session extensions
+
+### Changed
+
+- **Dependencies**: Added `next-auth@beta`, `@octokit/rest`, `@octokit/app`, `@octokit/auth-app`, `@monaco-editor/react`
+- **Store**: Extended with GitHub repository and PR tracking state
+- **Environment**: Added GitHub App and OAuth configuration variables (.env.example updated)
+- **Settings Page**: Now includes tabbed interface for GitHub App vs OAuth selection
+- **Security**: GitHub App tokens stored in HTTP-only cookies (not localStorage)
+
+### Fixed
+
+- All TypeScript compilation errors in GitHub integration code
+- Import cleanup in repo-selector, yaml-editor-modal, and GitHub App components
+- NextAuth handler exports for route compatibility
+- GitHub App token extraction from Octokit response
+- LogLine type inference in logs-viewer component
+- Unused import warnings across components
+
 ## [1.2.0] - 2025-11-13
 
 ### Added

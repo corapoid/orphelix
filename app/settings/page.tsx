@@ -24,6 +24,13 @@ import LaptopOutlinedIcon from '@mui/icons-material/LaptopOutlined'
 import { useThemeMode } from '../components/theme-provider'
 import { useModeStore } from '@/lib/store'
 import { NamespaceSelector } from '../components/layout/namespace-selector'
+import { GitHubLoginButton } from '@/app/components/github/login-button'
+import { RepoSelector } from '@/app/components/github/repo-selector'
+import { GitHubAppInstallButton } from '@/app/components/github-app/install-button'
+import { GitHubAppRepoSelector } from '@/app/components/github-app/repo-selector'
+import { useSession } from 'next-auth/react'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 import { useState, useEffect } from 'react'
 
 interface KubeContext {
@@ -37,6 +44,8 @@ interface KubeContext {
 export default function SettingsPage() {
   const { mode: themeMode, setThemeMode, actualTheme } = useThemeMode()
   const { mode: appMode, setMode, realtimeEnabled, setRealtimeEnabled, selectedNamespace, selectedContext, setContext } = useModeStore()
+  const { data: session } = useSession()
+  const [githubIntegrationType, setGithubIntegrationType] = useState<'oauth' | 'app'>('app')
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -358,6 +367,60 @@ export default function SettingsPage() {
                 </Button>
               </ButtonGroup>
             </Box>
+          </Paper>
+        </Grid>
+
+        {/* GitHub Integration */}
+        <Grid size={{ xs: 12 }}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              GitHub Integration
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Connect your GitHub account to edit Kubernetes manifests and create Pull Requests directly from KubeVista.
+            </Typography>
+
+            <Tabs
+              value={githubIntegrationType}
+              onChange={(_, v) => setGithubIntegrationType(v)}
+              sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}
+            >
+              <Tab label="GitHub App (Recommended)" value="app" />
+              <Tab label="OAuth (Legacy)" value="oauth" />
+            </Tabs>
+
+            {githubIntegrationType === 'app' ? (
+              <Box>
+                <GitHubAppInstallButton />
+                <Box sx={{ mt: 3 }}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Select Repository
+                  </Typography>
+                  <GitHubAppRepoSelector />
+                </Box>
+              </Box>
+            ) : (
+              <Box>
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  OAuth grants access to ALL repositories. Consider using GitHub App for granular control.
+                </Alert>
+                <Box sx={{ mb: 3 }}>
+                  <GitHubLoginButton />
+                </Box>
+                {session && (
+                  <Box>
+                    <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
+                      Select Repository
+                    </Typography>
+                    <RepoSelector />
+                    <Alert severity="info" sx={{ mt: 2 }}>
+                      After selecting a repository, you can edit YAML files from deployment details pages.
+                      Changes will be committed as Pull Requests for review.
+                    </Alert>
+                  </Box>
+                )}
+              </Box>
+            )}
           </Paper>
         </Grid>
       </Grid>
