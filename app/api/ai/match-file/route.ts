@@ -68,16 +68,16 @@ STEP-BY-STEP ANALYSIS:
 
 RESPONSE FORMAT (return ONLY valid JSON, no markdown):
 {
-  "matchedFile": "path/to/file.yaml",
+  "matchedFile": "path/to/matched/file.yaml",
   "confidence": 85,
-  "reasoning": "Found videocmsapi/c2a-int/helm-release.yaml which matches resource video-cms-api-main"
+  "reasoning": "Explanation of why this file matches"
 }
 
 If no good match exists, return:
 {
   "matchedFile": null,
   "confidence": 0,
-  "reasoning": "No file path matches the resource name pattern"
+  "reasoning": "No matching file found"
 }`
 
     const startTime = Date.now()
