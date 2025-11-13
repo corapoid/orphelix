@@ -6,7 +6,9 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import LinearProgress from '@mui/material/LinearProgress'
+import Grid from '@mui/material/Grid2'
+import Chip from '@mui/material/Chip'
 import { useQuery } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/store'
 
@@ -50,12 +52,15 @@ interface MetricsResponse {
 }
 
 function formatMemory(bytes: number): string {
+  if (bytes === 0) return '0 B'
+
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
+  const k = 1024
   let size = bytes
   let unitIndex = 0
 
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024
+  while (size >= k && unitIndex < units.length - 1) {
+    size /= k
     unitIndex++
   }
 
@@ -63,10 +68,17 @@ function formatMemory(bytes: number): string {
 }
 
 function formatCPU(millicores: number): string {
+  if (millicores === 0) return '0m'
   if (millicores >= 1000) {
     return `${(millicores / 1000).toFixed(2)} cores`
   }
   return `${millicores.toFixed(0)}m`
+}
+
+function getUsageColor(percentage: number): 'success' | 'warning' | 'error' {
+  if (percentage < 70) return 'success'
+  if (percentage < 90) return 'warning'
+  return 'error'
 }
 
 export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageChartProps) {
@@ -89,65 +101,46 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
     refetchInterval: 30000, // Refresh every 30 seconds
   })
 
-  const chartData = useMemo(() => {
-    if (!data) return { cpu: [], memory: [] }
+  const aggregatedMetrics = useMemo(() => {
+    if (!data) return null
 
-    const cpuData: Array<{ name: string; Current: number; Requested: number; Limit: number }> = []
-    const memoryData: Array<{ name: string; Current: number; Requested: number; Limit: number }> = []
-
-    // Aggregate metrics by pod
-    const podMap = new Map<string, {
-      current: number
-      requests: number
-      limits: number
-      currentMem: number
-      requestsMem: number
-      limitsMem: number
-    }>()
+    let totalCpuCurrent = 0
+    let totalCpuRequested = 0
+    let totalCpuLimit = 0
+    let totalMemCurrent = 0
+    let totalMemRequested = 0
+    let totalMemLimit = 0
 
     data.metrics.forEach(metric => {
-      const existing = podMap.get(metric.podName) || {
-        current: 0,
-        requests: 0,
-        limits: 0,
-        currentMem: 0,
-        requestsMem: 0,
-        limitsMem: 0,
-      }
-      existing.current += metric.cpuValue
-      existing.currentMem += metric.memoryValue
-      podMap.set(metric.podName, existing)
+      totalCpuCurrent += metric.cpuValue
+      totalMemCurrent += metric.memoryValue
     })
 
     data.requirements.forEach(req => {
-      const existing = podMap.get(req.podName)
-      if (existing) {
-        existing.requests += req.requests.cpuValue
-        existing.limits += req.limits.cpuValue
-        existing.requestsMem += req.requests.memoryValue
-        existing.limitsMem += req.limits.memoryValue
-      }
+      totalCpuRequested += req.requests.cpuValue
+      totalCpuLimit += req.limits.cpuValue
+      totalMemRequested += req.requests.memoryValue
+      totalMemLimit += req.limits.memoryValue
     })
 
-    podMap.forEach((values, podName) => {
-      const shortName = podName.split('-').slice(0, -2).join('-')
+    const cpuUsagePercent = totalCpuLimit > 0 ? (totalCpuCurrent / totalCpuLimit) * 100 : 0
+    const memUsagePercent = totalMemLimit > 0 ? (totalMemCurrent / totalMemLimit) * 100 : 0
 
-      cpuData.push({
-        name: shortName,
-        'Current': values.current,
-        'Requested': values.requests,
-        'Limit': values.limits,
-      })
-
-      memoryData.push({
-        name: shortName,
-        'Current': values.currentMem,
-        'Requested': values.requestsMem,
-        'Limit': values.limitsMem,
-      })
-    })
-
-    return { cpu: cpuData, memory: memoryData }
+    return {
+      cpu: {
+        current: totalCpuCurrent,
+        requested: totalCpuRequested,
+        limit: totalCpuLimit,
+        usagePercent: cpuUsagePercent,
+      },
+      memory: {
+        current: totalMemCurrent,
+        requested: totalMemRequested,
+        limit: totalMemLimit,
+        usagePercent: memUsagePercent,
+      },
+      podCount: data.metrics.length,
+    }
   }, [data])
 
   if (mode === 'mock') {
@@ -179,7 +172,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
     )
   }
 
-  if (!data || (chartData.cpu.length === 0 && chartData.memory.length === 0)) {
+  if (!data || !aggregatedMetrics) {
     return (
       <Alert severity="warning">
         No metrics available. Make sure metrics-server is installed in your cluster.
@@ -188,60 +181,121 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      {/* CPU Usage */}
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-          CPU Usage
-        </Typography>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={chartData.cpu}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis
-              label={{ value: 'Millicores', angle: -90, position: 'insideLeft' }}
-              tickFormatter={(value) => formatCPU(value)}
-            />
-            <Tooltip
-              formatter={(value: number) => formatCPU(value)}
-              contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
-            />
-            <Legend />
-            <Bar dataKey="Current" fill="#2196f3" />
-            <Bar dataKey="Requested" fill="#4caf50" />
-            <Bar dataKey="Limit" fill="#ff9800" />
-          </BarChart>
-        </ResponsiveContainer>
-      </Paper>
+    <Box>
+      <Grid container spacing={3}>
+        {/* CPU Card */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper sx={{ p: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                CPU Usage
+              </Typography>
+              <Chip
+                label={`${aggregatedMetrics.cpu.usagePercent.toFixed(1)}%`}
+                color={getUsageColor(aggregatedMetrics.cpu.usagePercent)}
+                size="small"
+              />
+            </Box>
 
-      {/* Memory Usage */}
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-          Memory Usage
-        </Typography>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={chartData.memory}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis
-              label={{ value: 'Memory', angle: -90, position: 'insideLeft' }}
-              tickFormatter={(value) => formatMemory(value)}
-            />
-            <Tooltip
-              formatter={(value: number) => formatMemory(value)}
-              contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
-            />
-            <Legend />
-            <Bar dataKey="Current" fill="#2196f3" />
-            <Bar dataKey="Requested" fill="#4caf50" />
-            <Bar dataKey="Limit" fill="#ff9800" />
-          </BarChart>
-        </ResponsiveContainer>
-      </Paper>
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Current Usage
+                </Typography>
+                <Typography variant="body2" fontWeight="medium">
+                  {formatCPU(aggregatedMetrics.cpu.current)}
+                </Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={Math.min(aggregatedMetrics.cpu.usagePercent, 100)}
+                color={getUsageColor(aggregatedMetrics.cpu.usagePercent)}
+                sx={{ height: 8, borderRadius: 1 }}
+              />
+            </Box>
 
-      <Typography variant="caption" color="text.secondary">
-        Last updated: {data ? new Date(data.timestamp).toLocaleTimeString() : 'N/A'}
-      </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="caption" color="text.secondary">
+                  Requested:
+                </Typography>
+                <Typography variant="caption" fontWeight="medium">
+                  {formatCPU(aggregatedMetrics.cpu.requested)}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="caption" color="text.secondary">
+                  Limit:
+                </Typography>
+                <Typography variant="caption" fontWeight="medium">
+                  {formatCPU(aggregatedMetrics.cpu.limit)}
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Memory Card */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper sx={{ p: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                Memory Usage
+              </Typography>
+              <Chip
+                label={`${aggregatedMetrics.memory.usagePercent.toFixed(1)}%`}
+                color={getUsageColor(aggregatedMetrics.memory.usagePercent)}
+                size="small"
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Current Usage
+                </Typography>
+                <Typography variant="body2" fontWeight="medium">
+                  {formatMemory(aggregatedMetrics.memory.current)}
+                </Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={Math.min(aggregatedMetrics.memory.usagePercent, 100)}
+                color={getUsageColor(aggregatedMetrics.memory.usagePercent)}
+                sx={{ height: 8, borderRadius: 1 }}
+              />
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="caption" color="text.secondary">
+                  Requested:
+                </Typography>
+                <Typography variant="caption" fontWeight="medium">
+                  {formatMemory(aggregatedMetrics.memory.requested)}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="caption" color="text.secondary">
+                  Limit:
+                </Typography>
+                <Typography variant="caption" fontWeight="medium">
+                  {formatMemory(aggregatedMetrics.memory.limit)}
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="caption" color="text.secondary">
+          Aggregated from {aggregatedMetrics.podCount} pod{aggregatedMetrics.podCount !== 1 ? 's' : ''}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          Last updated: {new Date(data.timestamp).toLocaleTimeString()}
+        </Typography>
+      </Box>
     </Box>
   )
 }
