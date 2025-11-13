@@ -243,7 +243,7 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
             </Tooltip>
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <ListItemButton
               selected={pathname === '/settings'}
               onClick={() => handleNavigate('/settings')}
@@ -278,7 +278,7 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
                 primary="Settings"
                 primaryTypographyProps={{
                   fontSize: '0.875rem',
-                  fontWeight: pathname === '/settings' ? 600 : 400,
+                  fontWeight: pathname === '/settings' ? 600 : 500,
                 }}
               />
             </ListItemButton>
@@ -286,6 +286,10 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
               onClick={toggleCollapse}
               sx={{
                 borderRadius: 2,
+                minWidth: 48,
+                minHeight: 48,
+                justifyContent: 'center',
+                px: 1,
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },
@@ -293,19 +297,12 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
             >
               <ListItemIcon
                 sx={{
-                  minWidth: 40,
+                  minWidth: 0,
                   color: 'text.secondary',
                 }}
               >
                 <ChevronLeftIcon />
               </ListItemIcon>
-              <ListItemText
-                primary="Collapse"
-                primaryTypographyProps={{
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                }}
-              />
             </ListItemButton>
           </Box>
         )}
