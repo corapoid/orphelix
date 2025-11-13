@@ -159,8 +159,16 @@ export class FileMatcher {
       return { file: null, method: 'none', score: 0 }
     }
 
+    console.log(`[FileMatcher] Matching resource: ${resource.name} (${resource.type}) in namespace: ${resource.namespace}`)
+    console.log(`[FileMatcher] Total files: ${yamlFiles.length}`)
+
     // Filter files by resource type first
     const filteredFiles = yamlFiles.filter(f => matchesResourceType(f, resource.type))
+
+    console.log(`[FileMatcher] Files after type filtering: ${filteredFiles.length}`)
+    if (filteredFiles.length > 0 && filteredFiles.length <= 10) {
+      console.log('[FileMatcher] Filtered files:', filteredFiles.map(f => f.path))
+    }
 
     if (filteredFiles.length === 0) {
       // No files match the resource type - return none
@@ -169,12 +177,16 @@ export class FileMatcher {
 
     // If only one file matches, return it
     if (filteredFiles.length === 1) {
+      console.log(`[FileMatcher] Only one file matches, selecting: ${filteredFiles[0].path}`)
       return { file: filteredFiles[0], method: 'exact', confidence: 1.0, score: 100 }
     }
 
     // If cluster YAML provided and files have content, use YAML comparison
     if (resource.clusterYaml) {
+      console.log('[FileMatcher] Cluster YAML provided, attempting content comparison')
       const filesWithContent = filteredFiles.filter(f => f.content)
+      console.log(`[FileMatcher] Files with content: ${filesWithContent.length}`)
+
       if (filesWithContent.length > 0) {
         const contentMatches = filesWithContent.map(file => ({
           file,
@@ -183,31 +195,50 @@ export class FileMatcher {
 
         // Sort by score
         contentMatches.sort((a, b) => b.score - a.score)
+
+        console.log('[FileMatcher] Content comparison scores:')
+        contentMatches.slice(0, 5).forEach(m => {
+          console.log(`  ${m.file.path}: ${m.score}`)
+        })
+
         const best = contentMatches[0]
 
         // If content match score is high enough (>= 70), use it
         if (best.score >= 70) {
+          console.log(`[FileMatcher] ✓ Content match selected: ${best.file.path} (score: ${best.score})`)
           return {
             file: best.file,
             method: 'content',
             confidence: best.score / 100,
             score: best.score
           }
+        } else {
+          console.log(`[FileMatcher] Best content score (${best.score}) below threshold (70), falling back to pattern matching`)
         }
       }
+    } else {
+      console.log('[FileMatcher] No cluster YAML provided, using pattern matching only')
     }
 
     // Score filtered files using pattern matching
+    console.log('[FileMatcher] Using pattern matching to score files')
     const scoredMatches = this.scoreAllFiles(resource, filteredFiles)
 
     // Sort by score (highest first)
     scoredMatches.sort((a, b) => b.score - a.score)
+
+    // Log top 5 scores
+    console.log('[FileMatcher] Pattern matching scores (top 5):')
+    scoredMatches.slice(0, 5).forEach(m => {
+      console.log(`  ${m.file.path}: ${m.score} (${m.method})`)
+    })
 
     // Get best match
     const bestMatch = scoredMatches[0]
 
     // If score is too low, don't auto-select
     if (bestMatch.score < 30) {
+      console.log(`[FileMatcher] Best score (${bestMatch.score}) below threshold (30), no match`)
       return { file: null, method: 'none', score: bestMatch.score }
     }
 
@@ -216,6 +247,8 @@ export class FileMatcher {
     if (bestMatch.score >= 90) method = 'exact'
     else if (bestMatch.score >= 70) method = 'directory'
     else if (bestMatch.score >= 50) method = 'namespace'
+
+    console.log(`[FileMatcher] ✓ Pattern match selected: ${bestMatch.file.path} (score: ${bestMatch.score}, method: ${method})`)
 
     return {
       file: bestMatch.file,
@@ -289,9 +322,12 @@ export class FileMatcher {
         }
       }
 
-      // 5. Common directory structures (bonus)
-      if (file.path.includes('/base/') || file.path.includes('/overlays/')) {
-        score += 5 // Kustomize structure
+      // 5. Overlay preference (STRONG bonus - overlays are environment-specific)
+      if (file.path.includes('/overlays/') || file.path.includes('/overlay/')) {
+        score += 30 // Strong preference for overlay files
+        if (method === 'none') method = 'overlay'
+      } else if (file.path.includes('/base/')) {
+        score += 5 // Base gets small bonus (generic configs)
       }
 
       return { file, score, method }

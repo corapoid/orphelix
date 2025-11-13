@@ -105,9 +105,13 @@ export function YamlEditorModal({
           console.warn('Could not fetch cluster YAML, falling back to pattern matching:', error)
         }
 
-        // Step 2: Fetch file contents from GitHub for top 10 candidate files
-        // (Limit to 10 to avoid rate limits and improve performance)
-        const candidateFiles = files.slice(0, 10)
+        // Step 2: Fetch file contents from GitHub for candidate files
+        // Prioritize overlay files over base files
+        const overlayFiles = files.filter((f: any) => f.path.includes('/overlays/') || f.path.includes('/overlay/'))
+        const baseFiles = files.filter((f: any) => !f.path.includes('/overlays/') && !f.path.includes('/overlay/'))
+
+        // Take up to 20 files: prioritize overlays, then base files
+        const candidateFiles = [...overlayFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
         const filesWithContent = await Promise.all(
           candidateFiles.map(async (file: any) => {
             try {

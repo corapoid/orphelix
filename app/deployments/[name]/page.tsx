@@ -32,6 +32,7 @@ import { DetailSkeleton } from '@/components/common/detail-skeleton'
 import { ErrorState } from '@/components/common/error-state'
 import { ResourceUsageChart } from '@/app/components/metrics/resource-usage-chart'
 import { YamlEditorModal } from '@/app/components/github/yaml-editor-modal'
+import { DeploymentManifestViewer } from '@/app/components/deployments/deployment-manifest-viewer'
 
 export default function DeploymentDetailPage() {
   const params = useParams()
@@ -363,6 +364,9 @@ export default function DeploymentDetailPage() {
           </Box>
         </Paper>
       )}
+
+      {/* Cluster Manifest Section */}
+      <DeploymentManifestViewer name={name} namespace={deployment.namespace} />
 
     </Box>
   )
