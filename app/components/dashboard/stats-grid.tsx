@@ -1,7 +1,7 @@
 'use client'
 
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { SvgIconComponent } from '@mui/icons-material'

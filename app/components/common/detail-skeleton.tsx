@@ -1,5 +1,5 @@
 import { Box, Paper, Skeleton } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 
 /**
  * Skeleton loader for detail pages
