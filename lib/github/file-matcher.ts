@@ -323,11 +323,11 @@ export class FileMatcher {
       }
 
       // 5. Environment-specific file preference (STRONG bonus)
-      // Files NOT in /base/ are usually environment-specific (prod, dev, staging, etc.)
-      if (file.path.includes('/base/')) {
+      // Files NOT starting with base/ are usually environment-specific (prod, dev, staging, c2a-int, etc.)
+      if (file.path.startsWith('base/')) {
         score += 5 // Base gets small bonus (generic configs)
       } else {
-        // Not in base = likely environment-specific (prod/, dev/, overlays/, etc.)
+        // Not in base/ = likely environment-specific (c2a-int/, prod/, dev/, overlays/, etc.)
         score += 35 // Strong preference for environment-specific files
         if (method === 'none') method = 'environment'
       }

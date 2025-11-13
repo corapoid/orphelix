@@ -107,17 +107,18 @@ export function YamlEditorModal({
 
         // Step 2: Fetch file contents from GitHub for candidate files
         // Prioritize environment-specific files over base files
-        // Note: overlays might be in /overlays/, /prod/, /dev/, /staging/, etc.
-        const baseFiles = files.filter((f: any) => f.path.includes('/base/'))
-        const envFiles = files.filter((f: any) => !f.path.includes('/base/'))
+        // Note: overlays might be in /overlays/, /prod/, /dev/, /staging/, c2a-int/, etc.
+        const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
+        const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
 
         // Take up to 20 files: prioritize env-specific files, then base files
         const candidateFiles = [...envFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
 
-        console.log('[YamlEditor] Total files:', files.length)
-        console.log('[YamlEditor] Base files:', baseFiles.length)
-        console.log('[YamlEditor] Environment files:', envFiles.length)
-        console.log('[YamlEditor] Candidate files for matching:', candidateFiles.length)
+        console.log('[YamlEditor] Total files from GitHub:', files.length)
+        console.log('[YamlEditor] Base files count:', baseFiles.length)
+        console.log('[YamlEditor] Environment files count:', envFiles.length)
+        console.log('[YamlEditor] First 5 env files:', envFiles.slice(0, 5).map((f: any) => f.path))
+        console.log('[YamlEditor] Candidate files for content fetching:', candidateFiles.length)
         const filesWithContent = await Promise.all(
           candidateFiles.map(async (file: any) => {
             try {
