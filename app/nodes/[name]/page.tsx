@@ -89,8 +89,13 @@ export default function NodeDetailPage() {
   return (
     <Box>
       <PageHeader
-        title={node.name}
-        subtitle={`Node (Version: ${node.version})`}
+        title={
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {node.name}
+            <StatusBadge status={node.status} size="medium" />
+          </Box>
+        }
+        subtitle={`Node • Version: ${node.version} • Age: ${formatAge(node.age)}`}
         breadcrumbs={[
           { label: 'Nodes', href: '/nodes' },
           { label: node.name },
@@ -98,16 +103,6 @@ export default function NodeDetailPage() {
         onRefresh={refetch}
         isRefreshing={isLoading}
       />
-
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-          <Typography variant="h4">{node.name}</Typography>
-          <StatusBadge status={node.status} size="medium" />
-        </Box>
-        <Typography variant="body2" color="text.secondary">
-          Version: {node.version} • Age: {formatAge(node.age)}
-        </Typography>
-      </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12 }}>

@@ -126,8 +126,13 @@ export default function PodDetailPage() {
   return (
     <Box>
       <PageHeader
-        title={pod.name}
-        subtitle={`Pod in ${pod.namespace} namespace`}
+        title={
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {pod.name}
+            <StatusBadge status={pod.status} size="medium" />
+          </Box>
+        }
+        subtitle={`Pod in ${pod.namespace} namespace • Node: ${pod.nodeName} • Age: ${pod.age}`}
         breadcrumbs={[
           { label: 'Pods', href: '/pods' },
           { label: pod.name },
@@ -145,24 +150,6 @@ export default function PodDetailPage() {
           </Button>
         }
       />
-
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-          <Typography variant="h4">{pod.name}</Typography>
-          <StatusBadge status={pod.status} size="medium" />
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <Typography variant="body2" color="text.secondary">
-            Namespace: {pod.namespace}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Node: {pod.nodeName}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Age: {pod.age}
-          </Typography>
-        </Box>
-      </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, md: 6 }}>

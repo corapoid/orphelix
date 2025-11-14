@@ -14,7 +14,7 @@ interface BreadcrumbItem {
 }
 
 interface PageHeaderProps {
-  title: string
+  title: string | React.ReactNode
   subtitle?: string
   breadcrumbs?: BreadcrumbItem[]
   onRefresh?: () => unknown
@@ -101,9 +101,17 @@ export function PageHeader({
       {/* Header with title, filters, and actions on the right */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 700, mb: subtitle ? 0.5 : 0 }}>
-            {title}
-          </Typography>
+          {typeof title === 'string' ? (
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: subtitle ? 0.5 : 0 }}>
+              {title}
+            </Typography>
+          ) : (
+            <Box sx={{ mb: subtitle ? 0.5 : 0 }}>
+              <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
+                {title}
+              </Typography>
+            </Box>
+          )}
           {subtitle && (
             <Typography variant="body2" color="text.secondary">
               {subtitle}

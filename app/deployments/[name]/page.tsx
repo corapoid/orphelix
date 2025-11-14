@@ -135,8 +135,13 @@ export default function DeploymentDetailPage() {
   return (
     <Box>
       <PageHeader
-        title={deployment.name}
-        subtitle={`Deployment in ${deployment.namespace} namespace`}
+        title={
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {deployment.name}
+            <StatusBadge status={deployment.status} size="medium" />
+          </Box>
+        }
+        subtitle={`Deployment in ${deployment.namespace} namespace • Age: ${deployment.age}`}
         breadcrumbs={[
           { label: 'Deployments', href: '/deployments' },
           { label: deployment.name },
@@ -192,21 +197,6 @@ export default function DeploymentDetailPage() {
           {restartError}
         </Alert>
       )}
-
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-          <Typography variant="h4">{deployment.name}</Typography>
-          <StatusBadge status={deployment.status} size="medium" />
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <Typography variant="body2" color="text.secondary">
-            Namespace: {deployment.namespace}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Age: {deployment.age}
-          </Typography>
-        </Box>
-      </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, md: 6 }}>

@@ -230,51 +230,8 @@ export default function SecretDetailPage({
       </Alert>
 
       <Grid container spacing={3}>
-          {/* Details Panel */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Details
-              </Typography>
-              <Box display="flex" flexDirection="column" gap={2}>
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Name
-                  </Typography>
-                  <Typography variant="body1" fontWeight="medium">
-                    {secret.name}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Namespace
-                  </Typography>
-                  <Typography variant="body1" fontWeight="medium">
-                    {secret.namespace}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Type
-                  </Typography>
-                  <Typography variant="body1" fontWeight="medium">
-                    {secret.type}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Data Keys
-                  </Typography>
-                  <Typography variant="body1" fontWeight="medium">
-                    {dataCount}
-                  </Typography>
-                </Box>
-              </Box>
-            </Paper>
-          </Grid>
-
           {/* Labels Panel */}
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid size={{ xs: 12 }}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
                 Labels

@@ -128,7 +128,7 @@ export default function ConfigMapDetailPage() {
     <Box>
       <PageHeader
         title={configMap.name}
-        subtitle={`ConfigMap in ${configMap.namespace} namespace`}
+        subtitle={`ConfigMap in ${configMap.namespace} namespace • Age: ${configMap.age} • Keys: ${Object.keys(configMap.data).length}`}
         breadcrumbs={[
           { label: 'ConfigMaps', href: '/configmaps' },
           { label: configMap.name },
@@ -147,41 +147,7 @@ export default function ConfigMapDetailPage() {
       />
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Details
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Name:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {configMap.name}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Namespace:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {configMap.namespace}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Keys:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {Object.keys(configMap.data).length}
-                </Typography>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
               Labels
