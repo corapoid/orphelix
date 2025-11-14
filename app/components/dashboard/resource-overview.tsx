@@ -191,11 +191,13 @@ export function ResourceOverview({ summary }: ResourceOverviewProps) {
     </Grid>
   )
 
+  const headerColor = '#6366F1' // Unified color for all headers
+
   return (
     <Grid container spacing={3}>
-      {renderResourceGroup('Workloads', workloads, '#6366F1')}
-      {renderResourceGroup('Network', network, '#10B981')}
-      {renderResourceGroup('Storage', storage, '#F59E0B')}
+      {renderResourceGroup('Workloads', workloads, headerColor)}
+      {renderResourceGroup('Network', network, headerColor)}
+      {renderResourceGroup('Storage', storage, headerColor)}
     </Grid>
   )
 }
