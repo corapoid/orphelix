@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { fetchNamespace } from '@/lib/k8s/api'
-import { handleK8sError } from '@/lib/k8s/errors'
+import { handleK8sError } from '@/lib/core/api-helpers'
 
 export async function GET(
-  request: NextRequest,
+  _request: Request,
   context: { params: Promise<{ name: string }> }
 ) {
   try {
