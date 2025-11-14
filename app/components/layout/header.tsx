@@ -31,10 +31,10 @@ export function Header({ onMenuClick: _onMenuClick }: HeaderProps) {
         <Logo collapsed={false} />
 
         {/* Spacer */}
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 1, pointerEvents: 'none' }} />
 
         {/* Search bar in the center */}
-        <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', zIndex: 1, pointerEvents: 'auto' }}>
+        <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', zIndex: 1 }}>
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
@@ -43,7 +43,7 @@ export function Header({ onMenuClick: _onMenuClick }: HeaderProps) {
         </Box>
 
         {/* Spacer */}
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 1, pointerEvents: 'none' }} />
 
         {/* Real-time status on the right */}
         <RealtimeStatus />
