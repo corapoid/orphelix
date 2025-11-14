@@ -6,7 +6,6 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import LanguageIcon from '@mui/icons-material/Language'
-import { ClusterHealthScore } from './components/dashboard/cluster-health-score'
 import { CriticalAlerts } from './components/dashboard/critical-alerts'
 import { ResourceOverview } from './components/dashboard/resource-overview'
 import { ResourceUtilization } from './components/dashboard/resource-utilization'
@@ -71,22 +70,17 @@ export default function DashboardPage() {
         </Typography>
       </Box>
 
-      {/* 1. Cluster Health Score (Hero) */}
-      <Box sx={{ mb: 3 }}>
-        <ClusterHealthScore summary={summary} />
-      </Box>
-
-      {/* 2. Critical Alerts (Conditional) */}
+      {/* 1. Critical Alerts (Conditional) */}
       <Box sx={{ mb: 3 }}>
         <CriticalAlerts summary={summary} />
       </Box>
 
-      {/* 3. Resource Overview (Grouped Cards) */}
+      {/* 2. Resource Overview (Grouped Cards) */}
       <Box sx={{ mb: 4 }}>
         <ResourceOverview summary={summary} />
       </Box>
 
-      {/* 4. Recent Activity + Resource Utilization (Side by Side) */}
+      {/* 3. Recent Activity + Resource Utilization (Side by Side) */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 3, mb: 4 }}>
         <Box>
           <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
