@@ -4,22 +4,34 @@ This directory contains the complete user documentation for KubeVista, built wit
 
 ## Viewing Documentation Locally
 
-### Prerequisites
+### Option 1: Using npm script (Recommended)
 
-Install the Mintlify CLI globally:
+From the project root:
 
 ```bash
-npm i -g mint
+npm run docs
 ```
 
-### Start Documentation Server
+The documentation will be available at `http://localhost:3001`
+
+### Option 2: Using npx directly
 
 ```bash
 cd docs
-mint dev
+npx mint@latest dev
 ```
 
 The documentation will be available at `http://localhost:3000`
+
+### Option 3: Global installation
+
+Install the Mintlify CLI globally (optional):
+
+```bash
+npm i -g mint
+cd docs
+mint dev
+```
 
 ## Documentation Structure
 
