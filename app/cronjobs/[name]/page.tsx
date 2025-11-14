@@ -11,24 +11,19 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Button from '@mui/material/Button'
-import EditIcon from '@mui/icons-material/Edit'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
 import { useCronJob } from '@/lib/hooks/use-cronjobs'
 import { useJobs } from '@/lib/hooks/use-jobs'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
-import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import Link from 'next/link'
 
 export default function CronJobDetailPage() {
   const params = useParams()
   const name = params.name as string
-  const [editorOpen, setEditorOpen] = useState(false)
 
   const { data: cronjob, isLoading, error, refetch } = useCronJob(name)
   const { data: allJobs } = useJobs()
@@ -98,15 +93,6 @@ export default function CronJobDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        actions={
-          <Button
-            variant="outlined"
-            startIcon={<EditIcon />}
-            onClick={() => setEditorOpen(true)}
-          >
-            Edit YAML
-          </Button>
-        }
       />
 
       <Grid container spacing={3}>
@@ -286,15 +272,6 @@ export default function CronJobDetailPage() {
           </Grid>
         )}
       </Grid>
-
-      {/* YAML Editor Modal */}
-      <YamlEditorModal
-        open={editorOpen}
-        onClose={() => setEditorOpen(false)}
-        resourceType="CronJob"
-        resourceName={cronjob.name}
-        namespace={cronjob.namespace}
-      />
     </Box>
   )
 }
