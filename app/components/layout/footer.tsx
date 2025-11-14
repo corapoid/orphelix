@@ -3,6 +3,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
+import NextLink from 'next/link'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import IconButton from '@mui/material/IconButton'
@@ -30,10 +31,8 @@ export function Footer() {
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Tooltip title="Documentation" arrow>
             <IconButton
-              component={Link}
-              href="https://github.com/dmakowski-rasp/kubevista/tree/main/docs"
-              target="_blank"
-              rel="noopener noreferrer"
+              component={NextLink}
+              href="/docs"
               sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
               size="small"
             >
