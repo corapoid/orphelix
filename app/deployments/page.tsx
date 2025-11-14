@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDeployments } from '@/lib/hooks/use-deployments'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
@@ -23,12 +23,13 @@ import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import type { Deployment } from '@/types/kubernetes'
 
 export default function DeploymentsPage() {
   const router = useRouter()
   const { data: deployments, isLoading, error, refetch } = useDeployments()
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search deployments...')
 
   // Auto-refresh
   useAutoRefresh(refetch)
@@ -86,9 +87,6 @@ export default function DeploymentsPage() {
         subtitle={`${deployments?.length || 0} deployment${deployments?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search deployments..."
       />
 
       <ClusterConnectionAlert minimal />
@@ -104,10 +102,6 @@ export default function DeploymentsPage() {
           icon={RocketLaunchIcon}
           title="No matching deployments"
           description={`No deployments match "${searchQuery}". Try adjusting your search.`}
-          action={{
-            label: 'Clear search',
-            onClick: () => setSearchQuery(''),
-          }}
         />
       ) : (
         <TableContainer component={Paper}>

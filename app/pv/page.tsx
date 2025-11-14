@@ -21,10 +21,11 @@ import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import type { PersistentVolume, PersistentVolumeClaim } from '@/types/kubernetes'
 
 export default function PersistentVolumesPage() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search...')
   const [tab, setTab] = useState(0)
 
   const { data: pvs, isLoading: pvsLoading, error: pvsError, refetch: refetchPVs } = usePVs()
@@ -88,9 +89,6 @@ export default function PersistentVolumesPage() {
         }
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search..."
       />
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
@@ -113,10 +111,6 @@ export default function PersistentVolumesPage() {
             icon={StorageIcon}
             title="No matching PersistentVolumes"
             description={`No PersistentVolumes match "${searchQuery}". Try adjusting your search.`}
-            action={{
-              label: 'Clear search',
-              onClick: () => setSearchQuery(''),
-            }}
           />
         ) : (
           <TableContainer component={Paper}>
@@ -205,10 +199,6 @@ export default function PersistentVolumesPage() {
             icon={StorageIcon}
             title="No matching PersistentVolumeClaims"
             description={`No PersistentVolumeClaims match "${searchQuery}". Try adjusting your search.`}
-            action={{
-              label: 'Clear search',
-              onClick: () => setSearchQuery(''),
-            }}
           />
         ) : (
           <TableContainer component={Paper}>

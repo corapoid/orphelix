@@ -9,7 +9,6 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
@@ -19,11 +18,12 @@ import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import type { ConfigMap } from '@/types/kubernetes'
 
 export default function ConfigMapsPage() {
   const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search ConfigMaps...')
   const { data: configMaps, isLoading, error, refetch } = useConfigMaps()
 
   // Auto-refresh
@@ -79,9 +79,6 @@ export default function ConfigMapsPage() {
         subtitle={`${configMaps?.length || 0} ConfigMap${configMaps?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search ConfigMaps..."
       />
 
       {!configMaps || configMaps.length === 0 ? (
@@ -95,10 +92,6 @@ export default function ConfigMapsPage() {
           icon={SettingsIcon}
           title="No matching ConfigMaps"
           description={`No ConfigMaps match your search "${searchQuery}".`}
-          action={{
-            label: 'Clear search',
-            onClick: () => setSearchQuery(''),
-          }}
         />
       ) : (
         <TableContainer component={Paper}>

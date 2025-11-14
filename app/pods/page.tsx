@@ -27,11 +27,12 @@ import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import type { PodStatus, Pod } from '@/types/kubernetes'
 
 export default function PodsPage() {
   const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search pods...')
   const [statusFilter, setStatusFilter] = useState<PodStatus | ''>('')
 
   const { data: pods, isLoading, error, refetch } = usePods(statusFilter || undefined)
@@ -94,9 +95,6 @@ export default function PodsPage() {
         subtitle={`${pods?.length || 0} pod${pods?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search pods..."
         filters={
           <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel id="status-filter-label">Status</InputLabel>
@@ -132,7 +130,6 @@ export default function PodsPage() {
           action={{
             label: 'Clear filters',
             onClick: () => {
-              setSearchQuery('')
               setStatusFilter('')
             },
           }}

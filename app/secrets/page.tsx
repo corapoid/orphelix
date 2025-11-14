@@ -9,7 +9,6 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSecrets } from '@/lib/hooks/use-secrets'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
@@ -19,11 +18,12 @@ import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import type { Secret } from '@/types/kubernetes'
 
 export default function SecretsPage() {
   const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search secrets...')
   const { data: secrets, isLoading, error, refetch } = useSecrets()
 
   // Auto-refresh
@@ -71,9 +71,6 @@ export default function SecretsPage() {
         subtitle={`${secrets?.length || 0} secret${secrets?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search secrets..."
       />
 
       {!secrets || secrets.length === 0 ? (
@@ -87,10 +84,6 @@ export default function SecretsPage() {
           icon={VpnKeyIcon}
           title="No matching secrets"
           description={`No secrets match "${searchQuery}". Try adjusting your search.`}
-          action={{
-            label: 'Clear search',
-            onClick: () => setSearchQuery(''),
-          }}
         />
       ) : (
         <TableContainer component={Paper}>

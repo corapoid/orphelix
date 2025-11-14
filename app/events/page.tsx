@@ -23,11 +23,12 @@ import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import { formatAge } from '@/lib/core/utils'
 import type { Event } from '@/types/kubernetes'
 
 export default function EventsPage() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search events...')
   const [typeFilter, setTypeFilter] = useState<'Normal' | 'Warning' | ''>('')
   const [timeRange, setTimeRange] = useState(24) // Time range in hours
 
@@ -81,9 +82,6 @@ export default function EventsPage() {
         subtitle={`${events?.length || 0} event${events?.length === 1 ? '' : 's'} in the last ${timeRange} hour${timeRange === 1 ? '' : 's'}`}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search events..."
         filters={
           <>
             <FormControl size="small" sx={{ minWidth: 150 }}>
@@ -132,7 +130,6 @@ export default function EventsPage() {
           action={{
             label: 'Clear filters',
             onClick: () => {
-              setSearchQuery('')
               setTypeFilter('')
             },
           }}

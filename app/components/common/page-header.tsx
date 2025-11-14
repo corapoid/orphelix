@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import { RefreshButton } from './refresh-button'
-import { SearchBar } from './search-bar'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { useRouter } from 'next/navigation'
 
@@ -21,10 +20,7 @@ interface PageHeaderProps {
   onRefresh?: () => unknown
   isRefreshing?: boolean
   actions?: React.ReactNode
-  // Search and filter
-  searchValue?: string
-  onSearchChange?: (value: string) => void
-  searchPlaceholder?: string
+  // Filters only (search is now in global header)
   filters?: React.ReactNode
 }
 
@@ -34,10 +30,11 @@ interface PageHeaderProps {
  * Provides consistent styling across all pages with:
  * - Title and optional subtitle
  * - Breadcrumbs navigation
- * - Search bar (integrated)
  * - Filters slot
  * - Refresh button
  * - Custom actions
+ *
+ * Note: Search is now in the global header, not here
  */
 export function PageHeader({
   title,
@@ -46,9 +43,6 @@ export function PageHeader({
   onRefresh,
   isRefreshing = false,
   actions,
-  searchValue,
-  onSearchChange,
-  searchPlaceholder = 'Search...',
   filters,
 }: PageHeaderProps) {
   const router = useRouter()
@@ -105,7 +99,7 @@ export function PageHeader({
       )}
 
       {/* Header with title and actions */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: filters ? 3 : 0 }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 700, mb: subtitle ? 0.5 : 0 }}>
             {title}
@@ -125,21 +119,10 @@ export function PageHeader({
         </Box>
       </Box>
 
-      {/* Search and Filters */}
-      {(onSearchChange || filters) && (
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          {filters && (
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              {filters}
-            </Box>
-          )}
-          {onSearchChange && (
-            <SearchBar
-              value={searchValue || ''}
-              onChange={onSearchChange}
-              placeholder={searchPlaceholder}
-            />
-          )}
+      {/* Filters (search is now in global header) */}
+      {filters && (
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          {filters}
         </Box>
       )}
     </Box>

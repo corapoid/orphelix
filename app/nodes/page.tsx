@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import DnsIcon from '@mui/icons-material/Dns'
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useNodes } from '@/lib/hooks/use-nodes'
 import { usePods } from '@/lib/hooks/use-pods'
@@ -22,6 +22,7 @@ import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import type { Node } from '@/types/kubernetes'
 
 // Helper function to parse Kubernetes resource quantities
@@ -57,7 +58,7 @@ function calculatePercentage(allocatable: string, capacity: string): number {
 
 export default function NodesPage() {
   const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search nodes...')
   const selectedNamespace = useModeStore((state) => state.selectedNamespace)
 
   const { data: nodes, isLoading, error, refetch } = useNodes()
@@ -138,9 +139,6 @@ export default function NodesPage() {
         subtitle={subtitle}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search nodes..."
       />
 
       {!nodes || nodes.length === 0 ? (
@@ -154,10 +152,6 @@ export default function NodesPage() {
           icon={DnsIcon}
           title="No matching nodes"
           description={`No nodes match your search "${searchQuery}".`}
-          action={{
-            label: 'Clear search',
-            onClick: () => setSearchQuery(''),
-          }}
         />
       ) : (
         <TableContainer component={Paper}>

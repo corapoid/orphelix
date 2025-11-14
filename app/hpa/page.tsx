@@ -11,7 +11,6 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import LinearProgress from '@mui/material/LinearProgress'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import { useState } from 'react'
 import { useHPAs } from '@/lib/hooks/use-hpa'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
@@ -20,10 +19,11 @@ import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
+import { usePageSearch } from '@/lib/contexts/search-context'
 import type { HPA } from '@/types/kubernetes'
 
 export default function HPAPage() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search HPAs...')
   const { data: hpas, isLoading, error, refetch } = useHPAs()
 
   // Auto-refresh
@@ -64,9 +64,6 @@ export default function HPAPage() {
         subtitle={`${hpas?.length || 0} HPA${hpas?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search HPAs..."
       />
 
       {!hpas || hpas.length === 0 ? (
@@ -80,10 +77,6 @@ export default function HPAPage() {
           icon={TrendingUpIcon}
           title="No matching HPAs"
           description={`No HPAs match "${searchQuery}". Try adjusting your search.`}
-          action={{
-            label: 'Clear search',
-            onClick: () => setSearchQuery(''),
-          }}
         />
       ) : (
         <TableContainer component={Paper}>
