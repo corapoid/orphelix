@@ -30,7 +30,7 @@ interface PageHeaderProps {
  * Provides consistent styling across all pages with:
  * - Title and optional subtitle
  * - Breadcrumbs navigation
- * - Filters slot
+ * - Filters (on the right, same line as refresh button)
  * - Refresh button
  * - Custom actions
  *
@@ -98,8 +98,8 @@ export function PageHeader({
         </Breadcrumbs>
       )}
 
-      {/* Header with title and actions */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: filters ? 3 : 0 }}>
+      {/* Header with title, filters, and actions on the right */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 700, mb: subtitle ? 0.5 : 0 }}>
             {title}
@@ -112,19 +112,15 @@ export function PageHeader({
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {/* Filters on the right, same line as refresh */}
+          {filters}
+
           {onRefresh && (
             <RefreshButton onRefresh={onRefresh} isLoading={isRefreshing} />
           )}
           {actions}
         </Box>
       </Box>
-
-      {/* Filters (search is now in global header) */}
-      {filters && (
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          {filters}
-        </Box>
-      )}
     </Box>
   )
 }
