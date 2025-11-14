@@ -1,0 +1,145 @@
+---
+title: 'Quickstart'
+description: 'Get started with KubeVista in under 5 minutes'
+---
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+<AccordionGroup>
+  <Accordion icon="node-js" title="Node.js 20 or higher">
+    Download from [nodejs.org](https://nodejs.org)
+  </Accordion>
+  <Accordion icon="terminal" title="kubectl (optional)">
+    Only needed for connecting to real clusters. Install from [kubernetes.io](https://kubernetes.io/docs/tasks/tools/)
+  </Accordion>
+</AccordionGroup>
+
+## Installation
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone <repository-url>
+    cd kubevista
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+  </Step>
+
+  <Step title="Start the development server">
+    ```bash
+    npm run dev
+    ```
+  </Step>
+
+  <Step title="Open in browser">
+    Navigate to [http://localhost:3000](http://localhost:3000)
+
+    The application starts in **Demo Mode** with realistic test data.
+  </Step>
+</Steps>
+
+## Exploring Demo Mode
+
+Demo Mode lets you explore all features without connecting to a real cluster:
+
+<CardGroup cols={2}>
+  <Card title="Dashboard" icon="chart-simple">
+    View summary cards showing resource counts (Deployments, Pods, Nodes, etc.)
+  </Card>
+  <Card title="Deployments" icon="layer-group">
+    Browse deployment lists, view details, and see associated pods
+  </Card>
+  <Card title="Pods" icon="cube">
+    Inspect pod details, view container logs, and check events
+  </Card>
+  <Card title="Topology" icon="diagram-project">
+    Visualize resource relationships in an interactive graph
+  </Card>
+</CardGroup>
+
+<Note>
+  Demo Mode uses realistic mock data that simulates a production environment. Perfect for testing, presentations, or learning Kubernetes concepts.
+</Note>
+
+## Connecting to a Real Cluster
+
+<Steps>
+  <Step title="Click the 'DEMO MODE' badge">
+    Located in the top-right corner of the header
+  </Step>
+
+  <Step title="Select 'Real Cluster'">
+    Choose your kubectl context from the dropdown
+  </Step>
+
+  <Step title="Select namespace">
+    Pick the namespace you want to monitor (default: 'default')
+  </Step>
+
+  <Step title="Test connection">
+    Click 'Test Connection' to verify cluster access
+  </Step>
+
+  <Step title="Switch mode">
+    Click 'Switch to Real Cluster' to start monitoring live resources
+  </Step>
+</Steps>
+
+<Warning>
+  Make sure your `~/.kube/config` file is properly configured and you have appropriate permissions to access the cluster.
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="User Guide"
+    icon="book"
+    href="/user-guide/dashboard"
+  >
+    Learn how to use all features in detail
+  </Card>
+  <Card
+    title="GitHub Integration"
+    icon="github"
+    href="/github/overview"
+  >
+    Set up GitOps workflow with YAML editor and PR creation
+  </Card>
+  <Card
+    title="Configuration"
+    icon="gear"
+    href="/configuration/cluster-connection"
+  >
+    Configure cluster connections, namespaces, and settings
+  </Card>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/introduction"
+  >
+    Explore the REST API for custom integrations
+  </Card>
+</CardGroup>
+
+## Production Deployment
+
+For production use, build and run the optimized version:
+
+```bash
+npm run build
+npm start
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000)
+
+<Tip>
+  For containerized deployment, see [Docker Deployment](/configuration/cluster-connection#docker-deployment)
+</Tip>

@@ -1,0 +1,95 @@
+---
+title: Introduction
+description: 'Welcome to KubeVista - A modern Kubernetes dashboard with real-time updates and GitOps integration'
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-light.png"
+  alt="Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-dark.png"
+  alt="Hero Dark"
+/>
+
+## What is KubeVista?
+
+KubeVista is a comprehensive web dashboard for monitoring and managing Kubernetes resources. Built with modern web technologies, it provides an intuitive interface for DevOps teams and developers to interact with their Kubernetes clusters.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card
+    title="Real-time Monitoring"
+    icon="chart-line"
+    href="/user-guide/dashboard"
+  >
+    Monitor your Kubernetes resources with live updates via Server-Sent Events
+  </Card>
+  <Card
+    title="GitOps Integration"
+    icon="code-branch"
+    href="/github/overview"
+  >
+    Edit YAML files and create Pull Requests directly from the dashboard
+  </Card>
+  <Card
+    title="Resource Management"
+    icon="server"
+    href="/user-guide/deployments"
+  >
+    Manage Deployments, Pods, Nodes, ConfigMaps, Secrets, and more
+  </Card>
+  <Card
+    title="Topology Visualization"
+    icon="diagram-project"
+    href="/user-guide/topology"
+  >
+    Interactive dependency graphs showing relationships between resources
+  </Card>
+</CardGroup>
+
+## Why KubeVista?
+
+<AccordionGroup>
+  <Accordion icon="rocket" title="Easy to Use">
+    Clean, modern interface designed for both beginners and experienced Kubernetes users. Start with demo mode to explore features without a cluster.
+  </Accordion>
+  <Accordion icon="shield" title="Secure">
+    Uses your local kubeconfig for authentication. Secret values are never displayed. GitHub App integration provides granular repository permissions.
+  </Accordion>
+  <Accordion icon="bolt" title="Fast & Responsive">
+    Built with Next.js 15, React 19, and Material-UI for optimal performance. Real-time updates without page refreshes.
+  </Accordion>
+  <Accordion icon="code" title="Developer Friendly">
+    Full TypeScript support, comprehensive API documentation, and extensible architecture. Open source under MPL-2.0 license.
+  </Accordion>
+</AccordionGroup>
+
+## Quick Links
+
+<CardGroup cols={3}>
+  <Card
+    title="Quickstart"
+    icon="play"
+    href="/quickstart"
+  >
+    Get up and running in 5 minutes
+  </Card>
+  <Card
+    title="User Guide"
+    icon="book-open"
+    href="/user-guide/dashboard"
+  >
+    Learn how to use all features
+  </Card>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/introduction"
+  >
+    Explore the REST API
+  </Card>
+</CardGroup>

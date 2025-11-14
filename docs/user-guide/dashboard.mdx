@@ -1,0 +1,144 @@
+---
+title: 'Dashboard Overview'
+description: 'Learn how to use the KubeVista dashboard to monitor your Kubernetes cluster'
+---
+
+## Overview
+
+The dashboard is your central hub for monitoring Kubernetes resources. It provides a quick overview of cluster health and recent activity.
+
+<img src="/images/dashboard.png" alt="Dashboard" />
+
+## Summary Cards
+
+The top section displays summary cards for each resource type:
+
+<CardGroup cols={2}>
+  <Card title="Deployments" icon="layer-group">
+    Total number of deployments in the selected namespace
+  </Card>
+  <Card title="Pods" icon="cube">
+    Total number of pods across all deployments
+  </Card>
+  <Card title="Nodes" icon="server">
+    Number of nodes in the cluster
+  </Card>
+  <Card title="ConfigMaps" icon="file-code">
+    Configuration resources in the namespace
+  </Card>
+  <Card title="Secrets" icon="key">
+    Secret resources in the namespace
+  </Card>
+  <Card title="HPA" icon="arrows-up-down">
+    HorizontalPodAutoscalers configured
+  </Card>
+  <Card title="Persistent Volumes" icon="database">
+    Storage resources available
+  </Card>
+</CardGroup>
+
+<Note>
+  Click any summary card to navigate to the detailed view for that resource type
+</Note>
+
+## Recent Events
+
+The events section shows the latest cluster activity:
+
+- **Event Type** - Normal (info) or Warning (error)
+- **Resource** - Which resource the event relates to
+- **Reason** - Why the event occurred
+- **Message** - Detailed description
+- **Age** - How long ago the event happened
+
+### Event Types
+
+<AccordionGroup>
+  <Accordion icon="circle-info" title="Normal Events">
+    Routine operations like pod scheduling, image pulling, or successful health checks
+  </Accordion>
+  <Accordion icon="triangle-exclamation" title="Warning Events">
+    Issues requiring attention like failed probes, image pull errors, or resource limits
+  </Accordion>
+</AccordionGroup>
+
+### Expanding Events
+
+By default, only the 3 most recent events are shown. Click **"Show N More"** to expand and see all recent events.
+
+## Topology Visualization
+
+<Info>
+  The topology section is collapsed by default. Click to expand and view the resource dependency graph.
+</Info>
+
+The topology graph shows relationships between:
+- **Deployments** → **Pods** → **Nodes**
+- **Services** → **Pods**
+- **ConfigMaps/Secrets** → **Deployments**
+
+### Graph Controls
+
+- **Pan** - Click and drag to move the view
+- **Zoom** - Use mouse wheel or pinch gesture
+- **Fit View** - Double-click to center all nodes
+- **Node Colors** - Status-based (green = healthy, red = error, yellow = warning)
+
+<Warning>
+  Scroll-based zoom is disabled by default to prevent accidental zooming. Use manual controls instead.
+</Warning>
+
+## Real-time Updates
+
+When connected to a real cluster, the dashboard automatically updates via Server-Sent Events (SSE):
+
+<Steps>
+  <Step title="Connection Status">
+    Check the status indicator in the top-right corner:
+    - 🟢 **Connected** - Receiving live updates
+    - 🟡 **Connecting** - Establishing connection
+    - 🔴 **Disconnected** - Not receiving updates
+  </Step>
+
+  <Step title="Automatic Refresh">
+    Resource counts and events update automatically when changes occur in the cluster
+  </Step>
+
+  <Step title="Manual Refresh">
+    Click the refresh button (🔄) on any section to force an immediate update
+  </Step>
+</Steps>
+
+## Theme Toggle
+
+Switch between light and dark themes using the theme toggle button in the header:
+
+- **Light Mode** - Bright, clean interface for daytime use
+- **Dark Mode** - Reduced eye strain for extended use
+
+Your preference is saved automatically and persists across sessions.
+
+## Navigation
+
+Use the sidebar to navigate to detailed views:
+
+<CardGroup cols={2}>
+  <Card title="Deployments" icon="layer-group" href="/user-guide/deployments">
+    Manage deployment resources
+  </Card>
+  <Card title="Pods" icon="cube" href="/user-guide/pods">
+    View and manage pods
+  </Card>
+  <Card title="Nodes" icon="server" href="/user-guide/nodes">
+    Monitor cluster nodes
+  </Card>
+  <Card title="ConfigMaps & Secrets" icon="key" href="/user-guide/configmaps-secrets">
+    Manage configuration
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<Card title="Learn about Deployments" icon="arrow-right" href="/user-guide/deployments">
+  Explore deployment management features
+</Card>

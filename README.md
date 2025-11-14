@@ -70,22 +70,59 @@ npm start
 
 ## 📖 Documentation
 
-### For Users
-- **[User Guide](TECHNICAL.md#usage)** - Detailed usage instructions for all features
-- **[Configuration Guide](TECHNICAL.md#configuration)** - Cluster connection, GitHub integration, environment setup
-- **[Docker Deployment](TECHNICAL.md#docker-deployment)** - Running with Docker and Docker Compose
-- **[FAQ](TECHNICAL.md#troubleshooting)** - Frequently asked questions and troubleshooting
+### 📘 User Documentation
 
-### For Developers
+Complete user guide available in the `/docs` directory (Mintlify format):
+
+```bash
+# View documentation locally
+cd docs
+mint dev
+```
+
+Or browse the documentation files:
+- **[Introduction](docs/introduction.mdx)** - What is KubeVista and key features
+- **[Quickstart](docs/quickstart.mdx)** - Get started in 5 minutes
+- **[Dashboard Guide](docs/user-guide/dashboard.mdx)** - Using the main dashboard
+- **[Search & Filters](docs/user-guide/search-filters.mdx)** - Finding resources quickly
+- **[GitHub Integration](docs/github/overview.mdx)** - GitOps workflow setup
+
+<details>
+<summary>📚 All Documentation Sections</summary>
+
+**User Guide:**
+- Dashboard Overview
+- Deployments Management
+- Pods Monitoring & Logs
+- Nodes Monitoring
+- ConfigMaps & Secrets
+- HPA (HorizontalPodAutoscaler)
+- Events Timeline
+- Topology Visualization
+- Search & Filters
+
+**GitHub Integration:**
+- Overview & Benefits
+- OAuth Setup
+- GitHub App Setup
+- YAML Editor Usage
+- Pull Request Workflow
+
+**Configuration:**
+- Cluster Connection
+- Namespace Selection
+- Settings & Preferences
+- Demo Mode
+
+</details>
+
+### 🔧 Developer Documentation
 - **[Technical Documentation](TECHNICAL.md)** - Architecture, technology stack, key patterns, API routes
 - **[Testing Guide](TESTING.md)** - Unit tests, E2E tests, coverage reports
-- **[Development Checklist](docs/development-checklist.md)** - Pre-commit workflow and quality checks
+- **[API Reference](docs/api-reference/introduction.mdx)** - REST API documentation
 - **[Roadmap](ROADMAP.md)** - Future features and development plans
 
-### GitHub Integration Setup
-- **[GitHub Setup Guide](docs/github-setup.md)** - Step-by-step setup for GitHub OAuth and GitHub App
-
-### Project Information
+### 📋 Project Information
 - **[Changelog](CHANGELOG.md)** - Complete version history and updates
 - **[License](LICENSE)** - Mozilla Public License 2.0 details
 

@@ -1,0 +1,337 @@
+---
+title: 'Installation'
+description: 'Detailed installation instructions for different deployment scenarios'
+---
+
+## System Requirements
+
+<CardGroup cols={2}>
+  <Card title="Node.js" icon="node-js">
+    Version 20.0.0 or higher
+  </Card>
+  <Card title="npm" icon="box">
+    Version 10 or higher (comes with Node.js)
+  </Card>
+  <Card title="kubectl" icon="dharmachakra">
+    Latest stable version (optional for demo mode)
+  </Card>
+  <Card title="Git" icon="git-alt">
+    Any recent version
+  </Card>
+</CardGroup>
+
+## Development Installation
+
+For local development and testing:
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/yourusername/kubevista.git
+    cd kubevista
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+
+    This installs all required packages including Next.js, React, Material-UI, and Kubernetes client libraries.
+  </Step>
+
+  <Step title="Start development server">
+    ```bash
+    npm run dev
+    ```
+
+    The server starts with Turbopack for fast hot-reload development.
+  </Step>
+
+  <Step title="Access the application">
+    Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+    The application starts in Demo Mode automatically.
+  </Step>
+</Steps>
+
+<Note>
+  Development mode includes hot-reload, detailed error messages, and source maps for debugging.
+</Note>
+
+## Production Installation
+
+For production deployment:
+
+<Steps>
+  <Step title="Clone and install">
+    ```bash
+    git clone https://github.com/yourusername/kubevista.git
+    cd kubevista
+    npm install
+    ```
+  </Step>
+
+  <Step title="Build the application">
+    ```bash
+    npm run build
+    ```
+
+    This creates an optimized production build in the `.next` directory.
+  </Step>
+
+  <Step title="Start production server">
+    ```bash
+    npm start
+    ```
+
+    The server runs on port 3000 by default.
+  </Step>
+</Steps>
+
+### Environment Configuration
+
+Create a `.env.local` file for production settings:
+
+```bash
+# Optional: Custom port
+PORT=3000
+
+# Optional: GitHub OAuth (for YAML editor)
+GITHUB_CLIENT_ID=your_github_oauth_app_client_id
+GITHUB_CLIENT_SECRET=your_github_oauth_app_client_secret
+NEXTAUTH_SECRET=your_random_secret_here
+NEXTAUTH_URL=http://localhost:3000
+
+# Optional: GitHub App (recommended over OAuth)
+GITHUB_APP_ID=your_github_app_id
+GITHUB_APP_PRIVATE_KEY=your_github_app_private_key
+GITHUB_APP_CLIENT_ID=your_github_app_client_id
+GITHUB_APP_CLIENT_SECRET=your_github_app_client_secret
+
+# Optional: OpenAI (for AI-powered file matching)
+OPENAI_API_KEY=your_openai_api_key
+```
+
+## Docker Installation
+
+Run KubeVista in a container:
+
+### Using Docker
+
+```bash
+# Build image
+docker build -t kubevista .
+
+# Run container
+docker run -p 3000:3000 \
+  -v ~/.kube:/root/.kube:ro \
+  kubevista
+```
+
+### Using Docker Compose
+
+Create `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+services:
+  kubevista:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ~/.kube:/root/.kube:ro
+    environment:
+      - NODE_ENV=production
+```
+
+Then run:
+
+```bash
+docker-compose up -d
+```
+
+<Warning>
+  The `-v ~/.kube:/root/.kube:ro` volume mount gives the container read-only access to your kubeconfig. Only use this if you understand the security implications.
+</Warning>
+
+## Kubernetes Deployment
+
+Deploy KubeVista to your Kubernetes cluster:
+
+### Create Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubevista
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubevista
+  template:
+    metadata:
+      labels:
+        app: kubevista
+    spec:
+      serviceAccountName: kubevista
+      containers:
+      - name: kubevista
+        image: kubevista:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+```
+
+### Create Service
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubevista
+  namespace: kube-system
+spec:
+  selector:
+    app: kubevista
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer
+```
+
+### Create ServiceAccount & RBAC
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubevista
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kubevista
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes", "configmaps", "secrets", "events", "namespaces"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["autoscaling"]
+  resources: ["horizontalpodautoscalers"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubevista
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubevista
+subjects:
+- kind: ServiceAccount
+  name: kubevista
+  namespace: kube-system
+```
+
+Apply all manifests:
+
+```bash
+kubectl apply -f kubevista-deployment.yaml
+```
+
+## Verification
+
+After installation, verify everything works:
+
+<Steps>
+  <Step title="Check the application loads">
+    Navigate to [http://localhost:3000](http://localhost:3000)
+  </Step>
+
+  <Step title="Verify demo mode">
+    You should see the "DEMO MODE" badge in the header and sample data on the dashboard
+  </Step>
+
+  <Step title="Test cluster connection (optional)">
+    Click "DEMO MODE" → Select a kubectl context → Click "Test Connection"
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion icon="circle-exclamation" title="Port already in use">
+    If port 3000 is occupied:
+    ```bash
+    PORT=3001 npm run dev
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Module not found errors">
+    Delete `node_modules` and reinstall:
+    ```bash
+    rm -rf node_modules package-lock.json
+    npm install
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="kubectl connection fails">
+    Verify your kubeconfig:
+    ```bash
+    kubectl cluster-info
+    kubectl get nodes
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Build fails">
+    Clear Next.js cache:
+    ```bash
+    rm -rf .next
+    npm run build
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Quickstart Guide"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Learn the basics in 5 minutes
+  </Card>
+  <Card
+    title="Configuration"
+    icon="gear"
+    href="/configuration/cluster-connection"
+  >
+    Configure cluster connection and settings
+  </Card>
+  <Card
+    title="User Guide"
+    icon="book"
+    href="/user-guide/dashboard"
+  >
+    Explore all features
+  </Card>
+  <Card
+    title="GitHub Integration"
+    icon="github"
+    href="/github/overview"
+  >
+    Set up GitOps workflow
+  </Card>
+</CardGroup>

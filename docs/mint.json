@@ -1,0 +1,122 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "KubeVista",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "https://github.com/yourusername/kubevista/issues"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "GitHub",
+    "url": "https://github.com/yourusername/kubevista"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Documentation",
+      "icon": "book-open-cover",
+      "url": "https://mintlify.com/docs"
+    },
+    {
+      "name": "Community",
+      "icon": "slack",
+      "url": "https://mintlify.com/community"
+    },
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://mintlify.com/blog"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "installation"
+      ]
+    },
+    {
+      "group": "User Guide",
+      "pages": [
+        "user-guide/dashboard",
+        "user-guide/deployments",
+        "user-guide/pods",
+        "user-guide/nodes",
+        "user-guide/configmaps-secrets",
+        "user-guide/hpa",
+        "user-guide/events",
+        "user-guide/topology",
+        "user-guide/search-filters"
+      ]
+    },
+    {
+      "group": "GitHub Integration",
+      "pages": [
+        "github/overview",
+        "github/oauth-setup",
+        "github/github-app-setup",
+        "github/yaml-editor",
+        "github/pull-requests"
+      ]
+    },
+    {
+      "group": "Configuration",
+      "pages": [
+        "configuration/cluster-connection",
+        "configuration/namespaces",
+        "configuration/settings",
+        "configuration/demo-mode"
+      ]
+    },
+    {
+      "group": "API Documentation",
+      "pages": [
+        "api-reference/introduction"
+      ]
+    },
+    {
+      "group": "Deployments",
+      "pages": [
+        "api-reference/deployments/list",
+        "api-reference/deployments/get",
+        "api-reference/deployments/pods",
+        "api-reference/deployments/events"
+      ]
+    },
+    {
+      "group": "Pods",
+      "pages": [
+        "api-reference/pods/list",
+        "api-reference/pods/get",
+        "api-reference/pods/logs",
+        "api-reference/pods/restart",
+        "api-reference/pods/events"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/yourusername/kubevista"
+  }
+}

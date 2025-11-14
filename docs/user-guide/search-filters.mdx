@@ -1,0 +1,169 @@
+---
+title: 'Search & Filters'
+description: 'Learn how to quickly find resources using global search and filters'
+---
+
+## Global Search
+
+KubeVista features a powerful global search bar located in the top header, centered in the navigation bar.
+
+<img src="/images/global-search.png" alt="Global Search" />
+
+### How it Works
+
+<Steps>
+  <Step title="Dynamic Placeholder">
+    The search placeholder changes based on the current page:
+    - "Search deployments..." on the Deployments page
+    - "Search pods..." on the Pods page
+    - "Search nodes..." on the Nodes page
+  </Step>
+
+  <Step title="Real-time Filtering">
+    As you type, the list updates instantly to show matching resources
+  </Step>
+
+  <Step title="Auto-clear">
+    When you navigate to a different page, the search automatically clears
+  </Step>
+</Steps>
+
+### Search Behavior
+
+- **Case-insensitive** - Searches work regardless of letter casing
+- **Partial matching** - Finds resources containing your search term anywhere in the name
+- **Instant results** - No need to press Enter, results appear as you type
+
+<Tip>
+  Use keyboard shortcuts: `Ctrl+K` (Windows/Linux) or `Cmd+K` (Mac) to quickly focus the search bar
+</Tip>
+
+## Status Filters
+
+Most resource pages include status filters to help you find specific resources quickly.
+
+### Deployments Filters
+
+Filter deployments by status:
+
+<AccordionGroup>
+  <Accordion icon="check-circle" title="Available">
+    Deployments with all replicas running and ready
+  </Accordion>
+  <Accordion icon="spinner" title="Progressing">
+    Deployments currently updating or scaling
+  </Accordion>
+  <Accordion icon="exclamation-triangle" title="Degraded">
+    Deployments with issues (failed pods, missing replicas)
+  </Accordion>
+</AccordionGroup>
+
+### Pods Filters
+
+Filter pods by status:
+
+<AccordionGroup>
+  <Accordion icon="check-circle" title="Running">
+    Pods currently running normally
+  </Accordion>
+  <Accordion icon="clock" title="Pending">
+    Pods waiting to be scheduled or start
+  </Accordion>
+  <Accordion icon="xmark-circle" title="Failed">
+    Pods that failed to start or terminated with errors
+  </Accordion>
+  <Accordion icon="check" title="Succeeded">
+    Completed pods (from jobs or cron jobs)
+  </Accordion>
+  <Accordion icon="rotate" title="CrashLoopBackOff">
+    Pods repeatedly crashing and restarting
+  </Accordion>
+</AccordionGroup>
+
+### Events Filters
+
+Filter events by:
+
+1. **Type**
+   - Normal (informational events)
+   - Warning (error events)
+
+2. **Time Range**
+   - Last hour
+   - Last 24 hours
+   - Last 7 days
+   - All time
+
+## Combining Search and Filters
+
+You can use search and filters together for powerful resource discovery:
+
+<Steps>
+  <Step title="Select a filter">
+    Choose a status filter (e.g., "Failed" for pods)
+  </Step>
+
+  <Step title="Type in search">
+    Enter a search term to further narrow results (e.g., "api")
+  </Step>
+
+  <Step title="View filtered results">
+    The table shows only resources matching both criteria
+  </Step>
+</Steps>
+
+<Note>
+  Search and filters work together using AND logic - resources must match both the search term AND the selected filter
+</Note>
+
+## Filter Location
+
+<Info>
+  Filters are positioned on the right side of the page header, aligned with the title and refresh button
+</Info>
+
+This layout provides:
+- **Easy access** - Filters are always visible without scrolling
+- **Clean interface** - No extra rows or cluttered layouts
+- **Consistent positioning** - Same location across all pages
+
+## Clearing Filters
+
+To reset your view:
+
+1. **Clear search** - Delete text from the search bar or navigate to another page
+2. **Reset filters** - Select "All Statuses" or "All Types" from the filter dropdown
+
+<Tip>
+  The filter state persists within the page but resets when you navigate to a different section
+</Tip>
+
+## Examples
+
+### Find all failed pods containing "api"
+
+```
+1. Navigate to Pods page
+2. Select "Failed" from status filter
+3. Type "api" in search bar
+```
+
+### Find recent warning events for a specific deployment
+
+```
+1. Navigate to Events page
+2. Select "Warning" from type filter
+3. Select "Last hour" from time range
+4. Type deployment name in search bar
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Deployments" icon="layer-group" href="/user-guide/deployments">
+    Learn about deployment management
+  </Card>
+  <Card title="Pods" icon="cube" href="/user-guide/pods">
+    Explore pod monitoring features
+  </Card>
+</CardGroup>
