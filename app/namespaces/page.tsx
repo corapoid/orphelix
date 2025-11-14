@@ -20,12 +20,19 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
+import { usePageSearch } from '@/lib/contexts/search-context'
 
 export default function NamespacesPage() {
   const router = useRouter()
   const { data: namespaces, isLoading, error, refetch } = useNamespaces()
+  const searchQuery = usePageSearch('Search namespaces...')
 
   useAutoRefresh(refetch)
+
+  // Filter namespaces based on search
+  const filteredNamespaces = namespaces?.filter((ns) =>
+    ns.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   if (isLoading) {
     return (
@@ -49,7 +56,7 @@ export default function NamespacesPage() {
     <Box>
       <PageHeader
         title="Namespaces"
-        subtitle={`${namespaces?.length || 0} namespace${namespaces?.length === 1 ? '' : 's'} in this cluster`}
+        subtitle={`${filteredNamespaces?.length || 0} namespace${filteredNamespaces?.length === 1 ? '' : 's'}${searchQuery ? ' (filtered)' : ''}`}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'Namespaces' },
@@ -60,11 +67,11 @@ export default function NamespacesPage() {
 
       <ClusterConnectionAlert minimal />
 
-      {!namespaces || namespaces.length === 0 ? (
+      {!filteredNamespaces || filteredNamespaces.length === 0 ? (
         <EmptyState
           icon={FolderIcon}
-          title="No namespaces found"
-          description="There are no namespaces in this cluster."
+          title={searchQuery ? 'No namespaces match your search' : 'No namespaces found'}
+          description={searchQuery ? 'Try adjusting your search query' : 'There are no namespaces in this cluster.'}
         />
       ) : (
         <TableContainer component={Paper}>
@@ -79,7 +86,7 @@ export default function NamespacesPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {namespaces.map((namespace) => (
+              {filteredNamespaces.map((namespace) => (
                 <TableRow
                   key={namespace.name}
                   hover
