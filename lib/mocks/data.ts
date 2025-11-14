@@ -15,6 +15,9 @@ import type {
   Service,
   ServiceType,
   Ingress,
+  Job,
+  JobStatus,
+  CronJob,
 } from '@/types/kubernetes'
 
 /**
@@ -33,6 +36,8 @@ let cachedPVCs: PersistentVolumeClaim[] | null = null
 let cachedEvents: Event[] | null = null
 let cachedServices: Service[] | null = null
 let cachedIngresses: Ingress[] | null = null
+let cachedJobs: Job[] | null = null
+let cachedCronJobs: CronJob[] | null = null
 
 // Helper to generate random date in the past
 function randomDate(daysAgo: number): Date {
@@ -667,6 +672,187 @@ export function generateMockIngresses(): Ingress[] {
 
   cachedIngresses = ingresses
   return ingresses
+}
+
+/**
+ * Generates mock Jobs
+ */
+export function generateMockJobs(): Job[] {
+  if (cachedJobs) return cachedJobs
+
+  const jobs: Job[] = [
+    {
+      name: 'data-migration-20241114',
+      namespace: 'demo',
+      status: 'Complete',
+      completions: 1,
+      succeeded: 1,
+      failed: 0,
+      active: 0,
+      startTime: '2024-11-14T08:00:00Z',
+      completionTime: '2024-11-14T08:15:23Z',
+      duration: '15m 23s',
+      age: '6h',
+      labels: { app: 'migration', type: 'batch' },
+      conditions: [
+        {
+          type: 'Complete',
+          status: 'True',
+          lastTransitionTime: '2024-11-14T08:15:23Z',
+        },
+      ],
+    },
+    {
+      name: 'backup-database',
+      namespace: 'demo',
+      status: 'Running',
+      completions: 1,
+      succeeded: 0,
+      failed: 0,
+      active: 1,
+      startTime: '2024-11-14T14:30:00Z',
+      duration: '5m 12s',
+      age: '5m',
+      labels: { app: 'backup', type: 'batch' },
+      conditions: [],
+    },
+    {
+      name: 'report-generation-failed',
+      namespace: 'demo',
+      status: 'Failed',
+      completions: 1,
+      succeeded: 0,
+      failed: 1,
+      active: 0,
+      startTime: '2024-11-14T12:00:00Z',
+      completionTime: '2024-11-14T12:02:15Z',
+      duration: '2m 15s',
+      age: '2h',
+      labels: { app: 'reporting', type: 'batch' },
+      conditions: [
+        {
+          type: 'Failed',
+          status: 'True',
+          lastTransitionTime: '2024-11-14T12:02:15Z',
+          reason: 'BackoffLimitExceeded',
+          message: 'Job has reached the specified backoff limit',
+        },
+      ],
+    },
+    {
+      name: 'cleanup-temp-files',
+      namespace: 'demo',
+      status: 'Complete',
+      completions: 1,
+      succeeded: 1,
+      failed: 0,
+      active: 0,
+      startTime: '2024-11-14T06:00:00Z',
+      completionTime: '2024-11-14T06:03:45Z',
+      duration: '3m 45s',
+      age: '8h',
+      labels: { app: 'cleanup', type: 'maintenance' },
+      conditions: [
+        {
+          type: 'Complete',
+          status: 'True',
+          lastTransitionTime: '2024-11-14T06:03:45Z',
+        },
+      ],
+    },
+    {
+      name: 'image-processing-batch',
+      namespace: 'demo',
+      status: 'Complete',
+      completions: 5,
+      succeeded: 5,
+      failed: 0,
+      active: 0,
+      startTime: '2024-11-14T10:00:00Z',
+      completionTime: '2024-11-14T10:45:30Z',
+      duration: '45m 30s',
+      age: '4h',
+      labels: { app: 'image-processor', type: 'batch' },
+      conditions: [
+        {
+          type: 'Complete',
+          status: 'True',
+          lastTransitionTime: '2024-11-14T10:45:30Z',
+        },
+      ],
+    },
+  ]
+
+  cachedJobs = jobs
+  return jobs
+}
+
+/**
+ * Generates mock CronJobs
+ */
+export function generateMockCronJobs(): CronJob[] {
+  if (cachedCronJobs) return cachedCronJobs
+
+  const cronJobs: CronJob[] = [
+    {
+      name: 'nightly-backup',
+      namespace: 'demo',
+      schedule: '0 2 * * *',
+      suspend: false,
+      active: 0,
+      lastSchedule: '2024-11-14T02:00:00Z',
+      lastSuccessfulTime: '2024-11-14T02:15:00Z',
+      age: '60d',
+      labels: { app: 'backup', frequency: 'daily' },
+    },
+    {
+      name: 'hourly-reports',
+      namespace: 'demo',
+      schedule: '0 * * * *',
+      suspend: false,
+      active: 1,
+      lastSchedule: '2024-11-14T14:00:00Z',
+      lastSuccessfulTime: '2024-11-14T13:05:00Z',
+      age: '30d',
+      labels: { app: 'reporting', frequency: 'hourly' },
+    },
+    {
+      name: 'weekly-cleanup',
+      namespace: 'demo',
+      schedule: '0 3 * * 0',
+      suspend: false,
+      active: 0,
+      lastSchedule: '2024-11-10T03:00:00Z',
+      lastSuccessfulTime: '2024-11-10T03:12:00Z',
+      age: '45d',
+      labels: { app: 'cleanup', frequency: 'weekly' },
+    },
+    {
+      name: 'monthly-archive',
+      namespace: 'demo',
+      schedule: '0 4 1 * *',
+      suspend: false,
+      active: 0,
+      lastSchedule: '2024-11-01T04:00:00Z',
+      lastSuccessfulTime: '2024-11-01T04:30:00Z',
+      age: '90d',
+      labels: { app: 'archiver', frequency: 'monthly' },
+    },
+    {
+      name: 'test-job-suspended',
+      namespace: 'demo',
+      schedule: '*/5 * * * *',
+      suspend: true,
+      active: 0,
+      lastSchedule: '2024-11-13T15:00:00Z',
+      lastSuccessfulTime: '2024-11-13T15:01:00Z',
+      age: '10d',
+      labels: { app: 'test', frequency: 'every-5-minutes' },
+    },
+  ]
+
+  cachedCronJobs = cronJobs
+  return cronJobs
 }
 
 /**
