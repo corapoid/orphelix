@@ -3,9 +3,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
-import NextLink from 'next/link'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
@@ -28,17 +26,7 @@ export function Footer() {
             KubeVista v1.1.0 - Modern Kubernetes Dashboard
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Tooltip title="Documentation" arrow>
-            <IconButton
-              component={NextLink}
-              href="/docs"
-              sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
-              size="small"
-            >
-              <MenuBookIcon />
-            </IconButton>
-          </Tooltip>
+        <Box>
           <Tooltip title="GitHub Repository" arrow>
             <IconButton
               component={Link}
