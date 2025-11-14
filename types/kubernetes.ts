@@ -363,3 +363,50 @@ export interface CronJob {
   age: string
   labels: Record<string, string>
 }
+
+// Namespace types
+
+export type NamespaceStatus = 'Active' | 'Terminating' | 'Unknown'
+
+export interface Namespace {
+  name: string
+  status: NamespaceStatus
+  age: string
+  labels: Record<string, string>
+  annotations: Record<string, string>
+}
+
+// ResourceQuota types
+
+export interface ResourceQuotaStatus {
+  hard: Record<string, string>
+  used: Record<string, string>
+}
+
+export interface ResourceQuota {
+  name: string
+  namespace: string
+  age: string
+  hard: Record<string, string>
+  used: Record<string, string>
+  labels: Record<string, string>
+}
+
+// LimitRange types
+
+export interface LimitRangeItem {
+  type: string // Pod, Container, PersistentVolumeClaim
+  max?: Record<string, string>
+  min?: Record<string, string>
+  default?: Record<string, string>
+  defaultRequest?: Record<string, string>
+  maxLimitRequestRatio?: Record<string, string>
+}
+
+export interface LimitRange {
+  name: string
+  namespace: string
+  age: string
+  limits: LimitRangeItem[]
+  labels: Record<string, string>
+}
