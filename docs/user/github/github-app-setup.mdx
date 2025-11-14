@@ -1,0 +1,386 @@
+---
+title: 'GitHub App Setup'
+description: 'Step-by-step guide to set up GitHub App authentication'
+---
+
+## Overview
+
+This guide explains how to create and configure a GitHub App for KubeVista.
+
+<Note>
+  Setting up a GitHub App takes about 5-10 minutes and provides the most secure integration method.
+</Note>
+
+## Step 1: Create GitHub App
+
+### For Personal Account
+
+<Steps>
+  <Step title="Navigate to GitHub Settings">
+    Go to [GitHub Settings → Developer settings → GitHub Apps](https://github.com/settings/apps)
+  </Step>
+
+  <Step title="Click New GitHub App">
+    Click the **"New GitHub App"** button
+  </Step>
+</Steps>
+
+### For Organization
+
+<Steps>
+  <Step title="Go to Organization Settings">
+    Navigate to your organization → Settings → Developer settings → GitHub Apps
+  </Step>
+
+  <Step title="Click New GitHub App">
+    Click the **"New GitHub App"** button
+  </Step>
+</Steps>
+
+## Step 2: Configure Basic Settings
+
+Fill in the following fields in the GitHub App creation form:
+
+| Field | Value | Description |
+|-------|-------|-------------|
+| **GitHub App name** | `KubeVista` (or any unique name) | Display name for the app |
+| **Homepage URL** | `http://localhost:3000` | Your KubeVista URL |
+| **Callback URL** | `http://localhost:3000/api/github-app/callback` | OAuth callback endpoint |
+| **Setup URL** | Leave empty | Not needed |
+| **Webhook** | ❌ **Disable "Active"** | We don't use webhooks |
+
+<Warning>
+  Make sure to **uncheck** the "Active" checkbox under Webhook settings - KubeVista doesn't use webhooks.
+</Warning>
+
+## Step 3: Set Permissions
+
+Under **Repository permissions**, configure the following:
+
+<Tabs>
+  <Tab title="Contents">
+    **Access level:** `Read and write`
+
+    Required for:
+    - Reading YAML files from repository
+    - Creating/updating files for PRs
+  </Tab>
+
+  <Tab title="Pull requests">
+    **Access level:** `Read and write`
+
+    Required for:
+    - Creating pull requests
+    - Listing and viewing PRs
+    - Merging PRs (optional)
+  </Tab>
+
+  <Tab title="Metadata">
+    **Access level:** `Read-only`
+
+    Automatically set by GitHub, required for all apps
+  </Tab>
+</Tabs>
+
+### Summary of Permissions
+
+```
+Repository permissions:
+  ✅ Contents: Read and write
+  ✅ Pull requests: Read and write
+  ✅ Metadata: Read-only (auto)
+```
+
+## Step 4: Create the App
+
+<Steps>
+  <Step title="Click Create GitHub App">
+    Scroll to the bottom and click **"Create GitHub App"**
+  </Step>
+
+  <Step title="Confirm creation">
+    You'll be redirected to your new GitHub App's settings page
+  </Step>
+</Steps>
+
+## Step 5: Install the App
+
+<Steps>
+  <Step title="Click Install App">
+    In the left sidebar, click **"Install App"**
+  </Step>
+
+  <Step title="Choose account">
+    Select your personal account or organization
+  </Step>
+
+  <Step title="Select repositories">
+    Choose repository access:
+
+    - **All repositories** - Grant access to all current and future repos
+    - **Only select repositories** - Choose specific repos (recommended)
+
+    <Tip>
+      For security, select only repositories containing your Kubernetes manifests
+    </Tip>
+  </Step>
+
+  <Step title="Click Install">
+    Click **"Install"** to complete the installation
+  </Step>
+</Steps>
+
+## Step 6: Get Credentials
+
+You need three credentials to configure KubeVista:
+
+### 1. App ID
+
+<Steps>
+  <Step title="Go to app settings">
+    Navigate back to your GitHub App settings page
+  </Step>
+
+  <Step title="Find App ID">
+    Look for **"App ID"** near the top of the page (e.g., `123456`)
+  </Step>
+
+  <Step title="Copy App ID">
+    Note this number - you'll need it for `.env.local`
+  </Step>
+</Steps>
+
+### 2. Client ID & Client Secret
+
+<Steps>
+  <Step title="Find Client ID">
+    On the app settings page, locate **"Client ID"**
+  </Step>
+
+  <Step title="Generate Client Secret">
+    Click **"Generate a new client secret"**
+  </Step>
+
+  <Step title="Copy immediately">
+    <Warning>
+      Copy the client secret immediately - it will only be shown once!
+    </Warning>
+  </Step>
+</Steps>
+
+### 3. Private Key
+
+<Steps>
+  <Step title="Scroll to Private keys section">
+    On the app settings page, scroll down to **"Private keys"**
+  </Step>
+
+  <Step title="Generate key">
+    Click **"Generate a private key"**
+  </Step>
+
+  <Step title="Save .pem file">
+    A `.pem` file will download automatically
+
+    <Warning>
+      Keep this file secure! It's like a password for your GitHub App.
+    </Warning>
+  </Step>
+</Steps>
+
+## Step 7: Configure Environment Variables
+
+Create or update `.env.local` in your KubeVista project root:
+
+```bash
+# GitHub App Configuration
+GITHUB_APP_ID=123456
+GITHUB_APP_CLIENT_ID=Iv1.abc123def456
+GITHUB_APP_CLIENT_SECRET=your_client_secret_here
+
+# Private key (convert .pem to base64)
+GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA...
+...
+-----END RSA PRIVATE KEY-----"
+
+# NextAuth configuration
+NEXTAUTH_SECRET=your_random_secret_here
+NEXTAUTH_URL=http://localhost:3000
+
+# Optional: OpenAI for AI-powered file matching
+OPENAI_API_KEY=sk-...
+```
+
+### Converting Private Key
+
+<Tabs>
+  <Tab title="macOS/Linux">
+    ```bash
+    # Display private key content
+    cat path/to/your-app.pem
+
+    # Copy the entire output including BEGIN/END lines
+    # Paste into .env.local as GITHUB_APP_PRIVATE_KEY value
+    ```
+  </Tab>
+
+  <Tab title="Windows">
+    ```powershell
+    # Open .pem file in notepad
+    notepad path\to\your-app.pem
+
+    # Copy entire content including BEGIN/END lines
+    # Paste into .env.local as GITHUB_APP_PRIVATE_KEY value
+    ```
+  </Tab>
+</Tabs>
+
+<Note>
+  Make sure to keep the quotes around the private key value and preserve all line breaks
+</Note>
+
+### Generating NEXTAUTH_SECRET
+
+```bash
+# Generate a random secret (32+ characters)
+openssl rand -base64 32
+```
+
+## Step 8: Verify Installation
+
+<Steps>
+  <Step title="Start KubeVista">
+    ```bash
+    npm run dev
+    ```
+  </Step>
+
+  <Step title="Open Settings">
+    Navigate to Settings page in KubeVista
+  </Step>
+
+  <Step title="Click GitHub Integration">
+    Go to GitHub Integration section
+  </Step>
+
+  <Step title="Click Login with GitHub App">
+    You should see a **"Login with GitHub App"** button
+  </Step>
+
+  <Step title="Authorize">
+    Click the button and authorize the app
+  </Step>
+
+  <Step title="Select repository">
+    After authorization, select a repository from the dropdown
+  </Step>
+
+  <Step title="Test YAML editor">
+    Go to a deployment detail page and click **"Edit YAML"**
+
+    You should see the Monaco editor with your deployment YAML!
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion icon="circle-exclamation" title="App not showing in Settings">
+    **Possible causes:**
+    - Environment variables not set correctly
+    - `.env.local` not loaded (restart dev server)
+    - NEXTAUTH_SECRET not generated
+
+    **Solution:**
+    ```bash
+    # Check if .env.local exists
+    cat .env.local
+
+    # Restart dev server
+    npm run dev
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Authorization fails">
+    **Possible causes:**
+    - Callback URL mismatch
+    - Client ID/Secret incorrect
+
+    **Solution:**
+    - Verify callback URL is exactly: `http://localhost:3000/api/github-app/callback`
+    - Double-check Client ID and Secret in `.env.local`
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Cannot read repositories">
+    **Possible causes:**
+    - App not installed on repository
+    - Missing Contents permission
+
+    **Solution:**
+    - Go to GitHub Settings → Applications → Installed GitHub Apps
+    - Click Configure on your app
+    - Verify repository access
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Private key errors">
+    **Possible causes:**
+    - Private key format incorrect
+    - Missing BEGIN/END lines
+    - Extra quotes or escaping
+
+    **Solution:**
+    - Ensure private key includes `-----BEGIN RSA PRIVATE KEY-----` and `-----END RSA PRIVATE KEY-----`
+    - Use double quotes around the entire key
+    - Preserve line breaks
+  </Accordion>
+</AccordionGroup>
+
+## Production Deployment
+
+For production, update these values:
+
+```bash
+# Production callback URL
+GITHUB_APP_CALLBACK_URL=https://your-domain.com/api/github-app/callback
+NEXTAUTH_URL=https://your-domain.com
+
+# Update in GitHub App settings too!
+```
+
+<Warning>
+  Remember to update the Callback URL in your GitHub App settings when deploying to production!
+</Warning>
+
+## Security Best Practices
+
+<AccordionGroup>
+  <Accordion icon="shield" title="Private Key Storage">
+    - Never commit `.env.local` to git
+    - Store private key in secure secret manager (production)
+    - Rotate keys periodically
+  </Accordion>
+
+  <Accordion icon="lock" title="Repository Access">
+    - Only grant access to necessary repositories
+    - Use "Only select repositories" instead of "All repositories"
+    - Review access permissions regularly
+  </Accordion>
+
+  <Accordion icon="key" title="Token Management">
+    - Tokens are stored in HTTP-only cookies
+    - Automatic refresh every 8 hours
+    - Revoke access from GitHub when not needed
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Use YAML Editor" icon="file-code" href="/user/github/yaml-editor">
+    Learn how to edit Kubernetes manifests
+  </Card>
+  <Card title="Create Pull Requests" icon="code-pull-request" href="/user/github/pull-requests">
+    Create and manage PRs
+  </Card>
+</CardGroup>

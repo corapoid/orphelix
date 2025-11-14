@@ -27,25 +27,24 @@
   },
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
+      "name": "User Guide",
+      "url": "user"
+    },
+    {
+      "name": "Developer",
+      "url": "developer"
     }
   ],
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/yourusername/kubevista"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "name": "Issues",
+      "icon": "bug",
+      "url": "https://github.com/yourusername/kubevista/issues"
     }
   ],
   "navigation": [
@@ -58,61 +57,64 @@
       ]
     },
     {
-      "group": "User Guide",
+      "group": "Features",
       "pages": [
-        "user-guide/dashboard",
-        "user-guide/deployments",
-        "user-guide/pods",
-        "user-guide/nodes",
-        "user-guide/configmaps-secrets",
-        "user-guide/hpa",
-        "user-guide/events",
-        "user-guide/topology",
-        "user-guide/search-filters"
+        "user/dashboard",
+        "user/deployments",
+        "user/pods",
+        "user/nodes",
+        "user/configmaps-secrets",
+        "user/hpa",
+        "user/events",
+        "user/topology",
+        "user/search-filters"
       ]
     },
     {
       "group": "GitHub Integration",
       "pages": [
-        "github/overview",
-        "github/oauth-setup",
-        "github/github-app-setup",
-        "github/yaml-editor",
-        "github/pull-requests"
+        "user/github/overview",
+        "user/github/github-app-setup",
+        "user/github/yaml-editor",
+        "user/github/pull-requests"
       ]
     },
     {
       "group": "Configuration",
       "pages": [
-        "configuration/cluster-connection",
-        "configuration/namespaces",
-        "configuration/settings",
-        "configuration/demo-mode"
+        "user/configuration/cluster-connection",
+        "user/configuration/namespaces",
+        "user/configuration/settings",
+        "user/configuration/demo-mode"
       ]
     },
     {
-      "group": "API Documentation",
+      "group": "Developer Guide",
       "pages": [
-        "api-reference/introduction"
+        "developer/overview",
+        "developer/architecture",
+        "developer/tech-stack",
+        "developer/project-structure"
       ]
     },
     {
-      "group": "Deployments",
+      "group": "Development",
       "pages": [
-        "api-reference/deployments/list",
-        "api-reference/deployments/get",
-        "api-reference/deployments/pods",
-        "api-reference/deployments/events"
+        "developer/getting-started",
+        "developer/testing",
+        "developer/contributing",
+        "developer/deployment"
       ]
     },
     {
-      "group": "Pods",
+      "group": "API Reference",
       "pages": [
-        "api-reference/pods/list",
-        "api-reference/pods/get",
-        "api-reference/pods/logs",
-        "api-reference/pods/restart",
-        "api-reference/pods/events"
+        "developer/api/introduction",
+        "developer/api/deployments",
+        "developer/api/pods",
+        "developer/api/nodes",
+        "developer/api/events",
+        "developer/api/realtime"
       ]
     }
   ],

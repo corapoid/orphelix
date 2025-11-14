@@ -1,0 +1,347 @@
+---
+title: 'Testing'
+description: 'Comprehensive testing guide for KubeVista'
+---
+
+## Testing Overview
+
+KubeVista has comprehensive test coverage with 300+ tests across unit and E2E testing:
+
+<CardGroup cols={2}>
+  <Card title="Unit Tests" icon="vial">
+    **214 tests** with Vitest
+    - Component tests
+    - Hook tests
+    - Utility function tests
+  </Card>
+  <Card title="E2E Tests" icon="robot">
+    **93 tests** with Playwright
+    - User flow testing
+    - Integration testing
+    - Visual regression testing
+  </Card>
+</CardGroup>
+
+## Running Tests
+
+### Unit Tests
+
+```bash
+# Run all unit tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run specific test file
+npm test status-badge
+```
+
+### E2E Tests
+
+```bash
+# Run all E2E tests
+npm run test:e2e
+
+# Run E2E tests in UI mode
+npm run test:e2e:ui
+
+# Run E2E tests in headed mode (see browser)
+npm run test:e2e:headed
+```
+
+## Test Structure
+
+### Unit Tests Location
+
+```
+__tests__/
+├── components/
+│   ├── common/
+│   │   ├── status-badge.test.tsx
+│   │   └── page-header.test.tsx
+│   ├── dashboard/
+│   │   └── summary-card.test.tsx
+│   └── pods/
+│       └── logs-viewer.test.tsx
+├── lib/
+│   ├── hooks/
+│   │   ├── use-deployments.test.ts
+│   │   └── use-pods.test.ts
+│   └── utils.test.ts
+└── types/
+    └── kubernetes.test.ts
+```
+
+### E2E Tests Location
+
+```
+e2e/
+├── dashboard.spec.ts
+├── deployments.spec.ts
+├── pods.spec.ts
+├── nodes.spec.ts
+└── settings.spec.ts
+```
+
+## Writing Unit Tests
+
+### Component Testing Example
+
+```typescript
+import { render, screen } from '@testing-library/react'
+import { StatusBadge } from '@/app/components/common/status-badge'
+
+describe('StatusBadge', () => {
+  it('renders Available status with success color', () => {
+    render(<StatusBadge status="Available" />)
+
+    const badge = screen.getByText('Available')
+    expect(badge).toBeInTheDocument()
+
+    const chip = badge.closest('.MuiChip-root')
+    expect(chip).toHaveClass('MuiChip-colorSuccess')
+  })
+})
+```
+
+### Hook Testing Example
+
+```typescript
+import { renderHook, waitFor } from '@testing-library/react'
+import { useDeployments } from '@/lib/hooks/use-deployments'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+describe('useDeployments', () => {
+  it('fetches deployments successfully', async () => {
+    const queryClient = new QueryClient()
+    const wrapper = ({ children }) => (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    )
+
+    const { result } = renderHook(() => useDeployments(), { wrapper })
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
+    })
+
+    expect(result.current.data).toHaveLength(5)
+  })
+})
+```
+
+## Writing E2E Tests
+
+### Page Testing Example
+
+```typescript
+import { test, expect } from '@playwright/test'
+
+test('dashboard displays summary cards', async ({ page }) => {
+  await page.goto('http://localhost:3000')
+
+  // Check all summary cards are visible
+  await expect(page.getByText('Deployments')).toBeVisible()
+  await expect(page.getByText('Pods')).toBeVisible()
+  await expect(page.getByText('Nodes')).toBeVisible()
+
+  // Check card values
+  const deploymentsCard = page.locator('[data-testid="summary-card-deployments"]')
+  await expect(deploymentsCard).toContainText('5')
+})
+```
+
+### User Flow Testing
+
+```typescript
+test('navigate to deployment details', async ({ page }) => {
+  await page.goto('http://localhost:3000/deployments')
+
+  // Click on first deployment
+  await page.click('tr:first-child td:first-child')
+
+  // Verify we're on detail page
+  await expect(page).toHaveURL(/\/deployments\/.*/)
+  await expect(page.getByRole('heading')).toBeVisible()
+})
+```
+
+## Test Coverage
+
+Current coverage (as of latest):
+
+| Category | Coverage |
+|----------|----------|
+| **Statements** | 78% |
+| **Branches** | 72% |
+| **Functions** | 81% |
+| **Lines** | 78% |
+
+### View Coverage Report
+
+```bash
+npm run test:coverage
+```
+
+Opens an HTML report in your browser showing detailed coverage for each file.
+
+## Testing with Real Cluster
+
+### Prerequisites
+
+<AccordionGroup>
+  <Accordion icon="dharmachakra" title="Kubernetes Cluster">
+    Access to a K8s cluster (Minikube, Kind, or cloud provider)
+  </Accordion>
+  <Accordion icon="terminal" title="kubectl">
+    Configured and authenticated
+  </Accordion>
+  <Accordion icon="key" title="Permissions">
+    Read access to resources in target namespace
+  </Accordion>
+</AccordionGroup>
+
+### Setup Test Cluster
+
+#### Option 1: Minikube
+
+```bash
+# Start Minikube
+minikube start
+
+# Create test resources
+kubectl create deployment nginx --image=nginx:latest --replicas=3
+kubectl create configmap app-config --from-literal=APP_ENV=test
+```
+
+#### Option 2: Kind
+
+```bash
+# Create cluster
+kind create cluster --name kubevista-test
+
+# Create test resources
+kubectl create deployment nginx --image=nginx:latest --replicas=3
+```
+
+### Test Real Mode
+
+<Steps>
+  <Step title="Start application">
+    ```bash
+    npm run dev
+    ```
+  </Step>
+
+  <Step title="Click 'DEMO MODE' badge">
+    Switch from demo to real cluster
+  </Step>
+
+  <Step title="Select kubectl context">
+    Choose your test cluster context
+  </Step>
+
+  <Step title="Test connection">
+    Click "Test Connection" to verify access
+  </Step>
+
+  <Step title="Switch mode">
+    Click "Switch to Real Cluster"
+  </Step>
+
+  <Step title="Verify data">
+    Confirm you see real resources from your cluster
+  </Step>
+</Steps>
+
+## CI/CD Testing
+
+### GitHub Actions
+
+Tests run automatically on every push and PR:
+
+```yaml
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npm test
+      - run: npm run test:e2e
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Write tests for new features">
+    Every new component or feature should include tests
+  </Accordion>
+
+  <Accordion icon="shield" title="Test edge cases">
+    Don't just test happy paths - test errors, loading states, and edge cases
+  </Accordion>
+
+  <Accordion icon="eye" title="Use data-testid">
+    Add `data-testid` attributes for reliable E2E selectors
+  </Accordion>
+
+  <Accordion icon="repeat" title="Mock external dependencies">
+    Mock API calls, K8s client, and other external dependencies in unit tests
+  </Accordion>
+
+  <Accordion icon="clock" title="Keep tests fast">
+    Unit tests should run in milliseconds, E2E tests in seconds
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion icon="circle-exclamation" title="Tests timing out">
+    Increase timeout in test file:
+    ```typescript
+    test('slow test', async ({ page }) => {
+      test.setTimeout(60000) // 60 seconds
+      // ...
+    })
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="E2E tests failing locally">
+    Make sure dev server is running:
+    ```bash
+    npm run dev
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Module not found errors">
+    Clear cache and reinstall:
+    ```bash
+    rm -rf node_modules .next
+    npm install
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Contributing" icon="code-pull-request" href="/developer/contributing">
+    Learn how to contribute code
+  </Card>
+  <Card title="Architecture" icon="sitemap" href="/developer/architecture">
+    Understand the system design
+  </Card>
+</CardGroup>

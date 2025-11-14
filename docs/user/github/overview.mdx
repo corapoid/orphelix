@@ -1,0 +1,236 @@
+---
+title: 'GitHub Integration Overview'
+description: 'Enable GitOps workflows with GitHub integration'
+---
+
+## What is GitHub Integration?
+
+GitHub integration allows you to edit Kubernetes YAML files and create Pull Requests directly from KubeVista, following GitOps best practices.
+
+<img src="/images/github-integration.png" alt="GitHub Integration" />
+
+## Benefits
+
+<CardGroup cols={2}>
+  <Card title="GitOps Workflow" icon="code-branch">
+    Follow GitOps best practices with version-controlled infrastructure
+  </Card>
+  <Card title="YAML Editor" icon="file-code">
+    Edit Kubernetes manifests with Monaco editor and syntax highlighting
+  </Card>
+  <Card title="Pull Requests" icon="code-pull-request">
+    Automatically create and manage PRs from the dashboard
+  </Card>
+  <Card title="Kustomize Support" icon="layer-group">
+    Detect and edit Kustomize base & overlay structures
+  </Card>
+</CardGroup>
+
+## Features
+
+### YAML Editing
+
+- **Monaco Editor** - VSCode-like editing experience
+- **Syntax Highlighting** - YAML and Kubernetes schema validation
+- **Auto-completion** - Smart suggestions for Kubernetes resources
+- **Error Detection** - Real-time validation of YAML syntax
+
+### Smart File Matching
+
+<Info>
+  KubeVista can automatically find the correct YAML file for each deployment using AI-powered matching
+</Info>
+
+Two matching methods:
+
+1. **AI-Powered (OpenAI)** - Uses GPT-4o-mini to intelligently match deployments to files
+2. **Pattern-based** - Fallback method using naming patterns
+
+### Pull Request Workflow
+
+<Steps>
+  <Step title="Edit YAML">
+    Make changes in the Monaco editor
+  </Step>
+
+  <Step title="Save Changes">
+    Click "Create Pull Request"
+  </Step>
+
+  <Step title="Automatic PR">
+    KubeVista creates a PR with your changes
+  </Step>
+
+  <Step title="Review & Merge">
+    Review in GitHub, then merge when ready
+  </Step>
+</Steps>
+
+## Authentication Methods
+
+<Tabs>
+  <Tab title="GitHub App (Recommended)">
+    ### Why GitHub App?
+
+    <AccordionGroup>
+      <Accordion icon="shield" title="More Secure">
+        Fine-grained repository access - choose exactly which repos to grant access
+      </Accordion>
+
+      <Accordion icon="users" title="Organization-Friendly">
+        Centralized permission management, no personal tokens
+      </Accordion>
+
+      <Accordion icon="gauge-high" title="Better Rate Limits">
+        Higher API rate limits than OAuth
+      </Accordion>
+
+      <Accordion icon="key" title="Independent Identity">
+        App has its own identity, not tied to a personal account
+      </Accordion>
+    </AccordionGroup>
+
+    **Setup:** See [GitHub App Setup](/user/github/github-app-setup)
+  </Tab>
+
+  <Tab title="OAuth (Legacy)">
+    ### OAuth Authentication
+
+    Traditional OAuth flow with full repository access.
+
+    <Warning>
+      OAuth requires granting access to ALL repositories. GitHub App is recommended for better security.
+    </Warning>
+
+    **Features:**
+    - Simpler setup process
+    - Works with personal repositories
+    - Immediate access after authorization
+
+    **Limitations:**
+    - All-or-nothing repository access
+    - Lower API rate limits
+    - Tied to personal GitHub account
+  </Tab>
+</Tabs>
+
+## Use Cases
+
+### 1. Update Deployment Image
+
+```yaml
+# Before
+spec:
+  containers:
+  - name: app
+    image: myapp:v1.0.0
+
+# After (edit in KubeVista)
+spec:
+  containers:
+  - name: app
+    image: myapp:v1.1.0
+```
+
+### 2. Adjust Resource Limits
+
+```yaml
+# Edit resources directly in dashboard
+resources:
+  limits:
+    memory: "1Gi"    # Updated from 512Mi
+    cpu: "1000m"     # Updated from 500m
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+```
+
+### 3. Update ConfigMap Values
+
+```yaml
+# Edit configuration without kubectl
+data:
+  APP_ENV: "production"
+  LOG_LEVEL: "info"    # Updated from "debug"
+  CACHE_TTL: "3600"    # Added new config
+```
+
+## Requirements
+
+<Steps>
+  <Step title="GitHub Account">
+    Personal or organization account
+  </Step>
+
+  <Step title="Repository Access">
+    Read/write access to your Kubernetes manifests repository
+  </Step>
+
+  <Step title="OpenAI API Key (Optional)">
+    For AI-powered file matching (recommended but not required)
+  </Step>
+</Steps>
+
+## Getting Started
+
+<CardGroup cols={2}>
+  <Card title="Set up GitHub App" icon="github" href="/user/github/github-app-setup">
+    Recommended method for secure integration
+  </Card>
+  <Card title="Use YAML Editor" icon="file-code" href="/user/github/yaml-editor">
+    Learn how to edit Kubernetes manifests
+  </Card>
+  <Card title="Create Pull Requests" icon="code-pull-request" href="/user/github/pull-requests">
+    Manage PRs from the dashboard
+  </Card>
+</CardGroup>
+
+## Security
+
+<AccordionGroup>
+  <Accordion icon="lock" title="Credentials Storage">
+    - GitHub App tokens stored in HTTP-only cookies
+    - Tokens never exposed to browser JavaScript
+    - Automatic token refresh every 8 hours
+  </Accordion>
+
+  <Accordion icon="key" title="Repository Access">
+    - Granular repository permissions
+    - Read + Write access only to selected repos
+    - Can revoke access anytime from GitHub settings
+  </Accordion>
+
+  <Accordion icon="shield" title="API Security">
+    - All GitHub API calls server-side
+    - No direct browser-to-GitHub communication
+    - Rate limiting protection
+  </Accordion>
+</AccordionGroup>
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="Can I use multiple GitHub accounts?">
+    Yes! You can install the GitHub App on multiple accounts (personal + organizations) and switch between them in the repository selector.
+  </Accordion>
+
+  <Accordion title="What permissions does the GitHub App need?">
+    - **Contents**: Read and write (to read/edit files)
+    - **Pull Requests**: Read and write (to create PRs)
+    - **Metadata**: Read-only (automatically set by GitHub)
+  </Accordion>
+
+  <Accordion title="Can I edit files in private repositories?">
+    Yes! GitHub App works with both public and private repositories.
+  </Accordion>
+
+  <Accordion title="What if my repo uses Kustomize?">
+    KubeVista automatically detects Kustomize structure and shows base + overlay files in separate tabs.
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<Card title="Set up GitHub App" icon="arrow-right" href="/user/github/github-app-setup">
+  Follow the step-by-step setup guide
+</Card>
