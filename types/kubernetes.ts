@@ -318,3 +318,48 @@ export interface Ingress {
   age: string
   labels: Record<string, string>
 }
+
+// Job types
+
+export type JobStatus = 'Complete' | 'Failed' | 'Running' | 'Pending' | 'Unknown'
+
+export interface JobCondition {
+  type: string
+  status: string
+  lastProbeTime?: string
+  lastTransitionTime?: string
+  reason?: string
+  message?: string
+}
+
+export interface Job {
+  name: string
+  namespace: string
+  status: JobStatus
+  completions: number
+  succeeded: number
+  failed: number
+  active: number
+  startTime?: string
+  completionTime?: string
+  duration?: string
+  age: string
+  labels: Record<string, string>
+  conditions: JobCondition[]
+}
+
+// CronJob types
+
+export type CronJobStatus = 'Active' | 'Suspended' | 'Unknown'
+
+export interface CronJob {
+  name: string
+  namespace: string
+  schedule: string
+  suspend: boolean
+  active: number
+  lastSchedule?: string
+  lastSuccessfulTime?: string
+  age: string
+  labels: Record<string, string>
+}

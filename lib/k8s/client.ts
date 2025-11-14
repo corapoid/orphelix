@@ -16,6 +16,7 @@ let k8sCoreApi: k8s.CoreV1Api | null = null
 let k8sAutoscalingApi: k8s.AutoscalingV2Api | null = null
 let k8sEventsApi: k8s.EventsV1Api | null = null
 let k8sNetworkingApi: k8s.NetworkingV1Api | null = null
+let k8sBatchApi: k8s.BatchV1Api | null = null
 
 /**
  * Initialize Kubernetes client
@@ -55,6 +56,7 @@ export function initK8sClient(): void {
   k8sAutoscalingApi = kc.makeApiClient(k8s.AutoscalingV2Api)
   k8sEventsApi = kc.makeApiClient(k8s.EventsV1Api)
   k8sNetworkingApi = kc.makeApiClient(k8s.NetworkingV1Api)
+  k8sBatchApi = kc.makeApiClient(k8s.BatchV1Api)
 }
 
 /**
@@ -103,6 +105,15 @@ export function getNetworkingApi(): k8s.NetworkingV1Api {
 }
 
 /**
+ * Get Batch V1 API client (for Jobs, CronJobs)
+ */
+export function getBatchApi(): k8s.BatchV1Api {
+  // Always reinitialize for AWS EKS to refresh tokens
+  initK8sClient()
+  return k8sBatchApi!
+}
+
+/**
  * Get KubeConfig instance
  */
 export function getKubeConfig(): k8s.KubeConfig {
@@ -136,4 +147,5 @@ export function resetClient(): void {
   k8sAutoscalingApi = null
   k8sEventsApi = null
   k8sNetworkingApi = null
+  k8sBatchApi = null
 }

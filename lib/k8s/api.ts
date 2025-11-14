@@ -6,7 +6,7 @@
  */
 
 import * as k8s from '@kubernetes/client-node'
-import { getAppsApi, getCoreApi, getAutoscalingApi, getNetworkingApi } from './client'
+import { getAppsApi, getCoreApi, getAutoscalingApi, getNetworkingApi, getBatchApi } from './client'
 import type {
   Deployment,
   Pod,
@@ -28,6 +28,10 @@ import type {
   IngressRule,
   IngressPath,
   IngressTLS,
+  Job,
+  JobStatus,
+  JobCondition,
+  CronJob,
 } from '@/types/kubernetes'
 
 /**
@@ -1012,6 +1016,168 @@ export async function fetchIngress(name: string, namespace: string): Promise<Ing
     }
   } catch (error) {
     console.error(`[K8s] Failed to fetch ingress ${name}:`, error)
+    return null
+  }
+}
+
+/**
+ * Jobs API
+ */
+function calculateDuration(startTime?: string, completionTime?: string): string | undefined {
+  if (!startTime) return undefined
+
+  const start = new Date(startTime)
+  const end = completionTime ? new Date(completionTime) : new Date()
+  const diffMs = end.getTime() - start.getTime()
+
+  const seconds = Math.floor(diffMs / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+
+  if (hours > 0) return `${hours}h ${minutes % 60}m`
+  if (minutes > 0) return `${minutes}m ${seconds % 60}s`
+  return `${seconds}s`
+}
+
+function determineJobStatus(job: k8s.V1Job): JobStatus {
+  const conditions = job.status?.conditions || []
+  const succeeded = job.status?.succeeded || 0
+  const failed = job.status?.failed || 0
+  const active = job.status?.active || 0
+
+  // Check conditions
+  const completeCondition = conditions.find(c => c.type === 'Complete' && c.status === 'True')
+  const failedCondition = conditions.find(c => c.type === 'Failed' && c.status === 'True')
+
+  if (completeCondition) return 'Complete'
+  if (failedCondition) return 'Failed'
+  if (active > 0) return 'Running'
+  if (succeeded === 0 && failed === 0 && active === 0) return 'Pending'
+
+  return 'Unknown'
+}
+
+export async function fetchJobs(namespace: string): Promise<Job[]> {
+  const batchApi = getBatchApi()
+  const response = await batchApi.listNamespacedJob({ namespace })
+
+  return response.items.map((job: k8s.V1Job) => {
+    const completions = job.spec?.completions || 1
+    const succeeded = job.status?.succeeded || 0
+    const failed = job.status?.failed || 0
+    const active = job.status?.active || 0
+    const status = determineJobStatus(job)
+
+    const conditions: JobCondition[] = (job.status?.conditions || []).map(c => ({
+      type: c.type || '',
+      status: c.status || '',
+      lastProbeTime: c.lastProbeTime,
+      lastTransitionTime: c.lastTransitionTime,
+      reason: c.reason,
+      message: c.message,
+    }))
+
+    return {
+      name: job.metadata?.name || '',
+      namespace: job.metadata?.namespace || namespace,
+      status,
+      completions,
+      succeeded,
+      failed,
+      active,
+      startTime: job.status?.startTime,
+      completionTime: job.status?.completionTime,
+      duration: calculateDuration(job.status?.startTime, job.status?.completionTime),
+      age: calculateAge(job.metadata?.creationTimestamp),
+      labels: job.metadata?.labels || {},
+      conditions,
+    }
+  })
+}
+
+export async function fetchJob(name: string, namespace: string): Promise<Job | null> {
+  try {
+    const batchApi = getBatchApi()
+    const response = await batchApi.readNamespacedJob({ name, namespace })
+    const job = response
+
+    const completions = job.spec?.completions || 1
+    const succeeded = job.status?.succeeded || 0
+    const failed = job.status?.failed || 0
+    const active = job.status?.active || 0
+    const status = determineJobStatus(job)
+
+    const conditions: JobCondition[] = (job.status?.conditions || []).map((c: any) => ({
+      type: c.type || '',
+      status: c.status || '',
+      lastProbeTime: c.lastProbeTime,
+      lastTransitionTime: c.lastTransitionTime,
+      reason: c.reason,
+      message: c.message,
+    }))
+
+    return {
+      name: job.metadata?.name || '',
+      namespace: job.metadata?.namespace || namespace,
+      status,
+      completions,
+      succeeded,
+      failed,
+      active,
+      startTime: job.status?.startTime,
+      completionTime: job.status?.completionTime,
+      duration: calculateDuration(job.status?.startTime, job.status?.completionTime),
+      age: calculateAge(job.metadata?.creationTimestamp),
+      labels: job.metadata?.labels || {},
+      conditions,
+    }
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch job ${name}:`, error)
+    return null
+  }
+}
+
+/**
+ * CronJobs API
+ */
+export async function fetchCronJobs(namespace: string): Promise<CronJob[]> {
+  const batchApi = getBatchApi()
+  const response = await batchApi.listNamespacedCronJob({ namespace })
+
+  return response.items.map((cronJob: k8s.V1CronJob) => {
+    return {
+      name: cronJob.metadata?.name || '',
+      namespace: cronJob.metadata?.namespace || namespace,
+      schedule: cronJob.spec?.schedule || '',
+      suspend: cronJob.spec?.suspend || false,
+      active: cronJob.status?.active?.length || 0,
+      lastSchedule: cronJob.status?.lastScheduleTime,
+      lastSuccessfulTime: cronJob.status?.lastSuccessfulTime,
+      age: calculateAge(cronJob.metadata?.creationTimestamp),
+      labels: cronJob.metadata?.labels || {},
+    }
+  })
+}
+
+export async function fetchCronJob(name: string, namespace: string): Promise<CronJob | null> {
+  try {
+    const batchApi = getBatchApi()
+    const response = await batchApi.readNamespacedCronJob({ name, namespace })
+    const cronJob = response
+
+    return {
+      name: cronJob.metadata?.name || '',
+      namespace: cronJob.metadata?.namespace || namespace,
+      schedule: cronJob.spec?.schedule || '',
+      suspend: cronJob.spec?.suspend || false,
+      active: cronJob.status?.active?.length || 0,
+      lastSchedule: cronJob.status?.lastScheduleTime,
+      lastSuccessfulTime: cronJob.status?.lastSuccessfulTime,
+      age: calculateAge(cronJob.metadata?.creationTimestamp),
+      labels: cronJob.metadata?.labels || {},
+    }
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch cronjob ${name}:`, error)
     return null
   }
 }
