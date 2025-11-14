@@ -89,7 +89,7 @@ export function RealtimeStatus() {
   }
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
       <Tooltip title={getTooltipTitle()} arrow>
         <Box
           sx={{

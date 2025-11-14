@@ -10,8 +10,12 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDeployments } from '@/lib/hooks/use-deployments'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
@@ -24,10 +28,11 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import { usePageSearch } from '@/lib/contexts/search-context'
-import type { Deployment } from '@/types/kubernetes'
+import type { Deployment, DeploymentStatus } from '@/types/kubernetes'
 
 export default function DeploymentsPage() {
   const router = useRouter()
+  const [statusFilter, setStatusFilter] = useState<DeploymentStatus | ''>('')
   const { data: deployments, isLoading, error, refetch } = useDeployments()
   const searchQuery = usePageSearch('Search deployments...')
 
@@ -36,12 +41,23 @@ export default function DeploymentsPage() {
 
   const filteredDeployments = useMemo(() => {
     if (!deployments) return []
-    if (!searchQuery) return deployments
 
-    return deployments.filter((deployment) =>
-      deployment.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  }, [deployments, searchQuery])
+    let filtered = deployments
+
+    // Filter by status
+    if (statusFilter) {
+      filtered = filtered.filter((deployment) => deployment.status === statusFilter)
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter((deployment) =>
+        deployment.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+
+    return filtered
+  }, [deployments, searchQuery, statusFilter])
 
   const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Deployment>(
     filteredDeployments,
@@ -87,6 +103,21 @@ export default function DeploymentsPage() {
         subtitle={`${deployments?.length || 0} deployment${deployments?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        filters={
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={statusFilter}
+              label="Status"
+              onChange={(e) => setStatusFilter(e.target.value as DeploymentStatus | '')}
+            >
+              <MenuItem value="">All Statuses</MenuItem>
+              <MenuItem value="Available">Available</MenuItem>
+              <MenuItem value="Progressing">Progressing</MenuItem>
+              <MenuItem value="Degraded">Degraded</MenuItem>
+            </Select>
+          </FormControl>
+        }
       />
 
       <ClusterConnectionAlert minimal />
