@@ -10,7 +10,9 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 import FolderIcon from '@mui/icons-material/Folder'
+import { useRouter } from 'next/navigation'
 import { useNamespaces } from '@/lib/hooks/use-namespaces'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
@@ -20,6 +22,7 @@ import { EmptyState } from '@/app/components/common/empty-state'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
 
 export default function NamespacesPage() {
+  const router = useRouter()
   const { data: namespaces, isLoading, error, refetch } = useNamespaces()
 
   useAutoRefresh(refetch)
@@ -72,11 +75,17 @@ export default function NamespacesPage() {
                 <TableCell>Status</TableCell>
                 <TableCell>Labels</TableCell>
                 <TableCell>Age</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {namespaces.map((namespace) => (
-                <TableRow key={namespace.name} hover>
+                <TableRow
+                  key={namespace.name}
+                  hover
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => router.push(`/namespaces/${namespace.name}`)}
+                >
                   <TableCell>
                     <Typography variant="body2" fontWeight="medium">
                       {namespace.name}
@@ -110,6 +119,17 @@ export default function NamespacesPage() {
                     </Box>
                   </TableCell>
                   <TableCell>{namespace.age}</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        router.push(`/namespaces/${namespace.name}`)
+                      }}
+                    >
+                      View
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
