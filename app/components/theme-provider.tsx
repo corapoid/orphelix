@@ -58,6 +58,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Determine actual theme to use
   const actualTheme = mode === 'system' ? systemTheme : mode
 
+  // Update HTML attribute when theme changes
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', actualTheme)
+    document.documentElement.style.colorScheme = actualTheme
+  }, [actualTheme])
+
   const theme = useMemo(() => (actualTheme === 'light' ? lightTheme : darkTheme), [actualTheme])
 
   return (

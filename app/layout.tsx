@@ -16,6 +16,25 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme-mode') || 'dark';
+                  var actualTheme = theme;
+                  if (theme === 'system') {
+                    actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  document.documentElement.setAttribute('data-theme', actualTheme);
+                  document.documentElement.style.colorScheme = actualTheme;
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body style={{ margin: 0 }}>
         <Providers>
           <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
