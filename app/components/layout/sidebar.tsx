@@ -29,6 +29,7 @@ import CloudIcon from '@mui/icons-material/Cloud'
 import HttpIcon from '@mui/icons-material/Http'
 import WorkIcon from '@mui/icons-material/Work'
 import ScheduleIcon from '@mui/icons-material/Schedule'
+import FolderIcon from '@mui/icons-material/Folder'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -83,6 +84,7 @@ const navGroups: (NavItem | NavGroup)[] = [
   {
     label: 'Cluster',
     items: [
+      { label: 'Namespaces', icon: <FolderIcon />, path: '/namespaces', color: '#8B5CF6' },
       { label: 'Nodes', icon: <NodeIcon />, path: '/nodes', color: '#06B6D4' },
       { label: 'HPA', icon: <HpaIcon />, path: '/hpa', color: '#64748B' },
       { label: 'Events', icon: <EventIcon />, path: '/events', color: '#06B6D4' },
