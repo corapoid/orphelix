@@ -5,18 +5,48 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Button from '@mui/material/Button'
+import EditIcon from '@mui/icons-material/Edit'
 import { useParams } from 'next/navigation'
+import { useState } from 'react'
 import { useCronJob } from '@/lib/hooks/use-cronjobs'
+import { useJobs } from '@/lib/hooks/use-jobs'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
+import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import Link from 'next/link'
 
 export default function CronJobDetailPage() {
   const params = useParams()
   const name = params.name as string
+  const [editorOpen, setEditorOpen] = useState(false)
 
   const { data: cronjob, isLoading, error, refetch } = useCronJob(name)
+  const { data: allJobs } = useJobs()
+
+  // Filter jobs owned by this cronjob
+  const cronJobs = allJobs?.filter((job) => {
+    // Check if job is owned by this cronjob via labels or name pattern
+    return job.labels['cronjob'] === name || job.name.startsWith(`${name}-`)
+  }) || []
+
+  // Sort by age (newest first)
+  const sortedJobs = [...cronJobs].sort((a, b) => {
+    // Simple age comparison - newer jobs have smaller age strings typically
+    if (a.startTime && b.startTime) {
+      return new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+    }
+    return 0
+  })
 
   // Auto-refresh
   useAutoRefresh(refetch)
@@ -68,10 +98,19 @@ export default function CronJobDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        actions={
+          <Button
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => setEditorOpen(true)}
+          >
+            Edit YAML
+          </Button>
+        }
       />
 
       <Grid container spacing={3}>
-        {/* CronJob Details */}
+        {/* CronJob Information */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
@@ -83,18 +122,18 @@ export default function CronJobDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Schedule
                 </Typography>
-                <Typography variant="body1" sx={{ fontFamily: 'monospace', fontSize: '0.95rem' }}>
+                <Typography variant="body1" fontWeight="medium" sx={{ fontFamily: 'monospace' }}>
                   {cronjob.schedule}
                 </Typography>
               </Box>
 
               <Box sx={{ mb: 2 }}>
                 <Typography variant="caption" color="text.secondary">
-                  Status
+                  Suspend
                 </Typography>
                 <Box sx={{ mt: 0.5 }}>
                   <Chip
-                    label={cronjob.suspend ? 'Suspended' : 'Active'}
+                    label={cronjob.suspend ? 'Yes' : 'No'}
                     size="small"
                     color={cronjob.suspend ? 'default' : 'success'}
                     variant="outlined"
@@ -106,7 +145,7 @@ export default function CronJobDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Active Jobs
                 </Typography>
-                <Typography variant="body1" fontWeight="medium">
+                <Typography variant="h4" fontWeight="bold" color="info.main">
                   {cronjob.active}
                 </Typography>
               </Box>
@@ -121,7 +160,7 @@ export default function CronJobDetailPage() {
           </Paper>
         </Grid>
 
-        {/* Execution History */}
+        {/* Last Execution */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
@@ -133,7 +172,7 @@ export default function CronJobDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Last Schedule Time
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" fontWeight="medium">
                   {cronjob.lastSchedule || 'Never'}
                 </Typography>
               </Box>
@@ -142,13 +181,89 @@ export default function CronJobDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Last Successful Time
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" fontWeight="medium" color="success.main">
                   {cronjob.lastSuccessfulTime || 'Never'}
+                </Typography>
+              </Box>
+
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="caption" color="text.secondary">
+                  Total Jobs Created
+                </Typography>
+                <Typography variant="h4" fontWeight="bold">
+                  {sortedJobs.length}
                 </Typography>
               </Box>
             </Box>
           </Paper>
         </Grid>
+
+        {/* Related Jobs */}
+        {sortedJobs.length > 0 && (
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Jobs ({sortedJobs.length})
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Jobs created by this CronJob (showing last 10)
+              </Typography>
+
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Completions</TableCell>
+                      <TableCell>Duration</TableCell>
+                      <TableCell>Age</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {sortedJobs.slice(0, 10).map((job) => (
+                      <TableRow
+                        key={job.name}
+                        hover
+                        component={Link}
+                        href={`/jobs/${job.name}`}
+                        sx={{
+                          cursor: 'pointer',
+                          textDecoration: 'none',
+                          '&:hover': { bgcolor: 'action.hover' },
+                        }}
+                      >
+                        <TableCell>
+                          <Typography variant="body2" fontWeight="medium">
+                            {job.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <StatusBadge status={job.status} size="small" />
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {job.succeeded} / {job.completions}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                            {job.duration || '-'}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" color="text.secondary">
+                            {job.age}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Grid>
+        )}
 
         {/* Labels */}
         {Object.keys(cronjob.labels).length > 0 && (
@@ -171,6 +286,15 @@ export default function CronJobDetailPage() {
           </Grid>
         )}
       </Grid>
+
+      {/* YAML Editor Modal */}
+      <YamlEditorModal
+        open={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        resourceType="CronJob"
+        resourceName={cronjob.name}
+        namespace={cronjob.namespace}
+      />
     </Box>
   )
 }

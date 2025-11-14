@@ -5,19 +5,39 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Button from '@mui/material/Button'
+import EditIcon from '@mui/icons-material/Edit'
 import { useParams } from 'next/navigation'
+import { useState } from 'react'
 import { useJob } from '@/lib/hooks/use-jobs'
+import { usePods } from '@/lib/hooks/use-pods'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
+import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import Link from 'next/link'
 
 export default function JobDetailPage() {
   const params = useParams()
   const name = params.name as string
+  const [editorOpen, setEditorOpen] = useState(false)
 
   const { data: job, isLoading, error, refetch } = useJob(name)
+  const { data: allPods } = usePods()
+
+  // Filter pods owned by this job
+  const jobPods = allPods?.filter((pod) => {
+    // Check if pod is owned by this job via labels
+    return pod.labels['job-name'] === name
+  }) || []
 
   // Auto-refresh
   useAutoRefresh(refetch)
@@ -64,10 +84,19 @@ export default function JobDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        actions={
+          <Button
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => setEditorOpen(true)}
+          >
+            Edit YAML
+          </Button>
+        }
       />
 
       <Grid container spacing={3}>
-        {/* Job Details */}
+        {/* Job Information */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
@@ -112,7 +141,7 @@ export default function JobDetailPage() {
           </Paper>
         </Grid>
 
-        {/* Execution Stats */}
+        {/* Execution Statistics */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
@@ -124,7 +153,7 @@ export default function JobDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Succeeded
                 </Typography>
-                <Typography variant="body1" fontWeight="medium" color="success.main">
+                <Typography variant="h4" fontWeight="bold" color="success.main">
                   {job.succeeded}
                 </Typography>
               </Box>
@@ -133,7 +162,7 @@ export default function JobDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Failed
                 </Typography>
-                <Typography variant="body1" fontWeight="medium" color="error.main">
+                <Typography variant="h4" fontWeight="bold" color="error.main">
                   {job.failed}
                 </Typography>
               </Box>
@@ -142,13 +171,131 @@ export default function JobDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Active
                 </Typography>
-                <Typography variant="body1" fontWeight="medium" color="info.main">
+                <Typography variant="h4" fontWeight="bold" color="info.main">
                   {job.active}
                 </Typography>
               </Box>
             </Box>
           </Paper>
         </Grid>
+
+        {/* Related Pods */}
+        {jobPods.length > 0 && (
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Pods ({jobPods.length})
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Pods created by this job
+              </Typography>
+
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Restarts</TableCell>
+                      <TableCell>Age</TableCell>
+                      <TableCell>Node</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {jobPods.map((pod) => (
+                      <TableRow
+                        key={pod.name}
+                        hover
+                        component={Link}
+                        href={`/pods/${pod.name}`}
+                        sx={{
+                          cursor: 'pointer',
+                          textDecoration: 'none',
+                          '&:hover': { bgcolor: 'action.hover' },
+                        }}
+                      >
+                        <TableCell>
+                          <Typography variant="body2" fontWeight="medium">
+                            {pod.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <StatusBadge status={pod.status} size="small" />
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" color={pod.restarts > 0 ? 'error.main' : 'text.secondary'}>
+                            {pod.restarts}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" color="text.secondary">
+                            {pod.age}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" color="text.secondary">
+                            {pod.nodeName}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Grid>
+        )}
+
+        {/* Conditions */}
+        {job.conditions && job.conditions.length > 0 && (
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Conditions
+              </Typography>
+
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Type</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Reason</TableCell>
+                      <TableCell>Message</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {job.conditions.map((condition, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell>
+                          <Typography variant="body2" fontWeight="medium">
+                            {condition.type}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            label={condition.status}
+                            size="small"
+                            color={condition.status === 'True' ? 'success' : 'default'}
+                            variant="outlined"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{condition.reason || '-'}</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" color="text.secondary">
+                            {condition.message || '-'}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Grid>
+        )}
 
         {/* Labels */}
         {Object.keys(job.labels).length > 0 && (
@@ -171,6 +318,15 @@ export default function JobDetailPage() {
           </Grid>
         )}
       </Grid>
+
+      {/* YAML Editor Modal */}
+      <YamlEditorModal
+        open={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        resourceType="Job"
+        resourceName={job.name}
+        namespace={job.namespace}
+      />
     </Box>
   )
 }
