@@ -198,6 +198,17 @@ export interface DashboardSummary {
   }
   services: number
   ingress: number
+  jobs?: {
+    total: number
+    active?: number
+    succeeded?: number
+    failed?: number
+  }
+  cronjobs?: {
+    total: number
+    active?: number
+    suspended?: number
+  }
 }
 
 // Flux GitOps types

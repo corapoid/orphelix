@@ -22,7 +22,7 @@ interface RecentEventsProps {
 
 export function RecentEvents({ events, loading, error }: RecentEventsProps) {
   const [showAll, setShowAll] = useState(false)
-  const PREVIEW_COUNT = 3
+  const PREVIEW_COUNT = 5
   const displayedEvents = showAll ? events : events.slice(0, PREVIEW_COUNT)
   const hasMore = events.length > PREVIEW_COUNT
 
@@ -30,9 +30,9 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
     return (
       <Paper>
         <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Recent Events</Typography>
+          <Typography variant="h6">Recent Activity</Typography>
           <Typography variant="body2" color="text.secondary">
-            Latest cluster events from the last 24 hours
+            Latest cluster events from the last hour
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
@@ -46,9 +46,9 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
     return (
       <Paper>
         <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Recent Events</Typography>
+          <Typography variant="h6">Recent Activity</Typography>
           <Typography variant="body2" color="text.secondary">
-            Latest cluster events from the last 24 hours
+            Latest cluster events from the last hour
           </Typography>
         </Box>
         <Box sx={{ p: 2 }}>
@@ -61,9 +61,9 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
   return (
     <Paper>
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="h6">Recent Events</Typography>
+        <Typography variant="h6">Recent Activity</Typography>
         <Typography variant="body2" color="text.secondary">
-          Latest cluster events from the last 24 hours • {events.length} events
+          Latest cluster events from the last hour • {events.length} event{events.length !== 1 ? 's' : ''}
         </Typography>
       </Box>
       <Box>

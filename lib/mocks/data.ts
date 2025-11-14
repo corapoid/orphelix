@@ -871,6 +871,8 @@ export function generateMockDashboardSummary(): DashboardSummary {
   const pvs = generateMockPVs()
   const services = generateMockServices()
   const ingresses = generateMockIngresses()
+  const jobs = generateMockJobs()
+  const cronjobs = generateMockCronJobs()
 
   return {
     deployments: {
@@ -898,6 +900,17 @@ export function generateMockDashboardSummary(): DashboardSummary {
     },
     services: services.length,
     ingress: ingresses.length,
+    jobs: {
+      total: jobs.length,
+      active: jobs.filter((j) => j.active > 0).length,
+      succeeded: jobs.filter((j) => j.succeeded > 0).length,
+      failed: jobs.filter((j) => j.failed > 0).length,
+    },
+    cronjobs: {
+      total: cronjobs.length,
+      active: jobs.filter((j) => j.active > 0).length,
+      suspended: cronjobs.filter((cj) => cj.suspend).length,
+    },
   }
 }
 

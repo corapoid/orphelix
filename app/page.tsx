@@ -2,33 +2,20 @@
 
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
-import AccountTreeIcon from '@mui/icons-material/AccountTree'
-import WidgetsIcon from '@mui/icons-material/Widgets'
-import StorageIcon from '@mui/icons-material/Storage'
-import SettingsIcon from '@mui/icons-material/Settings'
-import LockIcon from '@mui/icons-material/Lock'
-import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import FolderOpenIcon from '@mui/icons-material/FolderOpen'
-import EventNoteIcon from '@mui/icons-material/EventNote'
+import Button from '@mui/material/Button'
+import LanguageIcon from '@mui/icons-material/Language'
+import { ClusterHealthScore } from './components/dashboard/cluster-health-score'
+import { CriticalAlerts } from './components/dashboard/critical-alerts'
+import { ResourceOverview } from './components/dashboard/resource-overview'
+import { ResourceUtilization } from './components/dashboard/resource-utilization'
 import { RecentEvents } from './components/dashboard/recent-events'
-import { TopologyGraph } from './components/topology/topology-graph'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
-import { useDeployments } from '@/lib/hooks/use-deployments'
-import { useConfigMaps } from '@/lib/hooks/use-configmaps'
-import { useSecrets } from '@/lib/hooks/use-secrets'
+import { useResourceQuotas } from '@/lib/hooks/use-resourcequotas'
 import { useModeStore } from '@/lib/core/store'
-import { buildConfigSecretsTopology } from '@/lib/ui/topology'
-import { useMemo, useState } from 'react'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
 import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
-import IconButton from '@mui/material/IconButton'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import Collapse from '@mui/material/Collapse'
 
 export default function DashboardPage() {
   const { data: health } = useClusterHealth()
@@ -36,23 +23,8 @@ export default function DashboardPage() {
   const selectedContext = useModeStore((state) => state.selectedContext)
   const namespace = useModeStore((state) => state.selectedNamespace)
   const { data: summary, isLoading, error } = useDashboardSummary()
-  const [topologyExpanded, setTopologyExpanded] = useState(false)
-  const {
-    data: events,
-    isLoading: eventsLoading,
-    error: eventsError,
-  } = useRecentEvents(24) // Last 24 hours
-
-  // Fetch data for ConfigMaps/Secrets topology
-  const { data: deployments } = useDeployments()
-  const { data: configMaps } = useConfigMaps()
-  const { data: secrets } = useSecrets()
-
-  // Build topology graph
-  const topologyData = useMemo(() => {
-    if (!deployments || !configMaps || !secrets || !namespace) return null
-    return buildConfigSecretsTopology(deployments, configMaps, secrets, namespace)
-  }, [deployments, configMaps, secrets, namespace])
+  const { data: events, isLoading: eventsLoading, error: eventsError } = useRecentEvents(1) // Last 1 hour
+  const { data: quotas } = useResourceQuotas()
 
   // If cluster is not connected, show connection alert instead of loading/error states
   if (health?.status === 'disconnected') {
@@ -89,340 +61,51 @@ export default function DashboardPage() {
   return (
     <Box>
       {/* Clean Header */}
-      <Box sx={{ mb: 5 }}>
+      <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
           Cluster Overview
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Cluster:</strong> {mode === 'mock' ? 'Demo' : (selectedContext?.cluster || 'Unknown')}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Namespace:</strong> {mode === 'mock' ? 'demo' : (namespace || 'All namespaces')}
+          <strong>Cluster:</strong> {mode === 'mock' ? 'Demo' : selectedContext?.cluster || 'Unknown'} •
+          <strong> Namespace:</strong> {mode === 'mock' ? 'demo' : namespace || 'All namespaces'}
         </Typography>
       </Box>
 
-      {/* Minimalist Stats Grid - Only Primary Accent */}
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        {/* Deployments - Main Card */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              height: '100%',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              border: '1px solid',
-              borderColor: 'divider',
-              '&:hover': {
-                borderColor: 'primary.main',
-                boxShadow: 1,
-              },
-            }}
-            onClick={() => (window.location.href = '/deployments')}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-              <AccountTreeIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                Deployments
-              </Typography>
-            </Box>
-            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
-              {summary.deployments.total}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <Box>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                  Healthy
-                </Typography>
-                <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
-                  {summary.deployments.healthy}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                  Degraded
-                </Typography>
-                <Typography variant="body1" color="error.main" sx={{ fontWeight: 600 }}>
-                  {summary.deployments.degraded}
-                </Typography>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
+      {/* 1. Cluster Health Score (Hero) */}
+      <Box sx={{ mb: 3 }}>
+        <ClusterHealthScore summary={summary} />
+      </Box>
 
-        {/* Pods */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              height: '100%',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              border: '1px solid',
-              borderColor: 'divider',
-              '&:hover': {
-                borderColor: 'primary.main',
-                boxShadow: 1,
-              },
-            }}
-            onClick={() => (window.location.href = '/pods')}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-              <WidgetsIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                Pods
-              </Typography>
-            </Box>
-            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
-              {summary.pods.total}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1.5 }}>
-              <Box>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                  Running
-                </Typography>
-                <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
-                  {summary.pods.running}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                  Pending
-                </Typography>
-                <Typography variant="body1" color="warning.main" sx={{ fontWeight: 600 }}>
-                  {summary.pods.pending}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                  Failed
-                </Typography>
-                <Typography variant="body1" color="error.main" sx={{ fontWeight: 600 }}>
-                  {summary.pods.failed}
-                </Typography>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
+      {/* 2. Critical Alerts (Conditional) */}
+      <Box sx={{ mb: 3 }}>
+        <CriticalAlerts summary={summary} />
+      </Box>
 
-        {/* Nodes */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              height: '100%',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              border: '1px solid',
-              borderColor: 'divider',
-              '&:hover': {
-                borderColor: 'primary.main',
-                boxShadow: 1,
-              },
-            }}
-            onClick={() => (window.location.href = '/nodes')}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-              <StorageIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                Nodes
-              </Typography>
-            </Box>
-            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
-              {summary.nodes.total}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <Box>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                  Ready
-                </Typography>
-                <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
-                  {summary.nodes.ready}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                  Not Ready
-                </Typography>
-                <Typography variant="body1" color="error.main" sx={{ fontWeight: 600 }}>
-                  {summary.nodes.notReady}
-                </Typography>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
+      {/* 3. Resource Overview (Grouped Cards) */}
+      <Box sx={{ mb: 4 }}>
+        <ResourceOverview summary={summary} />
+      </Box>
 
-        {/* Storage */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              height: '100%',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              border: '1px solid',
-              borderColor: 'divider',
-              '&:hover': {
-                borderColor: 'primary.main',
-                boxShadow: 1,
-              },
-            }}
-            onClick={() => (window.location.href = '/pv')}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-              <FolderOpenIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                Volumes
-              </Typography>
-            </Box>
-            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1.5 }}>
-              {summary.pv.total}
-            </Typography>
-            <Box>
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.7rem' }}>
-                Bound
-              </Typography>
-              <Typography variant="body1" color="success.main" sx={{ fontWeight: 600 }}>
-                {summary.pv.bound}
-              </Typography>
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
+      {/* 4. Recent Activity + Resource Utilization (Side by Side) */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 3, mb: 4 }}>
+        <Box>
+          <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
+        </Box>
+        <Box>
+          <ResourceUtilization quotas={quotas} />
+        </Box>
+      </Box>
 
-      {/* Secondary Resources - Compact Row */}
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              textAlign: 'center',
-              cursor: 'pointer',
-              border: '1px solid',
-              borderColor: 'divider',
-              transition: 'all 0.2s',
-              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
-            }}
-            onClick={() => (window.location.href = '/configmaps')}
-          >
-            <SettingsIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
-              {summary.configMaps}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-              ConfigMaps
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              textAlign: 'center',
-              cursor: 'pointer',
-              border: '1px solid',
-              borderColor: 'divider',
-              transition: 'all 0.2s',
-              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
-            }}
-            onClick={() => (window.location.href = '/secrets')}
-          >
-            <LockIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
-              {summary.secrets}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-              Secrets
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              textAlign: 'center',
-              cursor: 'pointer',
-              border: '1px solid',
-              borderColor: 'divider',
-              transition: 'all 0.2s',
-              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
-            }}
-            onClick={() => (window.location.href = '/hpa')}
-          >
-            <TrendingUpIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
-              {summary.hpa}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-              HPA
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <Paper
-            sx={{
-              p: 2,
-              textAlign: 'center',
-              cursor: 'pointer',
-              border: '1px solid',
-              borderColor: 'divider',
-              transition: 'all 0.2s',
-              '&:hover': { borderColor: 'primary.main', boxShadow: 1 },
-            }}
-            onClick={() => (window.location.href = '/events')}
-          >
-            <EventNoteIcon sx={{ fontSize: 20, color: 'text.secondary', mb: 0.5 }} />
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
-              {events?.length || 0}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-              Events (24h)
-            </Typography>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      {/* ConfigMaps/Secrets to Deployments Topology */}
-      {topologyData && topologyData.nodes.length > 0 && (
-        <Paper sx={{ mb: 4, overflow: 'hidden' }}>
-          <Box
-            sx={{
-              p: 2,
-              borderBottom: topologyExpanded ? 1 : 0,
-              borderColor: 'divider',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-              '&:hover': {
-                bgcolor: 'action.hover',
-              }
-            }}
-            onClick={() => setTopologyExpanded(!topologyExpanded)}
-          >
-            <Typography variant="h6">Topology</Typography>
-            <IconButton
-              size="small"
-              disableRipple
-              sx={{
-                '&:hover': {
-                  bgcolor: 'transparent',
-                }
-              }}
-            >
-              {topologyExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </IconButton>
-          </Box>
-          <Collapse in={topologyExpanded}>
-            <Box>
-              <TopologyGraph data={topologyData} height={500} />
-            </Box>
-          </Collapse>
-        </Paper>
-      )}
-
-      <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
+      {/* Quick Link to Topology */}
+      <Box sx={{ textAlign: 'center' }}>
+        <Button
+          variant="outlined"
+          startIcon={<LanguageIcon />}
+          onClick={() => (window.location.href = '/topology')}
+        >
+          View Cluster Topology
+        </Button>
+      </Box>
     </Box>
   )
 }
