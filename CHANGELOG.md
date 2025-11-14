@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **UI Design Improvements**: Major visual redesign of badges and detail pages
+  - New pill-shaped status badges using MUI Chip component with icons
+  - Global search moved to top header (centered) for better accessibility
+  - SearchContext with Context API for global search state management
+  - Filters added to all list pages (Deployments, Pods, Events)
+  - Status filters for Deployments (Available, Progressing, Degraded)
+  - Vertical metadata layout on detail pages for better readability
+  - Refresh button moved to breadcrumb level for cleaner UI
+  - Interactive node links in pod detail view for easy navigation
+  - Badge demo page (`/badge-demo`) with 5 design variants
+
 - **AI-Powered File Matching (OpenAI Integration)**: Intelligent YAML file matching
   - OpenAI GPT-4o-mini integration for smart deployment-to-file matching
   - User-configurable OpenAI API key in Settings (stored in localStorage)
@@ -59,6 +70,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Status Badges**: Complete redesign using MUI Chip component
+  - V4 variant: pill-shaped with icons (CheckCircle, Error, HourglassEmpty)
+  - Consistent colors: success (green), error (red), warning (orange), info (blue)
+  - Size variants: small (min-width: 100px) and medium (min-width: 120px)
+  - Extra rounded borders (borderRadius: 16px) for modern look
+- **Search Bar**: Moved from PageHeader to global Header component
+  - Centered positioning in top navigation bar
+  - Dynamic placeholder based on current page
+  - Auto-clear on page navigation
+  - Global search state via SearchContext
+- **PageHeader Component**: Major restructuring
+  - Removed search props (now in global header)
+  - Added metadata array support for vertical layout
+  - Metadata accepts ReactNode for interactive elements
+  - Refresh button moved to breadcrumb level
+  - Filters positioned on right side (same line as title)
+  - Support for both string and ReactNode titles
+- **Detail Pages Layout**: Unified metadata presentation
+  - Changed from "Deployment in namespace" to "Namespace: ..." format
+  - Vertical layout instead of horizontal bullet-separated
+  - Status badge inline with title
+  - Metadata stacked vertically for better readability
+  - Applied to all detail pages (Deployments, Pods, Nodes, ConfigMaps, Secrets)
+- **RealtimeStatus**: Reduced gap between status badge and reconnect button (1.5 → 0.75)
 - **Nodes UI Improvements**:
   - Removed 'Roles' column from nodes table and details page
   - Removed 'Conditions' section from node details
@@ -75,6 +110,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Duplicate Headers**: Removed duplicate title/metadata sections from detail pages
+  - Fixed deployment name appearing twice with incorrect namespace
+  - Consolidated all metadata into PageHeader component
+  - Cleaner single-header layout across all detail pages
+- **PageHeader Types**: Updated to accept ReactNode for title and metadata items
+  - Conditional rendering for string vs ReactNode titles
+  - Proper TypeScript types for flexible content
+- **StatusBadge Tests**: Complete rewrite to test MUI Chip implementation
+  - Updated all 16 tests to check MUI classes instead of inline styles
+  - Test color classes (MuiChip-colorSuccess, etc.)
+  - Test size classes (MuiChip-sizeSmall, MuiChip-sizeMedium)
 - **AI Matcher**: Fixed OpenAI API key parameter passing (use `createOpenAI` client)
 - **YAML Editor UI**: Fixed empty blue alert bar (added AI method support)
 - **YAML Editor UI**: Removed confusing Base/Overlay tabs for non-Kustomize repos
