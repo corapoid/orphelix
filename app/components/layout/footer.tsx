@@ -9,8 +9,6 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
 export function Footer() {
-  const docsUrl = process.env.NEXT_PUBLIC_DOCS_URL || 'http://localhost:3001'
-
   return (
     <Box
       component="footer"
@@ -33,7 +31,7 @@ export function Footer() {
           <Tooltip title="Documentation" arrow>
             <IconButton
               component={Link}
-              href={docsUrl}
+              href="https://github.com/dmakowski-rasp/kubevista/tree/main/docs"
               target="_blank"
               rel="noopener noreferrer"
               sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}

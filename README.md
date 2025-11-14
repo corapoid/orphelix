@@ -55,12 +55,8 @@ npm install
 # 3. Run development server
 npm run dev
 
-# Or run app + documentation together
-npm run dev:all
-
 # 4. Open browser
-# App: http://localhost:3000
-# Docs: http://localhost:3001 (if using dev:all)
+# Navigate to http://localhost:3000
 ```
 
 The application starts in **demo mode** by default. Click the "DEMO MODE" badge to connect to a real cluster.
@@ -76,20 +72,26 @@ npm start
 
 ### 📘 User Documentation
 
-Complete user guide available in the `/docs` directory (Mintlify format):
+Complete user guide available in the `/docs` directory:
 
-```bash
-# View documentation locally
-cd docs
-mint dev
-```
-
-Or browse the documentation files:
 - **[Introduction](docs/introduction.mdx)** - What is KubeVista and key features
 - **[Quickstart](docs/quickstart.mdx)** - Get started in 5 minutes
-- **[Dashboard Guide](docs/user-guide/dashboard.mdx)** - Using the main dashboard
-- **[Search & Filters](docs/user-guide/search-filters.mdx)** - Finding resources quickly
-- **[GitHub Integration](docs/github/overview.mdx)** - GitOps workflow setup
+- **[Installation](docs/installation.mdx)** - Detailed installation guide
+- **[Dashboard Guide](docs/user/dashboard.mdx)** - Using the main dashboard
+- **[Search & Filters](docs/user/search-filters.mdx)** - Finding resources quickly
+- **[GitHub Integration](docs/user/github/overview.mdx)** - GitOps workflow setup
+- **[GitHub App Setup](docs/user/github/github-app-setup.mdx)** - Step-by-step configuration
+
+<details>
+<summary>📖 View documentation with Mintlify (optional)</summary>
+
+```bash
+cd docs
+npx mint@latest dev
+```
+
+Note: Mintlify may have dependency issues. Documentation is fully readable as markdown files.
+</details>
 
 <details>
 <summary>📚 All Documentation Sections</summary>
