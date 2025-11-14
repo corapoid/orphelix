@@ -26,27 +26,26 @@ export function Header({ onMenuClick: _onMenuClick }: HeaderProps) {
         borderColor: 'divider',
       }}
     >
-      <Toolbar>
+      <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
         {/* Logo on the left */}
-        <Logo collapsed={false} />
-
-        {/* Spacer */}
-        <Box sx={{ flexGrow: 1, pointerEvents: 'none' }} />
+        <Box sx={{ flexShrink: 0 }}>
+          <Logo collapsed={false} />
+        </Box>
 
         {/* Search bar in the center */}
-        <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', zIndex: 1 }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', maxWidth: 400 }}>
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder={searchPlaceholder}
+            fullWidth
           />
         </Box>
 
-        {/* Spacer */}
-        <Box sx={{ flexGrow: 1, pointerEvents: 'none' }} />
-
         {/* Real-time status on the right */}
-        <RealtimeStatus />
+        <Box sx={{ flexShrink: 0 }}>
+          <RealtimeStatus />
+        </Box>
       </Toolbar>
     </AppBar>
   )

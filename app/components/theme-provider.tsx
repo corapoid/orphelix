@@ -21,31 +21,39 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useThemeMode = () => useContext(ThemeContext)
 
+// Get initial theme from localStorage or default to 'dark'
+function getInitialTheme(): ThemeMode {
+  if (typeof window === 'undefined') return 'dark'
+  try {
+    const saved = localStorage.getItem('theme-mode')
+    if (saved === 'light' || saved === 'dark' || saved === 'system') {
+      return saved as ThemeMode
+    }
+  } catch (e) {
+    // localStorage not available
+  }
+  return 'dark'
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<ThemeMode>('dark') // Default to dark instead of system
-  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light')
+  const [mode, setMode] = useState<ThemeMode>(getInitialTheme)
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
   const [_mounted, setMounted] = useState(false)
 
   // Initialize on client side only
   useEffect(() => {
     setMounted(true)
 
-    // Detect system theme preference
+    // Listen for system theme changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    setSystemTheme(mediaQuery.matches ? 'dark' : 'light')
-
     const handler = (e: MediaQueryListEvent) => {
       setSystemTheme(e.matches ? 'dark' : 'light')
     }
 
     mediaQuery.addEventListener('change', handler)
-
-    // Load saved preference from localStorage
-    const saved = localStorage.getItem('theme-mode') as ThemeMode | null
-    if (saved && (saved === 'light' || saved === 'dark' || saved === 'system')) {
-      setMode(saved)
-    }
-
     return () => mediaQuery.removeEventListener('change', handler)
   }, [])
 
