@@ -10,8 +10,11 @@ import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
+import Collapse from '@mui/material/Collapse'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DeploymentIcon from '@mui/icons-material/AccountTree'
 import PodIcon from '@mui/icons-material/Widgets'
@@ -46,26 +49,61 @@ interface NavItem {
   color: string
 }
 
-const navItems: NavItem[] = [
+interface NavGroup {
+  label: string
+  items: NavItem[]
+}
+
+const navGroups: (NavItem | NavGroup)[] = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/', color: '#6366F1' },
-  { label: 'Deployments', icon: <DeploymentIcon />, path: '/deployments', color: '#6366F1' },
-  { label: 'Pods', icon: <PodIcon />, path: '/pods', color: '#8B5CF6' },
-  { label: 'Services', icon: <CloudIcon />, path: '/services', color: '#3B82F6' },
-  { label: 'Ingress', icon: <HttpIcon />, path: '/ingress', color: '#0EA5E9' },
-  { label: 'Jobs', icon: <WorkIcon />, path: '/jobs', color: '#EC4899' },
-  { label: 'CronJobs', icon: <ScheduleIcon />, path: '/cronjobs', color: '#A855F7' },
-  { label: 'Nodes', icon: <NodeIcon />, path: '/nodes', color: '#06B6D4' },
-  { label: 'ConfigMaps', icon: <ConfigIcon />, path: '/configmaps', color: '#10B981' },
-  { label: 'Secrets', icon: <SecretIcon />, path: '/secrets', color: '#F43F5E' },
-  { label: 'HPA', icon: <HpaIcon />, path: '/hpa', color: '#64748B' },
-  { label: 'Persistent Volumes', icon: <PvIcon />, path: '/pv', color: '#F59E0B' },
-  { label: 'Events', icon: <EventIcon />, path: '/events', color: '#06B6D4' },
+  {
+    label: 'Workloads',
+    items: [
+      { label: 'Deployments', icon: <DeploymentIcon />, path: '/deployments', color: '#6366F1' },
+      { label: 'Pods', icon: <PodIcon />, path: '/pods', color: '#8B5CF6' },
+      { label: 'Jobs', icon: <WorkIcon />, path: '/jobs', color: '#EC4899' },
+      { label: 'CronJobs', icon: <ScheduleIcon />, path: '/cronjobs', color: '#A855F7' },
+    ],
+  },
+  {
+    label: 'Network',
+    items: [
+      { label: 'Services', icon: <CloudIcon />, path: '/services', color: '#3B82F6' },
+      { label: 'Ingress', icon: <HttpIcon />, path: '/ingress', color: '#0EA5E9' },
+    ],
+  },
+  {
+    label: 'Config & Storage',
+    items: [
+      { label: 'ConfigMaps', icon: <ConfigIcon />, path: '/configmaps', color: '#10B981' },
+      { label: 'Secrets', icon: <SecretIcon />, path: '/secrets', color: '#F43F5E' },
+      { label: 'Persistent Volumes', icon: <PvIcon />, path: '/pv', color: '#F59E0B' },
+    ],
+  },
+  {
+    label: 'Cluster',
+    items: [
+      { label: 'Nodes', icon: <NodeIcon />, path: '/nodes', color: '#06B6D4' },
+      { label: 'HPA', icon: <HpaIcon />, path: '/hpa', color: '#64748B' },
+      { label: 'Events', icon: <EventIcon />, path: '/events', color: '#06B6D4' },
+    ],
+  },
 ]
+
+function isNavGroup(item: NavItem | NavGroup): item is NavGroup {
+  return 'items' in item
+}
 
 export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter() as AppRouterInstance
   const [collapsed, setCollapsed] = useState(false)
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
+    Workloads: true,
+    Network: true,
+    'Config & Storage': true,
+    Cluster: true,
+  })
 
   const handleNavigate = (path: string) => {
     router.push(path)
@@ -76,6 +114,101 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed)
+  }
+
+  const toggleGroup = (groupLabel: string) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [groupLabel]: !prev[groupLabel],
+    }))
+  }
+
+  const renderNavItem = (item: NavItem, isSubItem = false) => {
+    const isActive = pathname === item.path
+
+    if (collapsed) {
+      return (
+        <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+          <Tooltip title={item.label} placement="right">
+            <ListItemButton
+              selected={isActive}
+              onClick={() => handleNavigate(item.path)}
+              sx={{
+                borderRadius: 2,
+                minHeight: 48,
+                justifyContent: 'center',
+                px: 2,
+                transition: 'all 0.2s ease-in-out',
+                '&.Mui-selected': {
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                  },
+                },
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  color: isActive ? 'white' : 'text.secondary',
+                  transition: 'color 0.2s ease-in-out',
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+            </ListItemButton>
+          </Tooltip>
+        </ListItem>
+      )
+    }
+
+    return (
+      <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+        <ListItemButton
+          selected={isActive}
+          onClick={() => handleNavigate(item.path)}
+          sx={{
+            borderRadius: 2,
+            pl: isSubItem ? 4 : 2,
+            transition: 'all 0.2s ease-in-out',
+            '&.Mui-selected': {
+              bgcolor: 'primary.main',
+              color: 'white',
+              '&:hover': {
+                bgcolor: 'primary.dark',
+              },
+              '& .MuiListItemIcon-root': {
+                color: 'white',
+              },
+            },
+            '&:hover': {
+              bgcolor: 'action.hover',
+            },
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 40,
+              color: isActive ? 'white' : 'text.secondary',
+              transition: 'color 0.2s ease-in-out',
+            }}
+          >
+            {item.icon}
+          </ListItemIcon>
+          <ListItemText
+            primary={item.label}
+            primaryTypographyProps={{
+              fontSize: '0.875rem',
+              fontWeight: isActive ? 600 : 500,
+            }}
+          />
+        </ListItemButton>
+      </ListItem>
+    )
   }
 
   return (
@@ -98,91 +231,56 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
       <Toolbar />
 
       <List sx={{ px: 1, py: 1, flex: 1 }}>
-        {navItems.map((item) => {
-          const isActive = pathname === item.path
+        {navGroups.map((item) => {
+          if (isNavGroup(item)) {
+            // Render group header
+            const isExpanded = expandedGroups[item.label]
 
-          if (collapsed) {
+            if (collapsed) {
+              // In collapsed mode, show all items from groups without headers
+              return item.items.map((subItem) => renderNavItem(subItem, false))
+            }
+
             return (
-              <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
-                <Tooltip title={item.label} placement="right">
-                  <ListItemButton
-                    selected={isActive}
-                    onClick={() => handleNavigate(item.path)}
-                    sx={{
-                      borderRadius: 2,
-                      minHeight: 48,
-                      justifyContent: 'center',
-                      px: 2,
-                      transition: 'all 0.2s ease-in-out',
-                      '&.Mui-selected': {
-                        bgcolor: 'primary.main',
-                        color: 'white',
-                        '&:hover': {
-                          bgcolor: 'primary.dark',
-                        },
-                      },
-                      '&:hover': {
-                        bgcolor: 'action.hover',
-                      },
+              <Box key={item.label}>
+                <ListItemButton
+                  onClick={() => toggleGroup(item.label)}
+                  sx={{
+                    borderRadius: 2,
+                    mb: 0.5,
+                    py: 1,
+                    '&:hover': {
+                      bgcolor: 'action.hover',
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary={item.label}
+                    primaryTypographyProps={{
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      color: 'text.secondary',
+                      letterSpacing: 0.5,
                     }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        color: isActive ? 'white' : 'text.secondary',
-                        transition: 'color 0.2s ease-in-out',
-                      }}
-                    >
-                      {item.icon}
-                    </ListItemIcon>
-                  </ListItemButton>
-                </Tooltip>
-              </ListItem>
+                  />
+                  {isExpanded ? (
+                    <ExpandLessIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                  ) : (
+                    <ExpandMoreIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                  )}
+                </ListItemButton>
+                <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {item.items.map((subItem) => renderNavItem(subItem, true))}
+                  </List>
+                </Collapse>
+              </Box>
             )
           }
 
-          return (
-            <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton
-                selected={isActive}
-                onClick={() => handleNavigate(item.path)}
-                sx={{
-                  borderRadius: 2,
-                  transition: 'all 0.2s ease-in-out',
-                  '&.Mui-selected': {
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                    '&:hover': {
-                      bgcolor: 'primary.dark',
-                    },
-                    '& .MuiListItemIcon-root': {
-                      color: 'white',
-                    },
-                  },
-                  '&:hover': {
-                    bgcolor: 'action.hover',
-                  },
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 40,
-                    color: isActive ? 'white' : 'text.secondary',
-                    transition: 'color 0.2s ease-in-out',
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{
-                    fontSize: '0.875rem',
-                    fontWeight: isActive ? 600 : 500,
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
-          )
+          // Render single item (like Dashboard)
+          return renderNavItem(item, false)
         })}
       </List>
 
