@@ -34,7 +34,7 @@ export function Header({ onMenuClick: _onMenuClick }: HeaderProps) {
         <Box sx={{ flexGrow: 1 }} />
 
         {/* Search bar in the center */}
-        <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+        <Box sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', zIndex: 1, pointerEvents: 'auto' }}>
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
