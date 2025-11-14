@@ -128,7 +128,11 @@ export default function ConfigMapDetailPage() {
     <Box>
       <PageHeader
         title={configMap.name}
-        subtitle={`ConfigMap in ${configMap.namespace} namespace • Age: ${configMap.age} • Keys: ${Object.keys(configMap.data).length}`}
+        metadata={[
+          `Namespace: ${configMap.namespace}`,
+          `Age: ${configMap.age}`,
+          `Keys: ${Object.keys(configMap.data).length}`,
+        ]}
         breadcrumbs={[
           { label: 'ConfigMaps', href: '/configmaps' },
           { label: configMap.name },

@@ -201,7 +201,11 @@ export default function SecretDetailPage({
     <Box>
       <PageHeader
         title={secret.name}
-        subtitle={`Secret in ${secret.namespace} namespace • Type: ${secret.type} • Age: ${secret.age}`}
+        metadata={[
+          `Namespace: ${secret.namespace}`,
+          `Type: ${secret.type}`,
+          `Age: ${secret.age}`,
+        ]}
         breadcrumbs={[
           { label: 'Secrets', href: '/secrets' },
           { label: secret.name },

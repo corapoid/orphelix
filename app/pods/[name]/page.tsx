@@ -25,6 +25,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { usePod, usePodLogs } from '@/lib/hooks/use-pods'
@@ -132,7 +133,30 @@ export default function PodDetailPage() {
             <StatusBadge status={pod.status} size="medium" />
           </Box>
         }
-        subtitle={`Pod in ${pod.namespace} namespace • Node: ${pod.nodeName} • Age: ${pod.age}`}
+        metadata={[
+          `Namespace: ${pod.namespace}`,
+          <Typography key="node" variant="body2" color="text.secondary">
+            Node: <Link
+              href={`/nodes/${encodeURIComponent(pod.nodeName)}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Typography
+                component="span"
+                variant="body2"
+                sx={{
+                  color: 'primary.main',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                  cursor: 'pointer',
+                }}
+              >
+                {pod.nodeName}
+              </Typography>
+            </Link>
+          </Typography>,
+          `Age: ${pod.age}`,
+        ]}
         breadcrumbs={[
           { label: 'Pods', href: '/pods' },
           { label: pod.name },

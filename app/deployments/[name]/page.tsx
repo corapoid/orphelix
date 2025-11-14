@@ -141,7 +141,10 @@ export default function DeploymentDetailPage() {
             <StatusBadge status={deployment.status} size="medium" />
           </Box>
         }
-        subtitle={`Deployment in ${deployment.namespace} namespace • Age: ${deployment.age}`}
+        metadata={[
+          `Namespace: ${deployment.namespace}`,
+          `Age: ${deployment.age}`,
+        ]}
         breadcrumbs={[
           { label: 'Deployments', href: '/deployments' },
           { label: deployment.name },

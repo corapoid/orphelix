@@ -95,7 +95,10 @@ export default function NodeDetailPage() {
             <StatusBadge status={node.status} size="medium" />
           </Box>
         }
-        subtitle={`Node • Version: ${node.version} • Age: ${formatAge(node.age)}`}
+        metadata={[
+          `Version: ${node.version}`,
+          `Age: ${formatAge(node.age)}`,
+        ]}
         breadcrumbs={[
           { label: 'Nodes', href: '/nodes' },
           { label: node.name },

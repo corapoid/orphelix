@@ -16,6 +16,7 @@ interface BreadcrumbItem {
 interface PageHeaderProps {
   title: string | React.ReactNode
   subtitle?: string
+  metadata?: (string | React.ReactNode)[]  // Array of metadata items to display vertically
   breadcrumbs?: BreadcrumbItem[]
   onRefresh?: () => unknown
   isRefreshing?: boolean
@@ -39,6 +40,7 @@ interface PageHeaderProps {
 export function PageHeader({
   title,
   subtitle,
+  metadata,
   breadcrumbs,
   onRefresh,
   isRefreshing = false,
@@ -53,60 +55,64 @@ export function PageHeader({
 
   return (
     <Box sx={{ mb: 4 }}>
-      {/* Breadcrumbs */}
+      {/* Breadcrumbs with refresh button */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <Breadcrumbs
-          separator={<NavigateNextIcon fontSize="small" />}
-          sx={{ mb: 2 }}
-        >
-          {breadcrumbs.map((crumb, index) => {
-            const isLast = index === breadcrumbs.length - 1
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Breadcrumbs
+            separator={<NavigateNextIcon fontSize="small" />}
+          >
+            {breadcrumbs.map((crumb, index) => {
+              const isLast = index === breadcrumbs.length - 1
 
-            if (isLast || !crumb.href) {
+              if (isLast || !crumb.href) {
+                return (
+                  <Typography
+                    key={crumb.label}
+                    color="text.primary"
+                    sx={{ fontSize: '0.875rem', fontWeight: 500 }}
+                  >
+                    {crumb.label}
+                  </Typography>
+                )
+              }
+
               return (
-                <Typography
+                <Link
                   key={crumb.label}
-                  color="text.primary"
-                  sx={{ fontSize: '0.875rem', fontWeight: 500 }}
+                  component="button"
+                  onClick={() => handleBreadcrumbClick(crumb.href!)}
+                  sx={{
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    color: 'text.secondary',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      color: 'primary.main',
+                      textDecoration: 'underline',
+                    },
+                  }}
                 >
                   {crumb.label}
-                </Typography>
+                </Link>
               )
-            }
-
-            return (
-              <Link
-                key={crumb.label}
-                component="button"
-                onClick={() => handleBreadcrumbClick(crumb.href!)}
-                sx={{
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                  color: 'text.secondary',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    color: 'primary.main',
-                    textDecoration: 'underline',
-                  },
-                }}
-              >
-                {crumb.label}
-              </Link>
-            )
-          })}
-        </Breadcrumbs>
+            })}
+          </Breadcrumbs>
+          {onRefresh && (
+            <RefreshButton onRefresh={onRefresh} isLoading={isRefreshing} />
+          )}
+        </Box>
       )}
 
       {/* Header with title, filters, and actions on the right */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <Box>
           {typeof title === 'string' ? (
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: subtitle ? 0.5 : 0 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: subtitle || metadata ? 0.5 : 0 }}>
               {title}
             </Typography>
           ) : (
-            <Box sx={{ mb: subtitle ? 0.5 : 0 }}>
+            <Box sx={{ mb: subtitle || metadata ? 0.5 : 0 }}>
               <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
                 {title}
               </Typography>
@@ -117,15 +123,26 @@ export function PageHeader({
               {subtitle}
             </Typography>
           )}
+          {metadata && metadata.length > 0 && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mt: 1 }}>
+              {metadata.map((item, index) => (
+                typeof item === 'string' ? (
+                  <Typography key={index} variant="body2" color="text.secondary">
+                    {item}
+                  </Typography>
+                ) : (
+                  <Box key={index}>
+                    {item}
+                  </Box>
+                )
+              ))}
+            </Box>
+          )}
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {/* Filters on the right, same line as refresh */}
+          {/* Filters on the right */}
           {filters}
-
-          {onRefresh && (
-            <RefreshButton onRefresh={onRefresh} isLoading={isRefreshing} />
-          )}
           {actions}
         </Box>
       </Box>
