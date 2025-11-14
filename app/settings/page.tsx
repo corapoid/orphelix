@@ -59,6 +59,7 @@ export default function SettingsPage() {
   const [error, setError] = useState<string | null>(null)
   const [testingConnection, setTestingConnection] = useState(false)
   const [connectionError, setConnectionError] = useState<string | null>(null)
+  const [namespaceError, setNamespaceError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState(0)
 
   const fetchContexts = async () => {
@@ -307,7 +308,16 @@ export default function SettingsPage() {
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                   Namespace
                 </Typography>
-                <NamespaceSelector fullWidth />
+                {namespaceError && (
+                  <Alert severity="warning" sx={{ mb: 2 }}>
+                    <AlertTitle>Cannot Load Namespaces</AlertTitle>
+                    {namespaceError}
+                    <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                      You can still type a namespace name manually below.
+                    </Typography>
+                  </Alert>
+                )}
+                <NamespaceSelector fullWidth onError={setNamespaceError} />
                 <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
                   Current: {selectedNamespace || 'All namespaces'}
                 </Typography>

@@ -16,9 +16,10 @@ interface Namespace {
 
 interface NamespaceSelectorProps {
   fullWidth?: boolean
+  onError?: (error: string) => void
 }
 
-export function NamespaceSelector({ fullWidth = false }: NamespaceSelectorProps) {
+export function NamespaceSelector({ fullWidth = false, onError }: NamespaceSelectorProps) {
   const { mode, selectedNamespace, setNamespace } = useModeStore()
   const [namespaces, setNamespaces] = useState<Namespace[]>([])
   const [loading, setLoading] = useState(false)
@@ -38,10 +39,21 @@ export function NamespaceSelector({ fullWidth = false }: NamespaceSelectorProps)
     setLoading(true)
     try {
       const response = await fetch('/api/namespaces')
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to fetch namespaces')
+      }
       const data = await response.json()
-      setNamespaces(data.namespaces || [])
+      setNamespaces(data || [])
+      if (onError && data.length === 0) {
+        onError('No namespaces found in the cluster')
+      }
     } catch (error) {
       console.error('Failed to fetch namespaces:', error)
+      const errorMsg = error instanceof Error ? error.message : 'Failed to fetch namespaces'
+      if (onError) {
+        onError(errorMsg)
+      }
       setNamespaces([])
     } finally {
       setLoading(false)

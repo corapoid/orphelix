@@ -5,6 +5,8 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -37,8 +39,8 @@ export default function NamespaceDetailPage() {
   }, [name, setNamespace])
 
   const { data: namespace, isLoading, error, refetch } = useNamespace(name)
-  const { data: quotas } = useResourceQuotas()
-  const { data: limitRanges } = useLimitRanges()
+  const { data: quotas, error: quotasError } = useResourceQuotas()
+  const { data: limitRanges, error: limitRangesError } = useLimitRanges()
 
   useAutoRefresh(refetch)
 
@@ -152,7 +154,16 @@ export default function NamespaceDetailPage() {
         </Grid>
 
         {/* Resource Quotas */}
-        {quotas && quotas.length > 0 && (
+        {quotasError ? (
+          <Grid item xs={12}>
+            <Alert severity="warning">
+              <AlertTitle>Cannot Load Resource Quotas</AlertTitle>
+              {quotasError instanceof Error && quotasError.message.includes('403')
+                ? 'You do not have permission to view resource quotas in this namespace.'
+                : 'Failed to load resource quotas. Check your cluster connection and permissions.'}
+            </Alert>
+          </Grid>
+        ) : quotas && quotas.length > 0 ? (
           <Grid item xs={12}>
             <Grid container spacing={2}>
               {quotas.map((quota) => (
@@ -162,10 +173,19 @@ export default function NamespaceDetailPage() {
               ))}
             </Grid>
           </Grid>
-        )}
+        ) : null}
 
         {/* Limit Ranges */}
-        {limitRanges && limitRanges.length > 0 && (
+        {limitRangesError ? (
+          <Grid item xs={12}>
+            <Alert severity="warning">
+              <AlertTitle>Cannot Load Limit Ranges</AlertTitle>
+              {limitRangesError instanceof Error && limitRangesError.message.includes('403')
+                ? 'You do not have permission to view limit ranges in this namespace.'
+                : 'Failed to load limit ranges. Check your cluster connection and permissions.'}
+            </Alert>
+          </Grid>
+        ) : limitRanges && limitRanges.length > 0 ? (
           <Grid item xs={12}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
@@ -236,7 +256,7 @@ export default function NamespaceDetailPage() {
               ))}
             </Paper>
           </Grid>
-        )}
+        ) : null}
 
         {/* Annotations */}
         {Object.keys(namespace.annotations).length > 0 && (
