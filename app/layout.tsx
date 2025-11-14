@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const closeSidebar = () => setSidebarOpen(false)
 
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" style={{ colorScheme: 'dark' }}>
       <head>
         <script
           dangerouslySetInnerHTML={{
