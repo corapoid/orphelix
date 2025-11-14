@@ -12,6 +12,9 @@ import type {
   PodStatus,
   DeploymentStatus,
   NodeStatus,
+  Service,
+  ServiceType,
+  Ingress,
 } from '@/types/kubernetes'
 
 /**
@@ -28,6 +31,8 @@ let cachedHPAs: HPA[] | null = null
 let cachedPVs: PersistentVolume[] | null = null
 let cachedPVCs: PersistentVolumeClaim[] | null = null
 let cachedEvents: Event[] | null = null
+let cachedServices: Service[] | null = null
+let cachedIngresses: Ingress[] | null = null
 
 // Helper to generate random date in the past
 function randomDate(daysAgo: number): Date {
@@ -417,6 +422,254 @@ export function generateMockEvents(): Event[] {
 }
 
 /**
+ * Generates mock Services
+ */
+export function generateMockServices(): Service[] {
+  if (cachedServices) return cachedServices
+
+  const services: Service[] = [
+    {
+      name: 'frontend-service',
+      namespace: 'demo',
+      type: 'LoadBalancer',
+      clusterIP: '10.100.15.42',
+      externalIPs: ['52.29.145.78'],
+      ports: [
+        { protocol: 'TCP', port: 80, targetPort: 8080 },
+        { protocol: 'TCP', port: 443, targetPort: 8443 },
+      ],
+      selector: { app: 'frontend', tier: 'web' },
+      age: '15d',
+      labels: { app: 'frontend', environment: 'production', version: 'v2.1.0' },
+    },
+    {
+      name: 'backend-api-service',
+      namespace: 'demo',
+      type: 'ClusterIP',
+      clusterIP: '10.100.23.15',
+      ports: [
+        { name: 'http', protocol: 'TCP', port: 8080, targetPort: 8080 },
+        { name: 'metrics', protocol: 'TCP', port: 9090, targetPort: 9090 },
+      ],
+      selector: { app: 'backend-api', tier: 'backend' },
+      age: '12d',
+      labels: { app: 'backend-api', environment: 'production', version: 'v1.8.3' },
+    },
+    {
+      name: 'database-service',
+      namespace: 'demo',
+      type: 'ClusterIP',
+      clusterIP: '10.100.45.200',
+      ports: [
+        { name: 'postgres', protocol: 'TCP', port: 5432, targetPort: 5432 },
+      ],
+      selector: { app: 'database', tier: 'data' },
+      age: '30d',
+      labels: { app: 'database', environment: 'production', version: 'v14.5' },
+    },
+    {
+      name: 'redis-cache',
+      namespace: 'demo',
+      type: 'ClusterIP',
+      clusterIP: '10.100.67.89',
+      ports: [
+        { name: 'redis', protocol: 'TCP', port: 6379, targetPort: 6379 },
+      ],
+      selector: { app: 'redis', tier: 'cache' },
+      age: '22d',
+      labels: { app: 'redis', environment: 'production' },
+    },
+    {
+      name: 'admin-panel',
+      namespace: 'demo',
+      type: 'NodePort',
+      clusterIP: '10.100.89.123',
+      ports: [
+        { name: 'http', protocol: 'TCP', port: 80, targetPort: 3000, nodePort: 30080 },
+      ],
+      selector: { app: 'admin', tier: 'web' },
+      age: '8d',
+      labels: { app: 'admin', environment: 'production' },
+    },
+    {
+      name: 'monitoring-service',
+      namespace: 'demo',
+      type: 'ClusterIP',
+      clusterIP: '10.100.112.45',
+      ports: [
+        { name: 'prometheus', protocol: 'TCP', port: 9090, targetPort: 9090 },
+        { name: 'grafana', protocol: 'TCP', port: 3000, targetPort: 3000 },
+      ],
+      selector: { app: 'monitoring' },
+      age: '45d',
+      labels: { app: 'monitoring', component: 'observability' },
+    },
+    {
+      name: 'message-queue',
+      namespace: 'demo',
+      type: 'ClusterIP',
+      clusterIP: '10.100.134.67',
+      ports: [
+        { name: 'amqp', protocol: 'TCP', port: 5672, targetPort: 5672 },
+        { name: 'management', protocol: 'TCP', port: 15672, targetPort: 15672 },
+      ],
+      selector: { app: 'rabbitmq', tier: 'messaging' },
+      age: '18d',
+      labels: { app: 'rabbitmq', environment: 'production' },
+    },
+    {
+      name: 'external-api',
+      namespace: 'demo',
+      type: 'ExternalName',
+      clusterIP: '',
+      externalIPs: ['api.external-service.com'],
+      ports: [],
+      selector: {},
+      age: '60d',
+      labels: { type: 'external' },
+    },
+  ]
+
+  cachedServices = services
+  return services
+}
+
+/**
+ * Generates mock Ingress resources
+ */
+export function generateMockIngresses(): Ingress[] {
+  if (cachedIngresses) return cachedIngresses
+
+  const ingresses: Ingress[] = [
+    {
+      name: 'frontend-ingress',
+      namespace: 'demo',
+      className: 'nginx',
+      hosts: ['app.example.com', 'www.example.com'],
+      rules: [
+        {
+          host: 'app.example.com',
+          paths: [
+            {
+              path: '/',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: 'frontend-service',
+                  port: { number: 80 },
+                },
+              },
+            },
+            {
+              path: '/api',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: 'backend-api-service',
+                  port: { number: 8080 },
+                },
+              },
+            },
+          ],
+        },
+        {
+          host: 'www.example.com',
+          paths: [
+            {
+              path: '/',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: 'frontend-service',
+                  port: { number: 80 },
+                },
+              },
+            },
+          ],
+        },
+      ],
+      tls: [
+        {
+          hosts: ['app.example.com', 'www.example.com'],
+          secretName: 'example-com-tls',
+        },
+      ],
+      age: '15d',
+      labels: { app: 'frontend', environment: 'production' },
+    },
+    {
+      name: 'admin-ingress',
+      namespace: 'demo',
+      className: 'nginx',
+      hosts: ['admin.example.com'],
+      rules: [
+        {
+          host: 'admin.example.com',
+          paths: [
+            {
+              path: '/',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: 'admin-panel',
+                  port: { number: 80 },
+                },
+              },
+            },
+          ],
+        },
+      ],
+      tls: [
+        {
+          hosts: ['admin.example.com'],
+          secretName: 'admin-tls',
+        },
+      ],
+      age: '8d',
+      labels: { app: 'admin', environment: 'production' },
+    },
+    {
+      name: 'monitoring-ingress',
+      namespace: 'demo',
+      className: 'nginx',
+      hosts: ['monitoring.example.com'],
+      rules: [
+        {
+          host: 'monitoring.example.com',
+          paths: [
+            {
+              path: '/prometheus',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: 'monitoring-service',
+                  port: { number: 9090 },
+                },
+              },
+            },
+            {
+              path: '/grafana',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: 'monitoring-service',
+                  port: { number: 3000 },
+                },
+              },
+            },
+          ],
+        },
+      ],
+      age: '45d',
+      labels: { app: 'monitoring', component: 'observability' },
+    },
+  ]
+
+  cachedIngresses = ingresses
+  return ingresses
+}
+
+/**
  * Generates dashboard summary from mock data
  */
 export function generateMockDashboardSummary(): DashboardSummary {
@@ -424,6 +677,8 @@ export function generateMockDashboardSummary(): DashboardSummary {
   const pods = generateMockPods()
   const nodes = generateMockNodes()
   const pvs = generateMockPVs()
+  const services = generateMockServices()
+  const ingresses = generateMockIngresses()
 
   return {
     deployments: {
@@ -449,8 +704,8 @@ export function generateMockDashboardSummary(): DashboardSummary {
       total: pvs.length,
       bound: pvs.filter((pv) => pv.status === 'Bound').length,
     },
-    services: 8,
-    ingress: 3,
+    services: services.length,
+    ingress: ingresses.length,
   }
 }
 

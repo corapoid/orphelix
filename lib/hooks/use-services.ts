@@ -1,13 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/core/store'
+import { generateMockServices } from '@/lib/mocks/data'
 import type { Service } from '@/types/kubernetes'
 
 export function useServices() {
+  const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Service[]>({
-    queryKey: ['services', namespace],
+    queryKey: ['services', mode, namespace],
     queryFn: async () => {
+      if (mode === 'mock') {
+        await new Promise((resolve) => setTimeout(resolve, 300))
+        return generateMockServices()
+      }
+
       const response = await fetch(`/api/services?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) {
         const error = await response.json()
@@ -15,16 +22,25 @@ export function useServices() {
       }
       return response.json()
     },
-    enabled: !!namespace,
+    enabled: mode === 'mock' || !!namespace,
   })
 }
 
 export function useService(name: string) {
+  const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
 
   return useQuery<Service>({
-    queryKey: ['services', namespace, name],
+    queryKey: ['services', mode, namespace, name],
     queryFn: async () => {
+      if (mode === 'mock') {
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        const services = generateMockServices()
+        const service = services.find((s) => s.name === name)
+        if (!service) throw new Error('Service not found')
+        return service
+      }
+
       const response = await fetch(`/api/services/${name}?namespace=${encodeURIComponent(namespace)}`)
       if (!response.ok) {
         const error = await response.json()
@@ -32,6 +48,6 @@ export function useService(name: string) {
       }
       return response.json()
     },
-    enabled: !!namespace && !!name,
+    enabled: (mode === 'mock' || !!namespace) && !!name,
   })
 }
