@@ -18,6 +18,9 @@ import type {
   Job,
   JobStatus,
   CronJob,
+  Namespace,
+  ResourceQuota,
+  LimitRange,
 } from '@/types/kubernetes'
 
 /**
@@ -38,6 +41,9 @@ let cachedServices: Service[] | null = null
 let cachedIngresses: Ingress[] | null = null
 let cachedJobs: Job[] | null = null
 let cachedCronJobs: CronJob[] | null = null
+let cachedNamespaces: Namespace[] | null = null
+let cachedResourceQuotas: ResourceQuota[] | null = null
+let cachedLimitRanges: LimitRange[] | null = null
 
 // Helper to generate random date in the past
 function randomDate(daysAgo: number): Date {
@@ -963,4 +969,237 @@ export function generateMockPodMetrics(deploymentName: string, namespace: string
     requirements,
     timestamp: new Date().toISOString(),
   }
+}
+
+/**
+ * Generate mock Namespaces
+ */
+export function generateMockNamespaces(): Namespace[] {
+  if (cachedNamespaces) return cachedNamespaces
+
+  const namespaces: Namespace[] = [
+    {
+      name: 'default',
+      status: 'Active',
+      age: '120d',
+      labels: {},
+      annotations: {},
+    },
+    {
+      name: 'kube-system',
+      status: 'Active',
+      age: '120d',
+      labels: {
+        'kubernetes.io/metadata.name': 'kube-system',
+      },
+      annotations: {},
+    },
+    {
+      name: 'production',
+      status: 'Active',
+      age: '90d',
+      labels: {
+        environment: 'production',
+        team: 'platform',
+      },
+      annotations: {
+        'description': 'Production workloads',
+      },
+    },
+    {
+      name: 'staging',
+      status: 'Active',
+      age: '90d',
+      labels: {
+        environment: 'staging',
+        team: 'platform',
+      },
+      annotations: {
+        'description': 'Staging environment for testing',
+      },
+    },
+    {
+      name: 'development',
+      status: 'Active',
+      age: '60d',
+      labels: {
+        environment: 'development',
+        team: 'engineering',
+      },
+      annotations: {
+        'description': 'Development workloads',
+      },
+    },
+  ]
+
+  cachedNamespaces = namespaces
+  return namespaces
+}
+
+/**
+ * Generate mock ResourceQuotas
+ */
+export function generateMockResourceQuotas(): ResourceQuota[] {
+  if (cachedResourceQuotas) return cachedResourceQuotas
+
+  const quotas: ResourceQuota[] = [
+    {
+      name: 'production-quota',
+      namespace: 'production',
+      age: '90d',
+      hard: {
+        'requests.cpu': '100',
+        'requests.memory': '200Gi',
+        'limits.cpu': '200',
+        'limits.memory': '400Gi',
+        'persistentvolumeclaims': '50',
+        'pods': '100',
+      },
+      used: {
+        'requests.cpu': '75',
+        'requests.memory': '150Gi',
+        'limits.cpu': '150',
+        'limits.memory': '300Gi',
+        'persistentvolumeclaims': '32',
+        'pods': '67',
+      },
+      labels: {
+        environment: 'production',
+      },
+    },
+    {
+      name: 'staging-quota',
+      namespace: 'staging',
+      age: '90d',
+      hard: {
+        'requests.cpu': '50',
+        'requests.memory': '100Gi',
+        'limits.cpu': '100',
+        'limits.memory': '200Gi',
+        'pods': '50',
+      },
+      used: {
+        'requests.cpu': '25',
+        'requests.memory': '45Gi',
+        'limits.cpu': '50',
+        'limits.memory': '90Gi',
+        'pods': '28',
+      },
+      labels: {
+        environment: 'staging',
+      },
+    },
+    {
+      name: 'dev-quota',
+      namespace: 'development',
+      age: '60d',
+      hard: {
+        'requests.cpu': '30',
+        'requests.memory': '60Gi',
+        'limits.cpu': '60',
+        'limits.memory': '120Gi',
+        'pods': '30',
+      },
+      used: {
+        'requests.cpu': '12',
+        'requests.memory': '24Gi',
+        'limits.cpu': '24',
+        'limits.memory': '48Gi',
+        'pods': '15',
+      },
+      labels: {
+        environment: 'development',
+      },
+    },
+  ]
+
+  cachedResourceQuotas = quotas
+  return quotas
+}
+
+/**
+ * Generate mock LimitRanges
+ */
+export function generateMockLimitRanges(): LimitRange[] {
+  if (cachedLimitRanges) return cachedLimitRanges
+
+  const limitRanges: LimitRange[] = [
+    {
+      name: 'production-limits',
+      namespace: 'production',
+      age: '90d',
+      limits: [
+        {
+          type: 'Pod',
+          max: {
+            cpu: '4',
+            memory: '16Gi',
+          },
+          min: {
+            cpu: '100m',
+            memory: '128Mi',
+          },
+        },
+        {
+          type: 'Container',
+          max: {
+            cpu: '2',
+            memory: '8Gi',
+          },
+          min: {
+            cpu: '50m',
+            memory: '64Mi',
+          },
+          default: {
+            cpu: '500m',
+            memory: '512Mi',
+          },
+          defaultRequest: {
+            cpu: '100m',
+            memory: '128Mi',
+          },
+        },
+        {
+          type: 'PersistentVolumeClaim',
+          max: {
+            storage: '100Gi',
+          },
+          min: {
+            storage: '1Gi',
+          },
+        },
+      ],
+      labels: {
+        environment: 'production',
+      },
+    },
+    {
+      name: 'dev-limits',
+      namespace: 'development',
+      age: '60d',
+      limits: [
+        {
+          type: 'Container',
+          max: {
+            cpu: '1',
+            memory: '2Gi',
+          },
+          default: {
+            cpu: '200m',
+            memory: '256Mi',
+          },
+          defaultRequest: {
+            cpu: '100m',
+            memory: '128Mi',
+          },
+        },
+      ],
+      labels: {
+        environment: 'development',
+      },
+    },
+  ]
+
+  cachedLimitRanges = limitRanges
+  return limitRanges
 }
