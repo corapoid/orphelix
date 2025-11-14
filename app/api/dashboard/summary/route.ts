@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
-import { fetchDeployments, fetchPods, fetchNodes, fetchConfigMaps, fetchSecrets, fetchHPAs, fetchPVs } from '@/lib/k8s/api'
+import { fetchDeployments, fetchPods, fetchNodes, fetchConfigMaps, fetchSecrets, fetchHPAs, fetchPVs, fetchServices, fetchIngresses } from '@/lib/k8s/api'
 import type { DashboardSummary } from '@/types/kubernetes'
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch data in parallel
-    const [deployments, pods, nodes, configMaps, secrets, hpas, pvs] = await Promise.all([
+    const [deployments, pods, nodes, configMaps, secrets, hpas, pvs, services, ingresses] = await Promise.all([
       fetchDeployments(namespace),
       fetchPods(namespace),
       fetchNodes(),
@@ -23,6 +23,8 @@ export async function GET(request: NextRequest) {
       fetchSecrets(namespace),
       fetchHPAs(namespace),
       fetchPVs(),
+      fetchServices(namespace),
+      fetchIngresses(namespace),
     ])
 
     // Calculate summary
@@ -59,6 +61,8 @@ export async function GET(request: NextRequest) {
         total: pvs.length,
         bound: pvs.filter((pv) => pv.status === 'Bound').length,
       },
+      services: services.length,
+      ingress: ingresses.length,
     }
 
     return NextResponse.json(summary)

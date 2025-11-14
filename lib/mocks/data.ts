@@ -449,6 +449,8 @@ export function generateMockDashboardSummary(): DashboardSummary {
       total: pvs.length,
       bound: pvs.filter((pv) => pv.status === 'Bound').length,
     },
+    services: 8,
+    ingress: 3,
   }
 }
 

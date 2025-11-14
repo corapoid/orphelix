@@ -15,6 +15,7 @@ let k8sAppsApi: k8s.AppsV1Api | null = null
 let k8sCoreApi: k8s.CoreV1Api | null = null
 let k8sAutoscalingApi: k8s.AutoscalingV2Api | null = null
 let k8sEventsApi: k8s.EventsV1Api | null = null
+let k8sNetworkingApi: k8s.NetworkingV1Api | null = null
 
 /**
  * Initialize Kubernetes client
@@ -53,6 +54,7 @@ export function initK8sClient(): void {
   k8sCoreApi = kc.makeApiClient(k8s.CoreV1Api)
   k8sAutoscalingApi = kc.makeApiClient(k8s.AutoscalingV2Api)
   k8sEventsApi = kc.makeApiClient(k8s.EventsV1Api)
+  k8sNetworkingApi = kc.makeApiClient(k8s.NetworkingV1Api)
 }
 
 /**
@@ -92,6 +94,15 @@ export function getEventsApi(): k8s.EventsV1Api {
 }
 
 /**
+ * Get Networking V1 API client (for Ingress)
+ */
+export function getNetworkingApi(): k8s.NetworkingV1Api {
+  // Always reinitialize for AWS EKS to refresh tokens
+  initK8sClient()
+  return k8sNetworkingApi!
+}
+
+/**
  * Get KubeConfig instance
  */
 export function getKubeConfig(): k8s.KubeConfig {
@@ -124,4 +135,5 @@ export function resetClient(): void {
   k8sCoreApi = null
   k8sAutoscalingApi = null
   k8sEventsApi = null
+  k8sNetworkingApi = null
 }

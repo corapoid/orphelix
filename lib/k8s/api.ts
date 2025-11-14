@@ -6,7 +6,7 @@
  */
 
 import * as k8s from '@kubernetes/client-node'
-import { getAppsApi, getCoreApi, getAutoscalingApi } from './client'
+import { getAppsApi, getCoreApi, getAutoscalingApi, getNetworkingApi } from './client'
 import type {
   Deployment,
   Pod,
@@ -22,6 +22,12 @@ import type {
   NodeStatus,
   PVStatus,
   PVCStatus,
+  Service,
+  ServicePort,
+  Ingress,
+  IngressRule,
+  IngressPath,
+  IngressTLS,
 } from '@/types/kubernetes'
 
 /**
@@ -828,14 +834,184 @@ export async function fetchSecretYaml(name: string, namespace: string): Promise<
   try {
     const coreApi = getCoreApi()
     const response = await coreApi.readNamespacedSecret({ name, namespace })
-    
+
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const yaml = require('js-yaml')
     const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
-    
+
     return yamlString
   } catch (error) {
     console.error('[API] Failed to fetch secret YAML:', error)
+    return null
+  }
+}
+
+/**
+ * Services API
+ */
+export async function fetchServices(namespace: string): Promise<Service[]> {
+  const coreApi = getCoreApi()
+  const response = await coreApi.listNamespacedService({ namespace })
+
+  return response.items.map((svc) => {
+    const ports: ServicePort[] = (svc.spec?.ports || []).map((port) => ({
+      name: port.name,
+      protocol: port.protocol || 'TCP',
+      port: port.port || 0,
+      targetPort: port.targetPort || 0,
+      nodePort: port.nodePort,
+    }))
+
+    return {
+      name: svc.metadata?.name || '',
+      namespace: svc.metadata?.namespace || namespace,
+      type: (svc.spec?.type as Service['type']) || 'ClusterIP',
+      clusterIP: svc.spec?.clusterIP || '',
+      externalIPs: svc.spec?.externalIPs,
+      ports,
+      selector: svc.spec?.selector || {},
+      age: calculateAge(svc.metadata?.creationTimestamp),
+      labels: svc.metadata?.labels || {},
+    }
+  })
+}
+
+export async function fetchService(name: string, namespace: string): Promise<Service | null> {
+  try {
+    const coreApi = getCoreApi()
+    const response = await coreApi.readNamespacedService({ name, namespace })
+    const svc = response
+
+    const ports: ServicePort[] = (svc.spec?.ports || []).map((port) => ({
+      name: port.name,
+      protocol: port.protocol || 'TCP',
+      port: port.port || 0,
+      targetPort: port.targetPort || 0,
+      nodePort: port.nodePort,
+    }))
+
+    return {
+      name: svc.metadata?.name || '',
+      namespace: svc.metadata?.namespace || namespace,
+      type: (svc.spec?.type as Service['type']) || 'ClusterIP',
+      clusterIP: svc.spec?.clusterIP || '',
+      externalIPs: svc.spec?.externalIPs,
+      ports,
+      selector: svc.spec?.selector || {},
+      age: calculateAge(svc.metadata?.creationTimestamp),
+      labels: svc.metadata?.labels || {},
+    }
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch service ${name}:`, error)
+    return null
+  }
+}
+
+/**
+ * Ingress API
+ */
+export async function fetchIngresses(namespace: string): Promise<Ingress[]> {
+  const networkingApi = getNetworkingApi()
+  const response = await networkingApi.listNamespacedIngress({ namespace })
+
+  return response.items.map((ing) => {
+    // Extract hosts from rules
+    const hosts: string[] = []
+    const rules: IngressRule[] = (ing.spec?.rules || []).map((rule) => {
+      if (rule.host) {
+        hosts.push(rule.host)
+      }
+
+      const paths: IngressPath[] = (rule.http?.paths || []).map((path) => ({
+        path: path.path || '/',
+        pathType: path.pathType || 'Prefix',
+        backend: {
+          service: {
+            name: path.backend?.service?.name || '',
+            port: {
+              number: path.backend?.service?.port?.number,
+              name: path.backend?.service?.port?.name,
+            },
+          },
+        },
+      }))
+
+      return {
+        host: rule.host,
+        paths,
+      }
+    })
+
+    // Extract TLS configuration
+    const tls: IngressTLS[] | undefined = ing.spec?.tls?.map((tlsConfig) => ({
+      hosts: tlsConfig.hosts || [],
+      secretName: tlsConfig.secretName,
+    }))
+
+    return {
+      name: ing.metadata?.name || '',
+      namespace: ing.metadata?.namespace || namespace,
+      className: ing.spec?.ingressClassName,
+      hosts,
+      rules,
+      tls,
+      age: calculateAge(ing.metadata?.creationTimestamp),
+      labels: ing.metadata?.labels || {},
+    }
+  })
+}
+
+export async function fetchIngress(name: string, namespace: string): Promise<Ingress | null> {
+  try {
+    const networkingApi = getNetworkingApi()
+    const response = await networkingApi.readNamespacedIngress({ name, namespace })
+    const ing = response
+
+    // Extract hosts from rules
+    const hosts: string[] = []
+    const rules: IngressRule[] = (ing.spec?.rules || []).map((rule) => {
+      if (rule.host) {
+        hosts.push(rule.host)
+      }
+
+      const paths: IngressPath[] = (rule.http?.paths || []).map((path) => ({
+        path: path.path || '/',
+        pathType: path.pathType || 'Prefix',
+        backend: {
+          service: {
+            name: path.backend?.service?.name || '',
+            port: {
+              number: path.backend?.service?.port?.number,
+              name: path.backend?.service?.port?.name,
+            },
+          },
+        },
+      }))
+
+      return {
+        host: rule.host,
+        paths,
+      }
+    })
+
+    // Extract TLS configuration
+    const tls: IngressTLS[] | undefined = ing.spec?.tls?.map((tlsConfig) => ({
+      hosts: tlsConfig.hosts || [],
+      secretName: tlsConfig.secretName,
+    }))
+
+    return {
+      name: ing.metadata?.name || '',
+      namespace: ing.metadata?.namespace || namespace,
+      className: ing.spec?.ingressClassName,
+      hosts,
+      rules,
+      tls,
+      age: calculateAge(ing.metadata?.creationTimestamp),
+      labels: ing.metadata?.labels || {},
+    }
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch ingress ${name}:`, error)
     return null
   }
 }

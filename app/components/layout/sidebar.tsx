@@ -22,6 +22,8 @@ import HpaIcon from '@mui/icons-material/TrendingUp'
 import PvIcon from '@mui/icons-material/FolderOpen'
 import EventIcon from '@mui/icons-material/EventNote'
 import SettingsIcon from '@mui/icons-material/SettingsOutlined'
+import CloudIcon from '@mui/icons-material/Cloud'
+import HttpIcon from '@mui/icons-material/Http'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -46,6 +48,8 @@ const navItems: NavItem[] = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/', color: '#6366F1' },
   { label: 'Deployments', icon: <DeploymentIcon />, path: '/deployments', color: '#6366F1' },
   { label: 'Pods', icon: <PodIcon />, path: '/pods', color: '#8B5CF6' },
+  { label: 'Services', icon: <CloudIcon />, path: '/services', color: '#3B82F6' },
+  { label: 'Ingress', icon: <HttpIcon />, path: '/ingress', color: '#0EA5E9' },
   { label: 'Nodes', icon: <NodeIcon />, path: '/nodes', color: '#06B6D4' },
   { label: 'ConfigMaps', icon: <ConfigIcon />, path: '/configmaps', color: '#10B981' },
   { label: 'Secrets', icon: <SecretIcon />, path: '/secrets', color: '#F43F5E' },

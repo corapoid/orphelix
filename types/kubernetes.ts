@@ -196,6 +196,8 @@ export interface DashboardSummary {
     total: number
     bound: number
   }
+  services: number
+  ingress: number
 }
 
 // Flux GitOps types
@@ -254,4 +256,65 @@ export interface HelmRelease {
   lastReconcileTime?: string
   age: string
   conditions: FluxCondition[]
+}
+
+// Service types
+
+export type ServiceType = 'ClusterIP' | 'NodePort' | 'LoadBalancer' | 'ExternalName'
+
+export interface ServicePort {
+  name?: string
+  protocol: string
+  port: number
+  targetPort: number | string
+  nodePort?: number
+}
+
+export interface Service {
+  name: string
+  namespace: string
+  type: ServiceType
+  clusterIP: string
+  externalIPs?: string[]
+  ports: ServicePort[]
+  selector: Record<string, string>
+  age: string
+  labels: Record<string, string>
+}
+
+// Ingress types
+
+export interface IngressRule {
+  host?: string
+  paths: IngressPath[]
+}
+
+export interface IngressPath {
+  path: string
+  pathType: string
+  backend: {
+    service: {
+      name: string
+      port: {
+        number?: number
+        name?: string
+      }
+    }
+  }
+}
+
+export interface IngressTLS {
+  hosts: string[]
+  secretName?: string
+}
+
+export interface Ingress {
+  name: string
+  namespace: string
+  className?: string
+  hosts: string[]
+  rules: IngressRule[]
+  tls?: IngressTLS[]
+  age: string
+  labels: Record<string, string>
 }
