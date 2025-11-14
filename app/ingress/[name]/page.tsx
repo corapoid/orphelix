@@ -11,22 +11,17 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
-import EditIcon from '@mui/icons-material/Edit'
 import LockIcon from '@mui/icons-material/Lock'
-import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useIngress } from '@/lib/hooks/use-ingress'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 
 export default function IngressDetailPage() {
   const params = useParams()
   const name = params.name as string
-  const [editorOpen, setEditorOpen] = useState(false)
 
   const { data: ingress, isLoading, error, refetch } = useIngress(name)
 
@@ -82,15 +77,6 @@ export default function IngressDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        actions={
-          <Button
-            variant="outlined"
-            startIcon={<EditIcon />}
-            onClick={() => setEditorOpen(true)}
-          >
-            Edit YAML
-          </Button>
-        }
       />
 
       <Grid container spacing={3}>
@@ -276,15 +262,6 @@ export default function IngressDetailPage() {
           </Grid>
         )}
       </Grid>
-
-      {/* YAML Editor Modal */}
-      <YamlEditorModal
-        open={editorOpen}
-        onClose={() => setEditorOpen(false)}
-        resourceType="Ingress"
-        resourceName={ingress.name}
-        namespace={ingress.namespace}
-      />
     </Box>
   )
 }

@@ -11,22 +11,17 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
-import EditIcon from '@mui/icons-material/Edit'
-import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useService } from '@/lib/hooks/use-services'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import type { ServiceType } from '@/types/kubernetes'
 
 export default function ServiceDetailPage() {
   const params = useParams()
   const name = params.name as string
-  const [editorOpen, setEditorOpen] = useState(false)
 
   const { data: service, isLoading, error, refetch } = useService(name)
 
@@ -94,15 +89,6 @@ export default function ServiceDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        actions={
-          <Button
-            variant="outlined"
-            startIcon={<EditIcon />}
-            onClick={() => setEditorOpen(true)}
-          >
-            Edit YAML
-          </Button>
-        }
       />
 
       <Grid container spacing={3}>
@@ -267,15 +253,6 @@ export default function ServiceDetailPage() {
           </Grid>
         )}
       </Grid>
-
-      {/* YAML Editor Modal */}
-      <YamlEditorModal
-        open={editorOpen}
-        onClose={() => setEditorOpen(false)}
-        resourceType="Service"
-        resourceName={service.name}
-        namespace={service.namespace}
-      />
     </Box>
   )
 }
