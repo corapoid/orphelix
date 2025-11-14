@@ -55,8 +55,12 @@ npm install
 # 3. Run development server
 npm run dev
 
+# Or run app + documentation together
+npm run dev:all
+
 # 4. Open browser
-# Navigate to http://localhost:3000
+# App: http://localhost:3000
+# Docs: http://localhost:3001 (if using dev:all)
 ```
 
 The application starts in **demo mode** by default. Click the "DEMO MODE" badge to connect to a real cluster.
