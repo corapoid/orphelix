@@ -22,8 +22,10 @@ let k8sBatchApi: k8s.BatchV1Api | null = null
  * Initialize Kubernetes client
  * Tries in-cluster config first, then falls back to kubeconfig file
  * IMPORTANT: For AWS EKS, we must reload config on every call to refresh tokens
+ *
+ * @param contextName - Optional context name to switch to. If not provided, uses current context.
  */
-export function initK8sClient(): void {
+export function initK8sClient(contextName?: string): void {
   // Reset client to force reload (needed for AWS EKS exec auth)
   kc = new k8s.KubeConfig()
 
@@ -32,6 +34,12 @@ export function initK8sClient(): void {
   try {
     // Load from kubeconfig file (~/.kube/config)
     kc.loadFromDefault()
+
+    // Switch to specified context if provided
+    if (contextName) {
+      kc.setCurrentContext(contextName)
+    }
+
     const currentContext = kc.getCurrentContext()
     const cluster = kc.getCurrentCluster()
     // eslint-disable-next-line no-console
@@ -39,11 +47,12 @@ export function initK8sClient(): void {
       context: currentContext,
       cluster: cluster?.name,
       server: cluster?.server,
+      requestedContext: contextName || 'default',
     })
 
     // Validate cluster configuration
     if (!cluster?.server) {
-      throw new Error('Cluster server URL is not configured in kubeconfig')
+      throw new Error(`Cluster server URL is not configured for context: ${contextName || currentContext}`)
     }
   } catch (error) {
     console.error('[K8s] Failed to load Kubernetes configuration:', error)
@@ -61,55 +70,61 @@ export function initK8sClient(): void {
 
 /**
  * Get Apps V1 API client (for Deployments, StatefulSets, DaemonSets)
+ * @param contextName - Optional context name to switch to
  */
-export function getAppsApi(): k8s.AppsV1Api {
+export function getAppsApi(contextName?: string): k8s.AppsV1Api {
   // Always reinitialize for AWS EKS to refresh tokens
-  initK8sClient()
+  initK8sClient(contextName)
   return k8sAppsApi!
 }
 
 /**
  * Get Core V1 API client (for Pods, Services, ConfigMaps, Secrets, Nodes, PVs, PVCs)
+ * @param contextName - Optional context name to switch to
  */
-export function getCoreApi(): k8s.CoreV1Api {
+export function getCoreApi(contextName?: string): k8s.CoreV1Api {
   // Always reinitialize for AWS EKS to refresh tokens
-  initK8sClient()
+  initK8sClient(contextName)
   return k8sCoreApi!
 }
 
 /**
  * Get Autoscaling V2 API client (for HPAs)
+ * @param contextName - Optional context name to switch to
  */
-export function getAutoscalingApi(): k8s.AutoscalingV2Api {
+export function getAutoscalingApi(contextName?: string): k8s.AutoscalingV2Api {
   // Always reinitialize for AWS EKS to refresh tokens
-  initK8sClient()
+  initK8sClient(contextName)
   return k8sAutoscalingApi!
 }
 
 /**
  * Get Events V1 API client
+ * @param contextName - Optional context name to switch to
  */
-export function getEventsApi(): k8s.EventsV1Api {
+export function getEventsApi(contextName?: string): k8s.EventsV1Api {
   // Always reinitialize for AWS EKS to refresh tokens
-  initK8sClient()
+  initK8sClient(contextName)
   return k8sEventsApi!
 }
 
 /**
  * Get Networking V1 API client (for Ingress)
+ * @param contextName - Optional context name to switch to
  */
-export function getNetworkingApi(): k8s.NetworkingV1Api {
+export function getNetworkingApi(contextName?: string): k8s.NetworkingV1Api {
   // Always reinitialize for AWS EKS to refresh tokens
-  initK8sClient()
+  initK8sClient(contextName)
   return k8sNetworkingApi!
 }
 
 /**
  * Get Batch V1 API client (for Jobs, CronJobs)
+ * @param contextName - Optional context name to switch to
  */
-export function getBatchApi(): k8s.BatchV1Api {
+export function getBatchApi(contextName?: string): k8s.BatchV1Api {
   // Always reinitialize for AWS EKS to refresh tokens
-  initK8sClient()
+  initK8sClient(contextName)
   return k8sBatchApi!
 }
 

@@ -13,9 +13,10 @@ import * as k8s from '@kubernetes/client-node'
 export async function GET(request: NextRequest) {
   const encoder = new TextEncoder()
 
-  // Get namespace from query parameters
+  // Get namespace and context from query parameters
   const searchParams = request.nextUrl.searchParams
   const namespace = searchParams.get('namespace') || ''
+  const contextName = searchParams.get('context') || undefined
 
   // Namespace is required for SSE
   if (!namespace) {
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Send initial connection message
-      sendEvent('connected', { timestamp: new Date().toISOString(), namespace })
+      sendEvent('connected', { timestamp: new Date().toISOString(), namespace, context: contextName })
 
       // Heartbeat interval to keep connection alive
       const heartbeatInterval = setInterval(() => {
@@ -74,9 +75,9 @@ export async function GET(request: NextRequest) {
       }, 30000) // Every 30 seconds
 
       try {
-        // Initialize Kubernetes client
+        // Initialize Kubernetes client with specified context
         try {
-          initK8sClient()
+          initK8sClient(contextName)
         } catch (error) {
           console.error('[SSE] Failed to initialize Kubernetes client:', error)
           sendEvent('error', {
@@ -92,6 +93,11 @@ export async function GET(request: NextRequest) {
 
         try {
           kc.loadFromDefault()
+
+          // Switch to specified context if provided
+          if (contextName) {
+            kc.setCurrentContext(contextName)
+          }
         } catch (error) {
           console.error('[SSE] Failed to load Kubernetes config:', error)
           sendEvent('error', {

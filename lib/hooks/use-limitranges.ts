@@ -6,16 +6,17 @@ import type { LimitRange } from '@/types/kubernetes'
 export function useLimitRanges() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<LimitRange[]>({
-    queryKey: ['limitranges', mode, namespace],
+    queryKey: ['limitranges', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockLimitRanges()
       }
 
-      const response = await fetch(`/api/limitranges?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/limitranges?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch limit ranges')

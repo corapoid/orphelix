@@ -53,6 +53,7 @@ export default function SettingsPage() {
     selectedNamespace,
     selectedContext,
     setContext,
+    setNamespace,
   } = useModeStore()
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
@@ -84,6 +85,11 @@ export default function SettingsPage() {
           cluster: currentContext.cluster,
           user: currentContext.user,
         })
+
+        // Also auto-set namespace if not already set
+        if (currentContext.namespace && !selectedNamespace) {
+          setNamespace(currentContext.namespace)
+        }
       }
     } catch (err) {
       console.error('Failed to fetch kubectl contexts:', err)
@@ -98,7 +104,6 @@ export default function SettingsPage() {
     if (appMode === 'real') {
       fetchContexts()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appMode])
 
   const handleModeChange = (newMode: 'mock' | 'real') => {
@@ -137,6 +142,11 @@ export default function SettingsPage() {
       cluster: context.cluster,
       user: context.user,
     })
+
+    // Auto-set namespace from context (with fallback to 'default')
+    if (context.namespace) {
+      setNamespace(context.namespace)
+    }
 
     // Then test the connection
     await testConnection()

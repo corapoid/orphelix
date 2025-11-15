@@ -10,6 +10,16 @@ export function getNamespaceFromRequest(request: NextRequest): string {
 }
 
 /**
+ * Extract context name from request query parameters
+ * Returns undefined if not provided (will use default context)
+ */
+export function getContextFromRequest(request: NextRequest): string | undefined {
+  const searchParams = request.nextUrl.searchParams
+  const context = searchParams.get('context')
+  return context || undefined
+}
+
+/**
  * Build API URL with namespace query parameter
  */
 export function buildApiUrl(path: string, namespace: string): string {

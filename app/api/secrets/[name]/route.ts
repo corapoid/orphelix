@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchSecret } from '@/lib/k8s/api'
-import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
 
 /**
  * GET /api/secrets/[name]
@@ -15,6 +15,7 @@ export async function GET(
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
+    const context = getContextFromRequest(request)
 
     if (!namespace) {
       return NextResponse.json(
@@ -23,7 +24,7 @@ export async function GET(
       )
     }
 
-    const secret = await fetchSecret(name, namespace)
+    const secret = await fetchSecret(name, namespace, context)
 
     if (!secret) {
       return NextResponse.json(

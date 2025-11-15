@@ -9,9 +9,10 @@ import type { Deployment, Pod, Event } from '@/types/kubernetes'
 export function useDeployments() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Deployment[]>({
-    queryKey: ['deployments', mode, namespace],
+    queryKey: ['deployments', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
@@ -19,7 +20,7 @@ export function useDeployments() {
       }
 
       // Real mode: fetch from API route (server-side)
-      const response = await fetch(`/api/deployments?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/deployments?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch deployments')
       return response.json()
     },
@@ -33,9 +34,10 @@ export function useDeployments() {
 export function useDeployment(name: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Deployment>({
-    queryKey: ['deployment', name, mode, namespace],
+    queryKey: ['deployment', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -46,7 +48,7 @@ export function useDeployment(name: string) {
       }
 
       // Real mode: fetch from API route (server-side)
-      const response = await fetch(`/api/deployments/${name}?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/deployments/${name}?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch deployment')
       return response.json()
     },
@@ -61,9 +63,10 @@ export function useDeployment(name: string) {
 export function useDeploymentPods(deploymentName: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Pod[]>({
-    queryKey: ['deployment-pods', deploymentName, mode, namespace],
+    queryKey: ['deployment-pods', deploymentName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -81,7 +84,7 @@ export function useDeploymentPods(deploymentName: string) {
       }
 
       // Real mode: fetch from API route
-      const response = await fetch(`/api/deployments/${deploymentName}/pods?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/deployments/${deploymentName}/pods?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch deployment pods')
       return response.json()
     },
@@ -96,9 +99,10 @@ export function useDeploymentPods(deploymentName: string) {
 export function useDeploymentEvents(deploymentName: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Event[]>({
-    queryKey: ['deployment-events', deploymentName, mode, namespace],
+    queryKey: ['deployment-events', deploymentName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 150))
@@ -112,7 +116,7 @@ export function useDeploymentEvents(deploymentName: string) {
       }
 
       // Real mode: fetch from API route
-      const response = await fetch(`/api/deployments/${deploymentName}/events?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/deployments/${deploymentName}/events?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch deployment events')
       return response.json()
     },

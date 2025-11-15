@@ -30,7 +30,8 @@ export async function GET() {
           name: parts[0],
           cluster: parts[1],
           user: parts[2],
-          namespace: parts[3] || undefined,
+          // Use namespace from context, fallback to 'default'
+          namespace: parts[3] || 'default',
           current: isCurrent,
         })
       }

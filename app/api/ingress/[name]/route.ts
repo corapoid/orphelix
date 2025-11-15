@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest, handleK8sError } from '@/lib/core/api-helpers'
+import { getNamespaceFromRequest, getContextFromRequest, handleK8sError } from '@/lib/core/api-helpers'
 import { fetchIngress } from '@/lib/k8s/api'
 
 export async function GET(
@@ -8,6 +8,7 @@ export async function GET(
 ) {
   try {
     const namespace = getNamespaceFromRequest(request)
+    const context = getContextFromRequest(request)
     const { name } = await params
 
     if (!namespace) {
@@ -17,7 +18,7 @@ export async function GET(
       )
     }
 
-    const ingress = await fetchIngress(name, namespace)
+    const ingress = await fetchIngress(name, namespace, context)
 
     if (!ingress) {
       return NextResponse.json({ error: 'Ingress not found' }, { status: 404 })

@@ -63,8 +63,8 @@ function calculateAge(timestamp: Date | string | undefined): string {
 /**
  * Deployments API
  */
-export async function fetchDeployments(namespace: string): Promise<Deployment[]> {
-  const appsApi = getAppsApi()
+export async function fetchDeployments(namespace: string, contextName?: string): Promise<Deployment[]> {
+  const appsApi = getAppsApi(contextName)
   const response = await appsApi.listNamespacedDeployment({ namespace })
 
   return response.items.map((dep) => {
@@ -99,9 +99,9 @@ export async function fetchDeployments(namespace: string): Promise<Deployment[]>
   })
 }
 
-export async function fetchDeployment(name: string, namespace: string): Promise<Deployment | null> {
+export async function fetchDeployment(name: string, namespace: string, contextName?: string): Promise<Deployment | null> {
   try {
-    const appsApi = getAppsApi()
+    const appsApi = getAppsApi(contextName)
     const response = await appsApi.readNamespacedDeployment({ name, namespace })
     const dep = response
 
@@ -288,8 +288,8 @@ function extractSecretNamesFromPod(pod: k8s.V1Pod): string[] {
 /**
  * Pods API
  */
-export async function fetchPods(namespace: string, labelSelector?: string): Promise<Pod[]> {
-  const coreApi = getCoreApi()
+export async function fetchPods(namespace: string, contextName?: string, labelSelector?: string): Promise<Pod[]> {
+  const coreApi = getCoreApi(contextName)
   const response = await coreApi.listNamespacedPod({
     namespace,
     labelSelector,
@@ -323,9 +323,9 @@ export async function fetchPods(namespace: string, labelSelector?: string): Prom
   })
 }
 
-export async function fetchPod(name: string, namespace: string): Promise<Pod | null> {
+export async function fetchPod(name: string, namespace: string, contextName?: string): Promise<Pod | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedPod({ name, namespace })
     const pod = response
 
@@ -362,11 +362,12 @@ export async function fetchPod(name: string, namespace: string): Promise<Pod | n
 export async function fetchPodLogs(
   name: string,
   namespace: string,
+  contextName?: string,
   container?: string,
   tail = 100
 ): Promise<string> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedPodLog({
       name,
       namespace,
@@ -383,8 +384,8 @@ export async function fetchPodLogs(
 /**
  * Nodes API
  */
-export async function fetchNodes(): Promise<Node[]> {
-  const coreApi = getCoreApi()
+export async function fetchNodes(contextName?: string): Promise<Node[]> {
+  const coreApi = getCoreApi(contextName)
   const response = await coreApi.listNode({})
 
   return response.items.map((node) => {
@@ -429,9 +430,9 @@ export async function fetchNodes(): Promise<Node[]> {
   })
 }
 
-export async function fetchNode(name: string): Promise<Node | null> {
+export async function fetchNode(name: string, contextName?: string): Promise<Node | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNode({ name })
     const node = response
 
@@ -483,9 +484,9 @@ export async function fetchNodeEvents(nodeName: string): Promise<Event[]> {
   return fetchResourceEvents('Node', nodeName, '')
 }
 
-export async function fetchNodePods(nodeName: string, namespace?: string): Promise<Pod[]> {
+export async function fetchNodePods(nodeName: string, namespace?: string, contextName?: string): Promise<Pod[]> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
 
     // If no namespace provided, we can't list pods (no cluster-level permission)
     if (!namespace) {
@@ -537,8 +538,8 @@ export async function fetchNodePods(nodeName: string, namespace?: string): Promi
 /**
  * ConfigMaps API
  */
-export async function fetchConfigMaps(namespace: string): Promise<ConfigMap[]> {
-  const coreApi = getCoreApi()
+export async function fetchConfigMaps(namespace: string, contextName?: string): Promise<ConfigMap[]> {
+  const coreApi = getCoreApi(contextName)
   const response = await coreApi.listNamespacedConfigMap({ namespace })
 
   return response.items.map((cm) => ({
@@ -550,9 +551,9 @@ export async function fetchConfigMaps(namespace: string): Promise<ConfigMap[]> {
   }))
 }
 
-export async function fetchConfigMap(name: string, namespace: string): Promise<ConfigMap | null> {
+export async function fetchConfigMap(name: string, namespace: string, contextName?: string): Promise<ConfigMap | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedConfigMap({ name, namespace })
     const cm = response
 
@@ -572,8 +573,8 @@ export async function fetchConfigMap(name: string, namespace: string): Promise<C
 /**
  * Secrets API
  */
-export async function fetchSecrets(namespace: string): Promise<Secret[]> {
-  const coreApi = getCoreApi()
+export async function fetchSecrets(namespace: string, contextName?: string): Promise<Secret[]> {
+  const coreApi = getCoreApi(contextName)
   const response = await coreApi.listNamespacedSecret({ namespace })
 
   return response.items.map((secret) => {
@@ -597,9 +598,9 @@ export async function fetchSecrets(namespace: string): Promise<Secret[]> {
   })
 }
 
-export async function fetchSecret(name: string, namespace: string): Promise<Secret | null> {
+export async function fetchSecret(name: string, namespace: string, contextName?: string): Promise<Secret | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedSecret({ name, namespace })
     const secret = response
 
@@ -629,8 +630,8 @@ export async function fetchSecret(name: string, namespace: string): Promise<Secr
 /**
  * HPAs API
  */
-export async function fetchHPAs(namespace: string): Promise<HPA[]> {
-  const autoscalingApi = getAutoscalingApi()
+export async function fetchHPAs(namespace: string, contextName?: string): Promise<HPA[]> {
+  const autoscalingApi = getAutoscalingApi(contextName)
   const response = await autoscalingApi.listNamespacedHorizontalPodAutoscaler({ namespace })
 
   return response.items.map((hpa) => {
@@ -685,8 +686,8 @@ export async function fetchHPAs(namespace: string): Promise<HPA[]> {
 /**
  * PersistentVolumes API
  */
-export async function fetchPVs(): Promise<PersistentVolume[]> {
-  const coreApi = getCoreApi()
+export async function fetchPVs(contextName?: string): Promise<PersistentVolume[]> {
+  const coreApi = getCoreApi(contextName)
   const response = await coreApi.listPersistentVolume({})
 
   return response.items.map((pv) => ({
@@ -706,8 +707,8 @@ export async function fetchPVs(): Promise<PersistentVolume[]> {
 /**
  * PersistentVolumeClaims API
  */
-export async function fetchPVCs(namespace: string): Promise<PersistentVolumeClaim[]> {
-  const coreApi = getCoreApi()
+export async function fetchPVCs(namespace: string, contextName?: string): Promise<PersistentVolumeClaim[]> {
+  const coreApi = getCoreApi(contextName)
   const response = await coreApi.listNamespacedPersistentVolumeClaim({ namespace })
 
   return response.items.map((pvc) => ({
@@ -726,8 +727,8 @@ export async function fetchPVCs(namespace: string): Promise<PersistentVolumeClai
 /**
  * Events API
  */
-export async function fetchEvents(namespace?: string, timeRangeHours = 24): Promise<Event[]> {
-  const coreApi = getCoreApi()
+export async function fetchEvents(namespace?: string, contextName?: string, timeRangeHours = 24): Promise<Event[]> {
+  const coreApi = getCoreApi(contextName)
   const response = namespace
     ? await coreApi.listNamespacedEvent({ namespace })
     : await coreApi.listEventForAllNamespaces({})
@@ -767,10 +768,11 @@ export async function fetchEvents(namespace?: string, timeRangeHours = 24): Prom
 export async function fetchResourceEvents(
   kind: string,
   name: string,
-  namespace: string
+  namespace: string,
+  contextName?: string
 ): Promise<Event[]> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const fieldSelector = `involvedObject.kind=${kind},involvedObject.name=${name}`
     const response = await coreApi.listNamespacedEvent({
       namespace,
@@ -800,9 +802,9 @@ export async function fetchResourceEvents(
 /**
  * Fetch deployment as raw YAML string
  */
-export async function fetchDeploymentYaml(name: string, namespace: string): Promise<string | null> {
+export async function fetchDeploymentYaml(name: string, namespace: string, contextName?: string): Promise<string | null> {
   try {
-    const appsApi = getAppsApi()
+    const appsApi = getAppsApi(contextName)
     const response = await appsApi.readNamespacedDeployment({ name, namespace })
     
     // Convert to YAML using js-yaml
@@ -820,9 +822,9 @@ export async function fetchDeploymentYaml(name: string, namespace: string): Prom
 /**
  * Fetch configmap as raw YAML string
  */
-export async function fetchConfigMapYaml(name: string, namespace: string): Promise<string | null> {
+export async function fetchConfigMapYaml(name: string, namespace: string, contextName?: string): Promise<string | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedConfigMap({ name, namespace })
     
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -839,9 +841,9 @@ export async function fetchConfigMapYaml(name: string, namespace: string): Promi
 /**
  * Fetch secret as raw YAML string
  */
-export async function fetchSecretYaml(name: string, namespace: string): Promise<string | null> {
+export async function fetchSecretYaml(name: string, namespace: string, contextName?: string): Promise<string | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedSecret({ name, namespace })
 
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -858,8 +860,8 @@ export async function fetchSecretYaml(name: string, namespace: string): Promise<
 /**
  * Services API
  */
-export async function fetchServices(namespace: string): Promise<Service[]> {
-  const coreApi = getCoreApi()
+export async function fetchServices(namespace: string, contextName?: string): Promise<Service[]> {
+  const coreApi = getCoreApi(contextName)
   const response = await coreApi.listNamespacedService({ namespace })
 
   return response.items.map((svc) => {
@@ -885,9 +887,9 @@ export async function fetchServices(namespace: string): Promise<Service[]> {
   })
 }
 
-export async function fetchService(name: string, namespace: string): Promise<Service | null> {
+export async function fetchService(name: string, namespace: string, contextName?: string): Promise<Service | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedService({ name, namespace })
     const svc = response
 
@@ -919,8 +921,8 @@ export async function fetchService(name: string, namespace: string): Promise<Ser
 /**
  * Ingress API
  */
-export async function fetchIngresses(namespace: string): Promise<Ingress[]> {
-  const networkingApi = getNetworkingApi()
+export async function fetchIngresses(namespace: string, contextName?: string): Promise<Ingress[]> {
+  const networkingApi = getNetworkingApi(contextName)
   const response = await networkingApi.listNamespacedIngress({ namespace })
 
   return response.items.map((ing) => {
@@ -970,9 +972,9 @@ export async function fetchIngresses(namespace: string): Promise<Ingress[]> {
   })
 }
 
-export async function fetchIngress(name: string, namespace: string): Promise<Ingress | null> {
+export async function fetchIngress(name: string, namespace: string, contextName?: string): Promise<Ingress | null> {
   try {
-    const networkingApi = getNetworkingApi()
+    const networkingApi = getNetworkingApi(contextName)
     const response = await networkingApi.readNamespacedIngress({ name, namespace })
     const ing = response
 
@@ -1062,8 +1064,8 @@ function determineJobStatus(job: k8s.V1Job): JobStatus {
   return 'Unknown'
 }
 
-export async function fetchJobs(namespace: string): Promise<Job[]> {
-  const batchApi = getBatchApi()
+export async function fetchJobs(namespace: string, contextName?: string): Promise<Job[]> {
+  const batchApi = getBatchApi(contextName)
   const response = await batchApi.listNamespacedJob({ namespace })
 
   return response.items.map((job: k8s.V1Job) => {
@@ -1100,9 +1102,9 @@ export async function fetchJobs(namespace: string): Promise<Job[]> {
   })
 }
 
-export async function fetchJob(name: string, namespace: string): Promise<Job | null> {
+export async function fetchJob(name: string, namespace: string, contextName?: string): Promise<Job | null> {
   try {
-    const batchApi = getBatchApi()
+    const batchApi = getBatchApi(contextName)
     const response = await batchApi.readNamespacedJob({ name, namespace })
     const job = response
 
@@ -1145,8 +1147,8 @@ export async function fetchJob(name: string, namespace: string): Promise<Job | n
 /**
  * CronJobs API
  */
-export async function fetchCronJobs(namespace: string): Promise<CronJob[]> {
-  const batchApi = getBatchApi()
+export async function fetchCronJobs(namespace: string, contextName?: string): Promise<CronJob[]> {
+  const batchApi = getBatchApi(contextName)
   const response = await batchApi.listNamespacedCronJob({ namespace })
 
   return response.items.map((cronJob: k8s.V1CronJob) => {
@@ -1164,9 +1166,9 @@ export async function fetchCronJobs(namespace: string): Promise<CronJob[]> {
   })
 }
 
-export async function fetchCronJob(name: string, namespace: string): Promise<CronJob | null> {
+export async function fetchCronJob(name: string, namespace: string, contextName?: string): Promise<CronJob | null> {
   try {
-    const batchApi = getBatchApi()
+    const batchApi = getBatchApi(contextName)
     const response = await batchApi.readNamespacedCronJob({ name, namespace })
     const cronJob = response
 
@@ -1190,9 +1192,9 @@ export async function fetchCronJob(name: string, namespace: string): Promise<Cro
 /**
  * Fetch all namespaces
  */
-export async function fetchNamespaces(): Promise<Namespace[]> {
+export async function fetchNamespaces(contextName?: string): Promise<Namespace[]> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.listNamespace()
     const namespaces = response.items
 
@@ -1219,9 +1221,9 @@ export async function fetchNamespaces(): Promise<Namespace[]> {
 /**
  * Fetch single namespace
  */
-export async function fetchNamespace(name: string): Promise<Namespace | null> {
+export async function fetchNamespace(name: string, contextName?: string): Promise<Namespace | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespace({ name })
     const ns = response
 
@@ -1246,9 +1248,9 @@ export async function fetchNamespace(name: string): Promise<Namespace | null> {
 /**
  * Fetch all resource quotas in a namespace
  */
-export async function fetchResourceQuotas(namespace: string): Promise<ResourceQuota[]> {
+export async function fetchResourceQuotas(namespace: string, contextName?: string): Promise<ResourceQuota[]> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.listNamespacedResourceQuota({ namespace })
     const quotas = response.items
 
@@ -1271,10 +1273,11 @@ export async function fetchResourceQuotas(namespace: string): Promise<ResourceQu
  */
 export async function fetchResourceQuota(
   name: string,
-  namespace: string
+  namespace: string,
+  contextName?: string
 ): Promise<ResourceQuota | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedResourceQuota({ name, namespace })
     const quota = response
 
@@ -1295,9 +1298,9 @@ export async function fetchResourceQuota(
 /**
  * Fetch all limit ranges in a namespace
  */
-export async function fetchLimitRanges(namespace: string): Promise<LimitRange[]> {
+export async function fetchLimitRanges(namespace: string, contextName?: string): Promise<LimitRange[]> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.listNamespacedLimitRange({ namespace })
     const limitRanges = response.items
 
@@ -1328,9 +1331,9 @@ export async function fetchLimitRanges(namespace: string): Promise<LimitRange[]>
 /**
  * Fetch single limit range
  */
-export async function fetchLimitRange(name: string, namespace: string): Promise<LimitRange | null> {
+export async function fetchLimitRange(name: string, namespace: string, contextName?: string): Promise<LimitRange | null> {
   try {
-    const coreApi = getCoreApi()
+    const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedLimitRange({ name, namespace })
     const lr = response
 

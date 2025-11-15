@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react'
 
 interface SearchContextType {
   searchQuery: string
@@ -16,9 +16,9 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchPlaceholder, setSearchPlaceholder] = useState('Search...')
 
-  const clearSearch = () => {
+  const clearSearch = useCallback(() => {
     setSearchQuery('')
-  }
+  }, [setSearchQuery])
 
   return (
     <SearchContext.Provider

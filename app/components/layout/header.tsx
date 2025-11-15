@@ -6,7 +6,9 @@ import Box from '@mui/material/Box'
 import { RealtimeStatus } from './realtime-status'
 import { Logo } from './logo'
 import { SearchBar } from '../common/search-bar'
+import { NamespaceSelector } from './namespace-selector'
 import { useSearch } from '@/lib/contexts/search-context'
+import { useModeStore } from '@/lib/core/store'
 
 interface HeaderProps {
   onMenuClick: () => void
@@ -14,6 +16,7 @@ interface HeaderProps {
 
 export function Header({ onMenuClick: _onMenuClick }: HeaderProps) {
   const { searchQuery, setSearchQuery, searchPlaceholder } = useSearch()
+  const mode = useModeStore((state) => state.mode)
 
   return (
     <AppBar
@@ -42,8 +45,11 @@ export function Header({ onMenuClick: _onMenuClick }: HeaderProps) {
           />
         </Box>
 
-        {/* Real-time status on the right */}
-        <Box sx={{ flexShrink: 0 }}>
+        {/* Namespace selector and Real-time status on the right */}
+        <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 2 }}>
+          {mode === 'real' && (
+            <NamespaceSelector />
+          )}
           <RealtimeStatus />
         </Box>
       </Toolbar>

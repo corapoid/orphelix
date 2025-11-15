@@ -37,6 +37,34 @@ export default function DashboardPage() {
     )
   }
 
+  // If in real mode but no namespace selected, show alert
+  if (mode === 'real' && !namespace) {
+    return (
+      <Box>
+        <Typography variant="h4" gutterBottom>
+          Dashboard Overview
+        </Typography>
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Namespace Required
+          </Typography>
+          <Typography variant="body2">
+            Please select a namespace from the header to view cluster resources.
+            You can also set a default namespace in Settings.
+          </Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => (window.location.href = '/settings')}
+            sx={{ mt: 2 }}
+          >
+            Go to Settings
+          </Button>
+        </Alert>
+      </Box>
+    )
+  }
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>

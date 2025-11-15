@@ -72,7 +72,7 @@ export function useRealtimeUpdates() {
     setError(null)
 
     try {
-      const eventSource = new EventSource(`/api/stream?namespace=${encodeURIComponent(namespace)}`)
+      const eventSource = new EventSource(`/api/stream?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       eventSourceRef.current = eventSource
 
       // Connection opened

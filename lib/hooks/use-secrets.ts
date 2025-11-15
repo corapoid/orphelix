@@ -9,9 +9,10 @@ import type { Secret, Event } from '@/types/kubernetes'
 export function useSecrets() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Secret[]>({
-    queryKey: ['secrets', mode, namespace],
+    queryKey: ['secrets', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
@@ -22,7 +23,7 @@ export function useSecrets() {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/secrets?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/secrets?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch Secrets')
       return response.json()
     },
@@ -37,9 +38,10 @@ export function useSecrets() {
 export function useSecret(name: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Secret>({
-    queryKey: ['secret', name, mode, namespace],
+    queryKey: ['secret', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -53,7 +55,7 @@ export function useSecret(name: string) {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/secrets/${name}?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/secrets/${name}?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch Secret')
       return response.json()
     },
@@ -68,9 +70,10 @@ export function useSecret(name: string) {
 export function useSecretEvents(secretName: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Event[]>({
-    queryKey: ['secret-events', secretName, mode, namespace],
+    queryKey: ['secret-events', secretName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 150))
@@ -87,7 +90,7 @@ export function useSecretEvents(secretName: string) {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/secrets/${secretName}/events?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/secrets/${secretName}/events?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch Secret events')
       return response.json()
     },

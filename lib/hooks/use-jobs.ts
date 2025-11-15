@@ -6,16 +6,17 @@ import type { Job } from '@/types/kubernetes'
 export function useJobs() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Job[]>({
-    queryKey: ['jobs', mode, namespace],
+    queryKey: ['jobs', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockJobs()
       }
 
-      const response = await fetch(`/api/jobs?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/jobs?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch jobs')
@@ -29,9 +30,10 @@ export function useJobs() {
 export function useJob(name: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Job>({
-    queryKey: ['jobs', mode, namespace, name],
+    queryKey: ['jobs', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -41,7 +43,7 @@ export function useJob(name: string) {
         return job
       }
 
-      const response = await fetch(`/api/jobs/${name}?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/jobs/${name}?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch job')

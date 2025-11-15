@@ -6,16 +6,17 @@ import type { CronJob } from '@/types/kubernetes'
 export function useCronJobs() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<CronJob[]>({
-    queryKey: ['cronjobs', mode, namespace],
+    queryKey: ['cronjobs', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockCronJobs()
       }
 
-      const response = await fetch(`/api/cronjobs?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/cronjobs?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch cronjobs')
@@ -29,9 +30,10 @@ export function useCronJobs() {
 export function useCronJob(name: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<CronJob>({
-    queryKey: ['cronjobs', mode, namespace, name],
+    queryKey: ['cronjobs', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -41,7 +43,7 @@ export function useCronJob(name: string) {
         return cronjob
       }
 
-      const response = await fetch(`/api/cronjobs/${name}?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/cronjobs/${name}?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch cronjob')

@@ -6,16 +6,17 @@ import type { Service } from '@/types/kubernetes'
 export function useServices() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Service[]>({
-    queryKey: ['services', mode, namespace],
+    queryKey: ['services', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockServices()
       }
 
-      const response = await fetch(`/api/services?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/services?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch services')
@@ -29,6 +30,7 @@ export function useServices() {
 export function useService(name: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Service>({
     queryKey: ['services', mode, namespace, name],
@@ -41,7 +43,7 @@ export function useService(name: string) {
         return service
       }
 
-      const response = await fetch(`/api/services/${name}?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/services/${name}?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch service')

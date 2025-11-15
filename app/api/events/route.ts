@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
 import { fetchEvents } from '@/lib/k8s/api'
 
 export async function GET(request: NextRequest) {
   try {
     const namespace = getNamespaceFromRequest(request)
+    const context = getContextFromRequest(request)
 
     // Require namespace for events (no cluster-wide access)
     if (!namespace) {
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const events = await fetchEvents(namespace, timeRangeHours)
+    const events = await fetchEvents(namespace, context, timeRangeHours)
     return NextResponse.json(events)
   } catch (error) {
     console.error('[API] Failed to fetch events:', error)

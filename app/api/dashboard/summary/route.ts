@@ -6,6 +6,7 @@ import type { DashboardSummary } from '@/types/kubernetes'
 export async function GET(request: NextRequest) {
   try {
     const namespace = getNamespaceFromRequest(request)
+    // const context = getContextFromRequest(request) // TODO: use context when API supports it
 
     if (!namespace) {
       return NextResponse.json(

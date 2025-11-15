@@ -10,9 +10,10 @@ import type { DashboardSummary, Event } from '@/types/kubernetes'
 export function useDashboardSummary() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<DashboardSummary>({
-    queryKey: ['dashboard-summary', mode, namespace],
+    queryKey: ['dashboard-summary', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         // Simulate network delay
@@ -24,7 +25,7 @@ export function useDashboardSummary() {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/dashboard/summary?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/dashboard/summary?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch dashboard summary')
       return response.json()
     },
@@ -39,6 +40,7 @@ export function useDashboardSummary() {
 export function useRecentEvents(timeRangeHours = 24) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Event[]>({
     queryKey: ['recent-events', mode, namespace, timeRangeHours],
@@ -67,7 +69,7 @@ export function useRecentEvents(timeRangeHours = 24) {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/events?namespace=${encodeURIComponent(namespace)}&timeRange=${timeRangeHours}`)
+      const response = await fetch(`/api/events?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}&timeRange=${timeRangeHours}`)
       if (!response.ok) throw new Error('Failed to fetch events')
       return response.json()
     },

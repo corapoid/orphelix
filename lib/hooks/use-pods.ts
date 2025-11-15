@@ -10,6 +10,7 @@ import type { Pod, Event, PodStatus } from '@/types/kubernetes'
 export function usePods(statusFilter?: PodStatus) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Pod[]>({
     queryKey: ['pods', mode, namespace, statusFilter],
@@ -30,8 +31,8 @@ export function usePods(statusFilter?: PodStatus) {
       }
 
       const url = statusFilter
-        ? `/api/pods?namespace=${encodeURIComponent(namespace)}&status=${statusFilter}`
-        : `/api/pods?namespace=${encodeURIComponent(namespace)}`
+        ? `/api/pods?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}&status=${statusFilter}`
+        : `/api/pods?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`
       const response = await fetch(url)
       if (!response.ok) throw new Error('Failed to fetch pods')
       return response.json()
@@ -47,9 +48,10 @@ export function usePods(statusFilter?: PodStatus) {
 export function usePod(name: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Pod>({
-    queryKey: ['pod', name, mode, namespace],
+    queryKey: ['pod', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 200))
@@ -63,7 +65,7 @@ export function usePod(name: string) {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/pods/${name}?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/pods/${name}?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch pod')
       return response.json()
     },
@@ -78,9 +80,10 @@ export function usePod(name: string) {
 export function usePodEvents(podName: string) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<Event[]>({
-    queryKey: ['pod-events', podName, mode, namespace],
+    queryKey: ['pod-events', podName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
       if (mode === 'mock') {
         await new Promise((resolve) => setTimeout(resolve, 150))
@@ -97,7 +100,7 @@ export function usePodEvents(podName: string) {
         throw new Error('Namespace is required')
       }
 
-      const response = await fetch(`/api/pods/${podName}/events?namespace=${encodeURIComponent(namespace)}`)
+      const response = await fetch(`/api/pods/${podName}/events?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) throw new Error('Failed to fetch pod events')
       return response.json()
     },
@@ -114,6 +117,7 @@ export function usePodEvents(podName: string) {
 export function usePodLogs(podName: string, containerName: string, tail = 100) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useQuery<{ logs: string; parsed?: Array<{ line: number; timestamp?: string; level?: string; message: string; raw: string; isJson: boolean; data?: Record<string, unknown> }> }>({
     queryKey: ['pod-logs', podName, containerName, tail, mode, namespace],
@@ -154,7 +158,7 @@ export function usePodLogs(podName: string, containerName: string, tail = 100) {
       }
 
       const response = await fetch(
-        `/api/pods/${podName}/logs?namespace=${encodeURIComponent(namespace)}&container=${containerName}&tail=${tail}`
+        `/api/pods/${podName}/logs?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}&container=${containerName}&tail=${tail}`
       )
       if (!response.ok) throw new Error('Failed to fetch pod logs')
       const data = await response.json()

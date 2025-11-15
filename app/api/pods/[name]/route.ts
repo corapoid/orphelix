@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
 import { fetchPod } from '@/lib/k8s/api'
 
 export async function GET(
@@ -9,6 +9,7 @@ export async function GET(
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
+    const context = getContextFromRequest(request)
 
     if (!namespace) {
       return NextResponse.json(
@@ -17,7 +18,7 @@ export async function GET(
       )
     }
 
-    const pod = await fetchPod(name, namespace)
+    const pod = await fetchPod(name, namespace, context)
     if (!pod) {
       return NextResponse.json(
         { error: 'Pod not found' },

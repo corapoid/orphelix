@@ -24,6 +24,7 @@ export function useRestartPod(podName: string) {
   const queryClient = useQueryClient()
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
+  const selectedContext = useModeStore((state) => state.selectedContext)
 
   return useMutation<RestartPodResponse, RestartPodError, void>({
     mutationFn: async () => {
@@ -42,7 +43,7 @@ export function useRestartPod(podName: string) {
       }
 
       // Real mode: Call restart API
-      const response = await fetch(`/api/pods/${podName}/restart?namespace=${encodeURIComponent(namespace)}`, {
+      const response = await fetch(`/api/pods/${podName}/restart?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`, {
         method: 'POST',
       })
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchConfigMap } from '@/lib/k8s/api'
-import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
 
 /**
  * GET /api/configmaps/[name]
@@ -14,6 +14,7 @@ export async function GET(
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
+    const context = getContextFromRequest(request)
 
     if (!namespace) {
       return NextResponse.json(
@@ -22,7 +23,7 @@ export async function GET(
       )
     }
 
-    const configMap = await fetchConfigMap(name, namespace)
+    const configMap = await fetchConfigMap(name, namespace, context)
 
     if (!configMap) {
       return NextResponse.json(
