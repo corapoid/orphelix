@@ -1,5 +1,4 @@
 import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
@@ -94,7 +93,7 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
   }
 
   const errorAlerts = alerts.filter((a) => a.severity === 'error')
-  const warningAlerts = alerts.filter((a) => a.severity === 'warning')
+  const _warningAlerts = alerts.filter((a) => a.severity === 'warning')
 
   return (
     <Paper

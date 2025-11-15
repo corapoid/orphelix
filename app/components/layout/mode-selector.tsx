@@ -43,7 +43,6 @@ export function ModeSelector({ open, onClose }: ModeSelectorProps) {
     if (open && tempMode === 'real') {
       fetchContexts()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, tempMode])
 
   const fetchContexts = async () => {

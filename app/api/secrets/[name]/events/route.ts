@@ -15,6 +15,7 @@ export async function GET(
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
+    // const context = getContextFromRequest(request) // TODO: use context when API supports it
 
     if (!namespace) {
       return NextResponse.json(

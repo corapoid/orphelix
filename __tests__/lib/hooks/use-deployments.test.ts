@@ -179,7 +179,7 @@ describe('useDeployments', () => {
     // The query should be using the correct key (now includes namespace)
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployments', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['deployments', 'mock', 'mock', ''])
   })
 })
 
@@ -358,7 +358,7 @@ describe('useDeployment', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployment', 'test-deployment', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['deployment', 'test-deployment', 'mock', 'mock', ''])
   })
 })
 
@@ -562,7 +562,7 @@ describe('useDeploymentPods', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployment-pods', 'test-deployment', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['deployment-pods', 'test-deployment', 'mock', 'mock', ''])
   })
 })
 
@@ -770,6 +770,6 @@ describe('useDeploymentEvents', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployment-events', 'test-deployment', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['deployment-events', 'test-deployment', 'mock', 'mock', ''])
   })
 })

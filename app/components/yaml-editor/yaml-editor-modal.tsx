@@ -177,7 +177,6 @@ export function YamlEditorModal({
     }
 
     autoMatchFile()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files, open])
 
   // Load file content

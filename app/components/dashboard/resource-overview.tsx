@@ -8,7 +8,6 @@ import WidgetsIcon from '@mui/icons-material/Widgets'
 import WorkIcon from '@mui/icons-material/Work'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import LanguageIcon from '@mui/icons-material/Language'
-import StorageIcon from '@mui/icons-material/Storage'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import type { DashboardSummary } from '@/types/kubernetes'
 

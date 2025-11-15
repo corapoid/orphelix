@@ -169,7 +169,7 @@ describe('useDashboardSummary', () => {
     // The query should be using the correct key (now includes namespace)
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['dashboard-summary', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['dashboard-summary', 'mock', 'mock', ''])
   })
 })
 

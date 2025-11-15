@@ -410,7 +410,7 @@ describe('usePod', () => {
     // Assert - verify the query key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pod', 'test-pod', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['pod', 'test-pod', 'mock', 'mock', ''])
   })
 })
 
@@ -521,7 +521,7 @@ describe('usePodEvents', () => {
     // Assert - verify the query key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pod-events', 'test-pod', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['pod-events', 'test-pod', 'mock', 'mock', ''])
   })
 
   it('should handle loading states', async () => {

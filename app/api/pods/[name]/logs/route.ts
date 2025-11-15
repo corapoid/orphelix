@@ -88,6 +88,7 @@ export async function GET(
     const { name } = await params
     const { searchParams } = new URL(request.url)
     const namespace = searchParams.get('namespace') || ''
+    const context = searchParams.get('context') || undefined
     const container = searchParams.get('container') || undefined
     const tail = parseInt(searchParams.get('tail') || '100')
 
@@ -98,7 +99,7 @@ export async function GET(
       )
     }
 
-    const logsRaw = await fetchPodLogs(name, namespace, container, tail)
+    const logsRaw = await fetchPodLogs(name, namespace, context, container, tail)
 
     // Parse logs into structured format
     const lines = logsRaw.split('\n')

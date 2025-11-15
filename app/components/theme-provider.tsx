@@ -29,7 +29,7 @@ function getInitialTheme(): ThemeMode {
     if (saved === 'light' || saved === 'dark' || saved === 'system') {
       return saved as ThemeMode
     }
-  } catch (e) {
+  } catch {
     // localStorage not available
   }
   return 'dark'

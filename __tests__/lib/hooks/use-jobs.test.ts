@@ -237,7 +237,7 @@ describe('useJobs', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['jobs', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['jobs', 'mock', 'mock', ''])
   })
 })
 
@@ -470,6 +470,6 @@ describe('useJob', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['jobs', 'mock', 'mock', 'test-job'])
+    expect(queries[0].queryKey).toEqual(['jobs', 'test-job', 'mock', 'mock', ''])
   })
 })

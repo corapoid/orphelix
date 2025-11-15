@@ -216,7 +216,7 @@ describe('useCronJobs', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['cronjobs', 'mock', 'mock'])
+    expect(queries[0].queryKey).toEqual(['cronjobs', 'mock', 'mock', ''])
   })
 })
 
@@ -436,7 +436,7 @@ describe('useCronJob', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['cronjobs', 'mock', 'mock', 'test-cronjob'])
+    expect(queries[0].queryKey).toEqual(['cronjobs', 'test-cronjob', 'mock', 'mock', ''])
   })
 
   it('should handle suspended cronjobs correctly', async () => {

@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
 import {
   fetchDeploymentYaml,
   fetchConfigMapYaml,
@@ -20,6 +20,7 @@ export async function GET(
   try {
     const { type, name } = await params
     const namespace = getNamespaceFromRequest(request)
+    const context = getContextFromRequest(request)
 
     if (!namespace) {
       return NextResponse.json(
@@ -32,13 +33,13 @@ export async function GET(
 
     switch (type) {
       case 'deployments':
-        yaml = await fetchDeploymentYaml(name, namespace)
+        yaml = await fetchDeploymentYaml(name, namespace, context)
         break
       case 'configmaps':
-        yaml = await fetchConfigMapYaml(name, namespace)
+        yaml = await fetchConfigMapYaml(name, namespace, context)
         break
       case 'secrets':
-        yaml = await fetchSecretYaml(name, namespace)
+        yaml = await fetchSecretYaml(name, namespace, context)
         break
       default:
         return NextResponse.json(
