@@ -106,43 +106,58 @@ export default function SettingsPage() {
                     : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
               }}
             >
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={autoRefreshEnabled}
-                    onChange={(e) => setAutoRefreshEnabled(e.target.checked)}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Box>
-                    <Typography variant="body1" fontWeight={600}>
-                      Enable auto-refresh
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Automatically refresh data every {autoRefreshInterval} seconds
-                    </Typography>
-                  </Box>
-                }
-              />
-              {autoRefreshEnabled && (
-                <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 3, flexWrap: 'wrap' }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={autoRefreshEnabled}
+                      onChange={(e) => setAutoRefreshEnabled(e.target.checked)}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Box>
+                      <Typography variant="body1" fontWeight={600}>
+                        Enable auto-refresh
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Automatically refresh data every {autoRefreshInterval} seconds
+                      </Typography>
+                    </Box>
+                  }
+                />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      opacity: autoRefreshEnabled ? 1 : 0.5,
+                      transition: 'opacity 0.2s'
+                    }}
+                  >
                     Refresh interval
                   </Typography>
-                  <ButtonGroup size="small" sx={{ mt: 1 }}>
+                  <ButtonGroup
+                    size="small"
+                    disabled={!autoRefreshEnabled}
+                    sx={{
+                      opacity: autoRefreshEnabled ? 1 : 0.5,
+                      transition: 'opacity 0.2s'
+                    }}
+                  >
                     {[10, 30, 60].map((interval) => (
                       <Button
                         key={interval}
                         variant={autoRefreshInterval === interval ? 'contained' : 'outlined'}
                         onClick={() => setAutoRefreshInterval(interval)}
+                        disabled={!autoRefreshEnabled}
                       >
                         {interval}s
                       </Button>
                     ))}
                   </ButtonGroup>
                 </Box>
-              )}
+              </Box>
             </Paper>
           </Box>
         </Box>
