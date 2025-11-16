@@ -24,12 +24,14 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LaptopOutlinedIcon from '@mui/icons-material/LaptopOutlined'
 import { useThemeMode } from '../components/theme-provider'
-import { useModeStore } from '@/lib/core/store'
+import { useModeStore, useUIPreferences } from '@/lib/core/store'
 import { NamespaceSelector } from '../components/layout/namespace-selector'
+import { colorSkins, ColorSkinName } from '@/lib/ui/color-skins'
 import { GitHubAppInstallButton } from '@/app/components/github-app/install-button'
 import { GitHubAppRepoSelector } from '@/app/components/github-app/repo-selector'
 import { useState, useEffect } from 'react'
 import { AISettings } from '@/app/components/settings/ai-settings'
+import { ClusterAliases } from '@/app/components/settings/cluster-aliases'
 
 interface KubeContext {
   name: string
@@ -55,6 +57,7 @@ export default function SettingsPage() {
     setContext,
     setNamespace,
   } = useModeStore()
+  const { colorSkin, setColorSkin, compactMode, setCompactMode } = useUIPreferences()
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -176,6 +179,7 @@ export default function SettingsPage() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange}>
           <Tab label="Cluster" />
+          <Tab label="Cluster Aliases" />
           <Tab label="AI Features" />
           <Tab label="GitHub Integration" />
           <Tab label="Design" />
@@ -410,8 +414,20 @@ export default function SettingsPage() {
         </Box>
       )}
 
-      {/* AI Features */}
+      {/* Cluster Aliases */}
       {activeTab === 1 && (
+        <Box>
+          <Paper sx={{ p: 4 }}>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+              Cluster Aliases
+            </Typography>
+            <ClusterAliases />
+          </Paper>
+        </Box>
+      )}
+
+      {/* AI Features */}
+      {activeTab === 2 && (
         <Box>
           <Paper sx={{ p: 4 }}>
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
@@ -423,7 +439,7 @@ export default function SettingsPage() {
       )}
 
       {/* GitHub Integration */}
-      {activeTab === 2 && (
+      {activeTab === 3 && (
         <Box>
           <Paper sx={{ p: 4 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -448,9 +464,10 @@ export default function SettingsPage() {
       )}
 
       {/* Design */}
-      {activeTab === 3 && (
+      {activeTab === 4 && (
         <Box>
-          <Paper sx={{ p: 4 }}>
+          {/* Theme Mode */}
+          <Paper sx={{ p: 4, mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
               Theme Mode
             </Typography>
@@ -505,6 +522,87 @@ export default function SettingsPage() {
               </Grid>
             </Grid>
           </Paper>
+
+          {/* Color Skin */}
+          <Paper sx={{ p: 4, mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Color Skin
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Choose a color palette for your dashboard
+            </Typography>
+            <Grid container spacing={2}>
+              {Object.entries(colorSkins).map(([key, skin]) => {
+                const isSelected = colorSkin === key
+                const palette = actualTheme === 'light' ? skin.light : skin.dark
+                return (
+                  <Grid key={key} size={{ xs: 12, sm: 4 }}>
+                    <Button
+                      variant={isSelected ? 'contained' : 'outlined'}
+                      onClick={() => setColorSkin(key as ColorSkinName)}
+                      fullWidth
+                      sx={{
+                        justifyContent: 'flex-start',
+                        py: 2,
+                        px: 2,
+                        borderWidth: 2,
+                        borderColor: isSelected ? palette.primary.main : 'divider',
+                        '&:hover': {
+                          borderColor: palette.primary.main,
+                        },
+                      }}
+                    >
+                      <Box sx={{ textAlign: 'left', flex: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                          <Box
+                            sx={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: 1,
+                              background: `linear-gradient(135deg, ${palette.primary.main} 0%, ${palette.secondary.main} 100%)`,
+                            }}
+                          />
+                          <Typography variant="body1" fontWeight={600}>
+                            {skin.name}
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                          {skin.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 0.5, mt: 1 }}>
+                          <Box
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: 0.5,
+                              bgcolor: palette.primary.main,
+                            }}
+                          />
+                          <Box
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: 0.5,
+                              bgcolor: palette.secondary.main,
+                            }}
+                          />
+                          <Box
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: 0.5,
+                              bgcolor: palette.accent.main,
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                    </Button>
+                  </Grid>
+                )
+              })}
+            </Grid>
+          </Paper>
+
         </Box>
       )}
     </Box>

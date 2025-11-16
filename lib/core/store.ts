@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AppMode, KubernetesContext } from '@/types/app'
+import type { ColorSkinName } from '@/lib/ui/color-skins'
 
 interface ModeStore {
   mode: AppMode
@@ -123,6 +124,59 @@ export const useGitHubStore = create<GitHubStore>()(
         },
         removeItem: (name) => localStorage.removeItem(name),
       },
+    }
+  )
+)
+
+/**
+ * Cluster Aliases Store
+ * Manages friendly names/aliases for Kubernetes clusters
+ */
+interface ClusterAliasesStore {
+  aliases: Record<string, string> // contextName -> alias
+  setAlias: (contextName: string, alias: string) => void
+  removeAlias: (contextName: string) => void
+  getAlias: (contextName: string) => string | null
+}
+
+export const useClusterAliases = create<ClusterAliasesStore>()(
+  persist(
+    (set, get) => ({
+      aliases: {},
+      setAlias: (contextName, alias) =>
+        set((state) => ({
+          aliases: { ...state.aliases, [contextName]: alias },
+        })),
+      removeAlias: (contextName) =>
+        set((state) => {
+          const { [contextName]: _, ...rest } = state.aliases
+          return { aliases: rest }
+        }),
+      getAlias: (contextName) => get().aliases[contextName] || null,
+    }),
+    {
+      name: 'kubevista-cluster-aliases',
+    }
+  )
+)
+
+/**
+ * UI Preferences Store
+ * Manages color skin selection and UI customization
+ */
+interface UIPreferencesStore {
+  colorSkin: ColorSkinName
+  setColorSkin: (skin: ColorSkinName) => void
+}
+
+export const useUIPreferences = create<UIPreferencesStore>()(
+  persist(
+    (set) => ({
+      colorSkin: 'glass',
+      setColorSkin: (skin) => set({ colorSkin: skin }),
+    }),
+    {
+      name: 'kubevista-ui-preferences',
     }
   )
 )
