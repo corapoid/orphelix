@@ -1,9 +1,10 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import ScheduleIcon from '@mui/icons-material/Schedule'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useRouter } from 'next/navigation'
 import { useCronJobs } from '@/lib/hooks/use-cronjobs'
 import { CronJobCard } from '@/app/components/cronjobs/cronjob-card'
@@ -37,7 +38,7 @@ export default function CronJobsPage() {
       field: 'suspend',
       label: 'Status',
       render: (cronJob) => (
-        <Chip
+        <LiquidGlassChip
           label={cronJob.suspend ? 'Suspended' : 'Active'}
           size="small"
           color={cronJob.suspend ? 'warning' : 'success'}
@@ -64,15 +65,15 @@ export default function CronJobsPage() {
       align: 'right',
       sortable: false,
       render: (cronJob) => (
-        <Button
+        <IconButton
           size="small"
           onClick={(e) => {
             e.stopPropagation()
             router.push(`/cronjobs/${cronJob.name}`)
           }}
         >
-          View
-        </Button>
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
       ),
     },
   ]

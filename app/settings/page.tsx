@@ -18,11 +18,49 @@ import { useModeStore, useUIPreferences } from '@/lib/core/store'
 import { GitHubAppInstallButton } from '@/app/components/github-app/install-button'
 import { GitHubAppRepoSelector } from '@/app/components/github-app/repo-selector'
 import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { AISettings } from '@/app/components/settings/ai-settings'
 import { ClusterAliases } from '@/app/components/settings/cluster-aliases'
 import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import { backgroundPresets, BackgroundPreset } from '@/lib/ui/color-skins'
+
+function GitHubIntegrationTab() {
+  const { data: installations } = useQuery({
+    queryKey: ['github-app-installations'],
+    queryFn: async () => {
+      const response = await fetch('/api/github-app/installations')
+      if (!response.ok) return []
+      return response.json()
+    },
+  })
+
+  const hasInstallations = installations && installations.length > 0
+
+  return (
+    <Box>
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+        GitHub App Integration
+      </Typography>
+      <Typography variant="body2" color="text.secondary" paragraph>
+        Connect your GitHub App to edit Kubernetes manifests and create Pull Requests directly from KubeVista.
+      </Typography>
+
+      <Box sx={{ mb: 3 }}>
+        <GitHubAppInstallButton />
+      </Box>
+
+      {hasInstallations && (
+        <Box>
+          <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+            Select Repository
+          </Typography>
+          <GitHubAppRepoSelector />
+        </Box>
+      )}
+    </Box>
+  )
+}
 
 export default function SettingsPage() {
   const searchParams = useSearchParams()
@@ -65,8 +103,8 @@ export default function SettingsPage() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange}>
           <Tab label="Cluster Configuration" />
-          <Tab label="AI Features" />
           <Tab label="GitHub Integration" />
+          <Tab label="AI Features" />
           <Tab label="Design" />
         </Tabs>
       </Box>
@@ -74,7 +112,7 @@ export default function SettingsPage() {
       {activeTab === 0 && (
         <Box>
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Cluster Aliases
             </Typography>
             <ClusterAliases />
@@ -163,33 +201,11 @@ export default function SettingsPage() {
         </Box>
       )}
 
-      {activeTab === 1 && (
-        <Box>
-          <AISettings />
-        </Box>
-      )}
+      {activeTab === 1 && <GitHubIntegrationTab />}
 
       {activeTab === 2 && (
         <Box>
-          <Paper sx={{ p: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              GitHub App Integration
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Connect your GitHub App to edit Kubernetes manifests and create Pull Requests directly from KubeVista.
-            </Typography>
-
-            <Box sx={{ mb: 3 }}>
-              <GitHubAppInstallButton />
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
-                Select Repository
-              </Typography>
-              <GitHubAppRepoSelector />
-            </Box>
-          </Paper>
+          <AISettings />
         </Box>
       )}
 

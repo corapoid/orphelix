@@ -8,7 +8,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Chip from '@mui/material/Chip'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
@@ -25,6 +24,7 @@ import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import { usePageSearch } from '@/lib/contexts/search-context'
 import { formatAge } from '@/lib/core/utils'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import type { Event } from '@/types/kubernetes'
 
 export default function EventsPage() {
@@ -188,11 +188,7 @@ export default function EventsPage() {
               {sortedData.map((event, index) => (
                 <TableRow key={index} hover>
                   <TableCell>
-                    <Chip
-                      label={event.type}
-                      size="small"
-                      color={event.type === 'Warning' ? 'warning' : 'default'}
-                    />
+                    <StatusBadge status={event.type} />
                   </TableCell>
                   <TableCell>{event.reason}</TableCell>
                   <TableCell>{event.kind}</TableCell>

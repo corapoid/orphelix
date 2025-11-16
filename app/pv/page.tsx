@@ -8,7 +8,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Chip from '@mui/material/Chip'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import StorageIcon from '@mui/icons-material/Storage'
@@ -22,6 +21,7 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable } from '@/lib/hooks/use-table-sort'
 import { usePageSearch } from '@/lib/contexts/search-context'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import type { PersistentVolume, PersistentVolumeClaim } from '@/types/kubernetes'
 
 export default function PersistentVolumesPage() {
@@ -168,11 +168,7 @@ export default function PersistentVolumesPage() {
                   <TableRow key={pv.name} hover>
                     <TableCell>{pv.name}</TableCell>
                     <TableCell>
-                      <Chip
-                        label={pv.status}
-                        size="small"
-                        color={pv.status === 'Bound' ? 'success' : 'default'}
-                      />
+                      <StatusBadge status={pv.status} />
                     </TableCell>
                     <TableCell>{pv.capacity}</TableCell>
                     <TableCell>{pv.accessModes.join(', ')}</TableCell>
@@ -263,11 +259,7 @@ export default function PersistentVolumesPage() {
                     <TableCell>{pvc.name}</TableCell>
                     <TableCell>{pvc.namespace}</TableCell>
                     <TableCell>
-                      <Chip
-                        label={pvc.status}
-                        size="small"
-                        color={pvc.status === 'Bound' ? 'success' : 'default'}
-                      />
+                      <StatusBadge status={pvc.status} />
                     </TableCell>
                     <TableCell>{pvc.volume}</TableCell>
                     <TableCell>{pvc.capacity}</TableCell>
