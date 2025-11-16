@@ -7,7 +7,7 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import LanguageIcon from '@mui/icons-material/Language'
 import { CriticalAlerts } from './components/dashboard/critical-alerts'
-import { ResourceOverview } from './components/dashboard/resource-overview'
+import { ResourceOverviewV2 } from './components/dashboard/resource-overview-v2'
 import { ResourceUtilization } from './components/dashboard/resource-utilization'
 import { RecentEvents } from './components/dashboard/recent-events'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
@@ -15,6 +15,7 @@ import { useResourceQuotas } from '@/lib/hooks/use-resourcequotas'
 import { useModeStore } from '@/lib/core/store'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
 import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
+import { PageHeader } from './components/layout/page-header'
 
 export default function DashboardPage() {
   const { data: health } = useClusterHealth()
@@ -27,41 +28,29 @@ export default function DashboardPage() {
 
   // If cluster is not connected, show connection alert instead of loading/error states
   if (health?.status === 'disconnected') {
-    return (
-      <Box>
-        <Typography variant="h4" gutterBottom>
-          Dashboard Overview
-        </Typography>
-        <ClusterConnectionAlert />
-      </Box>
-    )
+    return <ClusterConnectionAlert />
   }
 
   // If in real mode but no namespace selected, show alert
   if (mode === 'real' && !namespace) {
     return (
-      <Box>
-        <Typography variant="h4" gutterBottom>
-          Dashboard Overview
+      <Alert severity="warning" sx={{ mb: 2 }}>
+        <Typography variant="subtitle1" gutterBottom>
+          Namespace Required
         </Typography>
-        <Alert severity="warning" sx={{ mb: 2 }}>
-          <Typography variant="subtitle1" gutterBottom>
-            Namespace Required
-          </Typography>
-          <Typography variant="body2">
-            Please select a namespace from the header to view cluster resources.
-            You can also set a default namespace in Settings.
-          </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => (window.location.href = '/settings')}
-            sx={{ mt: 2 }}
-          >
-            Go to Settings
-          </Button>
-        </Alert>
-      </Box>
+        <Typography variant="body2">
+          Please select a namespace above to view cluster resources.
+          You can also set a default namespace in Settings.
+        </Typography>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => (window.location.href = '/settings')}
+          sx={{ mt: 2 }}
+        >
+          Go to Settings
+        </Button>
+      </Alert>
     )
   }
 
@@ -87,33 +76,27 @@ export default function DashboardPage() {
 
   return (
     <Box>
-      {/* Clean Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-          Cluster Overview
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Cluster:</strong> {mode === 'mock' ? 'Demo' : selectedContext?.cluster || 'Unknown'} •
-          <strong> Namespace:</strong> {mode === 'mock' ? 'demo' : namespace || 'All namespaces'}
-        </Typography>
-      </Box>
-
       {/* 1. Critical Alerts (Conditional) */}
       <Box sx={{ mb: 3 }}>
         <CriticalAlerts summary={summary} />
       </Box>
 
-      {/* 2. Resource Overview (Grouped Cards) */}
-      <Box sx={{ mb: 4 }}>
-        <ResourceOverview summary={summary} />
+      {/* 2. Resource Overview + Resource Utilization (Side by Side on wide screens) */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: '2fr 1fr' }, gap: 3, mb: 4 }}>
+        <Box>
+          <ResourceOverviewV2 summary={summary} />
+        </Box>
+        <Box sx={{ display: { xs: 'none', xl: 'block' } }}>
+          <ResourceUtilization quotas={quotas} />
+        </Box>
       </Box>
 
-      {/* 3. Recent Activity + Resource Utilization (Side by Side) */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 3, mb: 4 }}>
+      {/* 3. Recent Activity + Resource Utilization (for smaller screens) */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' }, gap: 3, mb: 4 }}>
         <Box>
           <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
         </Box>
-        <Box>
+        <Box sx={{ display: { xs: 'block', xl: 'none' } }}>
           <ResourceUtilization quotas={quotas} />
         </Box>
       </Box>
