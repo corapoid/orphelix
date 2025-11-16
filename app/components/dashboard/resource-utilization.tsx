@@ -107,7 +107,28 @@ export function ResourceUtilization({ quotas }: ResourceUtilizationProps) {
   }
 
   return (
-    <Paper sx={{ p: 3 }}>
+    <Paper
+      elevation={0}
+      sx={{
+        p: 3,
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(30, 30, 46, 0.6)'
+            : 'rgba(255, 255, 255, 0.25)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        border: '1px solid',
+        borderColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.12)'
+            : 'rgba(209, 213, 219, 0.4)',
+        borderRadius: 3,
+        boxShadow: (theme) =>
+          theme.palette.mode === 'dark'
+            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
+            : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+      }}
+    >
       <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
         Cluster Resource Utilization
       </Typography>

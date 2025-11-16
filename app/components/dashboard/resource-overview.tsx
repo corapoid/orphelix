@@ -100,12 +100,9 @@ export function ResourceOverview({ summary }: ResourceOverviewProps) {
           p: 3,
           height: '100%',
           cursor: 'pointer',
-          transition: 'all 0.2s',
-          border: '1px solid',
-          borderColor: 'divider',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
-            borderColor: color,
-            boxShadow: 2,
+            transform: 'translateY(-2px)',
           },
         }}
         onClick={() => {

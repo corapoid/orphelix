@@ -40,14 +40,10 @@ export function SummaryCard({
       sx={{
         height: '100%',
         cursor: href ? 'pointer' : 'default',
-        transition: 'all 0.3s ease-in-out',
-        border: '1px solid',
-        borderColor: 'divider',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         '&:hover': href
           ? {
-              transform: 'translateY(-4px)',
-              boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.12)',
-              borderColor: iconBgColor || 'primary.main',
+              transform: 'translateY(-2px)',
             }
           : {},
       }}

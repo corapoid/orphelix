@@ -128,8 +128,6 @@ export function ClusterHealthScore({ summary }: ClusterHealthScoreProps) {
           theme.palette.mode === 'dark'
             ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%)'
             : 'linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%)',
-        border: '1px solid',
-        borderColor: 'divider',
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>

@@ -28,8 +28,28 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
 
   if (loading) {
     return (
-      <Paper>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+      <Paper
+        elevation={0}
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(30, 30, 46, 0.6)'
+              : 'rgba(255, 255, 255, 0.25)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(209, 213, 219, 0.4)',
+          borderRadius: 3,
+          boxShadow: (theme) =>
+            theme.palette.mode === 'dark'
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
+              : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+        }}
+      >
+        <Box sx={{ p: 2 }}>
           <Typography variant="h6">Recent Activity</Typography>
           <Typography variant="body2" color="text.secondary">
             Latest cluster events from the last hour
@@ -44,8 +64,28 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
 
   if (error) {
     return (
-      <Paper>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+      <Paper
+        elevation={0}
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(30, 30, 46, 0.6)'
+              : 'rgba(255, 255, 255, 0.25)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(209, 213, 219, 0.4)',
+          borderRadius: 3,
+          boxShadow: (theme) =>
+            theme.palette.mode === 'dark'
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
+              : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+        }}
+      >
+        <Box sx={{ p: 2 }}>
           <Typography variant="h6">Recent Activity</Typography>
           <Typography variant="body2" color="text.secondary">
             Latest cluster events from the last hour
@@ -59,9 +99,29 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
   }
 
   return (
-    <Paper>
+    <Paper
+      elevation={0}
+      sx={{
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(30, 30, 46, 0.6)'
+            : 'rgba(255, 255, 255, 0.25)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        border: '1px solid',
+        borderColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.12)'
+            : 'rgba(209, 213, 219, 0.4)',
+        borderRadius: 3,
+        boxShadow: (theme) =>
+          theme.palette.mode === 'dark'
+            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
+            : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+      }}
+    >
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="h6">Recent Activity</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
         <Typography variant="body2" color="text.secondary">
           Latest cluster events from the last hour • {events.length} event{events.length !== 1 ? 's' : ''}
         </Typography>
@@ -81,8 +141,6 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
                   key={`${event.name}-${event.reason}-${index}`}
                   alignItems="flex-start"
                   sx={{
-                    borderBottom: 1,
-                    borderColor: 'divider',
                     px: 3,
                     py: 2,
                   }}
@@ -122,7 +180,7 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
               ))}
             </List>
             {hasMore && (
-              <Box sx={{ p: 2, textAlign: 'center', borderTop: 1, borderColor: 'divider' }}>
+              <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Button
                   variant="text"
                   size="small"
