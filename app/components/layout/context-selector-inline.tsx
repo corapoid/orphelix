@@ -112,6 +112,7 @@ export function ContextSelectorInline() {
   }
 
   if (mode === 'mock') {
+    const demoDisplayName = getDisplayName('demo-cluster')
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <Typography variant="caption" color="text.secondary" fontWeight={600}>
@@ -126,7 +127,7 @@ export function ContextSelectorInline() {
           IconComponent={() => null}
           renderValue={() => (
             <Typography variant="body2" fontWeight={600}>
-              Demo Mode
+              {demoDisplayName}
             </Typography>
           )}
           sx={{
@@ -137,7 +138,7 @@ export function ContextSelectorInline() {
             },
           }}
         >
-          <MenuItem value="demo">Demo Mode</MenuItem>
+          <MenuItem value="demo">{demoDisplayName}</MenuItem>
         </Select>
       </Box>
     )
