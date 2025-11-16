@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-import Paper from '@mui/material/Paper'
 import Alert from '@mui/material/Alert'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -112,73 +111,67 @@ export function ClusterAliases() {
                 '&:last-child': { borderBottom: 'none' },
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="body2" fontWeight={600}>
-                    {context.name}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Cluster: {context.cluster}
-                  </Typography>
-                </Box>
-                {!isEditing && (
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                {isEditing ? (
+                  <>
+                    <TextField
+                      size="small"
+                      fullWidth
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSave(context.name)
+                        } else if (e.key === 'Escape') {
+                          handleCancel()
+                        }
+                      }}
+                      placeholder="Enter friendly name"
+                      autoFocus
+                      sx={{ flex: 1 }}
+                    />
                     <IconButton
                       size="small"
-                      onClick={() => handleEdit(context.name)}
+                      onClick={() => handleSave(context.name)}
                       color="primary"
                     >
-                      <EditIcon fontSize="small" />
+                      <SaveIcon fontSize="small" />
                     </IconButton>
-                    {currentAlias && (
+                    <IconButton size="small" onClick={handleCancel}>
+                      <CancelIcon fontSize="small" />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" fontWeight={600}>
+                        {currentAlias || context.name}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Cluster: {context.cluster}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
                       <IconButton
                         size="small"
-                        onClick={() => handleRemove(context.name)}
-                        color="error"
+                        onClick={() => handleEdit(context.name)}
+                        color="primary"
                       >
-                        <DeleteIcon fontSize="small" />
+                        <EditIcon fontSize="small" />
                       </IconButton>
-                    )}
-                  </Box>
+                      {currentAlias && (
+                        <IconButton
+                          size="small"
+                          onClick={() => handleRemove(context.name)}
+                          color="error"
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      )}
+                    </Box>
+                  </>
                 )}
               </Box>
-              {isEditing ? (
-                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                  <TextField
-                    size="small"
-                    fullWidth
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    placeholder="Enter friendly name"
-                    autoFocus
-                  />
-                  <IconButton
-                    size="small"
-                    onClick={() => handleSave(context.name)}
-                    color="primary"
-                  >
-                    <SaveIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton size="small" onClick={handleCancel}>
-                    <CancelIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-              ) : currentAlias ? (
-                <Paper sx={{ p: 1.5, bgcolor: 'primary.main', color: 'white', mt: 1 }}>
-                  <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                    Alias:
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600}>
-                    {currentAlias}
-                  </Typography>
-                </Paper>
-              ) : (
-                <Alert severity="info" sx={{ mt: 1 }}>
-                  <Typography variant="caption">
-                    No alias set. Click the edit icon to add one.
-                  </Typography>
-                </Alert>
-              )}
             </ListItem>
           )
         })}
