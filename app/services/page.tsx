@@ -1,9 +1,10 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import CloudIcon from '@mui/icons-material/Cloud'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useServices } from '@/lib/hooks/use-services'
@@ -44,7 +45,7 @@ export default function ServicesPage() {
       field: 'type',
       label: 'Type',
       render: (service) => (
-        <Chip label={service.type} size="small" color={getServiceTypeColor(service.type)} />
+        <LiquidGlassChip label={service.type} size="small" color={getServiceTypeColor(service.type)} />
       ),
     },
     {
@@ -59,7 +60,7 @@ export default function ServicesPage() {
     {
       field: 'ports',
       label: 'Ports',
-      render: (service) => service.ports.join(', '),
+      render: (service) => service.ports.map(p => `${p.port}/${p.protocol}`).join(', '),
       sortable: false,
     },
     {
@@ -72,15 +73,15 @@ export default function ServicesPage() {
       align: 'right',
       sortable: false,
       render: (service) => (
-        <Button
+        <IconButton
           size="small"
           onClick={(e) => {
             e.stopPropagation()
             router.push(`/services/${service.name}`)
           }}
         >
-          View
-        </Button>
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
       ),
     },
   ]

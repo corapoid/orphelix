@@ -1,8 +1,9 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import WorkIcon from '@mui/icons-material/Work'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useJobs } from '@/lib/hooks/use-jobs'
@@ -62,15 +63,15 @@ export default function JobsPage() {
       align: 'right',
       sortable: false,
       render: (job) => (
-        <Button
+        <IconButton
           size="small"
           onClick={(e) => {
             e.stopPropagation()
             router.push(`/jobs/${job.name}`)
           }}
         >
-          View
-        </Button>
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
       ),
     },
   ]

@@ -1,8 +1,9 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useDeployments } from '@/lib/hooks/use-deployments'
@@ -83,15 +84,15 @@ export default function DeploymentsPage() {
       align: 'right',
       sortable: false,
       render: (deployment) => (
-        <Button
+        <IconButton
           size="small"
           onClick={(e) => {
             e.stopPropagation()
             router.push(`/deployments/${deployment.name}`)
           }}
         >
-          View
-        </Button>
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
       ),
     },
   ]

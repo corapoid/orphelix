@@ -1,8 +1,9 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import ViewInArIcon from '@mui/icons-material/ViewInAr'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { usePods } from '@/lib/hooks/use-pods'
@@ -75,15 +76,15 @@ export default function PodsPage() {
       align: 'right',
       sortable: false,
       render: (pod) => (
-        <Button
+        <IconButton
           size="small"
           onClick={(e) => {
             e.stopPropagation()
             router.push(`/pods/${pod.name}`)
           }}
         >
-          View
-        </Button>
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
       ),
     },
   ]

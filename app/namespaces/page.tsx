@@ -10,8 +10,9 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import FolderIcon from '@mui/icons-material/Folder'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useRouter } from 'next/navigation'
 import { useNamespaces } from '@/lib/hooks/use-namespaces'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
@@ -21,6 +22,7 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
 import { usePageSearch } from '@/lib/contexts/search-context'
+import { StatusBadge } from '@/app/components/common/status-badge'
 
 export default function NamespacesPage() {
   const router = useRouter()
@@ -95,12 +97,7 @@ export default function NamespacesPage() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip
-                      label={namespace.status}
-                      size="small"
-                      color={namespace.status === 'Active' ? 'success' : 'default'}
-                      variant="outlined"
-                    />
+                    <StatusBadge status={namespace.status} />
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -123,15 +120,15 @@ export default function NamespacesPage() {
                   </TableCell>
                   <TableCell>{namespace.age}</TableCell>
                   <TableCell align="right">
-                    <Button
+                    <IconButton
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation()
                         router.push(`/namespaces/${namespace.name}`)
                       }}
                     >
-                      View
-                    </Button>
+                      <VisibilityIcon fontSize="small" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

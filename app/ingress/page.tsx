@@ -8,11 +8,12 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import HttpIcon from '@mui/icons-material/Http'
 import LockIcon from '@mui/icons-material/Lock'
+import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useIngresses } from '@/lib/hooks/use-ingress'
@@ -139,7 +140,7 @@ export default function IngressPage() {
                   </TableCell>
                   <TableCell>
                     {ingress.className ? (
-                      <Chip label={ingress.className} size="small" variant="outlined" />
+                      <LiquidGlassChip label={ingress.className} size="small" />
                     ) : (
                       <Typography variant="body2" color="text.secondary">
                         default
@@ -149,11 +150,10 @@ export default function IngressPage() {
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                       {ingress.hosts.slice(0, 2).map((host, idx) => (
-                        <Chip
+                        <LiquidGlassChip
                           key={idx}
                           label={host}
                           size="small"
-                          variant="outlined"
                         />
                       ))}
                       {ingress.hosts.length > 2 && (
@@ -175,7 +175,7 @@ export default function IngressPage() {
                   </TableCell>
                   <TableCell>
                     {ingress.tls && ingress.tls.length > 0 ? (
-                      <Chip
+                      <LiquidGlassChip
                         icon={<LockIcon sx={{ fontSize: 14 }} />}
                         label="Secured"
                         size="small"
@@ -189,15 +189,15 @@ export default function IngressPage() {
                   </TableCell>
                   <TableCell>{ingress.age}</TableCell>
                   <TableCell align="right">
-                    <Button
+                    <IconButton
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation()
                         router.push(`/ingress/${ingress.name}`)
                       }}
                     >
-                      View
-                    </Button>
+                      <VisibilityIcon fontSize="small" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
