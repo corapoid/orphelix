@@ -21,6 +21,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { AISettings } from '@/app/components/settings/ai-settings'
 import { ClusterAliases } from '@/app/components/settings/cluster-aliases'
+import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import { backgroundPresets, BackgroundPreset } from '@/lib/ui/color-skins'
 
 export default function SettingsPage() {
@@ -162,41 +163,10 @@ export default function SettingsPage() {
             </Typography>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Button
+                <LiquidGlassButton
                   onClick={() => setThemeMode('light')}
                   fullWidth
-                  sx={{
-                    justifyContent: 'flex-start',
-                    py: 2,
-                    px: 2,
-                    borderRadius: 1.5,
-                    border: '0.5px solid transparent',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                    ...(themeMode === 'light' && {
-                      background: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
-                          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                      backdropFilter: 'blur(20px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'rgba(0, 0, 0, 0.08)'
-                          : 'rgba(255, 255, 255, 0.2)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
-                          : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-                    }),
-                    '&:hover': {
-                      bgcolor: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'rgba(255, 255, 255, 0.5)'
-                          : 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                    },
-                  }}
+                  selected={themeMode === 'light'}
                 >
                   <Box sx={{ textAlign: 'left', flex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
@@ -209,44 +179,13 @@ export default function SettingsPage() {
                       Always use light theme
                     </Typography>
                   </Box>
-                </Button>
+                </LiquidGlassButton>
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Button
+                <LiquidGlassButton
                   onClick={() => setThemeMode('dark')}
                   fullWidth
-                  sx={{
-                    justifyContent: 'flex-start',
-                    py: 2,
-                    px: 2,
-                    borderRadius: 1.5,
-                    border: '0.5px solid transparent',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                    ...(themeMode === 'dark' && {
-                      background: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
-                          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                      backdropFilter: 'blur(20px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'rgba(0, 0, 0, 0.08)'
-                          : 'rgba(255, 255, 255, 0.2)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
-                          : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-                    }),
-                    '&:hover': {
-                      bgcolor: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'rgba(255, 255, 255, 0.5)'
-                          : 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                    },
-                  }}
+                  selected={themeMode === 'dark'}
                 >
                   <Box sx={{ textAlign: 'left', flex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
@@ -259,44 +198,13 @@ export default function SettingsPage() {
                       Always use dark theme
                     </Typography>
                   </Box>
-                </Button>
+                </LiquidGlassButton>
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Button
+                <LiquidGlassButton
                   onClick={() => setThemeMode('system')}
                   fullWidth
-                  sx={{
-                    justifyContent: 'flex-start',
-                    py: 2,
-                    px: 2,
-                    borderRadius: 1.5,
-                    border: '0.5px solid transparent',
-                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                    ...(themeMode === 'system' && {
-                      background: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
-                          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                      backdropFilter: 'blur(20px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'rgba(0, 0, 0, 0.08)'
-                          : 'rgba(255, 255, 255, 0.2)',
-                      boxShadow: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
-                          : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-                    }),
-                    '&:hover': {
-                      bgcolor: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'rgba(255, 255, 255, 0.5)'
-                          : 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                    },
-                  }}
+                  selected={themeMode === 'system'}
                 >
                   <Box sx={{ textAlign: 'left', flex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
@@ -309,7 +217,7 @@ export default function SettingsPage() {
                       Currently: {actualTheme}
                     </Typography>
                   </Box>
-                </Button>
+                </LiquidGlassButton>
               </Grid>
             </Grid>
           </Box>
@@ -327,41 +235,10 @@ export default function SettingsPage() {
                 const palette = actualTheme === 'light' ? preset.light : preset.dark
                 return (
                   <Grid key={key} size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Button
+                    <LiquidGlassButton
                       onClick={() => setBackgroundPreset(key as BackgroundPreset)}
                       fullWidth
-                      sx={{
-                        justifyContent: 'flex-start',
-                        py: 2,
-                        px: 2,
-                        borderRadius: 1.5,
-                        border: '0.5px solid transparent',
-                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                        ...(isSelected && {
-                          background: (theme) =>
-                            theme.palette.mode === 'light'
-                              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
-                              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                          backdropFilter: 'blur(20px) saturate(180%)',
-                          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                          borderColor: (theme) =>
-                            theme.palette.mode === 'light'
-                              ? 'rgba(0, 0, 0, 0.08)'
-                              : 'rgba(255, 255, 255, 0.2)',
-                          boxShadow: (theme) =>
-                            theme.palette.mode === 'light'
-                              ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
-                              : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-                        }),
-                        '&:hover': {
-                          bgcolor: (theme) =>
-                            theme.palette.mode === 'light'
-                              ? 'rgba(255, 255, 255, 0.5)'
-                              : 'rgba(255, 255, 255, 0.08)',
-                          backdropFilter: 'blur(20px)',
-                          WebkitBackdropFilter: 'blur(20px)',
-                        },
-                      }}
+                      selected={isSelected}
                     >
                       <Box sx={{ textAlign: 'left', flex: 1 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
@@ -388,7 +265,7 @@ export default function SettingsPage() {
                           {preset.description}
                         </Typography>
                       </Box>
-                    </Button>
+                    </LiquidGlassButton>
                   </Grid>
                 )
               })}
