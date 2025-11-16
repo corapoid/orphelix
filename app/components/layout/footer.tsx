@@ -12,34 +12,30 @@ export function Footer() {
     <Box
       component="footer"
       sx={{
-        py: 2,
+        py: 1.5,
         px: 3,
-        mt: 'auto',
         borderTop: 1,
         borderColor: 'divider',
-        bgcolor: 'background.paper',
+        bgcolor: 'transparent',
+        flexShrink: 0,
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-        <Box>
-          <Typography variant="body2" color="text.secondary">
-            KubeVista v1.1.0 - Modern Kubernetes Dashboard
-          </Typography>
-        </Box>
-        <Box>
-          <Tooltip title="GitHub Repository" arrow>
-            <IconButton
-              component={Link}
-              href="https://github.com/dmakowski-rasp/kubevista"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
-              size="small"
-            >
-              <GitHubIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <Typography variant="caption" color="text.secondary">
+          KubeVista v1.1.0 - Modern Kubernetes Dashboard
+        </Typography>
+        <Tooltip title="GitHub Repository" arrow>
+          <IconButton
+            component={Link}
+            href="https://github.com/dmakowski-rasp/kubevista"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+            size="small"
+          >
+            <GitHubIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </Box>
     </Box>
   )

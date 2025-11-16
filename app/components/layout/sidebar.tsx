@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -34,9 +34,12 @@ import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import Divider from '@mui/material/Divider'
+import { ContextSelector } from './context-selector'
+import { Logo } from './logo'
 
 const DRAWER_WIDTH = 240
 const DRAWER_WIDTH_COLLAPSED = 64
+const DRAWER_PADDING = 16 // Padding on left and right
 
 interface SidebarProps {
   open: boolean
@@ -96,22 +99,23 @@ function isNavGroup(item: NavItem | NavGroup): item is NavGroup {
   return 'items' in item
 }
 
-export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
+export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter() as AppRouterInstance
   const [collapsed, setCollapsed] = useState(false)
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    Workloads: true,
-    Network: true,
-    'Config & Storage': true,
-    Cluster: true,
-  })
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    setExpandedGroups({
+      Workloads: true,
+      Network: true,
+      'Config & Storage': true,
+      Cluster: true,
+    })
+  }, [])
 
   const handleNavigate = (path: string) => {
     router.push(path)
-    if (window.innerWidth < 1024) {
-      _onClose()
-    }
   }
 
   const toggleCollapse = () => {
@@ -130,34 +134,58 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
 
     if (collapsed) {
       return (
-        <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+        <ListItem key={item.path} disablePadding sx={{ mb: 0.4 }}>
           <Tooltip title={item.label} placement="right">
             <ListItemButton
               selected={isActive}
               onClick={() => handleNavigate(item.path)}
               sx={{
-                borderRadius: 2,
-                minHeight: 48,
+                borderRadius: 1.5,
+                minHeight: 40,
                 justifyContent: 'center',
-                px: 2,
-                transition: 'all 0.2s ease-in-out',
+                px: 1.5,
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&.Mui-selected': {
-                  bgcolor: 'primary.main',
-                  color: 'white',
+                  bgcolor: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? 'rgba(255, 255, 255, 0.7)'
+                      : 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? '0.5px solid rgba(0, 0, 0, 0.08)'
+                      : '0.5px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? '0 2px 8px rgba(0, 0, 0, 0.08)'
+                      : '0 2px 8px rgba(0, 0, 0, 0.3)',
                   '&:hover': {
-                    bgcolor: 'primary.dark',
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? 'rgba(255, 255, 255, 0.85)'
+                        : 'rgba(255, 255, 255, 0.16)',
                   },
                 },
                 '&:hover': {
-                  bgcolor: 'action.hover',
+                  bgcolor: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? 'rgba(255, 255, 255, 0.5)'
+                      : 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
                 },
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  color: isActive ? 'white' : 'text.secondary',
+                  color: isActive ? 'primary.main' : 'text.secondary',
                   transition: 'color 0.2s ease-in-out',
+                  fontSize: '1.25rem',
+                  '& svg': {
+                    fontSize: '1.25rem',
+                  },
                 }}
               >
                 {item.icon}
@@ -169,34 +197,59 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
     }
 
     return (
-      <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+      <ListItem key={item.path} disablePadding sx={{ mb: 0.4 }}>
         <ListItemButton
           selected={isActive}
           onClick={() => handleNavigate(item.path)}
           sx={{
-            borderRadius: 2,
-            pl: isSubItem ? 4 : 2,
-            transition: 'all 0.2s ease-in-out',
+            borderRadius: 1.5,
+            pl: isSubItem ? 3.5 : 1.5,
+            py: 0.75,
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             '&.Mui-selected': {
-              bgcolor: 'primary.main',
-              color: 'white',
+              bgcolor: (theme) =>
+                theme.palette.mode === 'light'
+                  ? 'rgba(255, 255, 255, 0.7)'
+                  : 'rgba(255, 255, 255, 0.12)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: (theme) =>
+                theme.palette.mode === 'light'
+                  ? '0.5px solid rgba(0, 0, 0, 0.08)'
+                  : '0.5px solid rgba(255, 255, 255, 0.15)',
+              boxShadow: (theme) =>
+                theme.palette.mode === 'light'
+                  ? '0 2px 8px rgba(0, 0, 0, 0.08)'
+                  : '0 2px 8px rgba(0, 0, 0, 0.3)',
               '&:hover': {
-                bgcolor: 'primary.dark',
+                bgcolor: (theme) =>
+                  theme.palette.mode === 'light'
+                    ? 'rgba(255, 255, 255, 0.85)'
+                    : 'rgba(255, 255, 255, 0.16)',
               },
               '& .MuiListItemIcon-root': {
-                color: 'white',
+                color: 'primary.main',
               },
             },
             '&:hover': {
-              bgcolor: 'action.hover',
+              bgcolor: (theme) =>
+                theme.palette.mode === 'light'
+                  ? 'rgba(255, 255, 255, 0.5)'
+                  : 'rgba(255, 255, 255, 0.08)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
             },
           }}
         >
           <ListItemIcon
             sx={{
-              minWidth: 40,
-              color: isActive ? 'white' : 'text.secondary',
+              minWidth: 34,
+              color: isActive ? 'primary.main' : 'text.secondary',
               transition: 'color 0.2s ease-in-out',
+              fontSize: '1.25rem',
+              '& svg': {
+                fontSize: '1.25rem',
+              },
             }}
           >
             {item.icon}
@@ -204,8 +257,9 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
           <ListItemText
             primary={item.label}
             primaryTypographyProps={{
-              fontSize: '0.875rem',
+              fontSize: '0.75rem',
               fontWeight: isActive ? 600 : 500,
+              color: isActive ? 'primary.main' : 'inherit',
             }}
           />
         </ListItemButton>
@@ -216,24 +270,53 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
   return (
     <Drawer
       variant="permanent"
+      hideBackdrop
+      ModalProps={{ keepMounted: true }}
       sx={{
-        width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
+        width: collapsed ? DRAWER_WIDTH_COLLAPSED + DRAWER_PADDING * 2 : DRAWER_WIDTH + DRAWER_PADDING * 2,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
+          width: collapsed ? DRAWER_WIDTH_COLLAPSED + DRAWER_PADDING * 2 : DRAWER_WIDTH + DRAWER_PADDING * 2,
           boxSizing: 'border-box',
-          borderRight: '1px solid',
-          borderColor: 'divider',
+          border: 'none',
+          bgcolor: 'transparent',
           transition: 'width 0.3s ease-in-out',
           overflowX: 'hidden',
           zIndex: (theme) => theme.zIndex.appBar - 1,
+          pl: 2, // 16px left margin
+          pr: 2, // 16px right margin
+          pt: 0,
+        },
+        '& .MuiBackdrop-root': {
+          display: 'none',
         },
       }}
     >
-      <Toolbar />
-
-      <List sx={{ px: 1, py: 1, flex: 1 }}>
-        {navGroups.map((item) => {
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          borderRadius: 3,
+          height: 'calc(100vh - 32px)',
+          mt: 2,
+          mb: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          backdropFilter: 'blur(60px)',
+          WebkitBackdropFilter: 'blur(60px)',
+          boxShadow: (theme) =>
+            theme.palette.mode === 'dark'
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
+              : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+          border: (theme) =>
+            theme.palette.mode === 'light'
+              ? '1px solid rgba(209, 213, 219, 0.4)'
+              : '1px solid rgba(255, 255, 255, 0.12)',
+          overflow: 'hidden',
+        }}
+      >
+        <ContextSelector collapsed={collapsed} />
+        <List sx={{ px: 1, py: 1, flex: 1, overflowY: 'auto' }}>
+          {navGroups.map((item) => {
           if (isNavGroup(item)) {
             // Render group header
             const isExpanded = expandedGroups[item.label]
@@ -248,9 +331,9 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
                 <ListItemButton
                   onClick={() => toggleGroup(item.label)}
                   sx={{
-                    borderRadius: 2,
-                    mb: 0.5,
-                    py: 1,
+                    borderRadius: 1.5,
+                    mb: 0.4,
+                    py: 0.6,
                     '&:hover': {
                       bgcolor: 'action.hover',
                     },
@@ -259,17 +342,17 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
                   <ListItemText
                     primary={item.label}
                     primaryTypographyProps={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.65rem',
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       color: 'text.secondary',
-                      letterSpacing: 0.5,
+                      letterSpacing: 0.4,
                     }}
                   />
                   {isExpanded ? (
-                    <ExpandLessIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                    <ExpandLessIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                   ) : (
-                    <ExpandMoreIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                    <ExpandMoreIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                   )}
                 </ListItemButton>
                 <Collapse in={isExpanded} timeout="auto" unmountOnExit>
@@ -283,12 +366,12 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
 
           // Render single item (like Dashboard)
           return renderNavItem(item, false)
-        })}
-      </List>
+          })}
+        </List>
 
-      {/* Bottom Actions: Settings & Collapse */}
-      <Divider />
-      <Box sx={{ px: 1, py: 1 }}>
+        {/* Bottom Actions: Settings & Collapse */}
+        <Divider />
+        <Box sx={{ px: 1, py: 1 }}>
         {collapsed ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
             <Tooltip title="Settings" placement="right">
@@ -300,23 +383,43 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
                   minHeight: 48,
                   justifyContent: 'center',
                   px: 2,
-                  transition: 'all 0.2s ease-in-out',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                   '&.Mui-selected': {
-                    bgcolor: 'primary.main',
-                    color: 'white',
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? 'rgba(255, 255, 255, 0.7)'
+                        : 'rgba(255, 255, 255, 0.12)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? '0.5px solid rgba(0, 0, 0, 0.08)'
+                        : '0.5px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? '0 2px 8px rgba(0, 0, 0, 0.08)'
+                        : '0 2px 8px rgba(0, 0, 0, 0.3)',
                     '&:hover': {
-                      bgcolor: 'primary.dark',
+                      bgcolor: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'rgba(255, 255, 255, 0.85)'
+                          : 'rgba(255, 255, 255, 0.16)',
                     },
                   },
                   '&:hover': {
-                    bgcolor: 'action.hover',
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? 'rgba(255, 255, 255, 0.5)'
+                        : 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    color: pathname === '/settings' ? 'white' : 'text.secondary',
+                    color: pathname === '/settings' ? 'primary.main' : 'text.secondary',
                     transition: 'color 0.2s ease-in-out',
                   }}
                 >
@@ -355,26 +458,46 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
               onClick={() => handleNavigate('/settings')}
               sx={{
                 borderRadius: 2,
-                transition: 'all 0.2s ease-in-out',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&.Mui-selected': {
-                  bgcolor: 'primary.main',
-                  color: 'white',
+                  bgcolor: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? 'rgba(255, 255, 255, 0.7)'
+                      : 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? '0.5px solid rgba(0, 0, 0, 0.08)'
+                      : '0.5px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? '0 2px 8px rgba(0, 0, 0, 0.08)'
+                      : '0 2px 8px rgba(0, 0, 0, 0.3)',
                   '&:hover': {
-                    bgcolor: 'primary.dark',
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? 'rgba(255, 255, 255, 0.85)'
+                        : 'rgba(255, 255, 255, 0.16)',
                   },
                   '& .MuiListItemIcon-root': {
-                    color: 'white',
+                    color: 'primary.main',
                   },
                 },
                 '&:hover': {
-                  bgcolor: 'action.hover',
+                  bgcolor: (theme) =>
+                    theme.palette.mode === 'light'
+                      ? 'rgba(255, 255, 255, 0.5)'
+                      : 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
                 },
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 40,
-                  color: pathname === '/settings' ? 'white' : 'text.secondary',
+                  color: pathname === '/settings' ? 'primary.main' : 'text.secondary',
                   transition: 'color 0.2s ease-in-out',
                 }}
               >
@@ -385,6 +508,7 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
                 primaryTypographyProps={{
                   fontSize: '0.875rem',
                   fontWeight: pathname === '/settings' ? 600 : 500,
+                  color: pathname === '/settings' ? 'primary.main' : 'inherit',
                 }}
               />
             </ListItemButton>
@@ -412,6 +536,7 @@ export function Sidebar({ open: _open, onClose: _onClose }: SidebarProps) {
             </ListItemButton>
           </Box>
         )}
+        </Box>
       </Box>
     </Drawer>
   )

@@ -1,18 +1,13 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
 import { Providers } from './components/providers'
-import { Header } from './components/layout/header'
 import { Sidebar } from './components/layout/sidebar'
 import { Footer } from './components/layout/footer'
+import { TopBar } from './components/layout/top-bar'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
-  const closeSidebar = () => setSidebarOpen(false)
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -22,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('theme-mode') || 'dark';
+                  var theme = localStorage.getItem('theme-mode') || 'light';
                   var actualTheme = theme;
                   if (theme === 'system') {
                     actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -37,21 +32,30 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body style={{ margin: 0 }} suppressHydrationWarning>
         <Providers>
-          <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Header onMenuClick={toggleSidebar} />
-            <Box sx={{ display: 'flex', flexGrow: 1 }}>
-              <Sidebar open={sidebarOpen} onClose={closeSidebar} />
+          <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+            <Sidebar />
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                pt: 2,
+                pr: 2,
+                pb: 2,
+              }}
+            >
               <Box
-                component="main"
                 sx={{
                   flexGrow: 1,
-                  width: { sm: '100%' },
                   display: 'flex',
                   flexDirection: 'column',
+                  borderRadius: 3,
+                  overflow: 'hidden',
                 }}
               >
-                <Toolbar />
-                <Box sx={{ flexGrow: 1, p: 3 }}>
+                <TopBar />
+                <Box sx={{ flexGrow: 1, p: 2, overflowY: 'auto' }}>
                   {children}
                 </Box>
                 <Footer />

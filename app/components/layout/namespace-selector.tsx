@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
-import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import Divider from '@mui/material/Divider'
 import { useModeStore } from '@/lib/core/store'
 
 interface Namespace {
@@ -15,25 +16,19 @@ interface Namespace {
 }
 
 interface NamespaceSelectorProps {
-  fullWidth?: boolean
   onError?: (error: string) => void
 }
 
-export function NamespaceSelector({ fullWidth = false, onError }: NamespaceSelectorProps) {
+export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
   const { mode, selectedNamespace, setNamespace } = useModeStore()
   const [namespaces, setNamespaces] = useState<Namespace[]>([])
   const [loading, setLoading] = useState(false)
-  const [inputValue, setInputValue] = useState(selectedNamespace)
 
   useEffect(() => {
     if (mode === 'real') {
       fetchNamespaces()
     }
   }, [mode])
-
-  useEffect(() => {
-    setInputValue(selectedNamespace)
-  }, [selectedNamespace])
 
   const fetchNamespaces = async () => {
     setLoading(true)
@@ -60,92 +55,114 @@ export function NamespaceSelector({ fullWidth = false, onError }: NamespaceSelec
     }
   }
 
-  const handleChange = (_event: unknown, newValue: string | null) => {
-    if (newValue) {
-      setNamespace(newValue)
-    }
-  }
-
-  const handleInputChange = (_event: unknown, newInputValue: string) => {
-    setInputValue(newInputValue)
+  const handleChange = (namespaceName: string) => {
+    setNamespace(namespaceName)
   }
 
   if (mode === 'mock') {
-    return null
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+          Namespace:
+        </Typography>
+        <Select
+          value="demo"
+          disabled
+          variant="standard"
+          disableUnderline
+          autoWidth
+          IconComponent={() => null}
+          renderValue={() => (
+            <Typography variant="body2" fontWeight={600}>
+              demo
+            </Typography>
+          )}
+          sx={{
+            fontSize: '0.875rem',
+            '& .MuiSelect-select': {
+              py: 0.5,
+              px: 1,
+            },
+          }}
+        >
+          <MenuItem value="demo">demo</MenuItem>
+        </Select>
+      </Box>
+    )
   }
 
-  const options = namespaces.length > 0
-    ? namespaces.map((ns) => ns.name)
-    : []
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+          Namespace:
+        </Typography>
+        <Box sx={{ py: 0.5, px: 1 }}>
+          <CircularProgress size={20} />
+        </Box>
+      </Box>
+    )
+  }
 
   return (
-    <Tooltip
-      title={namespaces.length === 0
-        ? "Type namespace name manually (API list unavailable)"
-        : "Select or type namespace"
-      }
-      arrow
-    >
-      <Box sx={{ minWidth: fullWidth ? undefined : 200, width: fullWidth ? '100%' : undefined }}>
-        <Autocomplete
-          freeSolo
-          size="small"
-          options={options}
-          value={selectedNamespace}
-          inputValue={inputValue}
-          onChange={handleChange}
-          onInputChange={handleInputChange}
-          onBlur={() => {
-            if (inputValue && inputValue !== selectedNamespace) {
-              setNamespace(inputValue)
-            }
-          }}
-          disabled={loading}
-          loading={loading}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Namespace"
-              placeholder="Enter namespace..."
-              required
-              error={!selectedNamespace}
-              helperText={!selectedNamespace ? 'Required' : ''}
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    {loading ? <CircularProgress size={20} /> : null}
-                    {params.InputProps.endAdornment}
-                  </>
-                ),
-              }}
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography variant="caption" color="text.secondary" fontWeight={600}>
+        Namespace:
+      </Typography>
+      <Select
+        value={selectedNamespace || ''}
+        onChange={(e) => handleChange(e.target.value)}
+        displayEmpty
+        variant="standard"
+        disableUnderline
+        autoWidth
+        renderValue={(value) => {
+          if (!value) return <Typography variant="body2" color="text.secondary">Select...</Typography>
+          return (
+            <Typography variant="body2" fontWeight={600}>
+              {value}
+            </Typography>
+          )
+        }}
+        sx={{
+          fontSize: '0.875rem',
+          '&:hover': {
+            bgcolor: 'action.hover',
+            borderRadius: 1,
+          },
+          '& .MuiSelect-select': {
+            py: 0.5,
+            px: 1,
+          },
+        }}
+      >
+        {namespaces.map((namespace, index) => (
+          <Box key={namespace.name}>
+            {index > 0 && <Divider sx={{ my: 0.5 }} />}
+            <MenuItem
+              value={namespace.name}
               sx={{
-                '& .MuiInputLabel-root': {
-                  color: 'inherit',
+                py: 1,
+                px: 2,
+                '&:hover': {
+                  bgcolor: 'action.hover',
                 },
-                '& .MuiOutlinedInput-root': {
-                  color: 'inherit',
-                  '& fieldset': {
-                    borderColor: !selectedNamespace ? 'error.main' : 'rgba(255, 255, 255, 0.23)',
+                '&.Mui-selected': {
+                  bgcolor: 'primary.main',
+                  color: 'primary.contrastText',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
                   },
-                  '&:hover fieldset': {
-                    borderColor: !selectedNamespace ? 'error.main' : 'rgba(255, 255, 255, 0.4)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: !selectedNamespace ? 'error.main' : 'primary.main',
-                  },
-                },
-                '& .MuiSvgIcon-root': {
-                  color: 'inherit',
-                },
-                '& .MuiFormHelperText-root': {
-                  color: 'error.main',
                 },
               }}
-            />
-          )}
-        />
-      </Box>
-    </Tooltip>
+            >
+              <Typography variant="body2" fontWeight={500}>
+                {namespace.name}
+              </Typography>
+            </MenuItem>
+          </Box>
+        ))}
+      </Select>
+    </Box>
   )
 }

@@ -3,7 +3,9 @@
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { useState, useMemo, createContext, useContext, ReactNode, useEffect } from 'react'
-import { lightTheme, darkTheme } from '@/lib/ui/theme'
+import { colorSkins } from '@/lib/ui/color-skins'
+import { buildTheme } from '@/lib/ui/theme-builder'
+import { useUIPreferences } from '@/lib/core/store'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -21,9 +23,9 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useThemeMode = () => useContext(ThemeContext)
 
-// Get initial theme from localStorage or default to 'dark'
+// Get initial theme from localStorage or default to 'light'
 function getInitialTheme(): ThemeMode {
-  if (typeof window === 'undefined') return 'dark'
+  if (typeof window === 'undefined') return 'light'
   try {
     const saved = localStorage.getItem('theme-mode')
     if (saved === 'light' || saved === 'dark' || saved === 'system') {
@@ -32,19 +34,22 @@ function getInitialTheme(): ThemeMode {
   } catch {
     // localStorage not available
   }
-  return 'dark'
+  return 'light'
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<ThemeMode>(getInitialTheme)
-  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window === 'undefined') return 'light'
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  })
-  const [_mounted, setMounted] = useState(false)
+  const [mode, setMode] = useState<ThemeMode>('light')
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light')
+  const [mounted, setMounted] = useState(false)
+
+  // Get color skin from store
+  const colorSkin = useUIPreferences((state) => state.colorSkin)
 
   // Initialize on client side only
   useEffect(() => {
+    // Set initial values from client
+    setMode(getInitialTheme())
+    setSystemTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     setMounted(true)
 
     // Listen for system theme changes
@@ -72,7 +77,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.style.colorScheme = actualTheme
   }, [actualTheme])
 
-  const theme = useMemo(() => (actualTheme === 'light' ? lightTheme : darkTheme), [actualTheme])
+  // Build theme from selected skin and theme mode (always compact)
+  const theme = useMemo(() => {
+    const skin = colorSkins[colorSkin] || colorSkins.classic
+    const palette = actualTheme === 'light' ? skin.light : skin.dark
+    return buildTheme(palette, true)
+  }, [actualTheme, colorSkin])
+
+  // Prevent flash by not rendering until mounted
+  if (!mounted) {
+    return null
+  }
 
   return (
     <ThemeContext.Provider value={{ mode, setThemeMode, actualTheme }}>
