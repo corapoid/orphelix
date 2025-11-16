@@ -72,68 +72,61 @@ export default function SettingsPage() {
 
       {activeTab === 0 && (
         <Box>
-          <Paper sx={{ p: 4 }}>
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Cluster Aliases
-              </Typography>
-              <ClusterAliases />
-            </Box>
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+              Cluster Aliases
+            </Typography>
+            <ClusterAliases />
+          </Box>
 
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Auto Refresh
-              </Typography>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={autoRefreshEnabled}
-                    onChange={(e) => setAutoRefreshEnabled(e.target.checked)}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Box>
-                    <Typography variant="body1">
-                      Enable auto-refresh
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Automatically refresh data every {autoRefreshInterval} seconds
-                    </Typography>
-                  </Box>
-                }
-              />
-              {autoRefreshEnabled && (
-                <Box sx={{ mt: 2, ml: 4 }}>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Refresh interval
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Auto Refresh
+            </Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={autoRefreshEnabled}
+                  onChange={(e) => setAutoRefreshEnabled(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body1">
+                    Enable auto-refresh
                   </Typography>
-                  <ButtonGroup size="small" sx={{ mt: 1 }}>
-                    {[10, 30, 60].map((interval) => (
-                      <Button
-                        key={interval}
-                        variant={autoRefreshInterval === interval ? 'contained' : 'outlined'}
-                        onClick={() => setAutoRefreshInterval(interval)}
-                      >
-                        {interval}s
-                      </Button>
-                    ))}
-                  </ButtonGroup>
+                  <Typography variant="caption" color="text.secondary">
+                    Automatically refresh data every {autoRefreshInterval} seconds
+                  </Typography>
                 </Box>
-              )}
-            </Box>
-          </Paper>
+              }
+            />
+            {autoRefreshEnabled && (
+              <Box sx={{ mt: 2, ml: 4 }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  Refresh interval
+                </Typography>
+                <ButtonGroup size="small" sx={{ mt: 1 }}>
+                  {[10, 30, 60].map((interval) => (
+                    <Button
+                      key={interval}
+                      variant={autoRefreshInterval === interval ? 'contained' : 'outlined'}
+                      onClick={() => setAutoRefreshInterval(interval)}
+                    >
+                      {interval}s
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </Box>
+            )}
+          </Box>
         </Box>
       )}
 
       {activeTab === 1 && (
         <Box>
-          <Paper sx={{ p: 4 }}>
-            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-              AI-Powered Features
-            </Typography>
-            <AISettings />
-          </Paper>
+          <AISettings />
         </Box>
       )}
 
