@@ -1,0 +1,63 @@
+/* React Flow Attribution - Hide */
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* React Flow Controls - Dark mode fix */
+.react-flow__controls {
+  box-shadow: none !important;
+}
+
+.react-flow__controls-button {
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+}
+
+/* Dark theme specific */
+@media (prefers-color-scheme: dark) {
+  .react-flow__controls {
+    background-color: rgba(30, 30, 46, 0.6) !important;
+    backdrop-filter: blur(12px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+  }
+
+  .react-flow__controls-button {
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .react-flow__controls-button:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+}
+
+/* Light theme specific */
+@media (prefers-color-scheme: light) {
+  .react-flow__controls {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(12px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 8px !important;
+  }
+
+  .react-flow__controls-button {
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .react-flow__controls-button:hover {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+  }
+}

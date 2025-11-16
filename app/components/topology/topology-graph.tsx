@@ -13,6 +13,7 @@ import {
   type OnEdgesChange,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
+import '../../react-flow-overrides.css'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
@@ -187,7 +188,15 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
         panOnScroll={false}
         panOnDrag={true}
       >
-        <Controls />
+        <Controls
+          style={{
+            button: {
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: 'inherit',
+            }
+          }}
+        />
         <Panel position="top-right">
           <Box sx={{ display: 'flex', gap: 1 }}>
             {/* Download button temporarily disabled due to technical issues */}
