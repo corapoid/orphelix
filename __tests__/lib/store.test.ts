@@ -10,12 +10,12 @@ describe('useModeStore', () => {
   })
 
   describe('initial state', () => {
-    it('should initialize with mock mode', () => {
+    it('should initialize with real mode', () => {
       // Act
       const { mode } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('mock')
+      expect(mode).toBe('real')
     })
 
     it('should initialize with null context', () => {
@@ -207,17 +207,17 @@ describe('useModeStore', () => {
   })
 
   describe('reset', () => {
-    it('should reset mode to mock', () => {
+    it('should reset mode to real', () => {
       // Arrange
       const { setMode, reset } = useModeStore.getState()
-      setMode('real')
+      setMode('mock')
 
       // Act
       reset()
       const { mode } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('mock')
+      expect(mode).toBe('real')
     })
 
     it('should reset selectedContext to null', () => {
@@ -242,7 +242,7 @@ describe('useModeStore', () => {
     it('should reset both mode and context simultaneously', () => {
       // Arrange
       const { setMode, setContext, reset } = useModeStore.getState()
-      setMode('real')
+      setMode('mock')
       const mockContext: KubernetesContext = {
         name: 'test',
         cluster: 'test-cluster',
@@ -256,14 +256,14 @@ describe('useModeStore', () => {
       const { mode, selectedContext } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('mock')
+      expect(mode).toBe('real')
       expect(selectedContext).toBeNull()
     })
 
     it('should be idempotent (safe to call multiple times)', () => {
       // Arrange
       const { setMode, setContext, reset } = useModeStore.getState()
-      setMode('real')
+      setMode('mock')
       const mockContext: KubernetesContext = {
         name: 'test',
         cluster: 'test-cluster',
@@ -279,7 +279,7 @@ describe('useModeStore', () => {
       const { mode, selectedContext } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('mock')
+      expect(mode).toBe('real')
       expect(selectedContext).toBeNull()
     })
 
