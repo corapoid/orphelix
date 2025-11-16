@@ -1,18 +1,22 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AppMode, KubernetesContext } from '@/types/app'
-import type { ColorSkinName } from '@/lib/ui/color-skins'
+import type { ColorSkinName, BackgroundPreset } from '@/lib/ui/color-skins'
 
 interface ModeStore {
   mode: AppMode
   selectedContext: KubernetesContext | null
   selectedNamespace: string
+  clusterConnected: boolean
+  connectionError: string | null
   realtimeEnabled: boolean
   autoRefreshEnabled: boolean
   autoRefreshInterval: number // seconds
   setMode: (mode: AppMode) => void
   setContext: (context: KubernetesContext | null) => void
   setNamespace: (namespace: string) => void
+  setClusterConnected: (connected: boolean) => void
+  setConnectionError: (error: string | null) => void
   setRealtimeEnabled: (enabled: boolean) => void
   setAutoRefreshEnabled: (enabled: boolean) => void
   setAutoRefreshInterval: (interval: number) => void
@@ -41,22 +45,28 @@ interface GitHubStore {
 export const useModeStore = create<ModeStore>()(
   persist(
     (set) => ({
-      mode: 'mock',
+      mode: 'real', // Default to real mode
       selectedContext: null,
       selectedNamespace: '',
+      clusterConnected: false,
+      connectionError: null,
       realtimeEnabled: false,
       autoRefreshEnabled: false,
       autoRefreshInterval: 30, // 30 seconds default
       setMode: (mode) => set({ mode }),
       setContext: (context) => set({ selectedContext: context }),
       setNamespace: (namespace) => set({ selectedNamespace: namespace }),
+      setClusterConnected: (connected) => set({ clusterConnected: connected }),
+      setConnectionError: (error) => set({ connectionError: error }),
       setRealtimeEnabled: (enabled) => set({ realtimeEnabled: enabled }),
       setAutoRefreshEnabled: (enabled) => set({ autoRefreshEnabled: enabled }),
       setAutoRefreshInterval: (interval) => set({ autoRefreshInterval: interval }),
       reset: () => set({
-        mode: 'mock',
+        mode: 'real',
         selectedContext: null,
         selectedNamespace: '',
+        clusterConnected: false,
+        connectionError: null,
         realtimeEnabled: false,
         autoRefreshEnabled: false,
         autoRefreshInterval: 30,
@@ -162,18 +172,26 @@ export const useClusterAliases = create<ClusterAliasesStore>()(
 
 /**
  * UI Preferences Store
- * Manages color skin selection and UI customization
+ * Manages UI customization (background preset, compact mode)
  */
 interface UIPreferencesStore {
-  colorSkin: ColorSkinName
-  setColorSkin: (skin: ColorSkinName) => void
+  colorSkin: ColorSkinName // Keep for backward compatibility
+  backgroundPreset: BackgroundPreset // Selected background color preset
+  compactMode: boolean
+  setColorSkin: (skin: ColorSkinName) => void // Keep for backward compatibility
+  setBackgroundPreset: (preset: BackgroundPreset) => void
+  setCompactMode: (compact: boolean) => void
 }
 
 export const useUIPreferences = create<UIPreferencesStore>()(
   persist(
     (set) => ({
       colorSkin: 'glass',
+      backgroundPreset: 'default',
+      compactMode: false,
       setColorSkin: (skin) => set({ colorSkin: skin }),
+      setBackgroundPreset: (preset) => set({ backgroundPreset: preset }),
+      setCompactMode: (compact) => set({ compactMode: compact }),
     }),
     {
       name: 'kubevista-ui-preferences',
