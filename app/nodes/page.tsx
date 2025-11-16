@@ -1,28 +1,13 @@
 'use client'
 
-import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
+import { useState, useMemo, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import DnsIcon from '@mui/icons-material/Dns'
-import { useMemo } from 'react'
-import { useRouter } from 'next/navigation'
 import { useNodes } from '@/lib/hooks/use-nodes'
 import { usePods } from '@/lib/hooks/use-pods'
 import { useModeStore } from '@/lib/core/store'
 import { StatusBadge } from '@/app/components/common/status-badge'
-import { TableSkeleton } from '@/app/components/common/table-skeleton'
-import { ErrorState } from '@/app/components/common/error-state'
-import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
-import { useSortableTable } from '@/lib/hooks/use-table-sort'
-import { PageHeader } from '@/app/components/common/page-header'
-import { EmptyState } from '@/app/components/common/empty-state'
-import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { usePageSearch } from '@/lib/contexts/search-context'
+import { TableOnlyResourceList } from '@/app/components/common/table-only-resource-list'
 import type { Node } from '@/types/kubernetes'
 
 // Helper function to parse Kubernetes resource quantities
@@ -58,14 +43,20 @@ function calculatePercentage(allocatable: string, capacity: string): number {
 
 export default function NodesPage() {
   const router = useRouter()
-  const searchQuery = usePageSearch('Search nodes...')
+  const searchParams = useSearchParams()
   const selectedNamespace = useModeStore((state) => state.selectedNamespace)
+  const [statusFilter, setStatusFilter] = useState<string>('all')
 
   const { data: nodes, isLoading, error, refetch } = useNodes()
   const { data: pods } = usePods()
 
-  // Auto-refresh
-  useAutoRefresh(refetch)
+  // Set filter from URL on mount
+  useEffect(() => {
+    const status = searchParams.get('status')
+    if (status && (status === 'Ready' || status === 'NotReady')) {
+      setStatusFilter(status)
+    }
+  }, [searchParams])
 
   // Get unique node names from pods in selected namespace
   const nodesWithPods = useMemo(() => {
@@ -73,153 +64,109 @@ export default function NodesPage() {
     return new Set(pods.map(pod => pod.nodeName).filter(Boolean))
   }, [pods, selectedNamespace])
 
-  // Filter nodes by:
-  // 1. Search query
-  // 2. Only show nodes with pods in selected namespace (if namespace is set)
-  const filteredNodes = useMemo(() => {
-    if (!nodes) return []
-
-    let filtered = nodes
-
+  // Custom filter combining namespace and status
+  const customFilter = (node: Node) => {
     // Filter by namespace (only show nodes with pods in selected namespace)
     if (selectedNamespace && nodesWithPods.size > 0) {
-      filtered = filtered.filter(node => nodesWithPods.has(node.name))
+      if (!nodesWithPods.has(node.name)) {
+        return false
+      }
     }
 
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter((node) =>
-        node.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    // Filter by status
+    if (statusFilter !== 'all' && node.status !== statusFilter) {
+      return false
     }
 
-    return filtered
-  }, [nodes, selectedNamespace, nodesWithPods, searchQuery])
-
-  const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Node>(
-    filteredNodes,
-    'name',
-    'asc'
-  )
-
-  if (isLoading) {
-    return (
-      <Box>
-        <PageHeader
-          title="Nodes"
-          onRefresh={refetch}
-          isRefreshing={isLoading}
-        />
-        <TableSkeleton rows={5} columns={6} />
-      </Box>
-    )
+    return true
   }
-
-  if (error) {
-    return (
-      <Box>
-        <PageHeader
-          title="Nodes"
-          onRefresh={refetch}
-          isRefreshing={isLoading}
-        />
-        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Nodes" />
-      </Box>
-    )
-  }
-
-  const subtitle = selectedNamespace
-    ? `Showing nodes with pods in namespace: ${selectedNamespace}`
-    : `${nodes?.length || 0} node${nodes?.length === 1 ? '' : 's'} in this cluster`
 
   return (
-    <Box>
-      <PageHeader
-        title="Nodes"
-        subtitle={subtitle}
-        onRefresh={refetch}
-        isRefreshing={isLoading}
-      />
-
-      {!nodes || nodes.length === 0 ? (
-        <EmptyState
-          icon={DnsIcon}
-          title="No nodes found"
-          description="There are no nodes in this cluster yet."
-        />
-      ) : filteredNodes.length === 0 ? (
-        <EmptyState
-          icon={DnsIcon}
-          title="No matching nodes"
-          description={`No nodes match your search "${searchQuery}".`}
-        />
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <SortableTableCell
-                  field="name"
-                  label="Name"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-                <SortableTableCell
-                  field="status"
-                  label="Status"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-                <SortableTableCell
-                  field="version"
-                  label="Version"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-                <TableCell>CPU</TableCell>
-                <TableCell>Memory</TableCell>
-                <TableCell>Pods</TableCell>
-                <SortableTableCell
-                  field="age"
-                  label="Age"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortedData.map((node) => (
-                <TableRow
-                  key={node.name}
-                  hover
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => router.push(`/nodes/${node.name}`)}
-                >
-                  <TableCell>{node.name}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={node.status} />
-                  </TableCell>
-                  <TableCell>{node.version}</TableCell>
-                  <TableCell>
-                    {node.allocatable.cpu} / {node.capacity.cpu} ({calculatePercentage(node.allocatable.cpu, node.capacity.cpu)}%)
-                  </TableCell>
-                  <TableCell>
-                    {node.allocatable.memory} / {node.capacity.memory} ({calculatePercentage(node.allocatable.memory, node.capacity.memory)}%)
-                  </TableCell>
-                  <TableCell>
-                    {node.allocatable.pods} / {node.capacity.pods}
-                  </TableCell>
-                  <TableCell>{node.age}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </Box>
+    <TableOnlyResourceList<Node>
+      title="Nodes"
+      resourceName="node"
+      resourceNamePlural="nodes"
+      icon={DnsIcon}
+      data={nodes}
+      isLoading={isLoading}
+      error={error}
+      refetch={refetch}
+      searchPlaceholder="Search nodes..."
+      searchFilter={(node, query) =>
+        node.name.toLowerCase().includes(query.toLowerCase())
+      }
+      filters={[
+        {
+          label: 'Status',
+          value: statusFilter,
+          options: [
+            { label: 'All', value: 'all' },
+            { label: 'Ready', value: 'Ready' },
+            { label: 'Not Ready', value: 'NotReady' },
+          ],
+          onChange: setStatusFilter,
+        },
+      ]}
+      customFilter={customFilter}
+      columns={[
+        {
+          field: 'name',
+          label: 'Name',
+          sortable: true,
+        },
+        {
+          field: 'status',
+          label: 'Status',
+          sortable: true,
+          render: (node) => <StatusBadge status={node.status} />,
+        },
+        {
+          field: 'version',
+          label: 'Version',
+          sortable: true,
+        },
+        {
+          field: 'cpu',
+          label: 'CPU',
+          render: (node) => (
+            <>
+              {node.allocatable.cpu} / {node.capacity.cpu} ({calculatePercentage(node.allocatable.cpu, node.capacity.cpu)}%)
+            </>
+          ),
+        },
+        {
+          field: 'memory',
+          label: 'Memory',
+          render: (node) => (
+            <>
+              {node.allocatable.memory} / {node.capacity.memory} ({calculatePercentage(node.allocatable.memory, node.capacity.memory)}%)
+            </>
+          ),
+        },
+        {
+          field: 'pods',
+          label: 'Pods',
+          render: (node) => (
+            <>
+              {node.allocatable.pods} / {node.capacity.pods}
+            </>
+          ),
+        },
+        {
+          field: 'age',
+          label: 'Age',
+          sortable: true,
+        },
+      ]}
+      defaultSortField="name"
+      defaultSortOrder="asc"
+      getRowKey={(node) => node.name}
+      onRowClick={(node) => router.push(`/nodes/${node.name}`)}
+      emptyStateDescription={
+        selectedNamespace
+          ? `No nodes have pods in namespace: ${selectedNamespace}`
+          : 'There are no nodes in this cluster yet.'
+      }
+    />
   )
 }
