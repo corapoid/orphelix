@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Cancel'
-import { useClusterAliases } from '@/lib/core/store'
+import { useClusterAliases, useModeStore } from '@/lib/core/store'
 interface KubeContext {
   name: string
   cluster: string
@@ -22,13 +22,26 @@ interface KubeContext {
 }
 export function ClusterAliases() {
   const { aliases, setAlias, removeAlias } = useClusterAliases()
+  const mode = useModeStore((state) => state.mode)
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
   const [editingContext, setEditingContext] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
+
   useEffect(() => {
-    fetchContexts()
-  }, [])
+    if (mode === 'mock') {
+      // In demo mode, show a mock demo cluster
+      setContexts([{
+        name: 'demo-cluster',
+        cluster: 'demo-cluster',
+        user: 'demo-user',
+        current: true,
+      }])
+      setLoading(false)
+    } else {
+      fetchContexts()
+    }
+  }, [mode])
   const fetchContexts = async () => {
     setLoading(true)
     try {
@@ -69,14 +82,18 @@ export function ClusterAliases() {
   if (contexts.length === 0) {
     return (
       <Alert severity="info">
-        No Kubernetes contexts found. Please configure kubectl first or switch to Real Cluster mode in the Cluster tab.
+        {mode === 'mock'
+          ? 'Demo cluster alias not available.'
+          : 'No Kubernetes contexts found. Please configure kubectl first.'}
       </Alert>
     )
   }
   return (
     <Box>
       <Typography variant="body2" color="text.secondary" paragraph>
-        Set friendly names (aliases) for your Kubernetes clusters. These will be displayed instead of the full context names throughout the application.
+        {mode === 'mock'
+          ? 'Set a friendly name (alias) for the demo cluster. This will be displayed instead of "demo-cluster" throughout the application.'
+          : 'Set friendly names (aliases) for your Kubernetes clusters. These will be displayed instead of the full context names throughout the application.'}
       </Typography>
       <List sx={{ bgcolor: 'background.default', borderRadius: 1 }}>
         {contexts.map((context) => {
