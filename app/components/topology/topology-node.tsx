@@ -29,8 +29,8 @@ const resourceColors: Record<ResourceType, string> = {
   Deployment: '#3F51B5', // Indigo
   Pod: '#9C27B0', // Purple
   Service: '#00BCD4', // Teal
-  ConfigMap: '#4CAF50', // Green
-  Secret: '#F44336', // Red
+  ConfigMap: '#0288d1', // Blue (info.main)
+  Secret: '#ed6c02', // Orange (warning.main)
   PersistentVolumeClaim: '#FF9800', // Orange
   HPA: '#FFEB3B', // Yellow
 }
@@ -57,7 +57,9 @@ function TopologyNodeComponent({ data, selected }: any) {
 
   return (
     <>
-      <Handle type="target" position={Position.Left} style={{ background: '#9e9e9e' }} />
+      <Handle type="target" position={Position.Left} style={{ opacity: 0 }} />
+      <Handle type="target" position={Position.Top} id="top" style={{ opacity: 0 }} />
+      <Handle type="target" position={Position.Bottom} id="bottom" style={{ opacity: 0 }} />
 
       <Box
         sx={{
@@ -147,7 +149,9 @@ function TopologyNodeComponent({ data, selected }: any) {
         </Box>
       </Box>
 
-      <Handle type="source" position={Position.Right} style={{ background: '#9e9e9e' }} />
+      <Handle type="source" position={Position.Right} style={{ opacity: 0 }} />
+      <Handle type="source" position={Position.Top} id="top" style={{ opacity: 0 }} />
+      <Handle type="source" position={Position.Bottom} id="bottom" style={{ opacity: 0 }} />
     </>
   )
 }

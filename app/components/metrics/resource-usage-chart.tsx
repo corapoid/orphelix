@@ -8,9 +8,9 @@ import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import LinearProgress from '@mui/material/LinearProgress'
 import Grid from '@mui/material/Grid'
-import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useQuery } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/core/store'
 
@@ -92,6 +92,56 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
   const { data, isLoading, error } = useQuery<MetricsResponse>({
     queryKey: ['pod-metrics', deploymentName, ns, mode],
     queryFn: async () => {
+      if (mode === 'mock') {
+        // Generate random metrics for demo mode
+        const podCount = 3
+        const metrics: PodMetrics[] = []
+        const requirements: ResourceRequirements[] = []
+
+        for (let i = 0; i < podCount; i++) {
+          const podName = `${deploymentName}-${Math.random().toString(36).substring(7)}`
+
+          // Random CPU: 50-400m
+          const cpuValue = 50 + Math.random() * 350
+          // Random Memory: 100-400MB
+          const memoryValue = (100 + Math.random() * 300) * 1024 * 1024
+
+          metrics.push({
+            podName,
+            containerName: deploymentName,
+            cpu: `${cpuValue.toFixed(0)}m`,
+            memory: `${(memoryValue / 1024 / 1024).toFixed(0)}Mi`,
+            cpuValue,
+            memoryValue,
+          })
+
+          requirements.push({
+            podName,
+            containerName: deploymentName,
+            requests: {
+              cpu: '100m',
+              memory: '128Mi',
+              cpuValue: 100,
+              memoryValue: 128 * 1024 * 1024,
+            },
+            limits: {
+              cpu: '500m',
+              memory: '512Mi',
+              cpuValue: 500,
+              memoryValue: 512 * 1024 * 1024,
+            },
+          })
+        }
+
+        return {
+          deployment: deploymentName,
+          namespace: ns,
+          metrics,
+          requirements,
+          timestamp: new Date().toISOString(),
+        }
+      }
+
       const response = await fetch(`/api/metrics/pods?deployment=${deploymentName}&namespace=${ns}&mode=${mode}`)
       if (!response.ok) {
         const errorData = await response.json()
@@ -100,7 +150,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
       return response.json()
     },
     enabled: true, // Enable for both demo and real modes
-    refetchInterval: mode === 'real' ? 30000 : false, // Refresh every 30 seconds only in real mode
+    refetchInterval: mode === 'mock' ? 5000 : 30000, // Refresh every 5s in demo, 30s in real mode
   })
 
   const aggregatedMetrics = useMemo(() => {
@@ -145,14 +195,6 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
     }
   }, [data])
 
-  if (mode === 'mock') {
-    return (
-      <Alert severity="info">
-        Metrics are only available in Real Cluster mode. Switch to Real Cluster mode in Settings to view resource usage.
-      </Alert>
-    )
-  }
-
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
@@ -187,7 +229,24 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
       <Grid container spacing={3}>
         {/* CPU Card */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 3 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 3,
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(30, 30, 46, 0.6)'
+                  : 'rgba(255, 255, 255, 0.25)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              border: '1px solid',
+              borderColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(209, 213, 219, 0.4)',
+              borderRadius: 3,
+            }}
+          >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -205,7 +264,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
                 title={`${formatCPU(aggregatedMetrics.cpu.current)} / ${formatCPU(aggregatedMetrics.cpu.limit)}`}
                 arrow
               >
-                <Chip
+                <LiquidGlassChip
                   label={`${aggregatedMetrics.cpu.usagePercent.toFixed(1)}%`}
                   color={getUsageColor(aggregatedMetrics.cpu.usagePercent)}
                   size="small"
@@ -253,7 +312,24 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
 
         {/* Memory Card */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 3 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 3,
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(30, 30, 46, 0.6)'
+                  : 'rgba(255, 255, 255, 0.25)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              border: '1px solid',
+              borderColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(209, 213, 219, 0.4)',
+              borderRadius: 3,
+            }}
+          >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -271,7 +347,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
                 title={`${formatMemory(aggregatedMetrics.memory.current)} / ${formatMemory(aggregatedMetrics.memory.limit)}`}
                 arrow
               >
-                <Chip
+                <LiquidGlassChip
                   label={`${aggregatedMetrics.memory.usagePercent.toFixed(1)}%`}
                   color={getUsageColor(aggregatedMetrics.memory.usagePercent)}
                   size="small"

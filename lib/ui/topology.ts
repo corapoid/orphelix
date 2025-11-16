@@ -75,11 +75,13 @@ export function buildDeploymentTopology(
       },
     })
 
-    // Connect HPA to Deployment
+    // Connect HPA to Deployment (from HPA bottom to deployment top)
     edges.push({
       id: `${nodeId}-deployment`,
       source: nodeId,
       target: `deployment-${deployment.name}`,
+      sourceHandle: 'bottom',
+      targetHandle: 'top',
       type: 'default',
       animated: true,
     })

@@ -5,15 +5,13 @@ import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
+import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import EditIcon from '@mui/icons-material/Edit'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
@@ -32,7 +30,6 @@ import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { ResourceUsageChart } from '@/app/components/metrics/resource-usage-chart'
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
-import { DeploymentManifestViewer } from '@/app/components/deployments/deployment-manifest-viewer'
 import { RestartDeploymentDialog } from '@/app/components/deployments/restart-deployment-dialog'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
@@ -142,7 +139,6 @@ export default function DeploymentDetailPage() {
           </Box>
         }
         metadata={[
-          `Namespace: ${deployment.namespace}`,
           `Age: ${deployment.age}`,
         ]}
         breadcrumbs={[
@@ -153,22 +149,23 @@ export default function DeploymentDetailPage() {
         isRefreshing={isLoading}
         actions={
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="outlined"
+            <LiquidGlassButton
               startIcon={<EditIcon />}
               onClick={() => setEditorOpen(true)}
             >
               Edit YAML
-            </Button>
-            <Button
-              variant="outlined"
-              color="warning"
+            </LiquidGlassButton>
+            <LiquidGlassButton
               startIcon={<RestartAltIcon />}
               onClick={handleRestartClick}
               disabled={restarting}
+              sx={{
+                color: (theme) => theme.palette.warning.main,
+                borderColor: (theme) => theme.palette.warning.main,
+              }}
             >
               Restart
-            </Button>
+            </LiquidGlassButton>
           </Box>
         }
       />
@@ -201,125 +198,237 @@ export default function DeploymentDetailPage() {
         </Alert>
       )}
 
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Details
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Strategy:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {deployment.strategy}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Desired Replicas:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {deployment.replicas.desired}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Ready Replicas:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {deployment.replicas.ready}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Available Replicas:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {deployment.replicas.available}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Unavailable Replicas:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {deployment.replicas.unavailable}
-                </Typography>
-              </Box>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Details
+        </Typography>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(30, 30, 46, 0.6)'
+                : 'rgba(255, 255, 255, 0.25)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid',
+            borderColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.12)'
+                : 'rgba(209, 213, 219, 0.4)',
+            borderRadius: 3,
+          }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Strategy:
+              </Typography>
+              <Typography variant="body2" fontWeight="medium">
+                {deployment.strategy}
+              </Typography>
             </Box>
-          </Paper>
-        </Grid>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Desired Replicas:
+              </Typography>
+              <Typography variant="body2" fontWeight="medium">
+                {deployment.replicas.desired}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Ready Replicas:
+              </Typography>
+              <Typography variant="body2" fontWeight="medium">
+                {deployment.replicas.ready}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Available Replicas:
+              </Typography>
+              <Typography variant="body2" fontWeight="medium">
+                {deployment.replicas.available}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Unavailable Replicas:
+              </Typography>
+              <Typography variant="body2" fontWeight="medium">
+                {deployment.replicas.unavailable}
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
 
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Labels
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {Object.entries(deployment.labels).map(([key, value]) => (
-                <Chip key={key} label={`${key}: ${value}`} size="small" variant="outlined" />
-              ))}
-            </Box>
-            <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-              Resources
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {deployment.configMaps.length > 0 ? (
-                deployment.configMaps.map((cm) => (
-                  <Link
-                    key={cm}
-                    href={`/configmaps/${encodeURIComponent(cm)}`}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <Chip
-                      label={`ConfigMap: ${cm}`}
-                      size="small"
-                      color="info"
-                      clickable
-                      icon={<OpenInNewIcon fontSize="small" />}
-                      sx={{ cursor: 'pointer' }}
-                    />
-                  </Link>
-                ))
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  No ConfigMaps
+      {/* Labels Section */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Labels
+        </Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+          {Object.entries(deployment.labels).map(([key, value]) => (
+            <Paper
+              key={key}
+              elevation={0}
+              sx={{
+                px: 2,
+                py: 1,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                {key}:
+              </Typography>
+              <Typography variant="body2" fontWeight={500}>
+                {value}
+              </Typography>
+            </Paper>
+          ))}
+        </Box>
+      </Box>
+
+      {/* Resources Section */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Resources
+        </Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+          {deployment.configMaps.map((cm) => (
+            <Link
+              key={cm}
+              href={`/configmaps/${encodeURIComponent(cm)}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  minWidth: 200,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                  borderRadius: 3,
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(59, 130, 246, 0.5)'
+                        : 'rgba(59, 130, 246, 0.4)',
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="caption" color="info.main" fontWeight={600}>
+                    ConfigMap
+                  </Typography>
+                  <OpenInNewIcon fontSize="small" sx={{ color: 'info.main', opacity: 0.6 }} />
+                </Box>
+                <Typography variant="body1" fontWeight={500}>
+                  {cm}
                 </Typography>
-              )}
-              {deployment.secrets.length > 0 ? (
-                deployment.secrets.map((secret) => (
-                  <Link
-                    key={secret}
-                    href={`/secrets/${encodeURIComponent(secret)}` as any}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <Chip
-                      label={`Secret: ${secret}`}
-                      size="small"
-                      color="warning"
-                      clickable
-                      icon={<OpenInNewIcon fontSize="small" />}
-                      sx={{ cursor: 'pointer' }}
-                    />
-                  </Link>
-                ))
-              ) : deployment.configMaps.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  No Secrets
+              </Paper>
+            </Link>
+          ))}
+          {deployment.secrets.map((secret) => (
+            <Link
+              key={secret}
+              href={`/secrets/${encodeURIComponent(secret)}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  minWidth: 200,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                  borderRadius: 3,
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(234, 179, 8, 0.5)'
+                        : 'rgba(234, 179, 8, 0.4)',
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="caption" color="warning.main" fontWeight={600}>
+                    Secret
+                  </Typography>
+                  <OpenInNewIcon fontSize="small" sx={{ color: 'warning.main', opacity: 0.6 }} />
+                </Box>
+                <Typography variant="body1" fontWeight={500}>
+                  {secret}
                 </Typography>
-              ) : null}
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
+              </Paper>
+            </Link>
+          ))}
+        </Box>
+      </Box>
 
       {/* Pods Section */}
-      <Paper sx={{ mb: 3 }}>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Pods</Typography>
-        </Box>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Pods
+        </Typography>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(30, 30, 46, 0.6)'
+                : 'rgba(255, 255, 255, 0.25)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid',
+            borderColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.12)'
+                : 'rgba(209, 213, 219, 0.4)',
+            borderRadius: 3,
+          }}
+        >
         {podsLoading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
             <CircularProgress />
@@ -380,7 +489,8 @@ export default function DeploymentDetailPage() {
             <Alert severity="info">No pods found for this deployment</Alert>
           </Box>
         )}
-      </Paper>
+        </Paper>
+      </Box>
 
       {/* Resource Metrics Section */}
       <Box sx={{ mb: 3 }}>
@@ -392,18 +502,13 @@ export default function DeploymentDetailPage() {
 
       {/* Topology Graph Section */}
       {topologyData && (
-        <Paper sx={{ mb: 3 }}>
-          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-            <Typography variant="h6">Topology</Typography>
-          </Box>
-          <Box>
-            <TopologyGraph data={topologyData} height={500} />
-          </Box>
-        </Paper>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Topology
+          </Typography>
+          <TopologyGraph data={topologyData} height={500} />
+        </Box>
       )}
-
-      {/* Cluster Manifest Section */}
-      <DeploymentManifestViewer name={name} namespace={deployment.namespace} />
 
     </Box>
   )
