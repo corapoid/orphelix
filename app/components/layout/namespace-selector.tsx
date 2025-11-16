@@ -20,15 +20,15 @@ interface NamespaceSelectorProps {
 }
 
 export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
-  const { mode, selectedNamespace, setNamespace } = useModeStore()
+  const { mode, selectedNamespace, setNamespace, clusterConnected, connectionError } = useModeStore()
   const [namespaces, setNamespaces] = useState<Namespace[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (mode === 'real') {
+    if (mode === 'real' && clusterConnected) {
       fetchNamespaces()
     }
-  }, [mode])
+  }, [mode, clusterConnected])
 
   const fetchNamespaces = async () => {
     setLoading(true)
@@ -87,6 +87,16 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
         >
           <MenuItem value="demo">demo</MenuItem>
         </Select>
+      </Box>
+    )
+  }
+
+  if (!clusterConnected && connectionError) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography variant="caption" color="error" fontWeight={600}>
+          Connection Error
+        </Typography>
       </Box>
     )
   }

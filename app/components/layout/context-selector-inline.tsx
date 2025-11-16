@@ -19,7 +19,7 @@ interface KubeContext {
 }
 
 export function ContextSelectorInline() {
-  const { mode, selectedContext, setContext, setNamespace } = useModeStore()
+  const { mode, selectedContext, setContext, setNamespace, setClusterConnected, setConnectionError } = useModeStore()
   const { getAlias } = useClusterAliases()
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
@@ -34,11 +34,38 @@ export function ContextSelectorInline() {
     return text.substring(0, maxLength - 3) + '...'
   }
 
+  const testConnection = async () => {
+    try {
+      const response = await fetch('/api/test-connection')
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || data.details || 'Failed to connect to cluster')
+      }
+
+      setClusterConnected(true)
+      setConnectionError(null)
+      return true
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to connect to cluster'
+      setClusterConnected(false)
+      setConnectionError(errorMsg)
+      return false
+    }
+  }
+
   useEffect(() => {
     if (mode === 'real') {
       fetchContexts()
     }
   }, [mode])
+
+  // Test connection when context changes
+  useEffect(() => {
+    if (mode === 'real' && selectedContext) {
+      testConnection()
+    }
+  }, [selectedContext, mode])
 
   const fetchContexts = async () => {
     setLoading(true)
