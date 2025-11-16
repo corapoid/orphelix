@@ -80,10 +80,6 @@ export default function IngressPage() {
       <PageHeader
         title="Ingress"
         subtitle={`${ingresses?.length || 0} ingress resource${ingresses?.length === 1 ? '' : 's'} in this namespace`}
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Ingress' },
-        ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
       />

@@ -32,7 +32,6 @@ export default function TopologyPage() {
       <PageHeader
         title="Cluster Topology"
         metadata={[`Namespace: ${namespace || 'All'}`]}
-        breadcrumbs={[{ label: 'Dashboard', href: '/' }, { label: 'Topology' }]}
       />
 
       {isLoading ? (

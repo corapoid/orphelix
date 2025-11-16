@@ -57,10 +57,6 @@ export default function NamespacesPage() {
       <PageHeader
         title="Namespaces"
         subtitle={`${filteredNamespaces?.length || 0} namespace${filteredNamespaces?.length === 1 ? '' : 's'}${searchQuery ? ' (filtered)' : ''}`}
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Namespaces' },
-        ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
       />
