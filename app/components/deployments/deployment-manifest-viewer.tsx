@@ -12,6 +12,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { useQuery } from '@tanstack/react-query'
 import Editor from '@monaco-editor/react'
+import { useModeStore } from '@/lib/core/store'
 
 interface DeploymentManifestViewerProps {
   name: string
@@ -20,10 +21,22 @@ interface DeploymentManifestViewerProps {
 
 export function DeploymentManifestViewer({ name, namespace }: DeploymentManifestViewerProps) {
   const [expanded, setExpanded] = useState(false)
+  const mode = useModeStore((state) => state.mode)
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['deployment-yaml', name, namespace],
+    queryKey: ['deployment-yaml', name, namespace, mode],
     queryFn: async () => {
+      if (mode === 'mock') {
+        // In demo mode, load from example manifest
+        const response = await fetch(`/examples/manifests/${name}.yaml`)
+        if (!response.ok) {
+          throw new Error('Example manifest not found')
+        }
+        const yaml = await response.text()
+        return { yaml }
+      }
+
+      // Real mode - fetch from API
       const response = await fetch(
         `/api/resources/deployments/${encodeURIComponent(name)}/yaml?namespace=${namespace}`
       )

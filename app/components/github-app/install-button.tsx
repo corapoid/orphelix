@@ -151,24 +151,37 @@ function GitHubAppInstallButtonContent() {
         startIcon={<GitHubIcon />}
         onClick={handleInstall}
         size="large"
-        fullWidth
+        sx={{
+          maxWidth: 300,
+          py: 2,
+          px: 3,
+          borderRadius: 3,
+          color: (theme) => theme.palette.text.primary,
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(30, 30, 46, 0.6)'
+              : 'rgba(255, 255, 255, 0.25)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(209, 213, 219, 0.4)',
+          boxShadow: (theme) =>
+            theme.palette.mode === 'dark'
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
+              : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+          '&:hover': {
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(30, 30, 46, 0.7)'
+                : 'rgba(255, 255, 255, 0.35)',
+          },
+        }}
       >
         Install GitHub App
       </Button>
-      <Alert severity="info" sx={{ mt: 2 }}>
-        <Typography variant="body2" fontWeight="medium" gutterBottom>
-          Why GitHub App?
-        </Typography>
-        <Typography variant="caption" display="block">
-          • Choose which repositories to grant access to
-        </Typography>
-        <Typography variant="caption" display="block">
-          • More secure with fine-grained permissions
-        </Typography>
-        <Typography variant="caption" display="block">
-          • Revoke access anytime from GitHub settings
-        </Typography>
-      </Alert>
     </Box>
   )
 }
