@@ -20,25 +20,13 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
 
   return (
     <Box>
-      {/* Main Title */}
-      <Typography
-        variant="h5"
-        sx={{
-          mb: 3,
-          fontWeight: 700,
-        }}
-      >
-        Resources
-      </Typography>
-
       {/* Workloads Section */}
       <Typography
-        variant="h6"
+        variant="body2"
         sx={{
           mb: 2,
           fontWeight: 700,
           color: 'text.secondary',
-          fontSize: '0.875rem',
           textTransform: 'uppercase',
           letterSpacing: 1,
         }}
@@ -67,7 +55,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Healthy
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="success.main">
+                <Typography variant="body1" fontWeight={700} color="success.main">
                   {summary.deployments.healthy}
                 </Typography>
               </Box>
@@ -75,7 +63,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Degraded
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="error.main">
+                <Typography variant="body1" fontWeight={700} color="error.main">
                   {summary.deployments.degraded}
                 </Typography>
               </Box>
@@ -96,7 +84,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Running
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="success.main">
+                <Typography variant="body1" fontWeight={700} color="success.main">
                   {summary.pods.running}
                 </Typography>
               </Box>
@@ -104,7 +92,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Failed
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="error.main">
+                <Typography variant="body1" fontWeight={700} color="error.main">
                   {summary.pods.failed}
                 </Typography>
               </Box>
@@ -125,7 +113,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Active
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="info.main">
+                <Typography variant="body1" fontWeight={700} color="info.main">
                   {summary.jobs?.active || 0}
                 </Typography>
               </Box>
@@ -133,7 +121,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Succeeded
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="success.main">
+                <Typography variant="body1" fontWeight={700} color="success.main">
                   {summary.jobs?.succeeded || 0}
                 </Typography>
               </Box>
@@ -154,7 +142,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Active
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="info.main">
+                <Typography variant="body1" fontWeight={700} color="info.main">
                   {summary.cronjobs?.active || 0}
                 </Typography>
               </Box>
@@ -162,7 +150,7 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Suspended
                 </Typography>
-                <Typography variant="h6" fontWeight={700} color="warning.main">
+                <Typography variant="body1" fontWeight={700} color="warning.main">
                   {summary.cronjobs?.suspended || 0}
                 </Typography>
               </Box>
@@ -171,124 +159,116 @@ export function ResourceOverviewV2({ summary }: ResourceOverviewV2Props) {
         />
       </Box>
 
-      {/* Network & Storage Section - side by side on wide screens */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 4 }}>
-        {/* Network */}
-        <Box>
-          <Typography
-            variant="h6"
-            sx={{
-              mb: 2,
-              fontWeight: 700,
-              color: 'text.secondary',
-              fontSize: '0.875rem',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-            }}
-          >
-            Network
-          </Typography>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gridAutoRows: '1fr',
-              gap: 2,
-            }}
-          >
-            {/* Services */}
-            <ResourceCard
-              name="Services"
-              resourceType={`${summary.services || 0} total`}
-              resourceColor="#00BCD4"
-              icon={CloudIcon}
-              onClick={() => router.push('/services')}
-              metrics={
-                <Box>
-                  <Typography variant="h4" fontWeight={700}>
-                    {summary.services || 0}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Click to view details
-                  </Typography>
-                </Box>
-              }
-            />
+      {/* Network Section */}
+      <Typography
+        variant="body2"
+        sx={{
+          mb: 2,
+          fontWeight: 700,
+          color: 'text.secondary',
+          textTransform: 'uppercase',
+          letterSpacing: 1,
+        }}
+      >
+        Network
+      </Typography>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+          gridAutoRows: '1fr',
+          gap: 2,
+          mb: 4,
+        }}
+      >
+        {/* Services */}
+        <ResourceCard
+          name="Services"
+          resourceType={`${summary.services || 0} total`}
+          resourceColor="#00BCD4"
+          icon={CloudIcon}
+          onClick={() => router.push('/services')}
+          metrics={
+            <Box>
+              <Typography variant="body1" fontWeight={700}>
+                {summary.services || 0}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Click to view details
+              </Typography>
+            </Box>
+          }
+        />
 
-            {/* Ingress */}
-            <ResourceCard
-              name="Ingress"
-              resourceType={`${summary.ingress || 0} total`}
-              resourceColor="#0EA5E9"
-              icon={HttpIcon}
-              onClick={() => router.push('/ingress')}
-              metrics={
-                <Box>
-                  <Typography variant="h4" fontWeight={700}>
-                    {summary.ingress || 0}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Click to view details
-                  </Typography>
-                </Box>
-              }
-            />
-          </Box>
-        </Box>
+        {/* Ingress */}
+        <ResourceCard
+          name="Ingress"
+          resourceType={`${summary.ingress || 0} total`}
+          resourceColor="#0EA5E9"
+          icon={HttpIcon}
+          onClick={() => router.push('/ingress')}
+          metrics={
+            <Box>
+              <Typography variant="body1" fontWeight={700}>
+                {summary.ingress || 0}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Click to view details
+              </Typography>
+            </Box>
+          }
+        />
+      </Box>
 
-        {/* Storage */}
-        <Box>
-          <Typography
-            variant="h6"
-            sx={{
-              mb: 2,
-              fontWeight: 700,
-              color: 'text.secondary',
-              fontSize: '0.875rem',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-            }}
-          >
-            Storage
-          </Typography>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gridAutoRows: '1fr',
-              gap: 2,
-            }}
-          >
-            {/* Persistent Volumes */}
-            <ResourceCard
-              name="Persistent Volumes"
-              resourceType={`${summary.pv.total} total`}
-              resourceColor="#F59E0B"
-              icon={FolderOpenIcon}
-              onClick={() => router.push('/pv')}
-              metrics={
-                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
-                  <Box>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                      Bound
-                    </Typography>
-                    <Typography variant="h6" fontWeight={700} color="success.main">
-                      {summary.pv.bound}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                      Unbound
-                    </Typography>
-                    <Typography variant="h6" fontWeight={700} color="warning.main">
-                      {summary.pv.total - summary.pv.bound}
-                    </Typography>
-                  </Box>
-                </Box>
-              }
-            />
-          </Box>
-        </Box>
+      {/* Storage Section */}
+      <Typography
+        variant="body2"
+        sx={{
+          mb: 2,
+          fontWeight: 700,
+          color: 'text.secondary',
+          textTransform: 'uppercase',
+          letterSpacing: 1,
+        }}
+      >
+        Storage
+      </Typography>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+          gridAutoRows: '1fr',
+          gap: 2,
+        }}
+      >
+        {/* Persistent Volumes */}
+        <ResourceCard
+          name="Persistent Volumes"
+          resourceType={`${summary.pv.total} total`}
+          resourceColor="#F59E0B"
+          icon={FolderOpenIcon}
+          onClick={() => router.push('/pv')}
+          metrics={
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                  Bound
+                </Typography>
+                <Typography variant="body1" fontWeight={700} color="success.main">
+                  {summary.pv.bound}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                  Unbound
+                </Typography>
+                <Typography variant="body1" fontWeight={700} color="warning.main">
+                  {summary.pv.total - summary.pv.bound}
+                </Typography>
+              </Box>
+            </Box>
+          }
+        />
       </Box>
     </Box>
   )

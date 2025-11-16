@@ -111,6 +111,7 @@ export function ResourceUtilization({ quotas }: ResourceUtilizationProps) {
       elevation={0}
       sx={{
         p: 3,
+        mt: 5,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark'
             ? 'rgba(30, 30, 46, 0.6)'
@@ -129,7 +130,7 @@ export function ResourceUtilization({ quotas }: ResourceUtilizationProps) {
             : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
       }}
     >
-      <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
+      <Typography variant="body1" gutterBottom sx={{ fontWeight: 700 }}>
         Cluster Resource Utilization
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>

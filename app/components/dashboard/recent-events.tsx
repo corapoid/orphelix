@@ -50,7 +50,7 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Typography variant="h6">Recent Activity</Typography>
+          <Typography variant="body1" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
           <Typography variant="body2" color="text.secondary">
             Latest cluster events from the last hour
           </Typography>
@@ -86,7 +86,7 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Typography variant="h6">Recent Activity</Typography>
+          <Typography variant="body1" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
           <Typography variant="body2" color="text.secondary">
             Latest cluster events from the last hour
           </Typography>
@@ -121,7 +121,7 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
       }}
     >
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="h6" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
+        <Typography variant="body1" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
         <Typography variant="body2" color="text.secondary">
           Latest cluster events from the last hour • {events.length} event{events.length !== 1 ? 's' : ''}
         </Typography>
