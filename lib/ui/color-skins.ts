@@ -88,7 +88,7 @@ export const classicSkin: ColorSkin = {
     info: '#2196F3',
     background: {
       default: '#F5F5F5',
-      paper: 'rgba(245, 245, 245, 0.88)', // Glass panel with backdrop-filter
+      paper: 'rgba(245, 245, 245, 0.88)',
       glass: 'rgba(245, 245, 245, 0.45)',
       wallpaper: '#F5F5F5',
     },
@@ -124,7 +124,7 @@ export const classicSkin: ColorSkin = {
     info: '#42A5F5',
     background: {
       default: '#121212',
-      paper: 'rgba(18, 18, 18, 0.88)', // Glass panel with backdrop-filter
+      paper: 'rgba(18, 18, 18, 0.88)',
       glass: 'rgba(18, 18, 18, 0.45)',
       wallpaper: '#121212',
     },
@@ -169,10 +169,10 @@ export const glassSkin: ColorSkin = {
     error: '#FF3B30',
     info: '#55BEFF',
     background: {
-      default: '#F1F2F8', // Unified background
-      paper: 'rgba(241, 242, 248, 0.88)', // Glass panels matching background - higher opacity for consistency
-      glass: 'rgba(241, 242, 248, 0.45)', // Even more transparent for overlays
-      wallpaper: '#F1F2F8', // Solid color for perfect uniformity
+      default: '#F1F2F8',
+      paper: 'rgba(241, 242, 248, 0.88)',
+      glass: 'rgba(241, 242, 248, 0.45)',
+      wallpaper: '#F1F2F8',
     },
     text: {
       primary: 'rgba(28, 28, 30, 0.92)',
@@ -205,10 +205,10 @@ export const glassSkin: ColorSkin = {
     error: '#FF453A',
     info: '#0A84FF',
     background: {
-      default: '#000000', // Pure black unified background
-      paper: 'rgba(0, 0, 0, 0.88)', // Glass panels matching background - higher opacity for consistency
-      glass: 'rgba(0, 0, 0, 0.45)', // Transparent overlays
-      wallpaper: '#000000', // Solid color for perfect uniformity
+      default: '#000000',
+      paper: 'rgba(0, 0, 0, 0.88)',
+      glass: 'rgba(0, 0, 0, 0.45)',
+      wallpaper: '#000000',
     },
     text: {
       primary: 'rgba(255, 255, 255, 0.92)',
@@ -251,10 +251,10 @@ export const liquidGlassSkin: ColorSkin = {
     error: '#FF6B6B',
     info: '#3AA0FF',
     background: {
-      default: '#E9F1FF', // Unified background with subtle blue tint
-      paper: 'rgba(233, 241, 255, 0.88)', // Glass panels matching background - higher opacity for consistency
-      glass: 'rgba(233, 241, 255, 0.45)', // Transparent overlays
-      wallpaper: '#E9F1FF', // Solid color for perfect uniformity
+      default: '#E9F1FF',
+      paper: 'rgba(233, 241, 255, 0.88)',
+      glass: 'rgba(233, 241, 255, 0.45)',
+      wallpaper: '#E9F1FF',
     },
     text: {
       primary: 'rgba(15, 33, 70, 0.92)',
@@ -287,10 +287,10 @@ export const liquidGlassSkin: ColorSkin = {
     error: '#FF7379',
     info: '#5AB2FF',
     background: {
-      default: '#000000', // Pure black unified background
-      paper: 'rgba(0, 0, 0, 0.88)', // Glass panels matching background - higher opacity for consistency
-      glass: 'rgba(0, 0, 0, 0.45)', // Transparent overlays
-      wallpaper: '#000000', // Solid color for perfect uniformity
+      default: '#000000',
+      paper: 'rgba(0, 0, 0, 0.88)',
+      glass: 'rgba(0, 0, 0, 0.45)',
+      wallpaper: '#000000',
     },
     text: {
       primary: 'rgba(231, 240, 255, 0.92)',
@@ -309,3 +309,141 @@ export const colorSkins: Record<ColorSkinName, ColorSkin> = {
 }
 
 export const defaultSkin: ColorSkinName = 'glass'
+
+/**
+ * Background Color Presets for Liquid Glass
+ * Carefully curated colors that work beautifully with glassmorphism
+ */
+export type BackgroundPreset = 'default' | 'midnight'
+
+export interface BackgroundPresetConfig {
+  name: string
+  description: string
+  light: ColorPalette
+  dark: ColorPalette
+}
+
+export const backgroundPresets: Record<BackgroundPreset, BackgroundPresetConfig> = {
+  // Default - Glass iOS with lighter dark mode
+  default: {
+    name: 'Default',
+    description: 'Classic iOS glass aesthetic',
+    light: glassSkin.light,
+    dark: {
+      primary: {
+        main: '#0A84FF',
+        light: '#64D2FF',
+        dark: '#0060DF',
+        contrast: '#FFFFFF',
+      },
+      secondary: {
+        main: '#5E5CE6',
+        light: '#9F8CFF',
+        dark: '#3D3ACF',
+        contrast: '#FFFFFF',
+      },
+      accent: {
+        main: 'rgba(44, 44, 46, 0.75)',
+        light: 'rgba(58, 58, 60, 0.86)',
+        dark: 'rgba(0, 0, 0, 0.68)',
+      },
+      success: '#30D158',
+      warning: '#FF9F0A',
+      error: '#FF453A',
+      info: '#0A84FF',
+      background: {
+        default: '#1C1C1E', // Lighter dark gray instead of pure black
+        paper: 'rgba(28, 28, 30, 0.88)',
+        glass: 'rgba(28, 28, 30, 0.45)',
+        wallpaper: '#1C1C1E',
+      },
+      text: {
+        primary: 'rgba(255, 255, 255, 0.92)',
+        secondary: 'rgba(235, 235, 245, 0.68)',
+        disabled: 'rgba(235, 235, 245, 0.36)',
+      },
+      divider: 'rgba(255, 255, 255, 0.1)',
+      border: 'rgba(255, 255, 255, 0.15)',
+    },
+  },
+
+  // Midnight - Deep purple/blue tones
+  midnight: {
+    name: 'Midnight',
+    description: 'Deep midnight sky with ethereal glow',
+    light: {
+      primary: {
+        main: '#5E60CE',
+        light: '#7F81E8',
+        dark: '#4B4DB5',
+        contrast: '#FFFFFF',
+      },
+      secondary: {
+        main: '#7209B7',
+        light: '#9D4EDD',
+        dark: '#5A189A',
+        contrast: '#FFFFFF',
+      },
+      accent: {
+        main: 'rgba(255, 255, 255, 0.68)',
+        light: 'rgba(255, 255, 255, 0.85)',
+        dark: 'rgba(255, 255, 255, 0.45)',
+      },
+      success: '#06D6A0',
+      warning: '#FFB627',
+      error: '#F72585',
+      info: '#4CC9F0',
+      background: {
+        default: '#E0E5F5', // Soft lavender
+        paper: 'rgba(224, 229, 245, 0.88)',
+        glass: 'rgba(224, 229, 245, 0.45)',
+        wallpaper: '#E0E5F5',
+      },
+      text: {
+        primary: 'rgba(36, 14, 82, 0.92)',
+        secondary: 'rgba(75, 77, 181, 0.7)',
+        disabled: 'rgba(94, 96, 206, 0.35)',
+      },
+      divider: 'rgba(75, 77, 181, 0.15)',
+      border: 'rgba(75, 77, 181, 0.12)',
+    },
+    dark: {
+      primary: {
+        main: '#7F81E8',
+        light: '#A4A6FF',
+        dark: '#5E60CE',
+        contrast: '#FFFFFF',
+      },
+      secondary: {
+        main: '#9D4EDD',
+        light: '#C77DFF',
+        dark: '#7209B7',
+        contrast: '#FFFFFF',
+      },
+      accent: {
+        main: 'rgba(16, 10, 41, 0.75)',
+        light: 'rgba(36, 14, 82, 0.86)',
+        dark: 'rgba(6, 4, 16, 0.68)',
+      },
+      success: '#06D6A0',
+      warning: '#FFB627',
+      error: '#F72585',
+      info: '#4CC9F0',
+      background: {
+        default: '#0A0612', // Deep space
+        paper: 'rgba(10, 6, 18, 0.88)',
+        glass: 'rgba(10, 6, 18, 0.45)',
+        wallpaper: '#0A0612',
+      },
+      text: {
+        primary: 'rgba(224, 229, 245, 0.92)',
+        secondary: 'rgba(164, 166, 255, 0.7)',
+        disabled: 'rgba(127, 129, 232, 0.35)',
+      },
+      divider: 'rgba(127, 129, 232, 0.18)',
+      border: 'rgba(127, 129, 232, 0.15)',
+    },
+  },
+}
+
+export const defaultPreset: BackgroundPreset = 'default'

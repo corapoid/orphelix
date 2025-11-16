@@ -103,7 +103,7 @@ export function TableOnlyResourceList<T>({
   showClusterAlert = true,
   emptyStateDescription,
 }: TableOnlyResourceListProps<T>) {
-  const router = useRouter()
+  const _router = useRouter()
   const searchQuery = usePageSearch(searchPlaceholder)
 
   // Auto-refresh

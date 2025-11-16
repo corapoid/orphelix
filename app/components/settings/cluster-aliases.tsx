@@ -1,10 +1,8 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -15,7 +13,6 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { useClusterAliases } from '@/lib/core/store'
-
 interface KubeContext {
   name: string
   cluster: string
@@ -23,24 +20,20 @@ interface KubeContext {
   namespace?: string
   current: boolean
 }
-
 export function ClusterAliases() {
   const { aliases, setAlias, removeAlias } = useClusterAliases()
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
   const [editingContext, setEditingContext] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
-
   useEffect(() => {
     fetchContexts()
   }, [])
-
   const fetchContexts = async () => {
     setLoading(true)
     try {
       const response = await fetch('/api/contexts')
       const data = await response.json()
-
       if (response.ok && data.contexts) {
         setContexts(data.contexts)
       }
@@ -50,12 +43,10 @@ export function ClusterAliases() {
       setLoading(false)
     }
   }
-
   const handleEdit = (contextName: string) => {
     setEditingContext(contextName)
     setEditValue(aliases[contextName] || contextName)
   }
-
   const handleSave = (contextName: string) => {
     if (editValue.trim() && editValue !== contextName) {
       setAlias(contextName, editValue.trim())
@@ -65,20 +56,16 @@ export function ClusterAliases() {
     setEditingContext(null)
     setEditValue('')
   }
-
   const handleCancel = () => {
     setEditingContext(null)
     setEditValue('')
   }
-
   const handleRemove = (contextName: string) => {
     removeAlias(contextName)
   }
-
   if (loading) {
     return <Typography>Loading contexts...</Typography>
   }
-
   if (contexts.length === 0) {
     return (
       <Alert severity="info">
@@ -86,18 +73,15 @@ export function ClusterAliases() {
       </Alert>
     )
   }
-
   return (
     <Box>
       <Typography variant="body2" color="text.secondary" paragraph>
         Set friendly names (aliases) for your Kubernetes clusters. These will be displayed instead of the full context names throughout the application.
       </Typography>
-
       <List sx={{ bgcolor: 'background.default', borderRadius: 1 }}>
         {contexts.map((context) => {
           const currentAlias = aliases[context.name]
           const isEditing = editingContext === context.name
-
           return (
             <ListItem
               key={context.name}
@@ -120,7 +104,6 @@ export function ClusterAliases() {
                     Cluster: {context.cluster}
                   </Typography>
                 </Box>
-
                 {!isEditing && (
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton
@@ -142,7 +125,6 @@ export function ClusterAliases() {
                   </Box>
                 )}
               </Box>
-
               {isEditing ? (
                 <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
                   <TextField

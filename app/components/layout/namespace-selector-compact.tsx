@@ -7,7 +7,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import FolderIcon from '@mui/icons-material/Folder'
 import CircularProgress from '@mui/material/CircularProgress'
-import Tooltip from '@mui/material/Tooltip'
 import { useModeStore } from '@/lib/core/store'
 import FormControl from '@mui/material/FormControl'
 

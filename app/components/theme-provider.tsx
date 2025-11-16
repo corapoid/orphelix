@@ -3,7 +3,7 @@
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { useState, useMemo, createContext, useContext, ReactNode, useEffect } from 'react'
-import { colorSkins } from '@/lib/ui/color-skins'
+import { backgroundPresets } from '@/lib/ui/color-skins'
 import { buildTheme } from '@/lib/ui/theme-builder'
 import { useUIPreferences } from '@/lib/core/store'
 
@@ -42,8 +42,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light')
   const [mounted, setMounted] = useState(false)
 
-  // Get color skin from store
-  const colorSkin = useUIPreferences((state) => state.colorSkin)
+  // Get background preset from store
+  const backgroundPreset = useUIPreferences((state) => state.backgroundPreset)
 
   // Initialize on client side only
   useEffect(() => {
@@ -77,12 +77,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.style.colorScheme = actualTheme
   }, [actualTheme])
 
-  // Build theme from selected skin and theme mode (always compact)
+  // Build theme from selected background preset (always compact mode)
   const theme = useMemo(() => {
-    const skin = colorSkins[colorSkin] || colorSkins.classic
-    const palette = actualTheme === 'light' ? skin.light : skin.dark
+    const preset = backgroundPresets[backgroundPreset] || backgroundPresets.default
+    const palette = actualTheme === 'light' ? preset.light : preset.dark
     return buildTheme(palette, true)
-  }, [actualTheme, colorSkin])
+  }, [actualTheme, backgroundPreset])
 
   // Prevent flash by not rendering until mounted
   if (!mounted) {

@@ -108,7 +108,7 @@ export function ResourceListView<T>({
   showClusterAlert = true,
   emptyStateDescription,
 }: ResourceListViewProps<T>) {
-  const router = useRouter()
+  const _router = useRouter()
   const { viewMode, setViewMode } = useViewMode()
   const searchQuery = usePageSearch(searchPlaceholder)
 
