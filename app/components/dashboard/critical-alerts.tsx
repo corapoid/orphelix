@@ -158,37 +158,33 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
     <Paper
       elevation={0}
       sx={{
-        py: expanded ? 2 : 1.5,
-        px: 2,
+        py: expanded ? 2.5 : 1,
+        px: 3,
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
         borderRadius: 3,
         overflow: 'hidden',
-        // Liquid glass effect
+        // Liquid glass effect with gradient
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark'
             ? errorAlerts.length > 0
-              ? 'rgba(30, 30, 46, 0.6)'
-              : 'rgba(30, 30, 46, 0.6)'
+              ? 'rgba(40, 30, 35, 0.5)'
+              : 'rgba(40, 35, 30, 0.5)'
             : errorAlerts.length > 0
-              ? 'rgba(255, 255, 255, 0.25)'
-              : 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              ? 'rgba(255, 245, 245, 0.25)'
+              : 'rgba(255, 250, 245, 0.25)',
+        backdropFilter: 'blur(32px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
         border: '1px solid',
         borderColor: (theme) =>
           theme.palette.mode === 'dark'
-            ? errorAlerts.length > 0
-              ? 'rgba(211, 47, 47, 0.4)'
-              : 'rgba(237, 108, 2, 0.4)'
-            : errorAlerts.length > 0
-              ? 'rgba(211, 47, 47, 0.3)'
-              : 'rgba(237, 108, 2, 0.3)',
+            ? 'rgba(255, 255, 255, 0.12)'
+            : 'rgba(209, 213, 219, 0.4)',
         boxShadow: (theme) =>
           theme.palette.mode === 'dark'
             ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
             : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-        // Glass shine
+        // Gradient overlay for depth
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -198,21 +194,33 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
           height: '100%',
           background: (theme) =>
             theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)'
-              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
+              ? errorAlerts.length > 0
+                ? 'linear-gradient(135deg, rgba(211, 47, 47, 0.12) 0%, rgba(211, 47, 47, 0.04) 30%, transparent 50%, rgba(0, 0, 0, 0.15) 100%)'
+                : 'linear-gradient(135deg, rgba(237, 108, 2, 0.12) 0%, rgba(237, 108, 2, 0.04) 30%, transparent 50%, rgba(0, 0, 0, 0.15) 100%)'
+              : errorAlerts.length > 0
+                ? 'linear-gradient(135deg, rgba(211, 47, 47, 0.08) 0%, rgba(211, 47, 47, 0.02) 30%, transparent 50%, rgba(0, 0, 0, 0.03) 100%)'
+                : 'linear-gradient(135deg, rgba(237, 108, 2, 0.08) 0%, rgba(237, 108, 2, 0.02) 30%, transparent 50%, rgba(0, 0, 0, 0.03) 100%)',
           pointerEvents: 'none',
           borderRadius: 3,
         },
       }}
     >
       <Box sx={{ position: 'relative', zIndex: 1 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: errorAlerts.length > 0 ? 'error.main' : 'warning.main' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            userSelect: 'none',
+          }}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <Typography variant="body1" sx={{ fontWeight: 700, color: errorAlerts.length > 0 ? 'error.main' : 'warning.main' }}>
             {errorAlerts.length > 0 ? 'Critical Issues Detected' : 'Warnings'}
           </Typography>
           <IconButton
             size="small"
-            onClick={() => setExpanded(!expanded)}
             sx={{ ml: 1 }}
           >
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -221,38 +229,38 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
         <Collapse in={expanded} timeout={300}>
           <List dense sx={{ pt: 1 }}>
             {alerts.map((alert, index) => (
-              <Link key={index} href={alert.link} passHref legacyBehavior>
-                <ListItem
-                  component="a"
-                  sx={{
-                    px: 0,
-                    py: 0.5,
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s',
-                    borderRadius: 1,
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    '&:hover': {
-                      bgcolor: 'action.hover',
-                    },
+              <ListItem
+                key={index}
+                component={Link}
+                href={alert.link}
+                sx={{
+                  px: 0,
+                  py: 0.5,
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s',
+                  borderRadius: 1,
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 32 }}>
+                  {alert.severity === 'error' ? (
+                    <ErrorOutlineIcon sx={{ fontSize: 20, color: 'error.main' }} />
+                  ) : (
+                    <WarningAmberIcon sx={{ fontSize: 20, color: 'warning.main' }} />
+                  )}
+                </ListItemIcon>
+                <ListItemText
+                  primary={alert.message}
+                  primaryTypographyProps={{
+                    variant: 'body2',
+                    fontWeight: 500,
                   }}
-                >
-                  <ListItemIcon sx={{ minWidth: 32 }}>
-                    {alert.severity === 'error' ? (
-                      <ErrorOutlineIcon sx={{ fontSize: 20, color: 'error.main' }} />
-                    ) : (
-                      <WarningAmberIcon sx={{ fontSize: 20, color: 'warning.main' }} />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={alert.message}
-                    primaryTypographyProps={{
-                      variant: 'body2',
-                      fontWeight: 500,
-                    }}
-                  />
-                </ListItem>
-              </Link>
+                />
+              </ListItem>
             ))}
           </List>
         </Collapse>
