@@ -22,6 +22,9 @@ const statusConfig: Record<string, {
   Running: { color: 'success', icon: <CheckCircleIcon /> },
   Ready: { color: 'success', icon: <CheckCircleIcon /> },
   Succeeded: { color: 'success', icon: <CheckCircleIcon /> },
+  Active: { color: 'success', icon: <CheckCircleIcon /> },
+  Bound: { color: 'success', icon: <CheckCircleIcon /> },
+  Normal: { color: 'success', icon: <CheckCircleIcon /> },
 
   // Error states
   Failed: { color: 'error', icon: <ErrorIcon /> },
@@ -31,6 +34,7 @@ const statusConfig: Record<string, {
 
   // Warning states
   Pending: { color: 'warning', icon: <HourglassEmptyIcon /> },
+  Warning: { color: 'warning', icon: <ErrorIcon /> },
 
   // Info states
   Progressing: { color: 'info', icon: <HourglassEmptyIcon /> },
@@ -90,24 +94,24 @@ export function StatusBadge({ status, size = 'small' }: StatusBadgeProps) {
     <Chip
       label={status}
       size={size}
-      icon={config.icon}
       sx={{
-        fontWeight: 600,
-        fontSize: size === 'small' ? '0.75rem' : '0.8125rem',
-        minWidth: size === 'small' ? 100 : 120,
-        height: size === 'small' ? 24 : 28,
-        borderRadius: '6px',
+        fontWeight: 500,
+        fontSize: '0.6875rem',
+        height: 20,
+        minWidth: 70,
+        borderRadius: '10px',
         backgroundColor: (theme) => theme.palette.mode === 'dark' ? colors.bgDark : colors.bg,
         color: (theme) => theme.palette.mode === 'dark' ? colors.textDark : colors.text,
-        border: 'none',
-        '& .MuiChip-icon': {
-          fontSize: size === 'small' ? '0.875rem' : '1rem',
-          color: (theme) => theme.palette.mode === 'dark' ? colors.textDark : colors.text,
-          marginLeft: '6px',
-        },
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        border: '1px solid',
+        borderColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.1)'
+            : 'rgba(0, 0, 0, 0.08)',
+        boxShadow: 'none',
         '& .MuiChip-label': {
-          paddingLeft: '6px',
-          paddingRight: '10px',
+          padding: '0 8px',
         },
       }}
     />
