@@ -61,32 +61,51 @@ export function AISettings() {
       <Grid container spacing={2} sx={{ mb: 4 }}>
         {availableFeatures.map((feature) => {
           const isAvailable = hasKey && feature.requiredProvider === 'openai'
+          const iconBgColor = isAvailable ? '#10B981' : '#94A3B8'
           return (
             <Grid key={feature.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <Card
                 sx={{
                   height: '100%',
-                  position: 'relative',
-                  border: '1px solid',
-                  borderColor: isAvailable ? 'success.main' : 'divider',
-                  bgcolor: isAvailable ? 'success.lighter' : 'background.paper',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <CodeIcon sx={{ color: isAvailable ? 'success.main' : 'text.secondary' }} />
-                    <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
-                      YAML Editor
-                    </Typography>
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 1, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '0.75rem' }}
+                      >
+                        YAML Editor
+                      </Typography>
+                      <Chip
+                        label={isAvailable ? 'Enabled' : 'Disabled'}
+                        size="small"
+                        color={isAvailable ? 'success' : 'default'}
+                      />
+                    </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 56,
+                        height: 56,
+                        borderRadius: '50%',
+                        bgcolor: iconBgColor,
+                        color: '#FFFFFF',
+                        flexShrink: 0,
+                        boxShadow: `0 4px 14px ${iconBgColor}40`,
+                      }}
+                    >
+                      <CodeIcon sx={{ fontSize: 28 }} />
+                    </Box>
                   </Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
                     {feature.description}
                   </Typography>
-                  <Chip
-                    label={isAvailable ? 'Enabled' : 'Disabled'}
-                    size="small"
-                    color={isAvailable ? 'success' : 'default'}
-                  />
                 </CardContent>
               </Card>
             </Grid>

@@ -26,7 +26,7 @@ import { backgroundPresets, BackgroundPreset } from '@/lib/ui/color-skins'
 export default function SettingsPage() {
   const searchParams = useSearchParams()
   const tabParam = searchParams.get('tab')
-  const { mode: themeMode, setThemeMode } = useThemeMode()
+  const { mode: themeMode, setThemeMode, actualTheme } = useThemeMode()
   const {
     autoRefreshEnabled,
     setAutoRefreshEnabled,
