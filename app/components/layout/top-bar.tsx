@@ -53,7 +53,9 @@ export function TopBar() {
 
   const handleNavigation = (path: string) => {
     handleClose()
-    router.push(path)
+    // Prefix path with /demo if in mock mode
+    const finalPath = mode === 'mock' ? `/demo${path}` : path
+    router.push(finalPath)
   }
 
   const handleRetryConnection = async () => {
