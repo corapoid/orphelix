@@ -11,7 +11,6 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Button from '@mui/material/Button'
 import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -26,12 +25,13 @@ import LaptopOutlinedIcon from '@mui/icons-material/LaptopOutlined'
 import { useThemeMode } from '../components/theme-provider'
 import { useModeStore, useUIPreferences } from '@/lib/core/store'
 import { NamespaceSelector } from '../components/layout/namespace-selector'
-import { colorSkins, ColorSkinName } from '@/lib/ui/color-skins'
 import { GitHubAppInstallButton } from '@/app/components/github-app/install-button'
 import { GitHubAppRepoSelector } from '@/app/components/github-app/repo-selector'
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { AISettings } from '@/app/components/settings/ai-settings'
 import { ClusterAliases } from '@/app/components/settings/cluster-aliases'
+import { backgroundPresets, BackgroundPreset } from '@/lib/ui/color-skins'
 
 interface KubeContext {
   name: string
@@ -42,10 +42,12 @@ interface KubeContext {
 }
 
 export default function SettingsPage() {
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get('tab')
   const { mode: themeMode, setThemeMode, actualTheme } = useThemeMode()
   const {
     mode: appMode,
-    setMode,
+    
     realtimeEnabled,
     setRealtimeEnabled,
     autoRefreshEnabled,
@@ -57,7 +59,7 @@ export default function SettingsPage() {
     setContext,
     setNamespace,
   } = useModeStore()
-  const { colorSkin, setColorSkin, compactMode, setCompactMode } = useUIPreferences()
+  const { backgroundPreset, setBackgroundPreset } = useUIPreferences()
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -65,6 +67,16 @@ export default function SettingsPage() {
   const [connectionError, setConnectionError] = useState<string | null>(null)
   const [namespaceError, setNamespaceError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState(0)
+
+  // Set active tab from URL parameter
+  useEffect(() => {
+    if (tabParam) {
+      const tabIndex = parseInt(tabParam, 10)
+      if (!isNaN(tabIndex) && tabIndex >= 0 && tabIndex <= 4) {
+        setActiveTab(tabIndex)
+      }
+    }
+  }, [tabParam])
 
   const fetchContexts = async () => {
     setLoading(true)
@@ -80,7 +92,6 @@ export default function SettingsPage() {
 
       setContexts(data.contexts || [])
 
-      // Auto-select current context if available and no context selected
       const currentContext = data.contexts.find((ctx: KubeContext) => ctx.current)
       if (currentContext && !selectedContext) {
         setContext({
@@ -89,7 +100,6 @@ export default function SettingsPage() {
           user: currentContext.user,
         })
 
-        // Also auto-set namespace if not already set
         if (currentContext.namespace && !selectedNamespace) {
           setNamespace(currentContext.namespace)
         }
@@ -109,12 +119,6 @@ export default function SettingsPage() {
     }
   }, [appMode])
 
-  const handleModeChange = (newMode: 'mock' | 'real') => {
-    setMode(newMode)
-    if (newMode === 'mock') {
-      setContext(null)
-    }
-  }
 
   const testConnection = async () => {
     setTestingConnection(true)
@@ -139,19 +143,16 @@ export default function SettingsPage() {
   }
 
   const handleContextSelect = async (context: KubeContext) => {
-    // First set the context
     setContext({
       name: context.name,
       cluster: context.cluster,
       user: context.user,
     })
 
-    // Auto-set namespace from context (with fallback to 'default')
     if (context.namespace) {
       setNamespace(context.namespace)
     }
 
-    // Then test the connection
     await testConnection()
   }
 
@@ -165,7 +166,6 @@ export default function SettingsPage() {
 
   return (
     <Box>
-      {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
           Settings
@@ -175,7 +175,6 @@ export default function SettingsPage() {
         </Typography>
       </Box>
 
-      {/* Tabs Navigation */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={activeTab} onChange={handleTabChange}>
           <Tab label="Cluster" />
@@ -186,48 +185,15 @@ export default function SettingsPage() {
         </Tabs>
       </Box>
 
-      {/* Tab Panels */}
-      {/* Cluster Configuration */}
       {activeTab === 0 && (
         <Box>
           <Paper sx={{ p: 4 }}>
-            {/* Mode Selection */}
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Connection Mode
-              </Typography>
-              <RadioGroup
-                value={appMode}
-                onChange={(e) => handleModeChange(e.target.value as 'mock' | 'real')}
-              >
-                <FormControlLabel
-                  value="mock"
-                  control={<Radio />}
-                  label={
-                    <Box>
-                      <Typography variant="body1">Demo Mode</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        Use realistic mock data - no cluster required
-                      </Typography>
-                    </Box>
-                  }
-                />
-                <FormControlLabel
-                  value="real"
-                  control={<Radio />}
-                  label={
-                    <Box>
-                      <Typography variant="body1">Real Cluster</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        Connect to a live Kubernetes cluster
-                      </Typography>
-                    </Box>
-                  }
-                />
-              </RadioGroup>
-            </Box>
-
-            {/* Context Selection - shown when Real Cluster is selected */}
+            {appMode === 'mock' && (
+              <Alert severity="info">
+                <AlertTitle>Demo Mode Active</AlertTitle>
+                You are currently using mock data. Remove <code>/demo</code> from the URL to connect to a real cluster.
+              </Alert>
+            )}
             {appMode === 'real' && (
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -293,7 +259,6 @@ export default function SettingsPage() {
               </Box>
             )}
 
-            {/* Connection Status */}
             {appMode === 'real' && selectedContext && testingConnection && (
               <Box sx={{ mb: 4 }}>
                 <Alert severity="info">
@@ -303,7 +268,6 @@ export default function SettingsPage() {
               </Box>
             )}
 
-            {/* Connection Error */}
             {appMode === 'real' && selectedContext && connectionError && (
               <Box sx={{ mb: 4 }}>
                 <Alert severity="error">
@@ -316,7 +280,6 @@ export default function SettingsPage() {
               </Box>
             )}
 
-            {/* Namespace Selector */}
             {appMode === 'real' && selectedContext && !connectionError && (
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -338,7 +301,6 @@ export default function SettingsPage() {
               </Box>
             )}
 
-            {/* Auto Refresh */}
             <Box sx={{ mb: 4 }}>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Auto Refresh
@@ -382,7 +344,6 @@ export default function SettingsPage() {
               )}
             </Box>
 
-            {/* Real-time Updates */}
             {appMode === 'real' && selectedContext && !connectionError && (
               <Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -414,7 +375,6 @@ export default function SettingsPage() {
         </Box>
       )}
 
-      {/* Cluster Aliases */}
       {activeTab === 1 && (
         <Box>
           <Paper sx={{ p: 4 }}>
@@ -426,7 +386,6 @@ export default function SettingsPage() {
         </Box>
       )}
 
-      {/* AI Features */}
       {activeTab === 2 && (
         <Box>
           <Paper sx={{ p: 4 }}>
@@ -438,7 +397,6 @@ export default function SettingsPage() {
         </Box>
       )}
 
-      {/* GitHub Integration */}
       {activeTab === 3 && (
         <Box>
           <Paper sx={{ p: 4 }}>
@@ -463,26 +421,58 @@ export default function SettingsPage() {
         </Box>
       )}
 
-      {/* Design */}
       {activeTab === 4 && (
         <Box>
-          {/* Theme Mode */}
-          <Paper sx={{ p: 4, mb: 3 }}>
+          <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
               Theme Mode
             </Typography>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Button
-                  variant={themeMode === 'light' ? 'contained' : 'outlined'}
                   onClick={() => setThemeMode('light')}
-                  startIcon={<LightModeOutlinedIcon />}
                   fullWidth
-                  sx={{ justifyContent: 'flex-start', py: 2 }}
+                  sx={{
+                    justifyContent: 'flex-start',
+                    py: 2,
+                    px: 2,
+                    borderRadius: 1.5,
+                    border: '0.5px solid transparent',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    ...(themeMode === 'light' && {
+                      background: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
+                          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                      backdropFilter: 'blur(20px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'rgba(0, 0, 0, 0.08)'
+                          : 'rgba(255, 255, 255, 0.2)',
+                      boxShadow: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                          : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                    }),
+                    '&:hover': {
+                      bgcolor: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'rgba(255, 255, 255, 0.5)'
+                          : 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                    },
+                  }}
                 >
                   <Box sx={{ textAlign: 'left', flex: 1 }}>
-                    <Typography variant="body1">Light Mode</Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
+                      <LightModeOutlinedIcon sx={{ fontSize: 20, color: themeMode === 'light' ? 'primary.main' : 'text.secondary' }} />
+                      <Typography variant="body1" fontWeight={600} sx={{ color: themeMode === 'light' ? 'primary.main' : 'inherit' }}>
+                        Light Mode
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" color="text.secondary" sx={{ ml: 4.5 }}>
                       Always use light theme
                     </Typography>
                   </Box>
@@ -490,15 +480,49 @@ export default function SettingsPage() {
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Button
-                  variant={themeMode === 'dark' ? 'contained' : 'outlined'}
                   onClick={() => setThemeMode('dark')}
-                  startIcon={<DarkModeOutlinedIcon />}
                   fullWidth
-                  sx={{ justifyContent: 'flex-start', py: 2 }}
+                  sx={{
+                    justifyContent: 'flex-start',
+                    py: 2,
+                    px: 2,
+                    borderRadius: 1.5,
+                    border: '0.5px solid transparent',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    ...(themeMode === 'dark' && {
+                      background: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
+                          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                      backdropFilter: 'blur(20px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'rgba(0, 0, 0, 0.08)'
+                          : 'rgba(255, 255, 255, 0.2)',
+                      boxShadow: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                          : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                    }),
+                    '&:hover': {
+                      bgcolor: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'rgba(255, 255, 255, 0.5)'
+                          : 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                    },
+                  }}
                 >
                   <Box sx={{ textAlign: 'left', flex: 1 }}>
-                    <Typography variant="body1">Dark Mode</Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
+                      <DarkModeOutlinedIcon sx={{ fontSize: 20, color: themeMode === 'dark' ? 'primary.main' : 'text.secondary' }} />
+                      <Typography variant="body1" fontWeight={600} sx={{ color: themeMode === 'dark' ? 'primary.main' : 'inherit' }}>
+                        Dark Mode
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" color="text.secondary" sx={{ ml: 4.5 }}>
                       Always use dark theme
                     </Typography>
                   </Box>
@@ -506,103 +530,137 @@ export default function SettingsPage() {
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Button
-                  variant={themeMode === 'system' ? 'contained' : 'outlined'}
                   onClick={() => setThemeMode('system')}
-                  startIcon={<LaptopOutlinedIcon />}
                   fullWidth
-                  sx={{ justifyContent: 'flex-start', py: 2 }}
+                  sx={{
+                    justifyContent: 'flex-start',
+                    py: 2,
+                    px: 2,
+                    borderRadius: 1.5,
+                    border: '0.5px solid transparent',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    ...(themeMode === 'system' && {
+                      background: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
+                          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                      backdropFilter: 'blur(20px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'rgba(0, 0, 0, 0.08)'
+                          : 'rgba(255, 255, 255, 0.2)',
+                      boxShadow: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                          : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                    }),
+                    '&:hover': {
+                      bgcolor: (theme) =>
+                        theme.palette.mode === 'light'
+                          ? 'rgba(255, 255, 255, 0.5)'
+                          : 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                    },
+                  }}
                 >
                   <Box sx={{ textAlign: 'left', flex: 1 }}>
-                    <Typography variant="body1">System</Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
+                      <LaptopOutlinedIcon sx={{ fontSize: 20, color: themeMode === 'system' ? 'primary.main' : 'text.secondary' }} />
+                      <Typography variant="body1" fontWeight={600} sx={{ color: themeMode === 'system' ? 'primary.main' : 'inherit' }}>
+                        System
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" color="text.secondary" sx={{ ml: 4.5 }}>
                       Currently: {actualTheme}
                     </Typography>
                   </Box>
                 </Button>
               </Grid>
             </Grid>
-          </Paper>
+          </Box>
 
-          {/* Color Skin */}
-          <Paper sx={{ p: 4, mb: 3 }}>
+          <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Color Skin
+              Color Theme
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Choose a color palette for your dashboard
+              Choose a color palette for your liquid glass interface. Each theme adapts to light and dark modes.
             </Typography>
             <Grid container spacing={2}>
-              {Object.entries(colorSkins).map(([key, skin]) => {
-                const isSelected = colorSkin === key
-                const palette = actualTheme === 'light' ? skin.light : skin.dark
+              {Object.entries(backgroundPresets).map(([key, preset]) => {
+                const isSelected = backgroundPreset === key
+                const palette = actualTheme === 'light' ? preset.light : preset.dark
                 return (
-                  <Grid key={key} size={{ xs: 12, sm: 4 }}>
+                  <Grid key={key} size={{ xs: 12, sm: 6, md: 4 }}>
                     <Button
-                      variant={isSelected ? 'contained' : 'outlined'}
-                      onClick={() => setColorSkin(key as ColorSkinName)}
+                      onClick={() => setBackgroundPreset(key as BackgroundPreset)}
                       fullWidth
                       sx={{
                         justifyContent: 'flex-start',
                         py: 2,
                         px: 2,
-                        borderWidth: 2,
-                        borderColor: isSelected ? palette.primary.main : 'divider',
+                        borderRadius: 1.5,
+                        border: '0.5px solid transparent',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        ...(isSelected && {
+                          background: (theme) =>
+                            theme.palette.mode === 'light'
+                              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
+                              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                          backdropFilter: 'blur(20px) saturate(180%)',
+                          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                          borderColor: (theme) =>
+                            theme.palette.mode === 'light'
+                              ? 'rgba(0, 0, 0, 0.08)'
+                              : 'rgba(255, 255, 255, 0.2)',
+                          boxShadow: (theme) =>
+                            theme.palette.mode === 'light'
+                              ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                              : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                        }),
                         '&:hover': {
-                          borderColor: palette.primary.main,
+                          bgcolor: (theme) =>
+                            theme.palette.mode === 'light'
+                              ? 'rgba(255, 255, 255, 0.5)'
+                              : 'rgba(255, 255, 255, 0.08)',
+                          backdropFilter: 'blur(20px)',
+                          WebkitBackdropFilter: 'blur(20px)',
                         },
                       }}
                     >
                       <Box sx={{ textAlign: 'left', flex: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                           <Box
                             sx={{
-                              width: 24,
-                              height: 24,
-                              borderRadius: 1,
+                              width: 32,
+                              height: 32,
+                              borderRadius: 1.5,
                               background: `linear-gradient(135deg, ${palette.primary.main} 0%, ${palette.secondary.main} 100%)`,
+                              boxShadow: `0 2px 8px ${palette.primary.main}40`,
                             }}
                           />
-                          <Typography variant="body1" fontWeight={600}>
-                            {skin.name}
+                          <Typography
+                            variant="body1"
+                            fontWeight={600}
+                            sx={{
+                              color: isSelected ? 'primary.main' : 'inherit'
+                            }}
+                          >
+                            {preset.name}
                           </Typography>
                         </Box>
                         <Typography variant="caption" color="text.secondary">
-                          {skin.description}
+                          {preset.description}
                         </Typography>
-                        <Box sx={{ display: 'flex', gap: 0.5, mt: 1 }}>
-                          <Box
-                            sx={{
-                              width: 16,
-                              height: 16,
-                              borderRadius: 0.5,
-                              bgcolor: palette.primary.main,
-                            }}
-                          />
-                          <Box
-                            sx={{
-                              width: 16,
-                              height: 16,
-                              borderRadius: 0.5,
-                              bgcolor: palette.secondary.main,
-                            }}
-                          />
-                          <Box
-                            sx={{
-                              width: 16,
-                              height: 16,
-                              borderRadius: 0.5,
-                              bgcolor: palette.accent.main,
-                            }}
-                          />
-                        </Box>
                       </Box>
                     </Button>
                   </Grid>
                 )
               })}
             </Grid>
-          </Paper>
-
+          </Box>
         </Box>
       )}
     </Box>

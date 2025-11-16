@@ -119,8 +119,12 @@ export function buildTheme(palette: ColorPalette, compact: boolean = false): The
     components: {
       MuiCssBaseline: {
         styleOverrides: {
+          '*': {
+            transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out',
+          },
           body: {
             backgroundColor: palette.background.default,
+            transition: 'background-color 0.3s ease-in-out',
             ...(palette.background.wallpaper && palette.background.wallpaper.includes('gradient')
               ? {
                   backgroundImage: palette.background.wallpaper,
