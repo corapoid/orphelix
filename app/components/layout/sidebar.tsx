@@ -7,9 +7,10 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
 import Collapse from '@mui/material/Collapse'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
@@ -24,27 +25,22 @@ import SecretIcon from '@mui/icons-material/Lock'
 import HpaIcon from '@mui/icons-material/TrendingUp'
 import PvIcon from '@mui/icons-material/FolderOpen'
 import EventIcon from '@mui/icons-material/EventNote'
-import SettingsIcon from '@mui/icons-material/SettingsOutlined'
 import CloudIcon from '@mui/icons-material/Cloud'
 import HttpIcon from '@mui/icons-material/Http'
 import WorkIcon from '@mui/icons-material/Work'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import FolderIcon from '@mui/icons-material/Folder'
+import GitHubIcon from '@mui/icons-material/GitHub'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import Divider from '@mui/material/Divider'
-import { ContextSelector } from './context-selector'
-import { Logo } from './logo'
+import { useModeStore } from '@/lib/core/store'
 
 const DRAWER_WIDTH = 240
 const DRAWER_WIDTH_COLLAPSED = 64
 const DRAWER_PADDING = 16 // Padding on left and right
 
-interface SidebarProps {
-  open: boolean
-  onClose: () => void
-}
 
 interface NavItem {
   label: string
@@ -102,6 +98,7 @@ function isNavGroup(item: NavItem | NavGroup): item is NavGroup {
 export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter() as AppRouterInstance
+  const mode = useModeStore((state) => state.mode)
   const [collapsed, setCollapsed] = useState(false)
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
 
@@ -115,7 +112,9 @@ export function Sidebar() {
   }, [])
 
   const handleNavigate = (path: string) => {
-    router.push(path)
+    // Prefix path with /demo if in mock mode
+    const finalPath = mode === 'mock' ? `/demo${path}` : path
+    router.push(finalPath)
   }
 
   const toggleCollapse = () => {
@@ -130,7 +129,9 @@ export function Sidebar() {
   }
 
   const renderNavItem = (item: NavItem, isSubItem = false) => {
-    const isActive = pathname === item.path
+    // Remove /demo prefix from pathname for comparison
+    const cleanPathname = pathname.startsWith('/demo') ? pathname.replace('/demo', '') : pathname
+    const isActive = cleanPathname === item.path
 
     if (collapsed) {
       return (
@@ -145,26 +146,27 @@ export function Sidebar() {
                 justifyContent: 'center',
                 px: 1.5,
                 transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                border: '0.5px solid transparent',
                 '&.Mui-selected': {
-                  bgcolor: (theme) =>
+                  background: (theme) =>
                     theme.palette.mode === 'light'
-                      ? 'rgba(255, 255, 255, 0.7)'
-                      : 'rgba(255, 255, 255, 0.12)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: (theme) =>
+                      ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
+                      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  borderColor: (theme) =>
                     theme.palette.mode === 'light'
-                      ? '0.5px solid rgba(0, 0, 0, 0.08)'
-                      : '0.5px solid rgba(255, 255, 255, 0.15)',
+                      ? 'rgba(0, 0, 0, 0.08)'
+                      : 'rgba(255, 255, 255, 0.2)',
                   boxShadow: (theme) =>
                     theme.palette.mode === 'light'
-                      ? '0 2px 8px rgba(0, 0, 0, 0.08)'
-                      : '0 2px 8px rgba(0, 0, 0, 0.3)',
+                      ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
                   '&:hover': {
-                    bgcolor: (theme) =>
+                    background: (theme) =>
                       theme.palette.mode === 'light'
-                        ? 'rgba(255, 255, 255, 0.85)'
-                        : 'rgba(255, 255, 255, 0.16)',
+                        ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%)'
+                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)',
                   },
                 },
                 '&:hover': {
@@ -206,26 +208,27 @@ export function Sidebar() {
             pl: isSubItem ? 3.5 : 1.5,
             py: 0.75,
             transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            border: '0.5px solid transparent',
             '&.Mui-selected': {
-              bgcolor: (theme) =>
+              background: (theme) =>
                 theme.palette.mode === 'light'
-                  ? 'rgba(255, 255, 255, 0.7)'
-                  : 'rgba(255, 255, 255, 0.12)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: (theme) =>
+                  ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
+                  : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              borderColor: (theme) =>
                 theme.palette.mode === 'light'
-                  ? '0.5px solid rgba(0, 0, 0, 0.08)'
-                  : '0.5px solid rgba(255, 255, 255, 0.15)',
+                  ? 'rgba(0, 0, 0, 0.08)'
+                  : 'rgba(255, 255, 255, 0.2)',
               boxShadow: (theme) =>
                 theme.palette.mode === 'light'
-                  ? '0 2px 8px rgba(0, 0, 0, 0.08)'
-                  : '0 2px 8px rgba(0, 0, 0, 0.3)',
+                  ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                  : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
               '&:hover': {
-                bgcolor: (theme) =>
+                background: (theme) =>
                   theme.palette.mode === 'light'
-                    ? 'rgba(255, 255, 255, 0.85)'
-                    : 'rgba(255, 255, 255, 0.16)',
+                    ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%)'
+                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)',
               },
               '& .MuiListItemIcon-root': {
                 color: 'primary.main',
@@ -314,8 +317,7 @@ export function Sidebar() {
           overflow: 'hidden',
         }}
       >
-        <ContextSelector collapsed={collapsed} />
-        <List sx={{ px: 1, py: 1, flex: 1, overflowY: 'auto' }}>
+        <List sx={{ px: 1, py: 1, flex: 1, overflowY: 'auto', pt: 2 }}>
           {navGroups.map((item) => {
           if (isNavGroup(item)) {
             // Render group header
@@ -369,171 +371,85 @@ export function Sidebar() {
           })}
         </List>
 
-        {/* Bottom Actions: Settings & Collapse */}
+        {/* Bottom Actions: Version & GitHub */}
         <Divider />
-        <Box sx={{ px: 1, py: 1 }}>
+        <Box sx={{ px: 1, py: 0.75 }}>
         {collapsed ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-            <Tooltip title="Settings" placement="right">
-              <ListItemButton
-                selected={pathname === '/settings'}
-                onClick={() => handleNavigate('/settings')}
+            <Tooltip title="GitHub" placement="right">
+              <IconButton
+                component="a"
+                href="https://github.com/dmachard/kubevista"
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
                 sx={{
-                  borderRadius: 2,
-                  minHeight: 48,
-                  justifyContent: 'center',
-                  px: 2,
-                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                  '&.Mui-selected': {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? 'rgba(255, 255, 255, 0.7)'
-                        : 'rgba(255, 255, 255, 0.12)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
-                    border: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? '0.5px solid rgba(0, 0, 0, 0.08)'
-                        : '0.5px solid rgba(255, 255, 255, 0.15)',
-                    boxShadow: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? '0 2px 8px rgba(0, 0, 0, 0.08)'
-                        : '0 2px 8px rgba(0, 0, 0, 0.3)',
-                    '&:hover': {
-                      bgcolor: (theme) =>
-                        theme.palette.mode === 'light'
-                          ? 'rgba(255, 255, 255, 0.85)'
-                          : 'rgba(255, 255, 255, 0.16)',
-                    },
-                  },
+                  color: 'text.secondary',
                   '&:hover': {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? 'rgba(255, 255, 255, 0.5)'
-                        : 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
+                    color: 'primary.main',
                   },
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    color: pathname === '/settings' ? 'primary.main' : 'text.secondary',
-                    transition: 'color 0.2s ease-in-out',
-                  }}
-                >
-                  <SettingsIcon />
-                </ListItemIcon>
-              </ListItemButton>
+                <GitHubIcon sx={{ fontSize: 18 }} />
+              </IconButton>
             </Tooltip>
             <Tooltip title="Expand sidebar" placement="right">
-              <ListItemButton
+              <IconButton
                 onClick={toggleCollapse}
+                size="small"
                 sx={{
-                  borderRadius: 2,
-                  minHeight: 48,
-                  justifyContent: 'center',
-                  px: 2,
+                  color: 'text.secondary',
                   '&:hover': {
                     bgcolor: 'action.hover',
                   },
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    color: 'text.secondary',
-                  }}
-                >
-                  <ChevronRightIcon />
-                </ListItemIcon>
-              </ListItemButton>
+                <ChevronRightIcon sx={{ fontSize: 18 }} />
+              </IconButton>
             </Tooltip>
           </Box>
         ) : (
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <ListItemButton
-              selected={pathname === '/settings'}
-              onClick={() => handleNavigate('/settings')}
+            <Typography
+              variant="caption"
               sx={{
-                borderRadius: 2,
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                '&.Mui-selected': {
-                  bgcolor: (theme) =>
-                    theme.palette.mode === 'light'
-                      ? 'rgba(255, 255, 255, 0.7)'
-                      : 'rgba(255, 255, 255, 0.12)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: (theme) =>
-                    theme.palette.mode === 'light'
-                      ? '0.5px solid rgba(0, 0, 0, 0.08)'
-                      : '0.5px solid rgba(255, 255, 255, 0.15)',
-                  boxShadow: (theme) =>
-                    theme.palette.mode === 'light'
-                      ? '0 2px 8px rgba(0, 0, 0, 0.08)'
-                      : '0 2px 8px rgba(0, 0, 0, 0.3)',
+                color: 'text.secondary',
+                fontSize: '0.65rem',
+                fontWeight: 500,
+                pl: 1,
+              }}
+            >
+              v1.0.0
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <IconButton
+                component="a"
+                href="https://github.com/dmachard/kubevista"
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
+                sx={{
+                  color: 'text.secondary',
                   '&:hover': {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? 'rgba(255, 255, 255, 0.85)'
-                        : 'rgba(255, 255, 255, 0.16)',
-                  },
-                  '& .MuiListItemIcon-root': {
                     color: 'primary.main',
                   },
-                },
-                '&:hover': {
-                  bgcolor: (theme) =>
-                    theme.palette.mode === 'light'
-                      ? 'rgba(255, 255, 255, 0.5)'
-                      : 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 40,
-                  color: pathname === '/settings' ? 'primary.main' : 'text.secondary',
-                  transition: 'color 0.2s ease-in-out',
                 }}
               >
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Settings"
-                primaryTypographyProps={{
-                  fontSize: '0.875rem',
-                  fontWeight: pathname === '/settings' ? 600 : 500,
-                  color: pathname === '/settings' ? 'primary.main' : 'inherit',
-                }}
-              />
-            </ListItemButton>
-            <ListItemButton
-              onClick={toggleCollapse}
-              sx={{
-                borderRadius: 2,
-                minWidth: 48,
-                minHeight: 48,
-                justifyContent: 'center',
-                px: 1,
-                '&:hover': {
-                  bgcolor: 'action.hover',
-                },
-              }}
-            >
-              <ListItemIcon
+                <GitHubIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+              <IconButton
+                onClick={toggleCollapse}
+                size="small"
                 sx={{
-                  minWidth: 0,
                   color: 'text.secondary',
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
                 }}
               >
-                <ChevronLeftIcon />
-              </ListItemIcon>
-            </ListItemButton>
+                <ChevronLeftIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Box>
           </Box>
         )}
         </Box>

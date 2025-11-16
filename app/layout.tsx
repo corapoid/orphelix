@@ -4,7 +4,6 @@ import { ReactNode } from 'react'
 import Box from '@mui/material/Box'
 import { Providers } from './components/providers'
 import { Sidebar } from './components/layout/sidebar'
-import { Footer } from './components/layout/footer'
 import { TopBar } from './components/layout/top-bar'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -58,7 +57,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <Box sx={{ flexGrow: 1, p: 2, overflowY: 'auto' }}>
                   {children}
                 </Box>
-                <Footer />
               </Box>
             </Box>
           </Box>

@@ -5,7 +5,6 @@ import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-import LanguageIcon from '@mui/icons-material/Language'
 import { CriticalAlerts } from './components/dashboard/critical-alerts'
 import { ResourceOverviewV2 } from './components/dashboard/resource-overview-v2'
 import { ResourceUtilization } from './components/dashboard/resource-utilization'
@@ -15,12 +14,10 @@ import { useResourceQuotas } from '@/lib/hooks/use-resourcequotas'
 import { useModeStore } from '@/lib/core/store'
 import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
 import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
-import { PageHeader } from './components/layout/page-header'
 
 export default function DashboardPage() {
   const { data: health } = useClusterHealth()
   const mode = useModeStore((state) => state.mode)
-  const selectedContext = useModeStore((state) => state.selectedContext)
   const namespace = useModeStore((state) => state.selectedNamespace)
   const { data: summary, isLoading, error } = useDashboardSummary()
   const { data: events, isLoading: eventsLoading, error: eventsError } = useRecentEvents(1) // Last 1 hour
@@ -82,7 +79,7 @@ export default function DashboardPage() {
       </Box>
 
       {/* 2. Resource Overview + Resource Utilization (Side by Side on wide screens) */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: '2fr 1fr' }, gap: 3, mb: 4 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: '2fr 1fr' }, gap: 3, mb: 4, alignItems: 'start' }}>
         <Box>
           <ResourceOverviewV2 summary={summary} />
         </Box>
@@ -91,25 +88,14 @@ export default function DashboardPage() {
         </Box>
       </Box>
 
-      {/* 3. Recent Activity + Resource Utilization (for smaller screens) */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' }, gap: 3, mb: 4 }}>
-        <Box>
-          <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
-        </Box>
-        <Box sx={{ display: { xs: 'block', xl: 'none' } }}>
-          <ResourceUtilization quotas={quotas} />
-        </Box>
+      {/* 3. Recent Activity (full width) */}
+      <Box sx={{ mb: 4 }}>
+        <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
       </Box>
 
-      {/* Quick Link to Topology */}
-      <Box sx={{ textAlign: 'center' }}>
-        <Button
-          variant="outlined"
-          startIcon={<LanguageIcon />}
-          onClick={() => (window.location.href = '/topology')}
-        >
-          View Cluster Topology
-        </Button>
+      {/* 4. Resource Utilization (for smaller screens) */}
+      <Box sx={{ display: { xs: 'block', xl: 'none' }, mb: 4 }}>
+        <ResourceUtilization quotas={quotas} />
       </Box>
     </Box>
   )
