@@ -25,23 +25,87 @@ import type {
  * Generates mock Kubernetes data for demo purposes
  */
 
-// Cache for mock data to ensure consistency across calls
-let cachedPods: Pod[] | null = null
-let cachedDeployments: Deployment[] | null = null
-let cachedNodes: Node[] | null = null
-let cachedConfigMaps: ConfigMap[] | null = null
-let cachedSecrets: Secret[] | null = null
-let cachedHPAs: HPA[] | null = null
-let cachedPVs: PersistentVolume[] | null = null
-let cachedPVCs: PersistentVolumeClaim[] | null = null
-let cachedEvents: Event[] | null = null
-let cachedServices: Service[] | null = null
-let cachedIngresses: Ingress[] | null = null
-let cachedJobs: Job[] | null = null
-let cachedCronJobs: CronJob[] | null = null
-let cachedNamespaces: Namespace[] | null = null
-let cachedResourceQuotas: ResourceQuota[] | null = null
-let cachedLimitRanges: LimitRange[] | null = null
+// Use global cache that survives HMR and navigation
+// Only resets on full page reload (F5)
+declare global {
+  interface Window {
+    __mockDataCache?: {
+      pods: Pod[] | null
+      deployments: Deployment[] | null
+      nodes: Node[] | null
+      configMaps: ConfigMap[] | null
+      secrets: Secret[] | null
+      hpas: HPA[] | null
+      pvs: PersistentVolume[] | null
+      pvcs: PersistentVolumeClaim[] | null
+      events: Event[] | null
+      services: Service[] | null
+      ingresses: Ingress[] | null
+      jobs: Job[] | null
+      cronJobs: CronJob[] | null
+      namespaces: Namespace[] | null
+      resourceQuotas: ResourceQuota[] | null
+      limitRanges: LimitRange[] | null
+    }
+  }
+}
+
+// Initialize cache if it doesn't exist
+if (typeof window !== 'undefined' && !window.__mockDataCache) {
+  window.__mockDataCache = {
+    pods: null,
+    deployments: null,
+    nodes: null,
+    configMaps: null,
+    secrets: null,
+    hpas: null,
+    pvs: null,
+    pvcs: null,
+    events: null,
+    services: null,
+    ingresses: null,
+    jobs: null,
+    cronJobs: null,
+    namespaces: null,
+    resourceQuotas: null,
+    limitRanges: null,
+  }
+}
+
+// Helper getters and setters for cache
+const getCache = () => (typeof window !== 'undefined' ? window.__mockDataCache : null)
+const getCachedPods = () => getCache()?.pods || null
+const setCachedPods = (data: Pod[]) => { if (getCache()) getCache()!.pods = data }
+const getCachedDeployments = () => getCache()?.deployments || null
+const setCachedDeployments = (data: Deployment[]) => { if (getCache()) getCache()!.deployments = data }
+const getCachedNodes = () => getCache()?.nodes || null
+const setCachedNodes = (data: Node[]) => { if (getCache()) getCache()!.nodes = data }
+const getCachedConfigMaps = () => getCache()?.configMaps || null
+const setCachedConfigMaps = (data: ConfigMap[]) => { if (getCache()) getCache()!.configMaps = data }
+const getCachedSecrets = () => getCache()?.secrets || null
+const setCachedSecrets = (data: Secret[]) => { if (getCache()) getCache()!.secrets = data }
+const getCachedHPAs = () => getCache()?.hpas || null
+const setCachedHPAs = (data: HPA[]) => { if (getCache()) getCache()!.hpas = data }
+const getCachedPVs = () => getCache()?.pvs || null
+const setCachedPVs = (data: PersistentVolume[]) => { if (getCache()) getCache()!.pvs = data }
+const getCachedPVCs = () => getCache()?.pvcs || null
+const setCachedPVCs = (data: PersistentVolumeClaim[]) => { if (getCache()) getCache()!.pvcs = data }
+const getCachedEvents = () => getCache()?.events || null
+const setCachedEvents = (data: Event[]) => { if (getCache()) getCache()!.events = data }
+const getCachedServices = () => getCache()?.services || null
+const setCachedServices = (data: Service[]) => { if (getCache()) getCache()!.services = data }
+const getCachedIngresses = () => getCache()?.ingresses || null
+const setCachedIngresses = (data: Ingress[]) => { if (getCache()) getCache()!.ingresses = data }
+const getCachedJobs = () => getCache()?.jobs || null
+const setCachedJobs = (data: Job[]) => { if (getCache()) getCache()!.jobs = data }
+const getCachedCronJobs = () => getCache()?.cronJobs || null
+const setCachedCronJobs = (data: CronJob[]) => { if (getCache()) getCache()!.cronJobs = data }
+const getCachedNamespaces = () => getCache()?.namespaces || null
+const setCachedNamespaces = (data: Namespace[]) => { if (getCache()) getCache()!.namespaces = data }
+const getCachedResourceQuotas = () => getCache()?.resourceQuotas || null
+const setCachedResourceQuotas = (data: ResourceQuota[]) => { if (getCache()) getCache()!.resourceQuotas = data }
+const getCachedLimitRanges = () => getCache()?.limitRanges || null
+const setCachedLimitRanges = (data: LimitRange[]) => { if (getCache()) getCache()!.limitRanges = data }
 
 // Helper to generate random date in the past
 function randomDate(daysAgo: number): Date {
@@ -76,8 +140,9 @@ function calculateAge(date: Date): string {
  * Generates mock pods
  */
 export function generateMockPods(): Pod[] {
-  if (cachedPods) {
-    return cachedPods
+  const cached = getCachedPods()
+  if (cached) {
+    return cached
   }
 
   const statuses: PodStatus[] = ['Running', 'Pending', 'Failed', 'CrashLoopBackOff']
@@ -125,7 +190,7 @@ export function generateMockPods(): Pod[] {
     }
   })
 
-  cachedPods = pods
+  setCachedPods(pods)
   return pods
 }
 
@@ -133,8 +198,8 @@ export function generateMockPods(): Pod[] {
  * Generates mock deployments
  */
 export function generateMockDeployments(): Deployment[] {
-  if (cachedDeployments) {
-    return cachedDeployments
+  const cached = getCachedDeployments(); if (cached) {
+    return cached
   }
 
   const apps = ['web-app', 'api-server', 'worker', 'cache', 'database']
@@ -169,7 +234,7 @@ export function generateMockDeployments(): Deployment[] {
     }
   })
 
-  cachedDeployments = deployments
+  setCachedDeployments(deployments)
   return deployments
 }
 
@@ -177,8 +242,8 @@ export function generateMockDeployments(): Deployment[] {
  * Generates mock nodes
  */
 export function generateMockNodes(): Node[] {
-  if (cachedNodes) {
-    return cachedNodes
+  const cached = getCachedNodes(); if (cached) {
+    return cached
   }
 
   const nodes: Node[] = []
@@ -216,7 +281,7 @@ export function generateMockNodes(): Node[] {
     })
   }
 
-  cachedNodes = nodes
+  setCachedNodes(nodes)
   return nodes
 }
 
@@ -224,8 +289,8 @@ export function generateMockNodes(): Node[] {
  * Generates mock ConfigMaps
  */
 export function generateMockConfigMaps(): ConfigMap[] {
-  if (cachedConfigMaps) {
-    return cachedConfigMaps
+  const cached = getCachedConfigMaps(); if (cached) {
+    return cached
   }
 
   const apps = ['web-app', 'api-server', 'worker', 'cache', 'database']
@@ -243,7 +308,7 @@ export function generateMockConfigMaps(): ConfigMap[] {
     },
   }))
 
-  cachedConfigMaps = configMaps
+  setCachedConfigMaps(configMaps)
   return configMaps
 }
 
@@ -251,8 +316,8 @@ export function generateMockConfigMaps(): ConfigMap[] {
  * Generates mock Secrets
  */
 export function generateMockSecrets(): Secret[] {
-  if (cachedSecrets) {
-    return cachedSecrets
+  const cached = getCachedSecrets(); if (cached) {
+    return cached
   }
 
   const apps = ['web-app', 'api-server', 'worker', 'cache', 'database']
@@ -274,7 +339,7 @@ export function generateMockSecrets(): Secret[] {
     },
   }))
 
-  cachedSecrets = secrets
+  setCachedSecrets(secrets)
   return secrets
 }
 
@@ -282,8 +347,8 @@ export function generateMockSecrets(): Secret[] {
  * Generates mock HPAs
  */
 export function generateMockHPAs(): HPA[] {
-  if (cachedHPAs) {
-    return cachedHPAs
+  const cached = getCachedHPAs(); if (cached) {
+    return cached
   }
 
   const apps = ['web-app', 'api-server', 'worker']
@@ -323,7 +388,7 @@ export function generateMockHPAs(): HPA[] {
     }
   })
 
-  cachedHPAs = hpas
+  setCachedHPAs(hpas)
   return hpas
 }
 
@@ -331,8 +396,8 @@ export function generateMockHPAs(): HPA[] {
  * Generates mock PersistentVolumes
  */
 export function generateMockPVs(): PersistentVolume[] {
-  if (cachedPVs) {
-    return cachedPVs
+  const cached = getCachedPVs(); if (cached) {
+    return cached
   }
 
   const pvs: PersistentVolume[] = []
@@ -350,7 +415,7 @@ export function generateMockPVs(): PersistentVolume[] {
     })
   }
 
-  cachedPVs = pvs
+  setCachedPVs(pvs)
   return pvs
 }
 
@@ -358,8 +423,8 @@ export function generateMockPVs(): PersistentVolume[] {
  * Generates mock PersistentVolumeClaims
  */
 export function generateMockPVCs(): PersistentVolumeClaim[] {
-  if (cachedPVCs) {
-    return cachedPVCs
+  const cached = getCachedPVCs(); if (cached) {
+    return cached
   }
 
   const apps = ['database', 'cache']
@@ -375,7 +440,7 @@ export function generateMockPVCs(): PersistentVolumeClaim[] {
     age: calculateAge(randomDate(60)),
   }))
 
-  cachedPVCs = pvcs
+  setCachedPVCs(pvcs)
   return pvcs
 }
 
@@ -383,8 +448,8 @@ export function generateMockPVCs(): PersistentVolumeClaim[] {
  * Generates mock Events
  */
 export function generateMockEvents(): Event[] {
-  if (cachedEvents) {
-    return cachedEvents
+  const cached = getCachedEvents(); if (cached) {
+    return cached
   }
 
   const events: Event[] = []
@@ -426,7 +491,7 @@ export function generateMockEvents(): Event[] {
   const sortedEvents = events.sort((a, b) =>
     new Date(b.lastTimestamp).getTime() - new Date(a.lastTimestamp).getTime()
   )
-  cachedEvents = sortedEvents
+  setCachedEvents(sortedEvents)
   return sortedEvents
 }
 
@@ -434,7 +499,7 @@ export function generateMockEvents(): Event[] {
  * Generates mock Services
  */
 export function generateMockServices(): Service[] {
-  if (cachedServices) return cachedServices
+  const cached = getCachedServices(); if (cached) return cached
 
   const services: Service[] = [
     {
@@ -539,7 +604,7 @@ export function generateMockServices(): Service[] {
     },
   ]
 
-  cachedServices = services
+  setCachedServices(services)
   return services
 }
 
@@ -547,7 +612,7 @@ export function generateMockServices(): Service[] {
  * Generates mock Ingress resources
  */
 export function generateMockIngresses(): Ingress[] {
-  if (cachedIngresses) return cachedIngresses
+  const cached = getCachedIngresses(); if (cached) return cached
 
   const ingresses: Ingress[] = [
     {
@@ -674,7 +739,7 @@ export function generateMockIngresses(): Ingress[] {
     },
   ]
 
-  cachedIngresses = ingresses
+  setCachedIngresses(ingresses)
   return ingresses
 }
 
@@ -682,7 +747,7 @@ export function generateMockIngresses(): Ingress[] {
  * Generates mock Jobs
  */
 export function generateMockJobs(): Job[] {
-  if (cachedJobs) return cachedJobs
+  const cached = getCachedJobs(); if (cached) return cached
 
   const jobs: Job[] = [
     {
@@ -787,7 +852,7 @@ export function generateMockJobs(): Job[] {
     },
   ]
 
-  cachedJobs = jobs
+  setCachedJobs(jobs)
   return jobs
 }
 
@@ -795,7 +860,7 @@ export function generateMockJobs(): Job[] {
  * Generates mock CronJobs
  */
 export function generateMockCronJobs(): CronJob[] {
-  if (cachedCronJobs) return cachedCronJobs
+  const cached = getCachedCronJobs(); if (cached) return cached
 
   const cronJobs: CronJob[] = [
     {
@@ -855,7 +920,7 @@ export function generateMockCronJobs(): CronJob[] {
     },
   ]
 
-  cachedCronJobs = cronJobs
+  setCachedCronJobs(cronJobs)
   return cronJobs
 }
 
@@ -986,7 +1051,7 @@ export function generateMockPodMetrics(deploymentName: string, namespace: string
  * Generate mock Namespaces
  */
 export function generateMockNamespaces(): Namespace[] {
-  if (cachedNamespaces) return cachedNamespaces
+  const cached = getCachedNamespaces(); if (cached) return cached
 
   const namespaces: Namespace[] = [
     {
@@ -1043,7 +1108,7 @@ export function generateMockNamespaces(): Namespace[] {
     },
   ]
 
-  cachedNamespaces = namespaces
+  setCachedNamespaces(namespaces)
   return namespaces
 }
 
@@ -1051,7 +1116,7 @@ export function generateMockNamespaces(): Namespace[] {
  * Generate mock ResourceQuotas
  */
 export function generateMockResourceQuotas(): ResourceQuota[] {
-  if (cachedResourceQuotas) return cachedResourceQuotas
+  const cached = getCachedResourceQuotas(); if (cached) return cached
 
   const quotas: ResourceQuota[] = [
     {
@@ -1124,7 +1189,7 @@ export function generateMockResourceQuotas(): ResourceQuota[] {
     },
   ]
 
-  cachedResourceQuotas = quotas
+  setCachedResourceQuotas(quotas)
   return quotas
 }
 
@@ -1132,7 +1197,7 @@ export function generateMockResourceQuotas(): ResourceQuota[] {
  * Generate mock LimitRanges
  */
 export function generateMockLimitRanges(): LimitRange[] {
-  if (cachedLimitRanges) return cachedLimitRanges
+  const cached = getCachedLimitRanges(); if (cached) return cached
 
   const limitRanges: LimitRange[] = [
     {
@@ -1211,6 +1276,6 @@ export function generateMockLimitRanges(): LimitRange[] {
     },
   ]
 
-  cachedLimitRanges = limitRanges
+  setCachedLimitRanges(limitRanges)
   return limitRanges
 }
