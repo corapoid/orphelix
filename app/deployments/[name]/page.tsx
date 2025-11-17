@@ -43,7 +43,7 @@ export default function DeploymentDetailPage() {
   const [restartSuccess, setRestartSuccess] = useState(false)
   const [editorOpen, setEditorOpen] = useState(false)
   const [restartDialogOpen, setRestartDialogOpen] = useState(false)
-  const [podsOpen, setPodsOpen] = useState(true)
+  const [podsExpanded, setPodsExpanded] = useState(true)
 
   const { data: deployment, isLoading, error, refetch } = useDeployment(name)
 
@@ -394,73 +394,83 @@ export default function DeploymentDetailPage() {
 
       {/* Pods Section */}
       <Box sx={{ mb: 3 }}>
-        <GlassPanel
-          closeable
-          open={podsOpen}
-          onClose={() => setPodsOpen(false)}
-          animationType="collapse"
-          sx={{ overflow: 'visible' }}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, px: 2, pt: 2 }}>
+        <GlassPanel sx={{ p: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h6" fontWeight={600}>
               Pods
             </Typography>
+            <LiquidGlassButton
+              size="small"
+              onClick={() => setPodsExpanded(!podsExpanded)}
+              sx={{ minWidth: 'auto', px: 2 }}
+            >
+              {podsExpanded ? 'Collapse' : 'Expand'}
+            </LiquidGlassButton>
           </Box>
           {podsLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
               <CircularProgress />
             </Box>
           ) : pods?.length ? (
-            <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Node</TableCell>
-                  <TableCell>IP</TableCell>
-                  <TableCell align="center">Restarts</TableCell>
-                  <TableCell>Age</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {pods.map((pod) => (
-                  <TableRow key={pod.name} hover>
-                    <TableCell>
-                      <Typography variant="body2" fontWeight="medium">
-                        {pod.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <StatusBadge status={pod.status} />
-                    </TableCell>
-                    <TableCell>
-                      <Link
-                        href={`/nodes/${encodeURIComponent(pod.nodeName)}`}
-                        style={{ textDecoration: 'none' }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: 'primary.main',
-                            '&:hover': {
-                              textDecoration: 'underline',
-                            },
-                            cursor: 'pointer',
-                          }}
-                        >
-                          {pod.nodeName}
-                        </Typography>
-                      </Link>
-                    </TableCell>
-                    <TableCell>{pod.ip}</TableCell>
-                    <TableCell align="center">{pod.restartCount}</TableCell>
-                    <TableCell>{pod.age}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-              </Table>
-            </TableContainer>
+            <>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Node</TableCell>
+                      <TableCell>IP</TableCell>
+                      <TableCell align="center">Restarts</TableCell>
+                      <TableCell>Age</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {(podsExpanded ? pods : pods.slice(0, 3)).map((pod) => (
+                      <TableRow key={pod.name} hover>
+                        <TableCell>
+                          <Typography variant="body2" fontWeight="medium">
+                            {pod.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <StatusBadge status={pod.status} />
+                        </TableCell>
+                        <TableCell>
+                          <Link
+                            href={`/nodes/${encodeURIComponent(pod.nodeName)}`}
+                            style={{ textDecoration: 'none' }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: 'primary.main',
+                                '&:hover': {
+                                  textDecoration: 'underline',
+                                },
+                                cursor: 'pointer',
+                              }}
+                            >
+                              {pod.nodeName}
+                            </Typography>
+                          </Link>
+                        </TableCell>
+                        <TableCell>{pod.ip}</TableCell>
+                        <TableCell align="center">{pod.restartCount}</TableCell>
+                        <TableCell>{pod.age}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {!podsExpanded && pods.length > 3 && (
+                <Box sx={{ textAlign: 'center', mt: 1 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Showing 3 of {pods.length} pods
+                  </Typography>
+                </Box>
+              )}
+            </>
           ) : (
             <Box sx={{ p: 2 }}>
               <Alert severity="info">No pods found for this deployment</Alert>
