@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Detail Pages UI Consistency**: Improved layout and visual consistency
+  - Disabled documentation sidebars across all resource detail pages
+  - Search bar moved to top bar (centered) alongside namespace selector
+  - SearchBar integrated with SearchContext for global state management
+  - Applied 50% width constraints to Jobs and CronJobs information panels
+  - Human-readable cron schedule descriptions (e.g., "Every 5 minutes", "Daily at midnight")
+  - Namespace removed from metadata in ConfigMaps, Secrets, and CronJobs
+  - Pods and Conditions sections converted to GlassPanel component
+  - Services Ports section uses GlassPanel styling
+  - Limit Ranges section removed from Namespaces detail page
+  - Fixed Age display in Nodes (removed formatAge causing N/A)
+  - Labels styling unified across ConfigMaps, Secrets, and Namespaces (glass morphism Paper)
+  - ConfigMaps and Secrets data sections simplified (removed GlassPanel backgrounds)
+  - Cleaned up unused imports and variables across all detail pages
+
 - **UI Design Improvements**: Major visual redesign of badges and detail pages
   - New pill-shaped status badges using MUI Chip component with icons
   - Global search moved to top header (centered) for better accessibility
