@@ -23,7 +23,11 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { QuotaUsageCard } from '@/app/components/namespace/quota-usage-card'
 import { useModeStore } from '@/lib/core/store'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import IconButton from '@mui/material/IconButton'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import { GlassPanel } from '@/app/components/common/glass-panel'
+import Link from 'next/link'
 
 export default function NamespaceDetailPage() {
   const params = useParams()
@@ -41,6 +45,7 @@ export default function NamespaceDetailPage() {
   const { data: namespace, isLoading, error, refetch } = useNamespace(name)
   const { data: quotas, error: quotasError } = useResourceQuotas()
   const { data: limitRanges, error: limitRangesError } = useLimitRanges()
+  const [docsOpen, setDocsOpen] = useState(true)
 
   useAutoRefresh(refetch)
 
@@ -88,15 +93,32 @@ export default function NamespaceDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        headerActions={
+          <IconButton
+            onClick={() => setDocsOpen(!docsOpen)}
+            size="medium"
+            title={docsOpen ? "Hide documentation" : "Show documentation"}
+            sx={{
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+            }}
+          >
+            <InfoOutlinedIcon />
+          </IconButton>
+        }
       />
 
-      <Grid container spacing={3}>
-        {/* Namespace Info */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Namespace Information
-            </Typography>
+      <Box sx={{ display: 'flex', gap: 2, position: 'relative' }}>
+        {/* Main Content */}
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Grid container spacing={3}>
+            {/* Namespace Info */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Namespace Information
+              </Typography>
+              <GlassPanel>
 
             <Box sx={{ mt: 2 }}>
               <Box sx={{ mb: 2 }}>
@@ -126,18 +148,18 @@ export default function NamespaceDetailPage() {
                 <Typography variant="caption" color="text.secondary">
                   Age
                 </Typography>
-                <Typography variant="body1">{namespace.age}</Typography>
+                <Typography variant="body2" fontWeight="medium">{namespace.age}</Typography>
               </Box>
             </Box>
-          </Paper>
-        </Grid>
+              </GlassPanel>
+            </Grid>
 
-        {/* Labels */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Labels
-            </Typography>
+            {/* Labels */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Labels
+              </Typography>
+              <GlassPanel>
 
             {Object.keys(namespace.labels).length > 0 ? (
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
@@ -146,51 +168,69 @@ export default function NamespaceDetailPage() {
                 ))}
               </Box>
             ) : (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
                 No labels defined
               </Typography>
             )}
-          </Paper>
-        </Grid>
+              </GlassPanel>
+            </Grid>
+          </Grid>
 
-        {/* Resource Quotas */}
-        {quotasError ? (
-          <Grid item xs={12}>
+          {/* Resource Quotas */}
+          {quotasError ? (
+            <Box sx={{ mt: 3 }}>
             <Alert severity="warning">
               <AlertTitle>Cannot Load Resource Quotas</AlertTitle>
               {quotasError instanceof Error && quotasError.message.includes('403')
                 ? 'You do not have permission to view resource quotas in this namespace.'
                 : 'Failed to load resource quotas. Check your cluster connection and permissions.'}
             </Alert>
-          </Grid>
-        ) : quotas && quotas.length > 0 ? (
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              {quotas.map((quota) => (
-                <Grid item xs={12} md={6} key={quota.name}>
-                  <QuotaUsageCard quota={quota} />
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-        ) : null}
+            </Box>
+          ) : quotas && quotas.length > 0 ? (
+            <Box sx={{ mt: 3 }}>
+              <Grid container spacing={2}>
+                {quotas.map((quota) => (
+                  <Grid size={{ xs: 12, md: 6 }} key={quota.name}>
+                    <QuotaUsageCard quota={quota} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          ) : null}
 
-        {/* Limit Ranges */}
-        {limitRangesError ? (
-          <Grid item xs={12}>
+          {/* Limit Ranges */}
+          {limitRangesError ? (
+            <Box sx={{ mt: 3 }}>
             <Alert severity="warning">
               <AlertTitle>Cannot Load Limit Ranges</AlertTitle>
               {limitRangesError instanceof Error && limitRangesError.message.includes('403')
                 ? 'You do not have permission to view limit ranges in this namespace.'
                 : 'Failed to load limit ranges. Check your cluster connection and permissions.'}
             </Alert>
-          </Grid>
-        ) : limitRanges && limitRanges.length > 0 ? (
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
+            </Box>
+          ) : limitRanges && limitRanges.length > 0 ? (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Limit Ranges
               </Typography>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                  borderRadius: 3,
+                }}
+              >
 
               {limitRanges.map((lr) => (
                 <Box key={lr.name} sx={{ mt: 2 }}>
@@ -254,26 +294,195 @@ export default function NamespaceDetailPage() {
                   ))}
                 </Box>
               ))}
-            </Paper>
-          </Grid>
-        ) : null}
+              </Paper>
+            </Box>
+          ) : null}
 
-        {/* Annotations */}
-        {Object.keys(namespace.annotations).length > 0 && (
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
+          {/* Annotations */}
+          {Object.keys(namespace.annotations).length > 0 && (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Annotations
               </Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
                 {Object.entries(namespace.annotations).map(([key, value]) => (
-                  <Chip key={key} label={`${key}=${value}`} size="small" variant="outlined" />
+                  <Paper
+                    key={key}
+                    elevation={0}
+                    sx={{
+                      px: 2,
+                      py: 1,
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(30, 30, 46, 0.6)'
+                          : 'rgba(255, 255, 255, 0.25)',
+                      backdropFilter: 'blur(24px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                      border: '1px solid',
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(255, 255, 255, 0.12)'
+                          : 'rgba(209, 213, 219, 0.4)',
+                      borderRadius: 3,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                      {key}:
+                    </Typography>
+                    <Typography variant="body2" fontWeight={500}>
+                      {value}
+                    </Typography>
+                  </Paper>
                 ))}
               </Box>
-            </Paper>
-          </Grid>
-        )}
-      </Grid>
+            </Box>
+          )}
+        </Box>
+
+        {/* Right Sidebar - Documentation */}
+        <Box
+          sx={{
+            width: 520,
+            flexShrink: 0,
+            mt: -12,
+            position: 'sticky',
+            top: 0,
+            alignSelf: 'flex-start',
+            maxHeight: '100vh',
+          }}
+        >
+          <GlassPanel
+            open={docsOpen}
+            closeable
+            onClose={() => setDocsOpen(false)}
+            animationType="fade"
+            sx={{ p: 3, overflow: 'auto', maxHeight: '100vh' }}
+          >
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                About Namespaces
+              </Typography>
+            </Box>
+
+            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
+              Namespaces provide a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace, but not across namespaces. Namespace-based scoping is applicable only for namespaced objects (e.g. Deployments, Services, etc) and not for cluster-wide objects (e.g. StorageClass, Nodes, PersistentVolumes, etc).
+            </Typography>
+
+            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
+              When to Use Namespaces
+            </Typography>
+
+            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
+              <li>
+                <Typography variant="caption">
+                  Isolating resources for different teams or projects.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="caption">
+                  Supporting multiple environments (dev, staging, prod) in one cluster.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="caption">
+                  Applying different resource quotas and limits.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="caption">
+                  Implementing access control via RBAC policies.
+                </Typography>
+              </li>
+            </Box>
+
+            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
+              Built-in Namespaces
+            </Typography>
+
+            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
+              <li>
+                <Typography variant="caption">
+                  <strong>default:</strong> The default namespace for objects with no other namespace.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="caption">
+                  <strong>kube-system:</strong> For objects created by the Kubernetes system.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="caption">
+                  <strong>kube-public:</strong> Readable by all users, reserved for cluster usage.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="caption">
+                  <strong>kube-node-lease:</strong> For node heartbeat objects.
+                </Typography>
+              </li>
+            </Box>
+
+            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
+              Resource Quotas & Limits
+            </Typography>
+
+            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
+              Namespaces can have ResourceQuotas to limit the aggregate resource consumption, and LimitRanges to enforce minimum and maximum resource usage constraints on individual containers or pods.
+            </Typography>
+
+            <Box sx={{
+              mt: 3,
+              pt: 2,
+              borderTop: '1px solid',
+              borderColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'rgba(0, 0, 0, 0.1)',
+            }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  color: 'text.secondary',
+                }}
+              >
+                Learn more in the{' '}
+                <Link
+                  href="https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '2px',
+                  }}
+                >
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    official Kubernetes docs
+                  </Typography>
+                  <Box component="span" sx={{ fontSize: '0.65rem' }}>↗</Box>
+                </Link>
+              </Typography>
+            </Box>
+          </GlassPanel>
+        </Box>
+      </Box>
     </Box>
   )
 }
