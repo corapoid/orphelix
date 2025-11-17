@@ -16,6 +16,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import PushPinIcon from '@mui/icons-material/PushPin'
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DeploymentIcon from '@mui/icons-material/AccountTree'
 import PodIcon from '@mui/icons-material/Widgets'
@@ -38,7 +40,7 @@ import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import Divider from '@mui/material/Divider'
-import { useModeStore } from '@/lib/core/store'
+import { useModeStore, useSidebarPins } from '@/lib/core/store'
 
 const DRAWER_WIDTH = 240
 const DRAWER_WIDTH_COLLAPSED = 64
@@ -105,8 +107,10 @@ export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter() as AppRouterInstance
   const mode = useModeStore((state) => state.mode)
+  const { isPinned, togglePin } = useSidebarPins()
   const [collapsed, setCollapsed] = useState(false)
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   useEffect(() => {
     setExpandedGroups({
@@ -204,14 +208,24 @@ export function Sidebar() {
       )
     }
 
+    const pinned = isPinned(item.path)
+    const isHovered = hoveredItem === item.path
+
     return (
-      <ListItem key={item.path} disablePadding sx={{ mb: 0.4 }}>
+      <ListItem
+        key={item.path}
+        disablePadding
+        sx={{ mb: 0.4, position: 'relative' }}
+        onMouseEnter={() => setHoveredItem(item.path)}
+        onMouseLeave={() => setHoveredItem(null)}
+      >
         <ListItemButton
           selected={isActive}
           onClick={() => handleNavigate(item.path)}
           sx={{
             borderRadius: 1.5,
             pl: isSubItem ? 3.5 : 1.5,
+            pr: 1,
             py: 0.75,
             transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             border: '0.5px solid transparent',
@@ -271,6 +285,27 @@ export function Sidebar() {
               color: isActive ? 'primary.main' : 'inherit',
             }}
           />
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation()
+              togglePin(item.path)
+            }}
+            sx={{
+              opacity: isHovered || !pinned ? 1 : 0,
+              transition: 'opacity 0.2s',
+              ml: 0.5,
+              '&:hover': {
+                bgcolor: 'transparent',
+              },
+            }}
+          >
+            {pinned ? (
+              <PushPinIcon sx={{ fontSize: '1rem', color: 'primary.main' }} />
+            ) : (
+              <PushPinOutlinedIcon sx={{ fontSize: '1rem', opacity: 0.5 }} />
+            )}
+          </IconButton>
         </ListItemButton>
       </ListItem>
     )
@@ -328,10 +363,17 @@ export function Sidebar() {
           if (isNavGroup(item)) {
             // Render group header
             const isExpanded = expandedGroups[item.label]
+            const pinnedItems = item.items.filter((subItem) => isPinned(subItem.path))
+            const unpinnedItems = item.items.filter((subItem) => !isPinned(subItem.path))
 
             if (collapsed) {
-              // In collapsed mode, show all items from groups without headers
-              return item.items.map((subItem) => renderNavItem(subItem, false))
+              // In collapsed mode, show all pinned items from groups without headers
+              return pinnedItems.map((subItem) => renderNavItem(subItem, false))
+            }
+
+            // Hide group if all items are unpinned
+            if (pinnedItems.length === 0) {
+              return null
             }
 
             return (
@@ -365,16 +407,78 @@ export function Sidebar() {
                 </ListItemButton>
                 <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    {item.items.map((subItem) => renderNavItem(subItem, true))}
+                    {pinnedItems.map((subItem) => renderNavItem(subItem, true))}
                   </List>
                 </Collapse>
               </Box>
             )
           }
 
-          // Render single item (like Dashboard)
+          // Render single item (like Dashboard) only if pinned
+          if (!isPinned(item.path)) {
+            return null
+          }
           return renderNavItem(item, false)
           })}
+
+          {/* Unpinned Items Section */}
+          {!collapsed && (() => {
+            const allUnpinnedItems: NavItem[] = []
+            navGroups.forEach((item) => {
+              if (isNavGroup(item)) {
+                item.items.forEach((subItem) => {
+                  if (!isPinned(subItem.path)) {
+                    allUnpinnedItems.push(subItem)
+                  }
+                })
+              } else if (!isPinned(item.path)) {
+                allUnpinnedItems.push(item)
+              }
+            })
+
+            if (allUnpinnedItems.length === 0) {
+              return null
+            }
+
+            const isMoreExpanded = expandedGroups['More']
+
+            return (
+              <Box sx={{ mt: 1 }}>
+                <ListItemButton
+                  onClick={() => toggleGroup('More')}
+                  sx={{
+                    borderRadius: 1.5,
+                    mb: 0.4,
+                    py: 0.6,
+                    '&:hover': {
+                      bgcolor: 'action.hover',
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="More..."
+                    primaryTypographyProps={{
+                      fontSize: '0.65rem',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      color: 'text.secondary',
+                      letterSpacing: 0.4,
+                    }}
+                  />
+                  {isMoreExpanded ? (
+                    <ExpandLessIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                  ) : (
+                    <ExpandMoreIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                  )}
+                </ListItemButton>
+                <Collapse in={isMoreExpanded} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {allUnpinnedItems.map((subItem) => renderNavItem(subItem, true))}
+                  </List>
+                </Collapse>
+              </Box>
+            )
+          })()}
         </List>
 
         {/* Bottom Actions: Version & GitHub */}

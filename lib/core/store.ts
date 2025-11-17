@@ -198,3 +198,94 @@ export const useUIPreferences = create<UIPreferencesStore>()(
     }
   )
 )
+
+/**
+ * Sidebar Pins Store
+ * Manages which navigation items are pinned/visible in the sidebar
+ */
+interface SidebarPinsStore {
+  pinnedItems: Set<string> // Set of navigation item paths that are pinned
+  isPinned: (path: string) => boolean
+  togglePin: (path: string) => void
+  pinItem: (path: string) => void
+  unpinItem: (path: string) => void
+}
+
+export const useSidebarPins = create<SidebarPinsStore>()(
+  persist(
+    (set, get) => ({
+      pinnedItems: new Set([
+        // Default pinned items - all items pinned by default
+        '/dashboard',
+        '/deployments',
+        '/statefulsets',
+        '/daemonsets',
+        '/pods',
+        '/jobs',
+        '/cronjobs',
+        '/services',
+        '/ingress',
+        '/configmaps',
+        '/secrets',
+        '/namespaces',
+        '/nodes',
+        '/hpa',
+        '/events',
+        '/labels',
+        '/topology',
+        '/pv',
+        '/settings',
+      ]),
+      isPinned: (path) => get().pinnedItems.has(path),
+      togglePin: (path) =>
+        set((state) => {
+          const newPinned = new Set(state.pinnedItems)
+          if (newPinned.has(path)) {
+            newPinned.delete(path)
+          } else {
+            newPinned.add(path)
+          }
+          return { pinnedItems: newPinned }
+        }),
+      pinItem: (path) =>
+        set((state) => ({
+          pinnedItems: new Set([...state.pinnedItems, path]),
+        })),
+      unpinItem: (path) =>
+        set((state) => {
+          const newPinned = new Set(state.pinnedItems)
+          newPinned.delete(path)
+          return { pinnedItems: newPinned }
+        }),
+    }),
+    {
+      name: 'kubevista-sidebar-pins',
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name)
+          if (!str) return null
+          const { state } = JSON.parse(str)
+          return {
+            state: {
+              ...state,
+              pinnedItems: new Set(state.pinnedItems || []),
+            },
+          }
+        },
+        setItem: (name, value) => {
+          const { state } = value
+          localStorage.setItem(
+            name,
+            JSON.stringify({
+              state: {
+                ...state,
+                pinnedItems: Array.from(state.pinnedItems),
+              },
+            })
+          )
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
+    }
+  )
+)
