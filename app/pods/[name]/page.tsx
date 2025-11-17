@@ -156,7 +156,7 @@ export default function PodDetailPage() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Details
           </Typography>
-          <GlassPanel sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <GlassPanel sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '110px' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2" color="text.secondary">
@@ -205,7 +205,7 @@ export default function PodDetailPage() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Containers
           </Typography>
-          <GlassPanel sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <GlassPanel sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '110px' }}>
             <Table size="small" sx={{ height: '100%' }}>
                 <TableHead>
                   <TableRow>
