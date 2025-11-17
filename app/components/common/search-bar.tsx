@@ -54,11 +54,33 @@ export function SearchBar({
       sx={{
         minWidth: fullWidth ? undefined : 300,
         '& .MuiOutlinedInput-root': {
-          bgcolor: 'background.paper',
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(30, 30, 46, 0.6)'
+              : 'rgba(255, 255, 255, 0.25)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(209, 213, 219, 0.4)',
+          borderRadius: '12px',
+          '& fieldset': {
+            border: 'none',
+          },
           '&:hover': {
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'primary.main',
-            },
+            borderColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.2)'
+                : 'rgba(209, 213, 219, 0.6)',
+          },
+          '&.Mui-focused': {
+            borderColor: 'primary.main',
+            boxShadow: (theme) =>
+              theme.palette.mode === 'dark'
+                ? '0 0 0 2px rgba(59, 130, 246, 0.2)'
+                : '0 0 0 2px rgba(59, 130, 246, 0.1)',
           },
         },
       }}
