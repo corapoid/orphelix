@@ -9,7 +9,6 @@ import { CriticalAlerts } from './components/dashboard/critical-alerts'
 import { ResourceOverviewV2 } from './components/dashboard/resource-overview-v2'
 import { ResourceUtilization } from './components/dashboard/resource-utilization'
 import { RecentEvents } from './components/dashboard/recent-events'
-import { HealthStatusWidget } from './components/dashboard/health-status-widget'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
 import { useResourceQuotas } from '@/lib/hooks/use-resourcequotas'
 import { useModeStore } from '@/lib/core/store'
@@ -79,18 +78,12 @@ export default function DashboardPage() {
         <CriticalAlerts summary={summary} />
       </Box>
 
-      {/* 2. Resource Overview + Health & Utilization (Side by Side on wide screens) */}
+      {/* 2. Resource Overview + Resource Utilization (Side by Side on wide screens) */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: '2fr 1fr' }, gap: 3, mb: 4, alignItems: 'start' }}>
         <Box>
           <ResourceOverviewV2 summary={summary} />
         </Box>
-        <Box sx={{ display: { xs: 'none', xl: 'flex' }, flexDirection: 'column', gap: 3 }}>
-          <HealthStatusWidget
-            totalPods={summary.pods.total}
-            healthyPods={summary.pods.running}
-            unhealthyPods={summary.pods.failed + summary.pods.pending}
-            podsWithRestarts={summary.pods.total - summary.pods.running}
-          />
+        <Box sx={{ display: { xs: 'none', xl: 'block' } }}>
           <ResourceUtilization quotas={quotas} />
         </Box>
       </Box>
@@ -100,14 +93,8 @@ export default function DashboardPage() {
         <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
       </Box>
 
-      {/* 4. Health & Resource Utilization (for smaller screens) */}
-      <Box sx={{ display: { xs: 'flex', xl: 'none' }, flexDirection: 'column', gap: 3, mb: 4 }}>
-        <HealthStatusWidget
-          totalPods={summary.pods.total}
-          healthyPods={summary.pods.running}
-          unhealthyPods={summary.pods.failed + summary.pods.pending}
-          podsWithRestarts={summary.pods.total - summary.pods.running}
-        />
+      {/* 4. Resource Utilization (for smaller screens) */}
+      <Box sx={{ display: { xs: 'block', xl: 'none' }, mb: 4 }}>
         <ResourceUtilization quotas={quotas} />
       </Box>
     </Box>
