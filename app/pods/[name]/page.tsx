@@ -152,7 +152,7 @@ export default function PodDetailPage() {
       />
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Details
           </Typography>
@@ -160,7 +160,7 @@ export default function PodDetailPage() {
             elevation={0}
             sx={{
               p: 2,
-              height: '100%',
+              flex: 1,
               display: 'flex',
               flexDirection: 'column',
               backgroundColor: (theme) =>
@@ -221,14 +221,14 @@ export default function PodDetailPage() {
           </Paper>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Containers
           </Typography>
           <Paper
             elevation={0}
             sx={{
-              height: '100%',
+              flex: 1,
               backgroundColor: (theme) =>
                 theme.palette.mode === 'dark'
                   ? 'rgba(30, 30, 46, 0.6)'
