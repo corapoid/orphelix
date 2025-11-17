@@ -225,7 +225,7 @@ export default function IngressDetailPage() {
                     theme.palette.mode === 'dark'
                       ? 'rgba(255, 255, 255, 0.12)'
                       : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
+                  borderRadius: '12px',
                 }}
               >
                 <Box sx={{ px: 3, py: 1.5, bgcolor: 'action.hover', borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }}>
