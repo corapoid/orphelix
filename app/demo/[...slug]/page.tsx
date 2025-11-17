@@ -11,6 +11,7 @@ const pages: Record<string, any> = {
   'pv': () => import('../../pv/page'),
   'hpa': () => import('../../hpa/page'),
   'events': () => import('../../events/page'),
+  'labels': () => import('../../labels/page'),
 }
 
 export default async function DemoSlugPage({ params }: { params: Promise<{ slug: string[] }> }) {
