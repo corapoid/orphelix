@@ -28,7 +28,7 @@ export function PodCard({ pod, onClick }: PodCardProps) {
               Restarts
             </Typography>
             <Typography variant="h6" fontWeight={700}>
-              {pod.restarts}
+              {pod.restartCount}
             </Typography>
           </Box>
           <Box>
@@ -44,7 +44,7 @@ export function PodCard({ pod, onClick }: PodCardProps) {
                 whiteSpace: 'nowrap',
               }}
             >
-              {pod.node || 'N/A'}
+              {pod.nodeName || 'N/A'}
             </Typography>
           </Box>
         </Box>

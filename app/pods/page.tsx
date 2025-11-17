@@ -44,7 +44,7 @@ export default function PodsPage() {
     {
       field: 'node',
       label: 'Node',
-      render: (pod) => pod.node || 'N/A',
+      render: (pod) => pod.nodeName || 'N/A',
     },
     {
       field: 'ip',
@@ -65,6 +65,7 @@ export default function PodsPage() {
       field: 'restarts',
       label: 'Restarts',
       align: 'center',
+      render: (pod) => pod.restartCount,
     },
     {
       field: 'age',

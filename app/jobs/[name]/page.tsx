@@ -209,8 +209,8 @@ export default function JobDetailPage() {
                           <StatusBadge status={pod.status} size="small" />
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" color={pod.restarts > 0 ? 'error.main' : 'text.secondary'}>
-                            {pod.restarts}
+                          <Typography variant="body2" color={pod.restartCount > 0 ? 'error.main' : 'text.secondary'}>
+                            {pod.restartCount}
                           </Typography>
                         </TableCell>
                         <TableCell>
