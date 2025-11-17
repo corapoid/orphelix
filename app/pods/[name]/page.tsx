@@ -331,11 +331,12 @@ export default function PodDetailPage() {
       </Box>
 
       {/* Resources Section */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-          Resources
-        </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+      {(pod.configMaps.length > 0 || pod.secrets.length > 0) && (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Resources
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
           {pod.configMaps.map((cm) => (
             <Link
               key={cm}
@@ -428,8 +429,9 @@ export default function PodDetailPage() {
               </Paper>
             </Link>
           ))}
+          </Box>
         </Box>
-      </Box>
+      )}
 
       {/* Container Logs Section */}
       {pod.containers.length > 0 && (
