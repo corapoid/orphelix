@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
-import Chip from '@mui/material/Chip'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -15,6 +14,7 @@ import { useParams } from 'next/navigation'
 import { useJob } from '@/lib/hooks/use-jobs'
 import { usePods } from '@/lib/hooks/use-pods'
 import { StatusBadge } from '@/app/components/common/status-badge'
+import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
@@ -70,7 +70,6 @@ export default function JobDetailPage() {
           </Box>
         }
         metadata={[
-          `Namespace: ${job.namespace}`,
           `Age: ${job.age}`,
         ]}
         breadcrumbs={[
@@ -83,60 +82,78 @@ export default function JobDetailPage() {
 
       <Grid container spacing={3}>
         {/* Job Information */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Job Information
-            </Typography>
-
-            <Box sx={{ mt: 2 }}>
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Status
+        <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Details
+          </Typography>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2.5,
+              flex: 1,
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(30, 30, 46, 0.6)'
+                  : 'rgba(255, 255, 255, 0.25)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              border: '1px solid',
+              borderColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(209, 213, 219, 0.4)',
+              borderRadius: 3,
+            }}
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="body2" color="text.secondary">
+                  Completions:
                 </Typography>
-                <Box sx={{ mt: 0.5 }}>
-                  <StatusBadge status={job.status} />
-                </Box>
-              </Box>
-
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Completions
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
+                <Typography variant="body2" fontWeight="medium">
                   {job.succeeded} / {job.completions}
                 </Typography>
               </Box>
 
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Duration
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="body2" color="text.secondary">
+                  Duration:
                 </Typography>
-                <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>
+                <Typography variant="body2" fontWeight="medium" sx={{ fontFamily: 'monospace' }}>
                   {job.duration || 'N/A'}
                 </Typography>
-              </Box>
-
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Age
-                </Typography>
-                <Typography variant="body1">{job.age}</Typography>
               </Box>
             </Box>
           </Paper>
         </Grid>
 
         {/* Execution Statistics */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Execution Statistics
-            </Typography>
-
-            <Box sx={{ mt: 2 }}>
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary">
+        <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Execution Statistics
+          </Typography>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2.5,
+              flex: 1,
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(30, 30, 46, 0.6)'
+                  : 'rgba(255, 255, 255, 0.25)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              border: '1px solid',
+              borderColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(209, 213, 219, 0.4)',
+              borderRadius: 3,
+            }}
+          >
+            <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', height: '100%' }}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Succeeded
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" color="success.main">
@@ -144,8 +161,8 @@ export default function JobDetailPage() {
                 </Typography>
               </Box>
 
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary">
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Failed
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" color="error.main">
@@ -153,8 +170,8 @@ export default function JobDetailPage() {
                 </Typography>
               </Box>
 
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary">
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
                   Active
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" color="info.main">
@@ -167,15 +184,27 @@ export default function JobDetailPage() {
 
         {/* Related Pods */}
         {jobPods.length > 0 && (
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Pods ({jobPods.length})
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Pods created by this job
-              </Typography>
-
+          <Grid size={{ xs: 12 }} sx={{ mt: 3 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Pods ({jobPods.length})
+            </Typography>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+              }}
+            >
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -234,12 +263,27 @@ export default function JobDetailPage() {
 
         {/* Conditions */}
         {job.conditions && job.conditions.length > 0 && (
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Conditions
-              </Typography>
-
+          <Grid size={{ xs: 12 }} sx={{ mt: 3 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Conditions
+            </Typography>
+            <Paper
+              elevation={0}
+              sx={{
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+              }}
+            >
               <TableContainer>
                 <Table size="small">
                   <TableHead>
@@ -259,11 +303,10 @@ export default function JobDetailPage() {
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Chip
+                          <LiquidGlassChip
                             label={condition.status}
                             size="small"
                             color={condition.status === 'True' ? 'success' : 'default'}
-                            variant="outlined"
                           />
                         </TableCell>
                         <TableCell>
@@ -285,22 +328,44 @@ export default function JobDetailPage() {
 
         {/* Labels */}
         {Object.keys(job.labels).length > 0 && (
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Labels
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-                {Object.entries(job.labels).map(([key, value]) => (
-                  <Chip
-                    key={key}
-                    label={`${key}=${value}`}
-                    size="small"
-                    variant="outlined"
-                  />
-                ))}
-              </Box>
-            </Paper>
+          <Grid size={{ xs: 12 }} sx={{ mt: 3 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Labels
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+              {Object.entries(job.labels).map(([key, value]) => (
+                <Paper
+                  key={key}
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.6)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(209, 213, 219, 0.4)',
+                    borderRadius: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                    {key}:
+                  </Typography>
+                  <Typography variant="body2" fontWeight={500}>
+                    {value}
+                  </Typography>
+                </Paper>
+              ))}
+            </Box>
           </Grid>
         )}
       </Grid>
