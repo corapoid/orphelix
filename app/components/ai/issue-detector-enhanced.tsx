@@ -28,6 +28,11 @@ interface IssueDetectorEnhancedProps {
     cpu?: string
     memory?: string
   }
+  summary?: {
+    pods?: { failed: number; total: number }
+    nodes?: { notReady: number; total: number }
+    deployments?: { degraded: number; total: number }
+  }
 }
 
 interface DetectedIssue {
@@ -38,7 +43,7 @@ interface DetectedIssue {
   loading?: boolean
 }
 
-export function IssueDetectorEnhanced({ events = [], metrics }: IssueDetectorEnhancedProps) {
+export function IssueDetectorEnhanced({ events = [], metrics, summary }: IssueDetectorEnhancedProps) {
   const [issues, setIssues] = useState<DetectedIssue[]>([])
   const [expanded, setExpanded] = useState(true)
   const [hasApiKey, setHasApiKey] = useState(false)
@@ -60,7 +65,31 @@ export function IssueDetectorEnhanced({ events = [], metrics }: IssueDetectorEnh
   useEffect(() => {
     const detectedIssues: DetectedIssue[] = []
 
-    console.log('[IssueDetector] Analyzing events:', events.length)
+    console.log('[IssueDetector] Analyzing events:', events.length, 'summary:', summary)
+
+    // Detect critical issues from summary
+    if (summary) {
+      if (summary.pods && summary.pods.failed > 0) {
+        detectedIssues.push({
+          severity: 'error',
+          message: `${summary.pods.failed} pod${summary.pods.failed > 1 ? 's are' : ' is'} failing (Failed or CrashLoopBackOff)`,
+        })
+      }
+
+      if (summary.nodes && summary.nodes.notReady > 0) {
+        detectedIssues.push({
+          severity: 'error',
+          message: `${summary.nodes.notReady} node${summary.nodes.notReady > 1 ? 's are' : ' is'} not ready`,
+        })
+      }
+
+      if (summary.deployments && summary.deployments.degraded > 0) {
+        detectedIssues.push({
+          severity: 'warning',
+          message: `${summary.deployments.degraded} deployment${summary.deployments.degraded > 1 ? 's are' : ' is'} degraded`,
+        })
+      }
+    }
 
     // Detect issues from events with related events
     if (events.length > 0) {
@@ -99,8 +128,9 @@ export function IssueDetectorEnhanced({ events = [], metrics }: IssueDetectorEnh
       })
     }
 
+    console.log('[IssueDetector] Total issues detected:', detectedIssues.length)
     setIssues(detectedIssues)
-  }, [events, metrics])
+  }, [events, metrics, summary])
 
   const getAIExplanation = async (issue: DetectedIssue, index: number) => {
     if (!hasApiKey) return
