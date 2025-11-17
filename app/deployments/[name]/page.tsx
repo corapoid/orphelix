@@ -397,21 +397,21 @@ export default function DeploymentDetailPage() {
 
       {/* Pods Section */}
       <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" fontWeight={600}>
+            Pods
+          </Typography>
+          {pods && pods.length > 3 && (
+            <IconButton
+              size="small"
+              onClick={() => setPodsExpanded(!podsExpanded)}
+              sx={{ color: 'text.secondary' }}
+            >
+              {podsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
+          )}
+        </Box>
         <GlassPanel sx={{ p: 2 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6" fontWeight={600}>
-              Pods
-            </Typography>
-            {pods && pods.length > 3 && (
-              <IconButton
-                size="small"
-                onClick={() => setPodsExpanded(!podsExpanded)}
-                sx={{ color: 'text.secondary' }}
-              >
-                {podsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </IconButton>
-            )}
-          </Box>
           {podsLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
               <CircularProgress />
