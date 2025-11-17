@@ -31,6 +31,8 @@ import WorkIcon from '@mui/icons-material/Work'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import FolderIcon from '@mui/icons-material/Folder'
 import GitHubIcon from '@mui/icons-material/GitHub'
+import StorageIcon from '@mui/icons-material/Storage'
+import SettingsSystemDaydreamIcon from '@mui/icons-material/SettingsSystemDaydream'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -60,6 +62,8 @@ const navGroups: (NavItem | NavGroup)[] = [
     label: 'Workloads',
     items: [
       { label: 'Deployments', icon: <DeploymentIcon />, path: '/deployments', color: '#6366F1' },
+      { label: 'StatefulSets', icon: <StorageIcon />, path: '/statefulsets', color: '#7C3AED' },
+      { label: 'DaemonSets', icon: <SettingsSystemDaydreamIcon />, path: '/daemonsets', color: '#9333EA' },
       { label: 'Pods', icon: <PodIcon />, path: '/pods', color: '#8B5CF6' },
       { label: 'Jobs', icon: <WorkIcon />, path: '/jobs', color: '#EC4899' },
       { label: 'CronJobs', icon: <ScheduleIcon />, path: '/cronjobs', color: '#A855F7' },

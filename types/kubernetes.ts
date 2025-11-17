@@ -8,7 +8,7 @@ export type PodStatus =
   | 'Unknown'
   | 'CrashLoopBackOff'
 
-export type DeploymentStatus = 'Available' | 'Progressing' | 'Degraded' | 'Unknown'
+export type DeploymentStatus = 'Available' | 'Progressing' | 'Degraded' | 'Healthy' | 'Not Ready' | 'Unknown'
 
 export type NodeStatus = 'Ready' | 'NotReady' | 'Unknown'
 
@@ -107,6 +107,44 @@ export interface Deployment {
   labels: Record<string, string>
   selector: Record<string, string>
   strategy: string
+  configMaps: string[]
+  secrets: string[]
+}
+
+export interface StatefulSet {
+  name: string
+  namespace: string
+  replicas: {
+    desired: number
+    ready: number
+    current: number
+    updated: number
+  }
+  status: DeploymentStatus // Reusing same status type
+  age: string
+  labels: Record<string, string>
+  selector: Record<string, string>
+  serviceName: string
+  updateStrategy: string
+  podManagementPolicy: string
+  persistentVolumeClaims: string[]
+  configMaps: string[]
+  secrets: string[]
+}
+
+export interface DaemonSet {
+  name: string
+  namespace: string
+  desired: number
+  current: number
+  ready: number
+  upToDate: number
+  available: number
+  status: DeploymentStatus // Reusing same status type
+  age: string
+  labels: Record<string, string>
+  selector: Record<string, string>
+  updateStrategy: string
   configMaps: string[]
   secrets: string[]
 }

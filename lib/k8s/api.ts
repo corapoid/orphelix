@@ -9,6 +9,8 @@ import * as k8s from '@kubernetes/client-node'
 import { getAppsApi, getCoreApi, getAutoscalingApi, getNetworkingApi, getBatchApi } from './client'
 import type {
   Deployment,
+  StatefulSet,
+  DaemonSet,
   Pod,
   Node,
   ConfigMap,
@@ -210,6 +212,303 @@ function extractSecretNames(dep: k8s.V1Deployment): string[] {
   })
 
   return Array.from(secrets)
+}
+
+/**
+ * StatefulSets API
+ */
+
+export async function fetchStatefulSets(namespace: string, contextName?: string): Promise<StatefulSet[]> {
+  try {
+    const appsApi = getAppsApi(contextName)
+    const response = await appsApi.listNamespacedStatefulSet(namespace)
+
+    return response.body.items.map((sts) => ({
+      name: sts.metadata?.name || '',
+      namespace: sts.metadata?.namespace || namespace,
+      replicas: {
+        desired: sts.spec?.replicas || 0,
+        ready: sts.status?.readyReplicas || 0,
+        current: sts.status?.currentReplicas || 0,
+        updated: sts.status?.updatedReplicas || 0,
+      },
+      status: getDeploymentStatus({
+        replicas: sts.spec?.replicas || 0,
+        availableReplicas: sts.status?.readyReplicas || 0,
+        updatedReplicas: sts.status?.updatedReplicas || 0,
+        readyReplicas: sts.status?.readyReplicas || 0,
+      }),
+      age: calculateAge(sts.metadata?.creationTimestamp),
+      labels: sts.metadata?.labels || {},
+      selector: sts.spec?.selector?.matchLabels || {},
+      serviceName: sts.spec?.serviceName || '',
+      updateStrategy: sts.spec?.updateStrategy?.type || 'RollingUpdate',
+      podManagementPolicy: sts.spec?.podManagementPolicy || 'OrderedReady',
+      persistentVolumeClaims: extractPVCNames(sts),
+      configMaps: extractConfigMapNamesFromStatefulSet(sts),
+      secrets: extractSecretNamesFromStatefulSet(sts),
+    }))
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch statefulsets in namespace ${namespace}:`, error)
+    return []
+  }
+}
+
+export async function fetchStatefulSet(
+  name: string,
+  namespace: string,
+  contextName?: string
+): Promise<StatefulSet | null> {
+  try {
+    const appsApi = getAppsApi(contextName)
+    const response = await appsApi.readNamespacedStatefulSet(name, namespace)
+    const sts = response.body
+
+    return {
+      name: sts.metadata?.name || name,
+      namespace: sts.metadata?.namespace || namespace,
+      replicas: {
+        desired: sts.spec?.replicas || 0,
+        ready: sts.status?.readyReplicas || 0,
+        current: sts.status?.currentReplicas || 0,
+        updated: sts.status?.updatedReplicas || 0,
+      },
+      status: getDeploymentStatus({
+        replicas: sts.spec?.replicas || 0,
+        availableReplicas: sts.status?.readyReplicas || 0,
+        updatedReplicas: sts.status?.updatedReplicas || 0,
+        readyReplicas: sts.status?.readyReplicas || 0,
+      }),
+      age: calculateAge(sts.metadata?.creationTimestamp),
+      labels: sts.metadata?.labels || {},
+      selector: sts.spec?.selector?.matchLabels || {},
+      serviceName: sts.spec?.serviceName || '',
+      updateStrategy: sts.spec?.updateStrategy?.type || 'RollingUpdate',
+      podManagementPolicy: sts.spec?.podManagementPolicy || 'OrderedReady',
+      persistentVolumeClaims: extractPVCNames(sts),
+      configMaps: extractConfigMapNamesFromStatefulSet(sts),
+      secrets: extractSecretNamesFromStatefulSet(sts),
+    }
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch statefulset ${name}:`, error)
+    return null
+  }
+}
+
+/**
+ * DaemonSets API
+ */
+
+export async function fetchDaemonSets(namespace: string, contextName?: string): Promise<DaemonSet[]> {
+  try {
+    const appsApi = getAppsApi(contextName)
+    const response = await appsApi.listNamespacedDaemonSet(namespace)
+
+    return response.body.items.map((ds) => ({
+      name: ds.metadata?.name || '',
+      namespace: ds.metadata?.namespace || namespace,
+      desired: ds.status?.desiredNumberScheduled || 0,
+      current: ds.status?.currentNumberScheduled || 0,
+      ready: ds.status?.numberReady || 0,
+      upToDate: ds.status?.updatedNumberScheduled || 0,
+      available: ds.status?.numberAvailable || 0,
+      status: getDaemonSetStatus(ds.status),
+      age: calculateAge(ds.metadata?.creationTimestamp),
+      labels: ds.metadata?.labels || {},
+      selector: ds.spec?.selector?.matchLabels || {},
+      updateStrategy: ds.spec?.updateStrategy?.type || 'RollingUpdate',
+      configMaps: extractConfigMapNamesFromDaemonSet(ds),
+      secrets: extractSecretNamesFromDaemonSet(ds),
+    }))
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch daemonsets in namespace ${namespace}:`, error)
+    return []
+  }
+}
+
+export async function fetchDaemonSet(
+  name: string,
+  namespace: string,
+  contextName?: string
+): Promise<DaemonSet | null> {
+  try {
+    const appsApi = getAppsApi(contextName)
+    const response = await appsApi.readNamespacedDaemonSet(name, namespace)
+    const ds = response.body
+
+    return {
+      name: ds.metadata?.name || name,
+      namespace: ds.metadata?.namespace || namespace,
+      desired: ds.status?.desiredNumberScheduled || 0,
+      current: ds.status?.currentNumberScheduled || 0,
+      ready: ds.status?.numberReady || 0,
+      upToDate: ds.status?.updatedNumberScheduled || 0,
+      available: ds.status?.numberAvailable || 0,
+      status: getDaemonSetStatus(ds.status),
+      age: calculateAge(ds.metadata?.creationTimestamp),
+      labels: ds.metadata?.labels || {},
+      selector: ds.spec?.selector?.matchLabels || {},
+      updateStrategy: ds.spec?.updateStrategy?.type || 'RollingUpdate',
+      configMaps: extractConfigMapNamesFromDaemonSet(ds),
+      secrets: extractSecretNamesFromDaemonSet(ds),
+    }
+  } catch (error) {
+    console.error(`[K8s] Failed to fetch daemonset ${name}:`, error)
+    return null
+  }
+}
+
+/**
+ * Helper: Extract PVC names from StatefulSet
+ */
+function extractPVCNames(sts: k8s.V1StatefulSet): string[] {
+  const pvcTemplates = sts.spec?.volumeClaimTemplates || []
+  return pvcTemplates.map((pvc) => pvc.metadata?.name || '').filter(Boolean)
+}
+
+/**
+ * Helper: Extract ConfigMap names from StatefulSet
+ */
+function extractConfigMapNamesFromStatefulSet(sts: k8s.V1StatefulSet): string[] {
+  const configMaps = new Set<string>()
+  const containers = sts.spec?.template?.spec?.containers || []
+
+  containers.forEach((container) => {
+    container.envFrom?.forEach((envFrom) => {
+      if (envFrom.configMapRef?.name) {
+        configMaps.add(envFrom.configMapRef.name)
+      }
+    })
+    container.env?.forEach((env) => {
+      if (env.valueFrom?.configMapKeyRef?.name) {
+        configMaps.add(env.valueFrom.configMapKeyRef.name)
+      }
+    })
+  })
+
+  sts.spec?.template?.spec?.volumes?.forEach((volume) => {
+    if (volume.configMap?.name) {
+      configMaps.add(volume.configMap.name)
+    }
+  })
+
+  return Array.from(configMaps)
+}
+
+/**
+ * Helper: Extract Secret names from StatefulSet
+ */
+function extractSecretNamesFromStatefulSet(sts: k8s.V1StatefulSet): string[] {
+  const secrets = new Set<string>()
+  const containers = sts.spec?.template?.spec?.containers || []
+
+  containers.forEach((container) => {
+    container.envFrom?.forEach((envFrom) => {
+      if (envFrom.secretRef?.name) {
+        secrets.add(envFrom.secretRef.name)
+      }
+    })
+    container.env?.forEach((env) => {
+      if (env.valueFrom?.secretKeyRef?.name) {
+        secrets.add(env.valueFrom.secretKeyRef.name)
+      }
+    })
+  })
+
+  sts.spec?.template?.spec?.volumes?.forEach((volume) => {
+    if (volume.secret?.secretName) {
+      secrets.add(volume.secret.secretName)
+    }
+  })
+
+  sts.spec?.template?.spec?.imagePullSecrets?.forEach((secret) => {
+    if (secret.name) {
+      secrets.add(secret.name)
+    }
+  })
+
+  return Array.from(secrets)
+}
+
+/**
+ * Helper: Extract ConfigMap names from DaemonSet
+ */
+function extractConfigMapNamesFromDaemonSet(ds: k8s.V1DaemonSet): string[] {
+  const configMaps = new Set<string>()
+  const containers = ds.spec?.template?.spec?.containers || []
+
+  containers.forEach((container) => {
+    container.envFrom?.forEach((envFrom) => {
+      if (envFrom.configMapRef?.name) {
+        configMaps.add(envFrom.configMapRef.name)
+      }
+    })
+    container.env?.forEach((env) => {
+      if (env.valueFrom?.configMapKeyRef?.name) {
+        configMaps.add(env.valueFrom.configMapKeyRef.name)
+      }
+    })
+  })
+
+  ds.spec?.template?.spec?.volumes?.forEach((volume) => {
+    if (volume.configMap?.name) {
+      configMaps.add(volume.configMap.name)
+    }
+  })
+
+  return Array.from(configMaps)
+}
+
+/**
+ * Helper: Extract Secret names from DaemonSet
+ */
+function extractSecretNamesFromDaemonSet(ds: k8s.V1DaemonSet): string[] {
+  const secrets = new Set<string>()
+  const containers = ds.spec?.template?.spec?.containers || []
+
+  containers.forEach((container) => {
+    container.envFrom?.forEach((envFrom) => {
+      if (envFrom.secretRef?.name) {
+        secrets.add(envFrom.secretRef.name)
+      }
+    })
+    container.env?.forEach((env) => {
+      if (env.valueFrom?.secretKeyRef?.name) {
+        secrets.add(env.valueFrom.secretKeyRef.name)
+      }
+    })
+  })
+
+  ds.spec?.template?.spec?.volumes?.forEach((volume) => {
+    if (volume.secret?.secretName) {
+      secrets.add(volume.secret.secretName)
+    }
+  })
+
+  ds.spec?.template?.spec?.imagePullSecrets?.forEach((secret) => {
+    if (secret.name) {
+      secrets.add(secret.name)
+    }
+  })
+
+  return Array.from(secrets)
+}
+
+/**
+ * Helper: Get DaemonSet status
+ */
+function getDaemonSetStatus(status: k8s.V1DaemonSetStatus | undefined): DeploymentStatus {
+  if (!status) return 'Unknown'
+
+  const desired = status.desiredNumberScheduled || 0
+  const ready = status.numberReady || 0
+  const available = status.numberAvailable || 0
+
+  if (ready === 0) return 'Not Ready'
+  if (ready < desired) return 'Degraded'
+  if (available === desired && ready === desired) return 'Healthy'
+
+  return 'Unknown'
 }
 
 /**

@@ -1,6 +1,8 @@
 import type {
   Pod,
   Deployment,
+  StatefulSet,
+  DaemonSet,
   Node,
   ConfigMap,
   Secret,
@@ -32,6 +34,8 @@ declare global {
     __mockDataCache?: {
       pods: Pod[] | null
       deployments: Deployment[] | null
+      statefulSets: StatefulSet[] | null
+      daemonSets: DaemonSet[] | null
       nodes: Node[] | null
       configMaps: ConfigMap[] | null
       secrets: Secret[] | null
@@ -55,6 +59,8 @@ if (typeof window !== 'undefined' && !window.__mockDataCache) {
   window.__mockDataCache = {
     pods: null,
     deployments: null,
+    statefulSets: null,
+    daemonSets: null,
     nodes: null,
     configMaps: null,
     secrets: null,
@@ -78,6 +84,10 @@ const getCachedPods = () => getCache()?.pods || null
 const setCachedPods = (data: Pod[]) => { if (getCache()) getCache()!.pods = data }
 const getCachedDeployments = () => getCache()?.deployments || null
 const setCachedDeployments = (data: Deployment[]) => { if (getCache()) getCache()!.deployments = data }
+const getCachedStatefulSets = () => getCache()?.statefulSets || null
+const setCachedStatefulSets = (data: StatefulSet[]) => { if (getCache()) getCache()!.statefulSets = data }
+const getCachedDaemonSets = () => getCache()?.daemonSets || null
+const setCachedDaemonSets = (data: DaemonSet[]) => { if (getCache()) getCache()!.daemonSets = data }
 const getCachedNodes = () => getCache()?.nodes || null
 const setCachedNodes = (data: Node[]) => { if (getCache()) getCache()!.nodes = data }
 const getCachedConfigMaps = () => getCache()?.configMaps || null
@@ -1337,4 +1347,192 @@ export function generateMockLimitRanges(): LimitRange[] {
 
   setCachedLimitRanges(limitRanges)
   return limitRanges
+}
+
+/**
+ * Generates mock StatefulSets
+ */
+export function generateMockStatefulSets(): StatefulSet[] {
+  const cached = getCachedStatefulSets()
+  if (cached) return cached
+
+  const statefulSets: StatefulSet[] = [
+    {
+      name: 'redis-cluster',
+      namespace: 'demo',
+      replicas: {
+        desired: 3,
+        ready: 3,
+        current: 3,
+        updated: 3,
+      },
+      status: 'Healthy',
+      age: '45d',
+      labels: { app: 'redis', component: 'cache' },
+      selector: { app: 'redis' },
+      serviceName: 'redis-service',
+      updateStrategy: 'RollingUpdate',
+      podManagementPolicy: 'OrderedReady',
+      persistentVolumeClaims: ['redis-data'],
+      configMaps: ['redis-config'],
+      secrets: ['redis-credentials'],
+    },
+    {
+      name: 'elasticsearch',
+      namespace: 'demo',
+      replicas: {
+        desired: 3,
+        ready: 2,
+        current: 3,
+        updated: 2,
+      },
+      status: 'Degraded',
+      age: '60d',
+      labels: { app: 'elasticsearch', tier: 'data' },
+      selector: { app: 'elasticsearch' },
+      serviceName: 'elasticsearch-service',
+      updateStrategy: 'RollingUpdate',
+      podManagementPolicy: 'Parallel',
+      persistentVolumeClaims: ['elasticsearch-data', 'elasticsearch-logs'],
+      configMaps: ['elasticsearch-config'],
+      secrets: [],
+    },
+    {
+      name: 'cassandra',
+      namespace: 'demo',
+      replicas: {
+        desired: 5,
+        ready: 5,
+        current: 5,
+        updated: 5,
+      },
+      status: 'Healthy',
+      age: '90d',
+      labels: { app: 'cassandra', type: 'database' },
+      selector: { app: 'cassandra' },
+      serviceName: 'cassandra-service',
+      updateStrategy: 'OnDelete',
+      podManagementPolicy: 'OrderedReady',
+      persistentVolumeClaims: ['cassandra-data'],
+      configMaps: ['cassandra-config'],
+      secrets: ['cassandra-keystore'],
+    },
+    {
+      name: 'zookeeper',
+      namespace: 'demo',
+      replicas: {
+        desired: 3,
+        ready: 3,
+        current: 3,
+        updated: 3,
+      },
+      status: 'Healthy',
+      age: '120d',
+      labels: { app: 'zookeeper', component: 'coordination' },
+      selector: { app: 'zookeeper' },
+      serviceName: 'zookeeper-service',
+      updateStrategy: 'RollingUpdate',
+      podManagementPolicy: 'OrderedReady',
+      persistentVolumeClaims: ['zookeeper-data', 'zookeeper-logs'],
+      configMaps: ['zookeeper-config'],
+      secrets: [],
+    },
+  ]
+
+  setCachedStatefulSets(statefulSets)
+  return statefulSets
+}
+
+/**
+ * Generates mock DaemonSets
+ */
+export function generateMockDaemonSets(): DaemonSet[] {
+  const cached = getCachedDaemonSets()
+  if (cached) return cached
+
+  const daemonSets: DaemonSet[] = [
+    {
+      name: 'node-exporter',
+      namespace: 'demo',
+      desired: 3,
+      current: 3,
+      ready: 3,
+      upToDate: 3,
+      available: 3,
+      status: 'Healthy',
+      age: '60d',
+      labels: { app: 'node-exporter', component: 'monitoring' },
+      selector: { app: 'node-exporter' },
+      updateStrategy: 'RollingUpdate',
+      configMaps: ['node-exporter-config'],
+      secrets: [],
+    },
+    {
+      name: 'fluentd',
+      namespace: 'demo',
+      desired: 3,
+      current: 3,
+      ready: 2,
+      upToDate: 3,
+      available: 2,
+      status: 'Degraded',
+      age: '45d',
+      labels: { app: 'fluentd', tier: 'logging' },
+      selector: { app: 'fluentd' },
+      updateStrategy: 'RollingUpdate',
+      configMaps: ['fluentd-config'],
+      secrets: ['fluentd-credentials'],
+    },
+    {
+      name: 'kube-proxy',
+      namespace: 'demo',
+      desired: 3,
+      current: 3,
+      ready: 3,
+      upToDate: 3,
+      available: 3,
+      status: 'Healthy',
+      age: '180d',
+      labels: { app: 'kube-proxy', component: 'networking' },
+      selector: { app: 'kube-proxy' },
+      updateStrategy: 'RollingUpdate',
+      configMaps: [],
+      secrets: [],
+    },
+    {
+      name: 'nvidia-device-plugin',
+      namespace: 'demo',
+      desired: 2,
+      current: 2,
+      ready: 2,
+      upToDate: 2,
+      available: 2,
+      status: 'Healthy',
+      age: '30d',
+      labels: { app: 'nvidia-device-plugin', type: 'gpu' },
+      selector: { app: 'nvidia-device-plugin' },
+      updateStrategy: 'OnDelete',
+      configMaps: ['nvidia-config'],
+      secrets: [],
+    },
+    {
+      name: 'calico-node',
+      namespace: 'demo',
+      desired: 3,
+      current: 3,
+      ready: 3,
+      upToDate: 3,
+      available: 3,
+      status: 'Healthy',
+      age: '200d',
+      labels: { app: 'calico-node', component: 'cni' },
+      selector: { app: 'calico-node' },
+      updateStrategy: 'RollingUpdate',
+      configMaps: ['calico-config'],
+      secrets: ['calico-etcd-secrets'],
+    },
+  ]
+
+  setCachedDaemonSets(daemonSets)
+  return daemonSets
 }
