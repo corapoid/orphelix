@@ -323,6 +323,44 @@ export async function fetchPods(namespace: string, contextName?: string, labelSe
   })
 }
 
+/**
+ * Helper: Parse probe configuration
+ */
+function parseProbe(probe: any): any {
+  if (!probe) return undefined
+
+  const result: any = {
+    initialDelaySeconds: probe.initialDelaySeconds,
+    periodSeconds: probe.periodSeconds,
+    timeoutSeconds: probe.timeoutSeconds,
+    successThreshold: probe.successThreshold,
+    failureThreshold: probe.failureThreshold,
+  }
+
+  if (probe.httpGet) {
+    result.type = 'httpGet'
+    result.httpGet = {
+      path: probe.httpGet.path || '/',
+      port: probe.httpGet.port,
+      scheme: probe.httpGet.scheme || 'HTTP',
+    }
+  } else if (probe.tcpSocket) {
+    result.type = 'tcpSocket'
+    result.tcpSocket = {
+      port: probe.tcpSocket.port,
+    }
+  } else if (probe.exec) {
+    result.type = 'exec'
+    result.exec = {
+      command: probe.exec.command || [],
+    }
+  } else if (probe.grpc) {
+    result.type = 'grpc'
+  }
+
+  return result
+}
+
 export async function fetchPod(name: string, namespace: string, contextName?: string): Promise<Pod | null> {
   try {
     const coreApi = getCoreApi(contextName)
@@ -330,6 +368,7 @@ export async function fetchPod(name: string, namespace: string, contextName?: st
     const pod = response
 
     const containerStatuses = pod.status?.containerStatuses || []
+    const containerSpecs = pod.spec?.containers || []
     const totalRestarts = containerStatuses.reduce(
       (sum, cs) => sum + (cs.restartCount || 0),
       0
@@ -344,11 +383,51 @@ export async function fetchPod(name: string, namespace: string, contextName?: st
       restartCount: totalRestarts,
       age: calculateAge(pod.metadata?.creationTimestamp),
       labels: pod.metadata?.labels || {},
-      containers: containerStatuses.map((cs) => ({
+      containers: containerSpecs.map((spec) => ({
+        name: spec.name,
+        image: spec.image || '',
+        ready: containerStatuses.find((cs) => cs.name === spec.name)?.ready || false,
+        restartCount: containerStatuses.find((cs) => cs.name === spec.name)?.restartCount || 0,
+        livenessProbe: parseProbe(spec.livenessProbe),
+        readinessProbe: parseProbe(spec.readinessProbe),
+        startupProbe: parseProbe(spec.startupProbe),
+      })),
+      containerStatuses: containerStatuses.map((cs) => ({
         name: cs.name,
-        image: cs.image || '',
         ready: cs.ready || false,
         restartCount: cs.restartCount || 0,
+        state: {
+          waiting: cs.state?.waiting ? {
+            reason: cs.state.waiting.reason || '',
+            message: cs.state.waiting.message,
+          } : undefined,
+          running: cs.state?.running ? {
+            startedAt: cs.state.running.startedAt?.toISOString() || '',
+          } : undefined,
+          terminated: cs.state?.terminated ? {
+            exitCode: cs.state.terminated.exitCode || 0,
+            reason: cs.state.terminated.reason || '',
+            message: cs.state.terminated.message,
+            startedAt: cs.state.terminated.startedAt?.toISOString() || '',
+            finishedAt: cs.state.terminated.finishedAt?.toISOString() || '',
+          } : undefined,
+        },
+        lastState: cs.lastState ? {
+          waiting: cs.lastState.waiting ? {
+            reason: cs.lastState.waiting.reason || '',
+            message: cs.lastState.waiting.message,
+          } : undefined,
+          running: cs.lastState.running ? {
+            startedAt: cs.lastState.running.startedAt?.toISOString() || '',
+          } : undefined,
+          terminated: cs.lastState.terminated ? {
+            exitCode: cs.lastState.terminated.exitCode || 0,
+            reason: cs.lastState.terminated.reason || '',
+            message: cs.lastState.terminated.message,
+            startedAt: cs.lastState.terminated.startedAt?.toISOString() || '',
+            finishedAt: cs.lastState.terminated.finishedAt?.toISOString() || '',
+          } : undefined,
+        } : undefined,
       })),
       configMaps: extractConfigMapNamesFromPod(pod),
       secrets: extractSecretNamesFromPod(pod),

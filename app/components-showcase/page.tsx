@@ -55,7 +55,7 @@ export default function ComponentShowcasePage() {
               A reusable glass morphism panel with consistent styling.
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <GlassPanel>
                   <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
                     Default Panel
@@ -65,7 +65,7 @@ export default function ComponentShowcasePage() {
                   </Typography>
                 </GlassPanel>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <GlassPanel sx={{ p: 4 }}>
                   <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
                     Custom Padding
@@ -75,7 +75,7 @@ export default function ComponentShowcasePage() {
                   </Typography>
                 </GlassPanel>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <GlassPanel sx={{ p: 2, backgroundColor: 'primary.main', opacity: 0.2 }}>
                   <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
                     Custom Styles
@@ -104,7 +104,6 @@ export default function ComponentShowcasePage() {
               <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
                 <StatusBadge status="Running" size="small" />
                 <StatusBadge status="Running" size="medium" />
-                <StatusBadge status="Running" size="large" />
               </Box>
 
               <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>Kubernetes Statuses:</Typography>
@@ -289,37 +288,37 @@ export default function ComponentShowcasePage() {
         <GlassPanel sx={{ mb: 3 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>Color Palette</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={6} md={4}>
+            <Grid size={{ xs: 6, md: 4 }}>
               <Box sx={{ p: 2, bgcolor: 'primary.main', borderRadius: 2, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>PRIMARY</Typography>
                 <Typography variant="body2">Actions & Links</Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid size={{ xs: 6, md: 4 }}>
               <Box sx={{ p: 2, bgcolor: 'success.main', borderRadius: 2, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>SUCCESS</Typography>
                 <Typography variant="body2">Healthy States</Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid size={{ xs: 6, md: 4 }}>
               <Box sx={{ p: 2, bgcolor: 'warning.main', borderRadius: 2, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>WARNING</Typography>
                 <Typography variant="body2">Warnings</Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid size={{ xs: 6, md: 4 }}>
               <Box sx={{ p: 2, bgcolor: 'error.main', borderRadius: 2, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>ERROR</Typography>
                 <Typography variant="body2">Failures</Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid size={{ xs: 6, md: 4 }}>
               <Box sx={{ p: 2, bgcolor: 'info.main', borderRadius: 2, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>INFO</Typography>
                 <Typography variant="body2">Information</Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} md={4}>
+            <Grid size={{ xs: 6, md: 4 }}>
               <Box sx={{ p: 2, bgcolor: 'text.secondary', borderRadius: 2, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>SECONDARY</Typography>
                 <Typography variant="body2">Metadata</Typography>
@@ -384,7 +383,7 @@ export default function ComponentShowcasePage() {
           Component Categories
         </Typography>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
               Common Components
             </Typography>
@@ -392,7 +391,7 @@ export default function ComponentShowcasePage() {
               Reusable UI components used throughout the application (buttons, badges, panels, etc.)
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
               Layout Components
             </Typography>
@@ -400,7 +399,7 @@ export default function ComponentShowcasePage() {
               Header, sidebar, footer, and navigation components
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
               Dashboard Components
             </Typography>
@@ -408,7 +407,7 @@ export default function ComponentShowcasePage() {
               Overview cards, charts, and dashboard-specific widgets
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
               Resource Components
             </Typography>
@@ -416,7 +415,7 @@ export default function ComponentShowcasePage() {
               Cards and viewers for specific Kubernetes resources (Pods, Deployments, etc.)
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
               Topology & Visualization
             </Typography>
@@ -424,7 +423,7 @@ export default function ComponentShowcasePage() {
               Interactive graphs and network diagrams
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
               Utilities
             </Typography>

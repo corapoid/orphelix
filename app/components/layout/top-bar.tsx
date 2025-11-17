@@ -51,7 +51,7 @@ export function TopBar() {
     handleClose()
     // Prefix path with /demo if in mock mode
     const finalPath = mode === 'mock' ? `/demo${path}` : path
-    router.push(finalPath)
+    router.push(finalPath as any)
   }
 
   return (

@@ -3,17 +3,13 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import IconButton from '@mui/material/IconButton'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useJob } from '@/lib/hooks/use-jobs'
 import { usePods } from '@/lib/hooks/use-pods'
 import { useBuildPath } from '@/lib/hooks/use-navigate-to'
@@ -23,11 +19,11 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import Link from 'next/link'
 
 export default function JobDetailPage() {
   const params = useParams()
   const name = params.name as string
+  const router = useRouter()
   const buildPath = useBuildPath()
 
   const { data: job, isLoading, error, refetch } = useJob(name)
@@ -190,15 +186,15 @@ export default function JobDetailPage() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {jobPods.map((pod) => (
+                    {jobPods.map((pod) => {
+                      const podPath = buildPath(`/pods/${pod.name}`)
+                      return (
                       <TableRow
                         key={pod.name}
                         hover
-                        component={Link}
-                        href={buildPath(`/pods/${pod.name}`)}
+                        onClick={() => router.push(podPath as any)}
                         sx={{
                           cursor: 'pointer',
-                          textDecoration: 'none',
                           '&:hover': { bgcolor: 'action.hover' },
                         }}
                       >
@@ -226,7 +222,8 @@ export default function JobDetailPage() {
                           </Typography>
                         </TableCell>
                       </TableRow>
-                    ))}
+                      )
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -240,23 +240,23 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
         <Collapse in={expanded} timeout={300}>
           <List dense sx={{ pt: 1 }}>
             {alerts.map((alert, index) => (
-              <ListItem
+              <Link
                 key={index}
-                component={Link}
-                href={alert.link}
-                sx={{
-                  px: 0,
-                  py: 0.5,
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s',
-                  borderRadius: 1,
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  '&:hover': {
-                    bgcolor: 'action.hover',
-                  },
-                }}
+                href={alert.link as any}
+                style={{ textDecoration: 'none', color: 'inherit' }}
               >
+                <ListItem
+                  sx={{
+                    px: 0,
+                    py: 0.5,
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s',
+                    borderRadius: 1,
+                    '&:hover': {
+                      bgcolor: 'action.hover',
+                    },
+                  }}
+                >
                 <ListItemIcon sx={{ minWidth: 32 }}>
                   {alert.severity === 'error' ? (
                     <ErrorOutlineIcon sx={{ fontSize: 20, color: 'error.main' }} />
@@ -272,6 +272,7 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
                   }}
                 />
               </ListItem>
+              </Link>
             ))}
           </List>
         </Collapse>

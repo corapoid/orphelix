@@ -10,7 +10,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useCronJob } from '@/lib/hooks/use-cronjobs'
 import { useJobs } from '@/lib/hooks/use-jobs'
 import { useBuildPath } from '@/lib/hooks/use-navigate-to'
@@ -20,7 +20,6 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import Link from 'next/link'
 
 // Helper function to convert cron schedule to human-readable description
 function getScheduleDescription(schedule: string): string {
@@ -74,6 +73,7 @@ function getScheduleDescription(schedule: string): string {
 export default function CronJobDetailPage() {
   const params = useParams()
   const name = params.name as string
+  const router = useRouter()
   const buildPath = useBuildPath()
 
   const { data: cronjob, isLoading, error, refetch } = useCronJob(name)
@@ -284,15 +284,15 @@ export default function CronJobDetailPage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sortedJobs.slice(0, 10).map((job) => (
+                      {sortedJobs.slice(0, 10).map((job) => {
+                        const jobPath = buildPath(`/jobs/${job.name}`)
+                        return (
                         <TableRow
                           key={job.name}
                           hover
-                          component={Link}
-                          href={buildPath(`/jobs/${job.name}`)}
+                          onClick={() => router.push(jobPath as any)}
                           sx={{
                             cursor: 'pointer',
-                            textDecoration: 'none',
                             '&:hover': { bgcolor: 'action.hover' },
                           }}
                         >
@@ -320,7 +320,8 @@ export default function CronJobDetailPage() {
                             </Typography>
                           </TableCell>
                         </TableRow>
-                      ))}
+                        )
+                      })}
                     </TableBody>
                   </Table>
                 </TableContainer>

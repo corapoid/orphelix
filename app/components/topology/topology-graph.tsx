@@ -188,15 +188,7 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
         panOnScroll={false}
         panOnDrag={true}
       >
-        <Controls
-          style={{
-            button: {
-              backgroundColor: 'transparent',
-              border: 'none',
-              color: 'inherit',
-            }
-          }}
-        />
+        <Controls />
         <Panel position="top-right">
           <Box sx={{ display: 'flex', gap: 1 }}>
             {/* Download button temporarily disabled due to technical issues */}

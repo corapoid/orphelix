@@ -11,10 +11,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
-import IconButton from '@mui/material/IconButton'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import LockIcon from '@mui/icons-material/Lock'
-import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useIngress } from '@/lib/hooks/use-ingress'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
@@ -22,7 +19,6 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import Link from 'next/link'
 
 export default function IngressDetailPage() {
   const params = useParams()
@@ -153,8 +149,8 @@ export default function IngressDetailPage() {
                   </Box>
                 </Typography>
                 <GlassPanel>
-                  {ingress.tls.map((tlsConfig, idx) => (
-                    <Box key={idx} sx={{ mb: idx < ingress.tls.length - 1 ? 2 : 0 }}>
+                  {ingress.tls?.map((tlsConfig, idx) => (
+                    <Box key={idx} sx={{ mb: idx < (ingress.tls?.length || 0) - 1 ? 2 : 0 }}>
                       <Box sx={{ mb: 1 }}>
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                           Hosts:

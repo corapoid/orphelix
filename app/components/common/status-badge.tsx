@@ -8,11 +8,11 @@ import type { DeploymentStatus, PodStatus, NodeStatus } from '@/types/kubernetes
 
 type Status = DeploymentStatus | PodStatus | NodeStatus | string
 
-interface StatusBadgeProps extends Omit<ChipProps, 'color'> {
+interface StatusBadgeProps extends Omit<ChipProps, 'color' | 'size'> {
   status?: Status
   label?: string
   color?: 'success' | 'error' | 'warning' | 'info' | 'default'
-  size?: 'small' | 'medium' | 'large'
+  size?: 'small' | 'medium'
 }
 
 // Config for Kubernetes status colors

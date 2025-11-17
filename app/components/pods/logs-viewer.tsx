@@ -197,7 +197,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
           <StatusBadge
             label="Formatted"
             size="small"
-            color={viewMode === 'formatted' ? 'primary' : 'default'}
+            color={viewMode === 'formatted' ? 'info' : 'default'}
             onClick={() => setViewMode('formatted')}
             sx={{
               cursor: 'pointer',
@@ -208,7 +208,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
           <StatusBadge
             label="Raw"
             size="small"
-            color={viewMode === 'raw' ? 'primary' : 'default'}
+            color={viewMode === 'raw' ? 'info' : 'default'}
             onClick={() => setViewMode('raw')}
             sx={{
               cursor: 'pointer',
@@ -371,7 +371,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                   <StatusBadge
                     label="JSON"
                     size="small"
-                    color="primary"
+                    color="info"
                     sx={{
                       height: '16px',
                       fontSize: '0.65rem',

@@ -13,7 +13,6 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { ReactNode, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
 import { PageHeader } from './page-header'
 import { EmptyState } from './empty-state'
 import { TableSkeleton } from './table-skeleton'
@@ -103,7 +102,6 @@ export function TableOnlyResourceList<T>({
   showClusterAlert = true,
   emptyStateDescription,
 }: TableOnlyResourceListProps<T>) {
-  const _router = useRouter()
   const searchQuery = usePageSearch(searchPlaceholder)
 
   // Auto-refresh

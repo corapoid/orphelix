@@ -29,6 +29,8 @@ import { useRestartPod } from '@/lib/hooks/use-restart-pod'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { LogsViewer } from '@/app/components/pods/logs-viewer'
 import { RestartPodDialog } from '@/app/components/pods/restart-pod-dialog'
+import { HealthCheckSection } from '@/app/components/pods/health-check-section'
+import { ContainerRestartHistory } from '@/app/components/pods/container-restart-history'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
@@ -393,6 +395,16 @@ export default function PodDetailPage() {
           </Box>
         </Box>
       )}
+
+      {/* Health Checks Section */}
+      <Box sx={{ mb: 3 }}>
+        <HealthCheckSection containers={pod.containers} />
+      </Box>
+
+      {/* Container Status/Restart History */}
+      <Box sx={{ mb: 3 }}>
+        <ContainerRestartHistory containerStatuses={pod.containerStatuses} />
+      </Box>
 
       {/* Container Logs Section */}
       {pod.containers.length > 0 && (

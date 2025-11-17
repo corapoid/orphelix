@@ -25,10 +25,56 @@ export interface Pod {
   nodeName: string
   ip: string
   containers: Container[]
+  containerStatuses?: ContainerStatus[]
   labels: Record<string, string>
   ownerReferences?: OwnerReference[]
   configMaps: string[]
   secrets: string[]
+}
+
+export interface Probe {
+  type: 'httpGet' | 'tcpSocket' | 'exec' | 'grpc'
+  httpGet?: {
+    path: string
+    port: number
+    scheme: string
+  }
+  tcpSocket?: {
+    port: number
+  }
+  exec?: {
+    command: string[]
+  }
+  initialDelaySeconds?: number
+  periodSeconds?: number
+  timeoutSeconds?: number
+  successThreshold?: number
+  failureThreshold?: number
+}
+
+export interface ContainerState {
+  waiting?: {
+    reason: string
+    message?: string
+  }
+  running?: {
+    startedAt: string
+  }
+  terminated?: {
+    exitCode: number
+    reason: string
+    message?: string
+    startedAt: string
+    finishedAt: string
+  }
+}
+
+export interface ContainerStatus {
+  name: string
+  ready: boolean
+  restartCount: number
+  state: ContainerState
+  lastState?: ContainerState
 }
 
 export interface Container {
@@ -36,6 +82,9 @@ export interface Container {
   image: string
   ready: boolean
   restartCount: number
+  livenessProbe?: Probe
+  readinessProbe?: Probe
+  startupProbe?: Probe
 }
 
 export interface OwnerReference {

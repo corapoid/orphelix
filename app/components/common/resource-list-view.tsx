@@ -17,7 +17,6 @@ import Tooltip from '@mui/material/Tooltip'
 import ViewListIcon from '@mui/icons-material/ViewList'
 import ViewModuleIcon from '@mui/icons-material/ViewModule'
 import { ReactNode, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
 import { PageHeader } from './page-header'
 import { EmptyState } from './empty-state'
 import { TableSkeleton } from './table-skeleton'
@@ -108,7 +107,6 @@ export function ResourceListView<T>({
   showClusterAlert = true,
   emptyStateDescription,
 }: ResourceListViewProps<T>) {
-  const _router = useRouter()
   const { viewMode, setViewMode } = useViewMode()
   const searchQuery = usePageSearch(searchPlaceholder)
 
