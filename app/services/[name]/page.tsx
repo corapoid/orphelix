@@ -82,7 +82,6 @@ export default function ServiceDetailPage() {
           </Box>
         }
         metadata={[
-          `Namespace: ${service.namespace}`,
           `Age: ${service.age}`,
         ]}
         breadcrumbs={[
