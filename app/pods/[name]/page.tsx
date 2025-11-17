@@ -33,6 +33,7 @@ import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { GlassPanel } from '@/app/components/common/glass-panel'
 
 export default function PodDetailPage() {
   const params = useParams()

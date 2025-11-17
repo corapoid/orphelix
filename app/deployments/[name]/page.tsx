@@ -33,6 +33,7 @@ import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { RestartDeploymentDialog } from '@/app/components/deployments/restart-deployment-dialog'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { GlassPanel } from '@/app/components/common/glass-panel'
 
 export default function DeploymentDetailPage() {
   const params = useParams()
