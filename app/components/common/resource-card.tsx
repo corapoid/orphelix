@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
-import Tooltip from '@mui/material/Tooltip'
 import { ReactNode } from 'react'
 import type { SvgIconComponent } from '@mui/icons-material'
 
@@ -126,20 +125,21 @@ export function ResourceCard({
           <Icon sx={{ fontSize: 22, color: resourceColor, opacity: 0.95 }} />
         </Box>
         <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-          <Tooltip title={name} placement="top" arrow>
-            <Typography
-              variant="body1"
-              fontWeight={700}
-              sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                mb: 0.5,
-              }}
-            >
-              {name}
-            </Typography>
-          </Tooltip>
+          <Typography
+            variant="body1"
+            fontWeight={700}
+            sx={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              lineHeight: 1.3,
+              mb: 0.5,
+            }}
+          >
+            {name}
+          </Typography>
           <Typography variant="caption" color="text.secondary" sx={{ opacity: 0.8 }}>
             {resourceType}
           </Typography>
