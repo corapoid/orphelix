@@ -91,7 +91,7 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
     )
   }
 
-  if (!clusterConnected && connectionError) {
+  if (!clusterConnected) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <Typography variant="caption" color="error" fontWeight={600}>
