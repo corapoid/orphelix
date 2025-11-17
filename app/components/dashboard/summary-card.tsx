@@ -1,9 +1,11 @@
+'use client'
+
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { SvgIconComponent } from '@mui/icons-material'
-import Link from 'next/link'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 
 interface SummaryCardProps {
   title: string
@@ -35,6 +37,8 @@ export function SummaryCard({
   iconBgColor,
   details
 }: SummaryCardProps) {
+  const navigateTo = useNavigateTo()
+
   const cardContent = (
     <Card
       sx={{
@@ -47,6 +51,7 @@ export function SummaryCard({
             }
           : {},
       }}
+      onClick={href ? () => navigateTo(href) : undefined}
     >
       <CardContent sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
@@ -110,14 +115,6 @@ export function SummaryCard({
       </CardContent>
     </Card>
   )
-
-  if (href) {
-    return (
-      <Link href={href as any} style={{ textDecoration: 'none', color: 'inherit' }}>
-        {cardContent}
-      </Link>
-    )
-  }
 
   return cardContent
 }
