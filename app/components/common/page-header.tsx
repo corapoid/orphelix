@@ -21,6 +21,7 @@ interface PageHeaderProps {
   onRefresh?: () => unknown
   isRefreshing?: boolean
   actions?: React.ReactNode
+  headerActions?: React.ReactNode  // Actions next to refresh button in breadcrumb line
   // Filters only (search is now in global header)
   filters?: React.ReactNode
 }
@@ -45,6 +46,7 @@ export function PageHeader({
   onRefresh,
   isRefreshing = false,
   actions,
+  headerActions,
   filters,
 }: PageHeaderProps) {
   const router = useRouter()
@@ -98,9 +100,12 @@ export function PageHeader({
               )
             })}
           </Breadcrumbs>
-          {onRefresh && (
-            <RefreshButton onRefresh={onRefresh} isLoading={isRefreshing} />
-          )}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {headerActions}
+            {onRefresh && (
+              <RefreshButton onRefresh={onRefresh} isLoading={isRefreshing} />
+            )}
+          </Box>
         </Box>
       )}
 

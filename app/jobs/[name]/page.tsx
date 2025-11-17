@@ -83,20 +83,19 @@ export default function JobDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        actions={
+        headerActions={
           !docsOpen && (
             <IconButton
               onClick={() => setDocsOpen(true)}
-              size="small"
+              size="medium"
               title="About Jobs"
               sx={{
-                color: 'text.primary',
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },
               }}
             >
-              <InfoOutlinedIcon fontSize="small" />
+              <InfoOutlinedIcon />
             </IconButton>
           )
         }
