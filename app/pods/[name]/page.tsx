@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -33,6 +32,7 @@ import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { GlassPanel } from '@/app/components/common/glass-panel'
 
 export default function PodDetailPage() {
   const params = useParams()
@@ -155,27 +155,7 @@ export default function PodDetailPage() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Details
           </Typography>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 2,
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(30, 30, 46, 0.6)'
-                  : 'rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              border: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : 'rgba(209, 213, 219, 0.4)',
-              borderRadius: 3,
-            }}
-          >
+          <GlassPanel sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2" color="text.secondary">
@@ -217,31 +197,14 @@ export default function PodDetailPage() {
                 </Typography>
               </Box>
             </Box>
-          </Paper>
+          </GlassPanel>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Containers
           </Typography>
-          <Paper
-            elevation={0}
-            sx={{
-              flex: 1,
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(30, 30, 46, 0.6)'
-                  : 'rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              border: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : 'rgba(209, 213, 219, 0.4)',
-              borderRadius: 3,
-            }}
-          >
+          <GlassPanel sx={{ flex: 1 }}>
             <TableContainer>
               <Table>
                 <TableHead>
@@ -284,7 +247,7 @@ export default function PodDetailPage() {
                 </TableBody>
               </Table>
             </TableContainer>
-          </Paper>
+          </GlassPanel>
         </Grid>
       </Grid>
 
@@ -295,24 +258,11 @@ export default function PodDetailPage() {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
           {Object.entries(pod.labels).map(([key, value]) => (
-            <Paper
+            <GlassPanel
               key={key}
-              elevation={0}
               sx={{
                 px: 2,
                 py: 1,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
@@ -324,7 +274,7 @@ export default function PodDetailPage() {
               <Typography variant="body2" fontWeight={500}>
                 {value}
               </Typography>
-            </Paper>
+            </GlassPanel>
           ))}
         </Box>
       </Box>
@@ -342,23 +292,10 @@ export default function PodDetailPage() {
               href={`/configmaps/${encodeURIComponent(cm)}`}
               style={{ textDecoration: 'none' }}
             >
-              <Paper
-                elevation={0}
+              <GlassPanel
                 sx={{
                   p: 2.5,
                   minWidth: 200,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                   '&:hover': {
@@ -379,7 +316,7 @@ export default function PodDetailPage() {
                 <Typography variant="body1" fontWeight={500}>
                   {cm}
                 </Typography>
-              </Paper>
+              </GlassPanel>
             </Link>
           ))}
           {pod.secrets.map((secret) => (
@@ -388,23 +325,10 @@ export default function PodDetailPage() {
               href={`/secrets/${encodeURIComponent(secret)}`}
               style={{ textDecoration: 'none' }}
             >
-              <Paper
-                elevation={0}
+              <GlassPanel
                 sx={{
                   p: 2.5,
                   minWidth: 200,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                   '&:hover': {
@@ -425,7 +349,7 @@ export default function PodDetailPage() {
                 <Typography variant="body1" fontWeight={500}>
                   {secret}
                 </Typography>
-              </Paper>
+              </GlassPanel>
             </Link>
           ))}
           </Box>
