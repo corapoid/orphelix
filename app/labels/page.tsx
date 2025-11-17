@@ -12,10 +12,11 @@ import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useLabels } from '@/lib/hooks/use-labels'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
+import { usePageSearch } from '@/lib/contexts/search-context'
 
 export default function LabelsPage() {
   const [selector, setSelector] = useState('')
-  const [searchQuery, setSearchQuery] = useState('')
+  const searchQuery = usePageSearch('Search labels...')
   const { data, isLoading, error, refetch } = useLabels(selector)
 
   if (isLoading) {
@@ -56,7 +57,7 @@ export default function LabelsPage() {
         onRefresh={refetch}
       />
 
-      {/* Label Selector Search */}
+      {/* Label Selector */}
       <GlassPanel sx={{ mb: 3 }}>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           Filter resources using Kubernetes label selector syntax
@@ -80,17 +81,6 @@ export default function LabelsPage() {
             />
           </Box>
         )}
-      </GlassPanel>
-
-      {/* Search Box */}
-      <GlassPanel sx={{ mb: 3 }}>
-        <TextField
-          fullWidth
-          placeholder="Search labels..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          size="small"
-        />
       </GlassPanel>
 
       {/* Label Distribution */}
