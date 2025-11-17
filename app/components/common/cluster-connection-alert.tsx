@@ -38,30 +38,40 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
     )
   }
 
-  // Full version - detailed error with liquid glass styling
+  // Full version - centered with liquid glass styling
   return (
     <Box
       sx={{
-        m: 2,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(30, 30, 46, 0.8)'
-            : 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: '1px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 100, 100, 0.3)'
-            : 'rgba(211, 47, 47, 0.3)',
-        borderRadius: '12px',
-        boxShadow: (theme) =>
-          theme.palette.mode === 'dark'
-            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
-            : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 'calc(100vh - 120px)',
         p: 3,
       }}
     >
+      <Box
+        sx={{
+          maxWidth: 700,
+          width: '100%',
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(30, 30, 46, 0.8)'
+              : 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 100, 100, 0.3)'
+              : 'rgba(211, 47, 47, 0.3)',
+          borderRadius: '12px',
+          boxShadow: (theme) =>
+            theme.palette.mode === 'dark'
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
+              : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+          p: 3,
+        }}
+      >
       <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
         <CloudOffIcon sx={{ fontSize: 32, color: 'error.main', mt: 0.5 }} />
         <Box sx={{ flex: 1 }}>
@@ -130,6 +140,7 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
         >
           Retry
         </Button>
+      </Box>
       </Box>
     </Box>
   )
