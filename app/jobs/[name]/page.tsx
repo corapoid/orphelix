@@ -12,11 +12,13 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useJob } from '@/lib/hooks/use-jobs'
 import { usePods } from '@/lib/hooks/use-pods'
 import { StatusBadge } from '@/app/components/common/status-badge'
+import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
@@ -82,6 +84,17 @@ export default function JobDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        actions={
+          !docsOpen && (
+            <LiquidGlassButton
+              startIcon={<InfoOutlinedIcon />}
+              onClick={() => setDocsOpen(true)}
+              size="small"
+            >
+              About Jobs
+            </LiquidGlassButton>
+          )
+        }
       />
 
       <Box sx={{ display: 'flex', gap: 3, position: 'relative' }}>
