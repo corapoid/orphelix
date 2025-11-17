@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useJob } from '@/lib/hooks/use-jobs'
 import { usePods } from '@/lib/hooks/use-pods'
+import { useBuildPath } from '@/lib/hooks/use-navigate-to'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
@@ -28,6 +29,7 @@ import Link from 'next/link'
 export default function JobDetailPage() {
   const params = useParams()
   const name = params.name as string
+  const buildPath = useBuildPath()
 
   const { data: job, isLoading, error, refetch } = useJob(name)
   const { data: allPods } = usePods()
@@ -246,7 +248,7 @@ export default function JobDetailPage() {
                         key={pod.name}
                         hover
                         component={Link}
-                        href={`/pods/${pod.name}`}
+                        href={buildPath(`/pods/${pod.name}`)}
                         sx={{
                           cursor: 'pointer',
                           textDecoration: 'none',

@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import WorkIcon from '@mui/icons-material/Work'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useJobs } from '@/lib/hooks/use-jobs'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { JobCard } from '@/app/components/jobs/job-card'
@@ -13,7 +13,7 @@ import { ResourceListView, TableColumn } from '@/app/components/common/resource-
 import type { Job, JobStatus } from '@/types/kubernetes'
 
 export default function JobsPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const [statusFilter, setStatusFilter] = useState<JobStatus | ''>('')
   const { data: jobs, isLoading, error, refetch } = useJobs()
 
@@ -67,7 +67,7 @@ export default function JobsPage() {
           size="small"
           onClick={(e) => {
             e.stopPropagation()
-            router.push(`/jobs/${job.name}`)
+            navigateTo(`/jobs/${job.name}`)
           }}
         >
           <VisibilityIcon fontSize="small" />
@@ -106,7 +106,7 @@ export default function JobsPage() {
       defaultSortField="name"
       defaultSortOrder="asc"
       getRowKey={(job) => job.name}
-      onRowClick={(job) => router.push(`/jobs/${job.name}`)}
+      onRowClick={(job) => navigateTo(`/jobs/${job.name}`)}
       renderCard={(job, onClick) => <JobCard job={job} onClick={onClick} />}
       emptyStateDescription="There are no jobs in this namespace. Create a job to run batch tasks."
     />
