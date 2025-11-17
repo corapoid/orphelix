@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { useRouter } from 'next/navigation'
+import { useNavigateTo } from 'next/navigation'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
@@ -22,7 +22,7 @@ import { usePageSearch } from '@/lib/contexts/search-context'
 import type { ConfigMap } from '@/types/kubernetes'
 
 export default function ConfigMapsPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const searchQuery = usePageSearch('Search ConfigMaps...')
   const { data: configMaps, isLoading, error, refetch } = useConfigMaps()
 
@@ -135,7 +135,7 @@ export default function ConfigMapsPage() {
                   key={cm.name}
                   hover
                   sx={{ cursor: 'pointer' }}
-                  onClick={() => router.push(`/configmaps/${encodeURIComponent(cm.name)}`)}
+                  onClick={() => navigateTo(`/configmaps/${encodeURIComponent(cm.name)}`)}
                 >
                   <TableCell>{cm.name}</TableCell>
                   <TableCell>{cm.namespace}</TableCell>

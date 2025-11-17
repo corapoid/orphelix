@@ -5,7 +5,8 @@ import IconButton from '@mui/material/IconButton'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useDeployments } from '@/lib/hooks/use-deployments'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { DeploymentCard } from '@/app/components/deployments/deployment-card'
@@ -13,7 +14,7 @@ import { ResourceListView, TableColumn } from '@/app/components/common/resource-
 import type { Deployment, DeploymentStatus } from '@/types/kubernetes'
 
 export default function DeploymentsPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const searchParams = useSearchParams()
   const [statusFilter, setStatusFilter] = useState<DeploymentStatus | ''>('')
   const { data: deployments, isLoading, error, refetch } = useDeployments()
@@ -88,7 +89,7 @@ export default function DeploymentsPage() {
           size="small"
           onClick={(e) => {
             e.stopPropagation()
-            router.push(`/deployments/${deployment.name}`)
+            navigateTo(`/deployments/${deployment.name}`)
           }}
         >
           <VisibilityIcon fontSize="small" />
@@ -133,7 +134,7 @@ export default function DeploymentsPage() {
       defaultSortField="name"
       defaultSortOrder="asc"
       getRowKey={(deployment) => deployment.name}
-      onRowClick={(deployment) => router.push(`/deployments/${deployment.name}`)}
+      onRowClick={(deployment) => navigateTo(`/deployments/${deployment.name}`)}
       renderCard={(deployment, onClick) => (
         <DeploymentCard deployment={deployment} onClick={onClick} />
       )}

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import DnsIcon from '@mui/icons-material/Dns'
 import { useNodes } from '@/lib/hooks/use-nodes'
 import { usePods } from '@/lib/hooks/use-pods'
@@ -42,7 +43,7 @@ function calculatePercentage(allocatable: string, capacity: string): number {
 }
 
 export default function NodesPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const searchParams = useSearchParams()
   const selectedNamespace = useModeStore((state) => state.selectedNamespace)
   const [statusFilter, setStatusFilter] = useState<string>('all')
@@ -161,7 +162,7 @@ export default function NodesPage() {
       defaultSortField="name"
       defaultSortOrder="asc"
       getRowKey={(node) => node.name}
-      onRowClick={(node) => router.push(`/nodes/${node.name}`)}
+      onRowClick={(node) => navigateTo(`/nodes/${node.name}`)}
       emptyStateDescription={
         selectedNamespace
           ? `No nodes have pods in namespace: ${selectedNamespace}`

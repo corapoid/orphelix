@@ -15,7 +15,7 @@ import HttpIcon from '@mui/icons-material/Http'
 import LockIcon from '@mui/icons-material/Lock'
 import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import { useNavigateTo } from 'next/navigation'
 import { useIngresses } from '@/lib/hooks/use-ingress'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
@@ -29,7 +29,7 @@ import { usePageSearch } from '@/lib/contexts/search-context'
 import type { Ingress } from '@/types/kubernetes'
 
 export default function IngressPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const { data: ingresses, isLoading, error, refetch } = useIngresses()
   const searchQuery = usePageSearch('Search ingress...')
 
@@ -131,7 +131,7 @@ export default function IngressPage() {
                   key={ingress.name}
                   hover
                   sx={{ cursor: 'pointer' }}
-                  onClick={() => router.push(`/ingress/${ingress.name}`)}
+                  onClick={() => navigateTo(`/ingress/${ingress.name}`)}
                 >
                   <TableCell>
                     <Typography variant="body2" fontWeight="medium">
@@ -193,7 +193,7 @@ export default function IngressPage() {
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation()
-                        router.push(`/ingress/${ingress.name}`)
+                        navigateTo(`/ingress/${ingress.name}`)
                       }}
                     >
                       <VisibilityIcon fontSize="small" />

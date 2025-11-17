@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import FolderIcon from '@mui/icons-material/Folder'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { useRouter } from 'next/navigation'
+import { useNavigateTo } from 'next/navigation'
 import { useNamespaces } from '@/lib/hooks/use-namespaces'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
@@ -25,7 +25,7 @@ import { usePageSearch } from '@/lib/contexts/search-context'
 import { StatusBadge } from '@/app/components/common/status-badge'
 
 export default function NamespacesPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const { data: namespaces, isLoading, error, refetch } = useNamespaces()
   const searchQuery = usePageSearch('Search namespaces...')
 
@@ -89,7 +89,7 @@ export default function NamespacesPage() {
                   key={namespace.name}
                   hover
                   sx={{ cursor: 'pointer' }}
-                  onClick={() => router.push(`/namespaces/${namespace.name}`)}
+                  onClick={() => navigateTo(`/namespaces/${namespace.name}`)}
                 >
                   <TableCell>
                     <Typography variant="body2" fontWeight="medium">
@@ -124,7 +124,7 @@ export default function NamespacesPage() {
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation()
-                        router.push(`/namespaces/${namespace.name}`)
+                        navigateTo(`/namespaces/${namespace.name}`)
                       }}
                     >
                       <VisibilityIcon fontSize="small" />

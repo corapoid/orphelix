@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
-import { useRouter } from 'next/navigation'
+import { useNavigateTo } from 'next/navigation'
 import { useSecrets } from '@/lib/hooks/use-secrets'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
@@ -22,7 +22,7 @@ import { usePageSearch } from '@/lib/contexts/search-context'
 import type { Secret } from '@/types/kubernetes'
 
 export default function SecretsPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const searchQuery = usePageSearch('Search secrets...')
   const { data: secrets, isLoading, error, refetch } = useSecrets()
 
@@ -134,7 +134,7 @@ export default function SecretsPage() {
                   key={secret.name}
                   hover
                   sx={{ cursor: 'pointer' }}
-                  onClick={() => router.push(`/secrets/${encodeURIComponent(secret.name)}`)}
+                  onClick={() => navigateTo(`/secrets/${encodeURIComponent(secret.name)}`)}
                 >
                   <TableCell>{secret.name}</TableCell>
                   <TableCell>{secret.namespace}</TableCell>

@@ -5,14 +5,14 @@ import IconButton from '@mui/material/IconButton'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
-import { useRouter } from 'next/navigation'
+import { useNavigateTo } from 'next/navigation'
 import { useCronJobs } from '@/lib/hooks/use-cronjobs'
 import { CronJobCard } from '@/app/components/cronjobs/cronjob-card'
 import { ResourceListView, TableColumn } from '@/app/components/common/resource-list-view'
 import type { CronJob } from '@/types/kubernetes'
 
 export default function CronJobsPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const { data: cronjobs, isLoading, error, refetch } = useCronJobs()
 
   const columns: TableColumn<CronJob>[] = [
@@ -69,7 +69,7 @@ export default function CronJobsPage() {
           size="small"
           onClick={(e) => {
             e.stopPropagation()
-            router.push(`/cronjobs/${cronJob.name}`)
+            navigateTo(`/cronjobs/${cronJob.name}`)
           }}
         >
           <VisibilityIcon fontSize="small" />
@@ -96,7 +96,7 @@ export default function CronJobsPage() {
       defaultSortField="name"
       defaultSortOrder="asc"
       getRowKey={(cronJob) => cronJob.name}
-      onRowClick={(cronJob) => router.push(`/cronjobs/${cronJob.name}`)}
+      onRowClick={(cronJob) => navigateTo(`/cronjobs/${cronJob.name}`)}
       renderCard={(cronJob, onClick) => <CronJobCard cronJob={cronJob} onClick={onClick} />}
       emptyStateDescription="There are no cronjobs in this namespace. Create a cronjob to schedule recurring tasks."
     />

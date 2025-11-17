@@ -5,7 +5,8 @@ import IconButton from '@mui/material/IconButton'
 import ViewInArIcon from '@mui/icons-material/ViewInAr'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { usePods } from '@/lib/hooks/use-pods'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { PodCard } from '@/app/components/pods/pod-card'
@@ -13,7 +14,7 @@ import { ResourceListView, TableColumn } from '@/app/components/common/resource-
 import type { Pod, PodStatus } from '@/types/kubernetes'
 
 export default function PodsPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const searchParams = useSearchParams()
   const [statusFilter, setStatusFilter] = useState<PodStatus | ''>('')
   const { data: pods, isLoading, error, refetch } = usePods(statusFilter || undefined)
@@ -81,7 +82,7 @@ export default function PodsPage() {
           size="small"
           onClick={(e) => {
             e.stopPropagation()
-            router.push(`/pods/${pod.name}`)
+            navigateTo(`/pods/${pod.name}`)
           }}
         >
           <VisibilityIcon fontSize="small" />
@@ -121,7 +122,7 @@ export default function PodsPage() {
       defaultSortField="name"
       defaultSortOrder="asc"
       getRowKey={(pod) => pod.name}
-      onRowClick={(pod) => router.push(`/pods/${pod.name}`)}
+      onRowClick={(pod) => navigateTo(`/pods/${pod.name}`)}
       renderCard={(pod, onClick) => <PodCard pod={pod} onClick={onClick} />}
       emptyStateDescription="There are no pods in this namespace yet."
       showClusterAlert={false}

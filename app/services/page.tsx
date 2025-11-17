@@ -6,13 +6,13 @@ import CloudIcon from '@mui/icons-material/Cloud'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useNavigateTo } from 'next/navigation'
 import { useServices } from '@/lib/hooks/use-services'
 import { TableOnlyResourceList, TableColumn } from '@/app/components/common/table-only-resource-list'
 import type { Service, ServiceType } from '@/types/kubernetes'
 
 export default function ServicesPage() {
-  const router = useRouter()
+  const navigateTo = useNavigateTo()
   const [typeFilter, setTypeFilter] = useState<ServiceType | ''>('')
   const { data: services, isLoading, error, refetch } = useServices()
 
@@ -77,7 +77,7 @@ export default function ServicesPage() {
           size="small"
           onClick={(e) => {
             e.stopPropagation()
-            router.push(`/services/${service.name}`)
+            navigateTo(`/services/${service.name}`)
           }}
         >
           <VisibilityIcon fontSize="small" />
@@ -119,7 +119,7 @@ export default function ServicesPage() {
       defaultSortField="name"
       defaultSortOrder="asc"
       getRowKey={(service) => service.name}
-      onRowClick={(service) => router.push(`/services/${service.name}`)}
+      onRowClick={(service) => navigateTo(`/services/${service.name}`)}
       emptyStateDescription="There are no services in this namespace. Create a service to expose your applications."
     />
   )
