@@ -128,11 +128,10 @@ Please provide a detailed troubleshooting response following the structure above
       system: systemPrompt,
       prompt: userPrompt,
       temperature: 0.3, // Lower temperature for more focused troubleshooting
-      maxTokens: 2000,
     })
 
     // Return streaming response
-    return result.toDataStreamResponse()
+    return result.toTextStreamResponse()
   } catch (error) {
     console.error('[AI Troubleshoot] Error:', error)
     return NextResponse.json(
