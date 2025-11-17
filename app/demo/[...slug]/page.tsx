@@ -19,10 +19,28 @@ const pages: Record<string, any> = {
   'events': () => import('../../events/page'),
 }
 
+// Import detail pages (dynamic routes)
+const detailPages: Record<string, any> = {
+  'pods': () => import('../../pods/[name]/page'),
+  'deployments': () => import('../../deployments/[name]/page'),
+  'services': () => import('../../services/[name]/page'),
+  'nodes': () => import('../../nodes/[name]/page'),
+  'cronjobs': () => import('../../cronjobs/[name]/page'),
+  'jobs': () => import('../../jobs/[name]/page'),
+  'namespaces': () => import('../../namespaces/[name]/page'),
+}
+
 export default async function DemoSlugPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params
   const pageSlug = slug[0]
 
+  // Check if this is a detail page (e.g., /demo/jobs/my-job)
+  if (slug.length === 2 && detailPages[pageSlug]) {
+    const DetailPageComponent = (await detailPages[pageSlug]()).default
+    return <DetailPageComponent />
+  }
+
+  // Otherwise, it's a list page (e.g., /demo/jobs)
   if (!pageSlug || !pages[pageSlug]) {
     notFound()
   }
