@@ -17,9 +17,6 @@ import CloudIcon from '@mui/icons-material/Cloud'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
-import Button from '@mui/material/Button'
 import { NamespaceSelector } from './namespace-selector'
 import { RealtimeStatus } from './realtime-status'
 import { ContextSelectorInline } from './context-selector-inline'
@@ -31,15 +28,11 @@ import { useSearch } from '@/lib/contexts/search-context'
 
 export function TopBar() {
   const mode = useModeStore((state) => state.mode)
-  const connectionError = useModeStore((state) => state.connectionError)
-  const clusterConnected = useModeStore((state) => state.clusterConnected)
-  const selectedContext = useModeStore((state) => state.selectedContext)
   const pathname = usePathname()
   const router = useRouter()
   const { mode: themeMode, setThemeMode } = useThemeMode()
   const { searchQuery, setSearchQuery, searchPlaceholder } = useSearch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [retrying, setRetrying] = useState(false)
   const open = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -59,22 +52,6 @@ export function TopBar() {
     // Prefix path with /demo if in mock mode
     const finalPath = mode === 'mock' ? `/demo${path}` : path
     router.push(finalPath)
-  }
-
-  const handleRetryConnection = async () => {
-    setRetrying(true)
-    try {
-      const response = await fetch('/api/test-connection')
-      const data = await response.json()
-
-      if (response.ok && data.success) {
-        window.location.reload()
-      }
-    } catch (err) {
-      console.error('Retry failed:', err)
-    } finally {
-      setRetrying(false)
-    }
   }
 
   return (
@@ -235,20 +212,6 @@ export function TopBar() {
         </Menu>
       </Box>
     </Box>
-    {mode === 'real' && selectedContext && !clusterConnected && connectionError && (
-      <Alert severity="error" sx={{ m: 2, mt: 0 }}>
-        <AlertTitle>Connection Failed</AlertTitle>
-        {connectionError}
-        <Button
-          size="small"
-          onClick={handleRetryConnection}
-          disabled={retrying}
-          sx={{ mt: 1 }}
-        >
-          {retrying ? 'Retrying...' : 'Retry Connection'}
-        </Button>
-      </Alert>
-    )}
     </>
   )
 }
