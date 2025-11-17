@@ -1,5 +1,37 @@
 // Kubernetes resource types
 
+// Label and Annotation types
+export interface LabelInfo {
+  key: string
+  value: string
+  count: number // Number of resources with this label
+  resourceTypes: string[] // Types of resources that use this label
+}
+
+export interface LabelGroup {
+  key: string
+  values: Array<{
+    value: string
+    count: number
+  }>
+  totalCount: number
+  resourceTypes: string[]
+}
+
+export interface ResourceWithLabels {
+  name: string
+  namespace: string
+  kind: string
+  labels: Record<string, string>
+  annotations: Record<string, string>
+}
+
+export interface LabelSearchResult {
+  labels: LabelGroup[]
+  resources: ResourceWithLabels[]
+  totalResources: number
+}
+
 export type PodStatus =
   | 'Running'
   | 'Pending'

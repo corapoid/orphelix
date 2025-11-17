@@ -33,6 +33,7 @@ import FolderIcon from '@mui/icons-material/Folder'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import StorageIcon from '@mui/icons-material/Storage'
 import SettingsSystemDaydreamIcon from '@mui/icons-material/SettingsSystemDaydream'
+import LabelIcon from '@mui/icons-material/Label'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -91,6 +92,7 @@ const navGroups: (NavItem | NavGroup)[] = [
       { label: 'Nodes', icon: <NodeIcon />, path: '/nodes', color: '#06B6D4' },
       { label: 'HPA', icon: <HpaIcon />, path: '/hpa', color: '#64748B' },
       { label: 'Events', icon: <EventIcon />, path: '/events', color: '#06B6D4' },
+      { label: 'Labels', icon: <LabelIcon />, path: '/labels', color: '#10B981' },
     ],
   },
 ]
