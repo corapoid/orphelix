@@ -81,7 +81,14 @@ export default function DashboardPage() {
 
       {/* 2. AI Issue Detection */}
       <Box sx={{ mb: 3 }}>
-        <IssueDetectorEnhanced events={events || []} />
+        <IssueDetectorEnhanced
+          events={events || []}
+          summary={{
+            pods: summary.pods,
+            nodes: summary.nodes,
+            deployments: summary.deployments,
+          }}
+        />
       </Box>
 
       {/* 3. Resource Overview */}
