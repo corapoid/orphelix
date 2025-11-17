@@ -136,32 +136,31 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
           },
         }}
       >
-        {namespaces.map((namespace, index) => (
-          <Box key={namespace.name}>
-            {index > 0 && <Divider sx={{ my: 0.5 }} />}
-            <MenuItem
-              value={namespace.name}
-              sx={{
-                py: 1,
-                px: 2,
+        {namespaces.map((namespace, index) => [
+          index > 0 && <Divider key={`divider-${namespace.name}`} sx={{ my: 0.5 }} />,
+          <MenuItem
+            key={namespace.name}
+            value={namespace.name}
+            sx={{
+              py: 1,
+              px: 2,
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+              '&.Mui-selected': {
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
                 '&:hover': {
-                  bgcolor: 'action.hover',
+                  bgcolor: 'primary.dark',
                 },
-                '&.Mui-selected': {
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  '&:hover': {
-                    bgcolor: 'primary.dark',
-                  },
-                },
-              }}
-            >
-              <Typography variant="body2" fontWeight={500}>
-                {namespace.name}
-              </Typography>
-            </MenuItem>
-          </Box>
-        ))}
+              },
+            }}
+          >
+            <Typography variant="body2" fontWeight={500}>
+              {namespace.name}
+            </Typography>
+          </MenuItem>
+        ])}
       </Select>
     </Box>
   )
