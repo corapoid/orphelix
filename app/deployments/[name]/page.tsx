@@ -43,6 +43,7 @@ export default function DeploymentDetailPage() {
   const [restartSuccess, setRestartSuccess] = useState(false)
   const [editorOpen, setEditorOpen] = useState(false)
   const [restartDialogOpen, setRestartDialogOpen] = useState(false)
+  const [podsOpen, setPodsOpen] = useState(true)
 
   const { data: deployment, isLoading, error, refetch } = useDeployment(name)
 
@@ -393,16 +394,24 @@ export default function DeploymentDetailPage() {
 
       {/* Pods Section */}
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-          Pods
-        </Typography>
-        <GlassPanel>
-        {podsLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-            <CircularProgress />
+        <GlassPanel
+          closeable
+          open={podsOpen}
+          onClose={() => setPodsOpen(false)}
+          animationType="collapse"
+          sx={{ overflow: 'visible' }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, px: 2, pt: 2 }}>
+            <Typography variant="h6" fontWeight={600}>
+              Pods
+            </Typography>
           </Box>
-        ) : pods?.length ? (
-          <TableContainer>
+          {podsLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : pods?.length ? (
+            <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
@@ -450,13 +459,13 @@ export default function DeploymentDetailPage() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <Box sx={{ p: 2 }}>
-            <Alert severity="info">No pods found for this deployment</Alert>
-          </Box>
-        )}
+              </Table>
+            </TableContainer>
+          ) : (
+            <Box sx={{ p: 2 }}>
+              <Alert severity="info">No pods found for this deployment</Alert>
+            </Box>
+          )}
         </GlassPanel>
       </Box>
 
