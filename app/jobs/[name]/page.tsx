@@ -10,6 +10,9 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
+import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useJob } from '@/lib/hooks/use-jobs'
 import { usePods } from '@/lib/hooks/use-pods'
@@ -27,6 +30,7 @@ export default function JobDetailPage() {
 
   const { data: job, isLoading, error, refetch } = useJob(name)
   const { data: allPods } = usePods()
+  const [docsOpen, setDocsOpen] = useState(true)
 
   // Filter pods owned by this job
   const jobPods = allPods?.filter((pod) => {
@@ -80,9 +84,12 @@ export default function JobDetailPage() {
         isRefreshing={isLoading}
       />
 
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        {/* Left Column - Details + Statistics */}
-        <Grid size={{ xs: 12, md: 3 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ display: 'flex', gap: 3, position: 'relative' }}>
+        {/* Main Content */}
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            {/* Details + Statistics */}
+            <Grid size={{ xs: 12, md: docsOpen ? 6 : 4 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Details */}
           <Box>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -182,177 +189,17 @@ export default function JobDetailPage() {
             </Paper>
           </Box>
         </Grid>
+          </Grid>
 
-        {/* Right Column - Resource Info */}
-        <Grid size={{ xs: 12, md: 9 }}>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-            About Jobs
-          </Typography>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 3,
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(30, 30, 46, 0.6)'
-                  : 'rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              border: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : 'rgba(209, 213, 219, 0.4)',
-              borderRadius: 3,
-            }}
-          >
-            <Typography variant="body1" sx={{ mb: 2.5, lineHeight: 1.8 }}>
-              A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.
-              As pods successfully complete, the Job tracks the successful completions. When a specified number of successful completions is reached,
-              the task (ie, Job) is complete. Deleting a Job will clean up the Pods it created. Suspending a Job will delete its active Pods until
-              the Job is resumed again.
-            </Typography>
-
-            <Typography variant="body1" sx={{ mb: 2.5, lineHeight: 1.8 }}>
-              A simple case is to create one Job object in order to reliably run one Pod to completion. The Job object will start a new Pod if
-              the first Pod fails or is deleted (for example due to a node hardware failure or a node reboot). You can also use a Job to run
-              multiple Pods in parallel.
-            </Typography>
-
-            <Typography variant="h6" sx={{ mt: 3, mb: 2, fontWeight: 600, fontSize: '1.05rem' }}>
-              Running an example Job
-            </Typography>
-
-            <Typography variant="body1" sx={{ mb: 2.5, lineHeight: 1.8 }}>
-              Here is an example Job config that computes π to 2000 places and prints it out. It takes around 10s to complete:
-            </Typography>
-
-            <Box
-              component="pre"
-              sx={{
-                p: 2,
-                mb: 3,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(0, 0, 0, 0.3)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                borderRadius: 2,
-                overflow: 'auto',
-                fontSize: '0.85rem',
-                lineHeight: 1.6,
-                fontFamily: 'monospace',
-              }}
-            >
-{`apiVersion: batch/v1
-kind: Job
-metadata:
-  name: pi
-spec:
-  template:
-    spec:
-      containers:
-      - name: pi
-        image: perl:5.34.0
-        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"]
-      restartPolicy: Never
-  backoffLimit: 4`}
-            </Box>
-
-            <Typography variant="h6" sx={{ mt: 3, mb: 2, fontWeight: 600, fontSize: '1.05rem' }}>
-              Key Concepts
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2.5, mb: 3, '& li': { mb: 1.5, lineHeight: 1.8 } }}>
-              <li>
-                <Typography variant="body2">
-                  <strong>Completions:</strong> Specifies the desired number of successfully finished pods the job should be run with.
-                  Setting to null means that the success of any pod signals the success of all pods.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  <strong>Parallelism:</strong> Specifies the maximum desired number of pods the job should run at any given time.
-                  The actual number of pods running in steady state will be less than this number when work is left to do.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  <strong>Backoff Limit:</strong> Specifies the number of retries before marking this job failed. Defaults to 6.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  <strong>Active Deadline Seconds:</strong> Specifies the duration in seconds relative to the startTime that the job may be active
-                  before the system tries to terminate it.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  <strong>TTL After Finished:</strong> Limits the lifetime of a Job that has finished execution (either Complete or Failed).
-                  After TTL seconds, the Job is eligible to be automatically deleted.
-                </Typography>
-              </li>
-            </Box>
-
-            <Box sx={{
-              mt: 4,
-              pt: 3,
-              borderTop: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.1)',
-            }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  color: 'text.secondary',
-                }}
-              >
-                Learn more in the{' '}
-                <Link
-                  href="https://kubernetes.io/docs/concepts/workloads/controllers/job/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                  }}
-                >
-                  <Typography
-                    component="span"
-                    sx={{
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                  >
-                    official Kubernetes documentation
-                  </Typography>
-                  <Box component="span" sx={{ fontSize: '0.75rem' }}>↗</Box>
-                </Link>
+          {/* Related Pods */}
+          {jobPods.length > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Pods ({jobPods.length})
               </Typography>
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      {/* Related Pods */}
-      {jobPods.length > 0 && (
-        <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Pods ({jobPods.length})
-            </Typography>
-            <Paper
-              elevation={0}
-              sx={{
+              <Paper
+                elevation={0}
+                sx={{
                 backgroundColor: (theme) =>
                   theme.palette.mode === 'dark'
                     ? 'rgba(30, 30, 46, 0.6)'
@@ -530,6 +377,185 @@ spec:
             </Box>
         </Box>
       )}
+        </Box>
+
+        {/* Right Sidebar - Documentation */}
+        {docsOpen && (
+          <Box
+            sx={{
+              width: 400,
+              flexShrink: 0,
+              position: 'sticky',
+              top: 16,
+              alignSelf: 'flex-start',
+              maxHeight: 'calc(100vh - 100px)',
+              overflow: 'auto',
+            }}
+          >
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+              }}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  About Jobs
+                </Typography>
+                <IconButton
+                  size="small"
+                  onClick={() => setDocsOpen(false)}
+                  sx={{
+                    color: 'text.secondary',
+                    '&:hover': {
+                      bgcolor: 'action.hover',
+                    },
+                  }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Box>
+
+              <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
+                A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.
+                As pods successfully complete, the Job tracks the successful completions. When a specified number of successful completions is reached,
+                the task (ie, Job) is complete.
+              </Typography>
+
+              <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.7 }}>
+                A simple case is to create one Job object in order to reliably run one Pod to completion. The Job object will start a new Pod if
+                the first Pod fails or is deleted (for example due to a node hardware failure or a node reboot).
+              </Typography>
+
+              <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
+                Running an example Job
+              </Typography>
+
+              <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
+                Here is an example Job config that computes π to 2000 places:
+              </Typography>
+
+              <Box
+                component="pre"
+                sx={{
+                  p: 1.5,
+                  mb: 2.5,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(0, 0, 0, 0.3)'
+                      : 'rgba(0, 0, 0, 0.05)',
+                  borderRadius: 2,
+                  overflow: 'auto',
+                  fontSize: '0.75rem',
+                  lineHeight: 1.5,
+                  fontFamily: 'monospace',
+                }}
+              >
+{`apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl:5.34.0
+        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  backoffLimit: 4`}
+              </Box>
+
+              <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
+                Key Concepts
+              </Typography>
+
+              <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
+                <li>
+                  <Typography variant="caption">
+                    <strong>Completions:</strong> Number of successfully finished pods required.
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="caption">
+                    <strong>Parallelism:</strong> Maximum number of pods running concurrently.
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="caption">
+                    <strong>Backoff Limit:</strong> Number of retries before marking as failed (default: 6).
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="caption">
+                    <strong>TTL After Finished:</strong> Automatic cleanup time after completion.
+                  </Typography>
+                </li>
+              </Box>
+
+              <Box sx={{
+                mt: 3,
+                pt: 2,
+                borderTop: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'rgba(0, 0, 0, 0.1)',
+              }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    color: 'text.secondary',
+                  }}
+                >
+                  Learn more in the{' '}
+                  <Link
+                    href="https://kubernetes.io/docs/concepts/workloads/controllers/job/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '2px',
+                    }}
+                  >
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      sx={{
+                        color: 'primary.main',
+                        fontWeight: 600,
+                        '&:hover': {
+                          textDecoration: 'underline',
+                        },
+                      }}
+                    >
+                      official Kubernetes docs
+                    </Typography>
+                    <Box component="span" sx={{ fontSize: '0.65rem' }}>↗</Box>
+                  </Link>
+                </Typography>
+              </Box>
+            </Paper>
+          </Box>
+        )}
+      </Box>
     </Box>
   )
 }
