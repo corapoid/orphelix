@@ -133,27 +133,6 @@ export default function PodDetailPage() {
           </Box>
         }
         metadata={[
-          `Namespace: ${pod.namespace}`,
-          <Typography key="node" variant="body2" color="text.secondary">
-            Node: <Link
-              href={`/nodes/${encodeURIComponent(pod.nodeName)}`}
-              style={{ textDecoration: 'none' }}
-            >
-              <Typography
-                component="span"
-                variant="body2"
-                sx={{
-                  color: 'primary.main',
-                  '&:hover': {
-                    textDecoration: 'underline',
-                  },
-                  cursor: 'pointer',
-                }}
-              >
-                {pod.nodeName}
-              </Typography>
-            </Link>
-          </Typography>,
           `Age: ${pod.age}`,
         ]}
         breadcrumbs={[
@@ -201,28 +180,33 @@ export default function PodDetailPage() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="body2" color="text.secondary">
+                Node:
+              </Typography>
+              <Link
+                href={`/nodes/${encodeURIComponent(pod.nodeName)}`}
+                style={{ textDecoration: 'none' }}
+              >
+                <Typography
+                  variant="body2"
+                  fontWeight="medium"
+                  sx={{
+                    color: 'primary.main',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    },
+                    cursor: 'pointer',
+                  }}
+                >
+                  {pod.nodeName}
+                </Typography>
+              </Link>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
                 IP Address:
               </Typography>
               <Typography variant="body2" fontWeight="medium">
                 {pod.ip}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color="text.secondary">
-                Restart Count:
-              </Typography>
-              <LiquidGlassChip
-                label={pod.restartCount}
-                size="small"
-                color={pod.restartCount > 5 ? 'error' : pod.restartCount > 0 ? 'warning' : 'success'}
-              />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color="text.secondary">
-                Containers:
-              </Typography>
-              <Typography variant="body2" fontWeight="medium">
-                {pod.containers.length}
               </Typography>
             </Box>
           </Box>
