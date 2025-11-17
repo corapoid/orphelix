@@ -12,9 +12,12 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
+import IconButton from '@mui/material/IconButton'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import EditIcon from '@mui/icons-material/Edit'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
@@ -399,13 +402,15 @@ export default function DeploymentDetailPage() {
             <Typography variant="h6" fontWeight={600}>
               Pods
             </Typography>
-            <LiquidGlassButton
-              size="small"
-              onClick={() => setPodsExpanded(!podsExpanded)}
-              sx={{ minWidth: 'auto', px: 2 }}
-            >
-              {podsExpanded ? 'Collapse' : 'Expand'}
-            </LiquidGlassButton>
+            {pods && pods.length > 3 && (
+              <IconButton
+                size="small"
+                onClick={() => setPodsExpanded(!podsExpanded)}
+                sx={{ color: 'text.secondary' }}
+              >
+                {podsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </IconButton>
+            )}
           </Box>
           {podsLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
