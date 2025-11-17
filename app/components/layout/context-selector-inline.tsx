@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
@@ -116,32 +115,7 @@ export function ContextSelectorInline() {
   if (mode === 'mock') {
     const demoDisplayName = getDisplayName('demo-cluster')
     return (
-      <Paper
-        elevation={0}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1.5,
-          px: 2,
-          py: 1,
-          borderRadius: 2,
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.6)'
-              : 'rgba(255, 255, 255, 0.25)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          border: '1px solid',
-          borderColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.12)'
-              : 'rgba(209, 213, 219, 0.4)',
-          boxShadow: (theme) =>
-            theme.palette.mode === 'dark'
-              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
-              : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-        }}
-      >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <CloudIcon sx={{ fontSize: 18, color: 'primary.main' }} />
         <Typography variant="caption" color="text.secondary" fontWeight={600}>
           Cluster:
@@ -149,13 +123,14 @@ export function ContextSelectorInline() {
         <Typography variant="body2" fontWeight={600}>
           {demoDisplayName}
         </Typography>
-      </Paper>
+      </Box>
     )
   }
 
   if (loading) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <CloudIcon sx={{ fontSize: 18, color: 'primary.main' }} />
         <Typography variant="caption" color="text.secondary" fontWeight={600}>
           Cluster:
         </Typography>
@@ -167,32 +142,7 @@ export function ContextSelectorInline() {
   }
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 1.5,
-        px: 2,
-        py: 1,
-        borderRadius: 2,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(30, 30, 46, 0.6)'
-            : 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: '1px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.12)'
-            : 'rgba(209, 213, 219, 0.4)',
-        boxShadow: (theme) =>
-          theme.palette.mode === 'dark'
-            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
-            : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-      }}
-    >
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       <CloudIcon sx={{ fontSize: 18, color: 'primary.main' }} />
       <Typography variant="caption" color="text.secondary" fontWeight={600}>
         Cluster:
@@ -230,11 +180,12 @@ export function ContextSelectorInline() {
         sx={{
           fontSize: '0.875rem',
           '&:hover': {
-            bgcolor: 'transparent',
+            bgcolor: 'action.hover',
+            borderRadius: 1,
           },
           '& .MuiSelect-select': {
-            py: 0,
-            px: 0,
+            py: 0.5,
+            px: 1,
           },
         }}
       >
@@ -277,6 +228,6 @@ export function ContextSelectorInline() {
           )
         })}
       </Select>
-    </Paper>
+    </Box>
   )
 }
