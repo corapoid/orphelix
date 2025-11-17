@@ -1005,6 +1005,8 @@ export function generateMockDashboardSummary(): DashboardSummary {
   const ingresses = generateMockIngresses()
   const jobs = generateMockJobs()
   const cronjobs = generateMockCronJobs()
+  const statefulsets = generateMockStatefulSets()
+  const daemonsets = generateMockDaemonSets()
 
   return {
     deployments: {
@@ -1042,6 +1044,16 @@ export function generateMockDashboardSummary(): DashboardSummary {
       total: cronjobs.length,
       active: jobs.filter((j) => j.active > 0).length,
       suspended: cronjobs.filter((cj) => cj.suspend).length,
+    },
+    statefulsets: {
+      total: statefulsets.length,
+      ready: statefulsets.filter((s) => s.replicas.ready === s.replicas.desired).length,
+      notReady: statefulsets.filter((s) => s.replicas.ready !== s.replicas.desired).length,
+    },
+    daemonsets: {
+      total: daemonsets.length,
+      ready: daemonsets.filter((d) => d.numberReady === d.desiredNumberScheduled).length,
+      notReady: daemonsets.filter((d) => d.numberReady !== d.desiredNumberScheduled).length,
     },
   }
 }

@@ -19,12 +19,17 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
 import { usePageSearch } from '@/lib/contexts/search-context'
+import { useViewMode } from '@/lib/hooks/use-view-mode'
+import { ViewModeToggle } from '@/app/components/common/view-mode-toggle'
+import { SecretGridView } from '@/app/components/secrets/secret-grid-view'
+import { GridSkeleton } from '@/app/components/common/grid-skeleton'
 import type { Secret } from '@/types/kubernetes'
 
 export default function SecretsPage() {
   const navigateTo = useNavigateTo()
   const searchQuery = usePageSearch('Search secrets...')
   const { data: secrets, isLoading, error, refetch } = useSecrets()
+  const { viewMode, setViewMode } = useViewMode()
 
   // Auto-refresh
   useAutoRefresh(refetch)
@@ -49,8 +54,16 @@ export default function SecretsPage() {
   if (isLoading) {
     return (
       <Box>
-        <PageHeader title="Secrets" onRefresh={refetch} />
-        <TableSkeleton rows={8} columns={5} />
+        <PageHeader
+          title="Secrets"
+          onRefresh={refetch}
+          actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
+        />
+        {viewMode === 'list' ? (
+          <TableSkeleton rows={8} columns={5} />
+        ) : (
+          <GridSkeleton cards={8} />
+        )}
       </Box>
     )
   }
@@ -58,7 +71,11 @@ export default function SecretsPage() {
   if (error) {
     return (
       <Box>
-        <PageHeader title="Secrets" onRefresh={refetch} />
+        <PageHeader
+          title="Secrets"
+          onRefresh={refetch}
+          actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
+        />
         <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Secrets" />
       </Box>
     )
@@ -71,6 +88,7 @@ export default function SecretsPage() {
         subtitle={`${secrets?.length || 0} secret${secrets?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
       />
 
       {!secrets || secrets.length === 0 ? (
@@ -85,6 +103,8 @@ export default function SecretsPage() {
           title="No matching secrets"
           description={`No secrets match "${searchQuery}". Try adjusting your search.`}
         />
+      ) : viewMode === 'grid' ? (
+        <SecretGridView secrets={sortedData} />
       ) : (
         <TableContainer component={Paper}>
           <Table>

@@ -12,11 +12,12 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import Link from 'next/link'
 import type { DashboardSummary } from '@/types/kubernetes'
 import { usePods } from '@/lib/hooks/use-pods'
 import { useNodes } from '@/lib/hooks/use-nodes'
 import { useDeployments } from '@/lib/hooks/use-deployments'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
+import { useSidebarPins } from '@/lib/core/store'
 
 interface CriticalAlertsProps {
   summary: DashboardSummary
@@ -25,7 +26,7 @@ interface CriticalAlertsProps {
 interface AlertItem {
   severity: 'error' | 'warning'
   message: string
-  link: string
+  path: string
 }
 
 const STORAGE_KEY = 'criticalAlertsExpanded'
@@ -42,6 +43,8 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
   const { data: pods, refetch: refetchPods } = usePods()
   const { data: nodes, refetch: refetchNodes } = useNodes()
   const { data: deployments, refetch: refetchDeployments } = useDeployments()
+  const navigateTo = useNavigateTo()
+  const { isPinned } = useSidebarPins()
 
   // Save to localStorage when expanded changes
   useEffect(() => {
@@ -62,48 +65,48 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
   const getCriticalAlerts = (): AlertItem[] => {
     const alerts: AlertItem[] = []
 
-    // Critical: Failed pods
-    if (summary.pods.failed > 0) {
+    // Critical: Failed pods (only if pods are visible)
+    if (isPinned('/pods') && summary.pods.failed > 0) {
       const failedPods = pods?.filter((p) => p.status === 'Failed' || p.status === 'CrashLoopBackOff') || []
       if (failedPods.length === 1) {
         // Single pod - go directly to pod details
         alerts.push({
           severity: 'error',
           message: `1 pod is failing: ${failedPods[0].name}`,
-          link: `/pods/${failedPods[0].name}`,
+          path: `/pods/${failedPods[0].name}`,
         })
       } else {
         // Multiple pods - go to pods page with Failed filter
         alerts.push({
           severity: 'error',
           message: `${summary.pods.failed} pods are failing`,
-          link: '/pods?status=Failed',
+          path: '/pods?status=Failed',
         })
       }
     }
 
-    // Critical: Not ready nodes
-    if (summary.nodes.notReady > 0) {
+    // Critical: Not ready nodes (only if nodes are visible)
+    if (isPinned('/nodes') && summary.nodes.notReady > 0) {
       const notReadyNodes = nodes?.filter((n) => n.status === 'NotReady') || []
       if (notReadyNodes.length === 1) {
         // Single node - go directly to node details
         alerts.push({
           severity: 'error',
           message: `1 node is not ready: ${notReadyNodes[0].name}`,
-          link: `/nodes/${notReadyNodes[0].name}`,
+          path: `/nodes/${notReadyNodes[0].name}`,
         })
       } else {
         // Multiple nodes - go to nodes page with NotReady filter
         alerts.push({
           severity: 'error',
           message: `${summary.nodes.notReady} nodes are not ready`,
-          link: '/nodes?status=NotReady',
+          path: '/nodes?status=NotReady',
         })
       }
     }
 
-    // Critical: Degraded deployments
-    if (summary.deployments.degraded > 0) {
+    // Critical: Degraded deployments (only if deployments are visible)
+    if (isPinned('/deployments') && summary.deployments.degraded > 0) {
       const degradedDeployments = deployments?.filter((d) => d.status === 'Degraded') || []
       const percent = (summary.deployments.degraded / summary.deployments.total) * 100
 
@@ -112,7 +115,7 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
         alerts.push({
           severity: percent > 30 ? 'error' : 'warning',
           message: `1 deployment is degraded: ${degradedDeployments[0].name}`,
-          link: `/deployments/${degradedDeployments[0].name}`,
+          path: `/deployments/${degradedDeployments[0].name}`,
         })
       } else {
         // Multiple deployments - go to deployments page with Degraded filter
@@ -120,38 +123,40 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
           alerts.push({
             severity: 'error',
             message: `${summary.deployments.degraded} deployments are degraded (${Math.round(percent)}%)`,
-            link: '/deployments?status=Degraded',
+            path: '/deployments?status=Degraded',
           })
         } else {
           alerts.push({
             severity: 'warning',
             message: `${summary.deployments.degraded} deployments are degraded`,
-            link: '/deployments?status=Degraded',
+            path: '/deployments?status=Degraded',
           })
         }
       }
     }
 
-    // Warning: Many pending pods
-    if (summary.pods.pending > 0) {
+    // Warning: Many pending pods (only if pods are visible)
+    if (isPinned('/pods') && summary.pods.pending > 0) {
       const percent = (summary.pods.pending / summary.pods.total) * 100
       if (percent > 20) {
         alerts.push({
           severity: 'warning',
           message: `${summary.pods.pending} pod${summary.pods.pending > 1 ? 's are' : ' is'} pending (${Math.round(percent)}%)`,
-          link: '/pods',
+          path: '/pods',
         })
       }
     }
 
-    // Warning: Unbound volumes
-    const unboundVolumes = summary.pv.total - summary.pv.bound
-    if (unboundVolumes > 5) {
-      alerts.push({
-        severity: 'warning',
-        message: `${unboundVolumes} persistent volumes are unbound`,
-        link: '/pv',
-      })
+    // Warning: Unbound volumes (only if PVs are visible)
+    if (isPinned('/pv')) {
+      const unboundVolumes = summary.pv.total - summary.pv.bound
+      if (unboundVolumes > 5) {
+        alerts.push({
+          severity: 'warning',
+          message: `${unboundVolumes} persistent volumes are unbound`,
+          path: '/pv',
+        })
+      }
     }
 
     return alerts
@@ -240,23 +245,20 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
         <Collapse in={expanded} timeout={300}>
           <List dense sx={{ pt: 1 }}>
             {alerts.map((alert, index) => (
-              <Link
+              <ListItem
                 key={index}
-                href={alert.link as any}
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                onClick={() => navigateTo(alert.path)}
+                sx={{
+                  px: 0,
+                  py: 0.5,
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s',
+                  borderRadius: 1,
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                }}
               >
-                <ListItem
-                  sx={{
-                    px: 0,
-                    py: 0.5,
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s',
-                    borderRadius: 1,
-                    '&:hover': {
-                      bgcolor: 'action.hover',
-                    },
-                  }}
-                >
                 <ListItemIcon sx={{ minWidth: 32 }}>
                   {alert.severity === 'error' ? (
                     <ErrorOutlineIcon sx={{ fontSize: 20, color: 'error.main' }} />
@@ -272,7 +274,6 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
                   }}
                 />
               </ListItem>
-              </Link>
             ))}
           </List>
         </Collapse>

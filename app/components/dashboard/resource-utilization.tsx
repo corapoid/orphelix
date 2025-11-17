@@ -107,14 +107,7 @@ export function ResourceUtilization({ quotas }: ResourceUtilizationProps) {
   }
 
   return (
-    <GlassPanel sx={{ p: 3, mt: 5 }}>
-      <Typography variant="body1" gutterBottom sx={{ fontWeight: 700 }}>
-        Cluster Resource Utilization
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Aggregated resource usage across all namespaces with quotas
-      </Typography>
-
+    <GlassPanel sx={{ p: 3 }}>
       {displayResources.map((resource) => {
         const percentage = resource.total > 0 ? (resource.used / resource.total) * 100 : 0
         const color = getProgressColor(percentage)

@@ -19,12 +19,17 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { EmptyState } from '@/app/components/common/empty-state'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { usePageSearch } from '@/lib/contexts/search-context'
+import { useViewMode } from '@/lib/hooks/use-view-mode'
+import { ViewModeToggle } from '@/app/components/common/view-mode-toggle'
+import { ConfigMapGridView } from '@/app/components/configmaps/configmap-grid-view'
+import { GridSkeleton } from '@/app/components/common/grid-skeleton'
 import type { ConfigMap } from '@/types/kubernetes'
 
 export default function ConfigMapsPage() {
   const navigateTo = useNavigateTo()
   const searchQuery = usePageSearch('Search ConfigMaps...')
   const { data: configMaps, isLoading, error, refetch } = useConfigMaps()
+  const { viewMode, setViewMode } = useViewMode()
 
   // Auto-refresh
   useAutoRefresh(refetch)
@@ -53,8 +58,13 @@ export default function ConfigMapsPage() {
           title="ConfigMaps"
           onRefresh={refetch}
           isRefreshing={isLoading}
+          actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
         />
-        <TableSkeleton rows={8} columns={4} />
+        {viewMode === 'list' ? (
+          <TableSkeleton rows={8} columns={4} />
+        ) : (
+          <GridSkeleton cards={8} />
+        )}
       </Box>
     )
   }
@@ -66,6 +76,7 @@ export default function ConfigMapsPage() {
           title="ConfigMaps"
           onRefresh={refetch}
           isRefreshing={isLoading}
+          actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
         />
         <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load ConfigMaps" />
       </Box>
@@ -79,6 +90,7 @@ export default function ConfigMapsPage() {
         subtitle={`${configMaps?.length || 0} ConfigMap${configMaps?.length === 1 ? '' : 's'} in this namespace`}
         onRefresh={refetch}
         isRefreshing={isLoading}
+        actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
       />
 
       {!configMaps || configMaps.length === 0 ? (
@@ -93,6 +105,8 @@ export default function ConfigMapsPage() {
           title="No matching ConfigMaps"
           description={`No ConfigMaps match your search "${searchQuery}".`}
         />
+      ) : viewMode === 'grid' ? (
+        <ConfigMapGridView configMaps={sortedData} />
       ) : (
         <TableContainer component={Paper}>
           <Table>

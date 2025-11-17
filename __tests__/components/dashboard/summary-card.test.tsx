@@ -1,9 +1,26 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { SummaryCard } from '@/app/components/dashboard/summary-card'
 import StorageIcon from '@mui/icons-material/Storage'
 import CloudIcon from '@mui/icons-material/Cloud'
 import DnsIcon from '@mui/icons-material/Dns'
+
+// Mock Next.js navigation
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+  usePathname: () => '/',
+}))
+
+// Mock mode store
+vi.mock('@/lib/core/store', () => ({
+  useModeStore: () => ({
+    mode: 'real',
+  }),
+}))
 
 describe('SummaryCard', () => {
   it('should render with title, total, and icon', () => {

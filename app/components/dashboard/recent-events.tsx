@@ -28,13 +28,7 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
 
   if (loading) {
     return (
-      <GlassPanel>
-        <Box sx={{ p: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Latest cluster events from the last hour
-          </Typography>
-        </Box>
+      <GlassPanel sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
           <CircularProgress />
         </Box>
@@ -44,28 +38,14 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
 
   if (error) {
     return (
-      <GlassPanel>
-        <Box sx={{ p: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Latest cluster events from the last hour
-          </Typography>
-        </Box>
-        <Box sx={{ p: 2 }}>
-          <Alert severity="error">Failed to load events: {error.message}</Alert>
-        </Box>
+      <GlassPanel sx={{ p: 2 }}>
+        <Alert severity="error">Failed to load events: {error.message}</Alert>
       </GlassPanel>
     )
   }
 
   return (
-    <GlassPanel>
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="body1" sx={{ fontWeight: 700 }}>Recent Activity</Typography>
-        <Typography variant="body2" color="text.secondary">
-          Latest cluster events from the last hour • {events.length} event{events.length !== 1 ? 's' : ''}
-        </Typography>
-      </Box>
+    <GlassPanel sx={{ p: 2 }}>
       <Box>
         {events.length === 0 ? (
           <Box sx={{ p: 3 }}>
@@ -81,7 +61,6 @@ export function RecentEvents({ events, loading, error }: RecentEventsProps) {
                   key={`${event.name}-${event.reason}-${index}`}
                   alignItems="flex-start"
                   sx={{
-                    px: 3,
                     py: 2,
                   }}
                 >

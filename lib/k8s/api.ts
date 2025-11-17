@@ -30,7 +30,6 @@ import type {
   IngressRule,
   ResourceWithLabels,
   LabelGroup,
-  LabelSearchResult,
   IngressPath,
   IngressTLS,
   Job,

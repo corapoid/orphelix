@@ -78,17 +78,19 @@ export function TopBar() {
         <ContextSelectorInline />
       </Box>
 
-      {/* Center - Search with context */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'center', maxWidth: 600 }}>
-        <Box sx={{ flex: 1 }}>
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder={searchPlaceholder}
-            fullWidth
-          />
+      {/* Center - Search with context (hidden on dashboard) */}
+      {pathname !== '/' && pathname !== '/demo' && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'center', maxWidth: 600 }}>
+          <Box sx={{ flex: 1 }}>
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={searchPlaceholder}
+              fullWidth
+            />
+          </Box>
         </Box>
-      </Box>
+      )}
 
       {/* Right side - Namespace, Status, and Settings */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>

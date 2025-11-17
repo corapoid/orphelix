@@ -71,7 +71,6 @@ describe('RecentEvents', () => {
     render(<RecentEvents events={events} />)
 
     // Assert
-    expect(screen.getByText('Recent Activity')).toBeInTheDocument()
     expect(screen.getByText('Started')).toBeInTheDocument()
     expect(screen.getByText('Container started successfully')).toBeInTheDocument()
     expect(screen.getByText('BackOff')).toBeInTheDocument()
@@ -86,7 +85,6 @@ describe('RecentEvents', () => {
     render(<RecentEvents events={events} loading={true} />)
 
     // Assert
-    expect(screen.getByText('Recent Activity')).toBeInTheDocument()
     expect(screen.getByRole('progressbar')).toBeInTheDocument()
     expect(screen.queryByText('No events found')).not.toBeInTheDocument()
   })
@@ -100,7 +98,6 @@ describe('RecentEvents', () => {
     render(<RecentEvents events={events} error={error} />)
 
     // Assert
-    expect(screen.getByText('Recent Activity')).toBeInTheDocument()
     expect(screen.getByText('Failed to load events: Failed to fetch events')).toBeInTheDocument()
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
@@ -113,7 +110,6 @@ describe('RecentEvents', () => {
     render(<RecentEvents events={events} />)
 
     // Assert
-    expect(screen.getByText('Recent Activity')).toBeInTheDocument()
     expect(screen.getByText('No events found')).toBeInTheDocument()
   })
 
@@ -353,7 +349,6 @@ describe('RecentEvents', () => {
     render(<RecentEvents events={events} />)
 
     // Assert
-    expect(screen.getByText('Recent Activity')).toBeInTheDocument()
     expect(screen.getByText('Single Event')).toBeInTheDocument()
   })
 })

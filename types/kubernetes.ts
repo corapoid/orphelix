@@ -355,6 +355,16 @@ export interface DashboardSummary {
     active?: number
     suspended?: number
   }
+  statefulsets?: {
+    total: number
+    ready: number
+    notReady: number
+  }
+  daemonsets?: {
+    total: number
+    ready: number
+    notReady: number
+  }
 }
 
 // Flux GitOps types

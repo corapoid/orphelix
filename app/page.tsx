@@ -78,24 +78,32 @@ export default function DashboardPage() {
         <CriticalAlerts summary={summary} />
       </Box>
 
-      {/* 2. Resource Overview + Resource Utilization (Side by Side on wide screens) */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: '2fr 1fr' }, gap: 3, mb: 4, alignItems: 'start' }}>
+      {/* 2. Resource Overview */}
+      <Box sx={{ mb: 3 }}>
+        <ResourceOverviewV2 summary={summary} />
+      </Box>
+
+      {/* 3. Cluster Resource Utilization (left) + Recent Activity (right) */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
+        {/* Cluster Resource Utilization */}
+        {quotas && quotas.length > 0 ? (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Cluster Resource Utilization
+            </Typography>
+            <ResourceUtilization quotas={quotas} />
+          </Box>
+        ) : (
+          <Box />
+        )}
+
+        {/* Recent Activity */}
         <Box>
-          <ResourceOverviewV2 summary={summary} />
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Recent Activity
+          </Typography>
+          <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
         </Box>
-        <Box sx={{ display: { xs: 'none', xl: 'block' } }}>
-          <ResourceUtilization quotas={quotas} />
-        </Box>
-      </Box>
-
-      {/* 3. Recent Activity (full width) */}
-      <Box sx={{ mb: 4 }}>
-        <RecentEvents events={events || []} loading={eventsLoading} error={eventsError || null} />
-      </Box>
-
-      {/* 4. Resource Utilization (for smaller screens) */}
-      <Box sx={{ display: { xs: 'block', xl: 'none' }, mb: 4 }}>
-        <ResourceUtilization quotas={quotas} />
       </Box>
     </Box>
   )
