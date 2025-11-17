@@ -11,9 +11,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Chip from '@mui/material/Chip'
-import IconButton from '@mui/material/IconButton'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useService } from '@/lib/hooks/use-services'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
@@ -22,14 +19,13 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { ServiceType } from '@/types/kubernetes'
-import Link from 'next/link'
 
 export default function ServiceDetailPage() {
   const params = useParams()
   const name = params.name as string
 
   const { data: service, isLoading, error, refetch } = useService(name)
-  const [docsOpen, setDocsOpen] = useState(true)
+  // const [docsOpen, setDocsOpen] = useState(true)
 
   // Auto-refresh
   useAutoRefresh(refetch)
@@ -95,25 +91,10 @@ export default function ServiceDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        headerActions={
-          <IconButton
-            onClick={() => setDocsOpen(!docsOpen)}
-            size="medium"
-            title={docsOpen ? "Hide documentation" : "Show documentation"}
-            sx={{
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <InfoOutlinedIcon />
-          </IconButton>
-        }
       />
 
-      <Box sx={{ display: 'flex', gap: 2, position: 'relative' }}>
+      <Box>
         {/* Main Content */}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
           <Grid container spacing={3}>
             {/* Service Details */}
             <Grid size={{ xs: 12, md: 6 }}>
@@ -204,23 +185,7 @@ export default function ServiceDetailPage() {
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Ports
             </Typography>
-            <Paper
-              elevation={0}
-              sx={{
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
-              }}
-            >
+            <GlassPanel sx={{ p: 0, overflow: 'hidden' }}>
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -265,7 +230,7 @@ export default function ServiceDetailPage() {
                   </TableBody>
                 </Table>
               </TableContainer>
-            </Paper>
+            </GlassPanel>
           </Box>
 
           {/* Labels */}
@@ -310,179 +275,16 @@ export default function ServiceDetailPage() {
               </Box>
             </Box>
           )}
-        </Box>
-
-        {/* Right Sidebar - Documentation */}
-        <Box
-          sx={{
-            width: 520,
-            flexShrink: 0,
-            mt: -12,
-            position: 'sticky',
-            top: 0,
-            alignSelf: 'flex-start',
-            maxHeight: '100vh',
-          }}
-        >
-          <GlassPanel
-            open={docsOpen}
-            closeable
-            onClose={() => setDocsOpen(false)}
-            animationType="fade"
-            sx={{ p: 3, overflow: 'auto', maxHeight: '100vh' }}
-          >
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                About Services
-              </Typography>
-            </Box>
-
-            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-              A Service is an abstract way to expose an application running on a set of Pods as a network service. With Kubernetes you don't need to modify your application to use an unfamiliar service discovery mechanism. Kubernetes gives Pods their own IP addresses and a single DNS name for a set of Pods, and can load-balance across them.
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.7 }}>
-              Services enable loose coupling between dependent Pods. A Service is defined using YAML or JSON, like all Kubernetes objects. The set of Pods targeted by a Service is usually determined by a label selector.
-            </Typography>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Service Types
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-              <li>
-                <Typography variant="caption">
-                  <strong>ClusterIP:</strong> Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>NodePort:</strong> Exposes the Service on each Node's IP at a static port. A ClusterIP Service is automatically created.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>LoadBalancer:</strong> Exposes the Service externally using a cloud provider's load balancer.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>ExternalName:</strong> Maps the Service to a DNS name by returning a CNAME record.
-                </Typography>
-              </li>
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Example Service
-            </Typography>
-
-            <Box
-              component="pre"
-              sx={{
-                p: 1.5,
-                mb: 2.5,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(0, 0, 0, 0.3)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                borderRadius: 2,
-                overflow: 'auto',
-                fontSize: '0.75rem',
-                lineHeight: 1.5,
-                fontFamily: 'monospace',
-              }}
-            >
-{`apiVersion: v1
-kind: Service
-metadata:
-  name: my-service
-spec:
-  selector:
-    app: MyApp
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 9376
-  type: ClusterIP`}
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Key Concepts
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-              <li>
-                <Typography variant="caption">
-                  <strong>Selector:</strong> Determines which Pods will receive traffic from this Service.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>Port:</strong> The port that will be exposed by this Service.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>TargetPort:</strong> The port on the Pod where traffic will be sent.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>Endpoints:</strong> Automatically maintained list of Pod IPs matching the selector.
-                </Typography>
-              </li>
-            </Box>
-
-            <Box sx={{
-              mt: 3,
-              pt: 2,
-              borderTop: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.1)',
-            }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5,
-                  color: 'text.secondary',
-                }}
-              >
-                Learn more in the{' '}
-                <Link
-                  href="https://kubernetes.io/docs/concepts/services-networking/service/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '2px',
-                  }}
-                >
-                  <Typography
-                    component="span"
-                    variant="caption"
-                    sx={{
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                  >
-                    official Kubernetes docs
-                  </Typography>
-                  <Box component="span" sx={{ fontSize: '0.65rem' }}>↗</Box>
-                </Link>
-              </Typography>
-            </Box>
-          </GlassPanel>
-        </Box>
       </Box>
+      {/* Documentation content preserved for future use:
+        Right Sidebar - Documentation
+        About Services
+        A Service is an abstract way to expose an application running on a set of Pods as a network service.
+        Service Types: ClusterIP, NodePort, LoadBalancer, ExternalName
+        Example Service
+        Key Concepts: Selector, Port, TargetPort, Endpoints
+        Learn more: https://kubernetes.io/docs/concepts/services-networking/service/
+      */}
     </Box>
   )
 }

@@ -23,9 +23,11 @@ import Button from '@mui/material/Button'
 import { NamespaceSelector } from './namespace-selector'
 import { RealtimeStatus } from './realtime-status'
 import { ContextSelectorInline } from './context-selector-inline'
+import { SearchBar } from '../common/search-bar'
 import { useModeStore } from '@/lib/core/store'
 import { usePathname, useRouter } from 'next/navigation'
 import { useThemeMode } from '../theme-provider'
+import { useSearch } from '@/lib/contexts/search-context'
 
 export function TopBar() {
   const mode = useModeStore((state) => state.mode)
@@ -35,6 +37,7 @@ export function TopBar() {
   const pathname = usePathname()
   const router = useRouter()
   const { mode: themeMode, setThemeMode } = useThemeMode()
+  const { searchQuery, setSearchQuery, searchPlaceholder } = useSearch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [retrying, setRetrying] = useState(false)
   const open = Boolean(anchorEl)
@@ -96,6 +99,18 @@ export function TopBar() {
       {/* Left side - Cluster selector */}
       <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
         <ContextSelectorInline />
+      </Box>
+
+      {/* Center - Search with context */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'center', maxWidth: 600 }}>
+        <Box sx={{ flex: 1 }}>
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={searchPlaceholder}
+            fullWidth
+          />
+        </Box>
       </Box>
 
       {/* Right side - Namespace, Status, and Settings */}

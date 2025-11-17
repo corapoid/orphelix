@@ -5,11 +5,8 @@ import {
   Box,
   Typography,
   Paper,
-  Chip,
   Alert,
   Button,
-  TextField,
-  InputAdornment,
   Snackbar,
   Dialog,
   DialogTitle,
@@ -19,8 +16,6 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material'
-import Grid from '@mui/material/Grid'
-import SearchIcon from '@mui/icons-material/Search'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
@@ -33,10 +28,7 @@ import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { PageHeader } from '@/app/components/common/page-header'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import Link from 'next/link'
 
 const MAX_PREVIEW_LINES = 10
 
@@ -52,7 +44,7 @@ export default function SecretDetailPage({
 
   useAutoRefresh(refetch)
 
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery] = useState('')
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set())
   const [revealedKeys, setRevealedKeys] = useState<Set<string>>(new Set())
   const [revealAll, setRevealAll] = useState(false)
@@ -61,7 +53,7 @@ export default function SecretDetailPage({
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [editorOpen, setEditorOpen] = useState(false)
-  const [docsOpen, setDocsOpen] = useState(true)
+  // const [docsOpen, setDocsOpen] = useState(true)
 
   // Decode base64 value
   const decodeValue = (value: string): string => {
@@ -209,7 +201,6 @@ export default function SecretDetailPage({
       <PageHeader
         title={secret.name}
         metadata={[
-          `Namespace: ${secret.namespace}`,
           `Type: ${secret.type}`,
           `Age: ${secret.age}`,
         ]}
@@ -228,25 +219,58 @@ export default function SecretDetailPage({
             Edit YAML
           </Button>
         }
-        headerActions={
-          <IconButton
-            onClick={() => setDocsOpen(!docsOpen)}
-            size="medium"
-            title={docsOpen ? "Hide documentation" : "Show documentation"}
-            sx={{
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <InfoOutlinedIcon />
-          </IconButton>
-        }
       />
 
-      <Box sx={{ display: 'flex', gap: 2, position: 'relative' }}>
-        {/* Main Content */}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+      <Box>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Labels
+        </Typography>
+        <Box display="flex" flexWrap="wrap" gap={1.5}>
+          {Object.entries(secret.labels || {}).length > 0 ? (
+            Object.entries(secret.labels).map(([key, value]) => (
+              <Paper
+                key={key}
+                elevation={0}
+                sx={{
+                  px: 2,
+                  py: 1,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                  borderRadius: 3,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{ fontWeight: 600, color: 'text.secondary' }}
+                >
+                  {key}:
+                </Typography>
+                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                  {value}
+                </Typography>
+              </Paper>
+            ))
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No labels
+            </Typography>
+          )}
+        </Box>
+      </Box>
+
       {/* Security Warning */}
       <Alert severity="warning" icon={<WarningAmberIcon />} sx={{ mb: 3 }}>
         <Typography variant="body2" fontWeight="bold">
@@ -258,96 +282,52 @@ export default function SecretDetailPage({
         </Typography>
       </Alert>
 
-      <Grid container spacing={3}>
-          {/* Labels Panel */}
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Labels
-            </Typography>
-            <GlassPanel>
-              <Box display="flex" flexWrap="wrap" gap={1}>
-                {Object.entries(secret.labels || {}).length > 0 ? (
-                  Object.entries(secret.labels).map(([key, value]) => (
-                    <Chip key={key} label={`${key}: ${value}`} size="small" />
-                  ))
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    No labels
-                  </Typography>
-                )}
-              </Box>
-            </GlassPanel>
-          </Grid>
+      {/* Data Section */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>Data</Typography>
+        <Box display="flex" gap={1}>
+          {!revealAll ? (
+            <Button
+              startIcon={<VisibilityIcon />}
+              onClick={() => handleRevealRequest(null)}
+              variant="outlined"
+              color="warning"
+              size="small"
+            >
+              Reveal All
+            </Button>
+          ) : (
+            <Button
+              startIcon={<VisibilityOffIcon />}
+              onClick={handleHideAll}
+              variant="outlined"
+              size="small"
+            >
+              Hide All
+            </Button>
+          )}
+        </Box>
+      </Box>
 
-          {/* Data Section */}
-          <Grid size={12}>
-            <Paper sx={{ p: 3 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Data</Typography>
-                <Box display="flex" gap={1}>
-                  {!revealAll ? (
-                    <Button
-                      startIcon={<VisibilityIcon />}
-                      onClick={() => handleRevealRequest(null)}
-                      variant="outlined"
-                      color="warning"
-                      size="small"
-                    >
-                      Reveal All
-                    </Button>
-                  ) : (
-                    <Button
-                      startIcon={<VisibilityOffIcon />}
-                      onClick={handleHideAll}
-                      variant="outlined"
-                      size="small"
-                    >
-                      Hide All
-                    </Button>
-                  )}
-                </Box>
-              </Box>
+      <Box sx={{ mb: 3 }}>
+        {dataCount === 0 ? (
+          <Alert severity="info">No data in this Secret</Alert>
+        ) : filteredData.length === 0 ? (
+          <Alert severity="info">No matches found</Alert>
+        ) : (
+          <Box display="flex" flexDirection="column" gap={3}>
+            {filteredData.map(([key, value]) => {
+              const isExpanded = expandedKeys.has(key)
+              const isRevealed = revealedKeys.has(key)
+              const isTruncated = shouldTruncate(value)
+              const displayValue = isRevealed
+                ? isExpanded || !isTruncated
+                  ? formatValue(value)
+                  : getTruncatedValue(value)
+                : '••••••••••••••••'
 
-              {dataCount > 0 && (
-                <TextField
-                  fullWidth
-                  size="small"
-                  placeholder="Search keys or values..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{ mb: 2 }}
-                />
-              )}
-
-              {dataCount === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  No data in this Secret
-                </Typography>
-              ) : filteredData.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  No matches found
-                </Typography>
-              ) : (
-                <Box display="flex" flexDirection="column" gap={2}>
-                  {filteredData.map(([key, value]) => {
-                    const isExpanded = expandedKeys.has(key)
-                    const isRevealed = revealedKeys.has(key)
-                    const isTruncated = shouldTruncate(value)
-                    const displayValue = isRevealed
-                      ? isExpanded || !isTruncated
-                        ? formatValue(value)
-                        : getTruncatedValue(value)
-                      : '••••••••••••••••'
-
-                    return (
-                      <Paper key={key} variant="outlined" sx={{ p: 2 }}>
+              return (
+                <Box key={key}>
                         <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
                           <Typography variant="subtitle2" fontWeight="bold" color="primary">
                             {key}
@@ -388,15 +368,20 @@ export default function SecretDetailPage({
                           </Box>
                         </Box>
                         <Box
+                          component="pre"
                           sx={{
-                            bgcolor: 'grey.50',
+                            bgcolor: (theme) =>
+                              theme.palette.mode === 'dark'
+                                ? 'rgba(0, 0, 0, 0.3)'
+                                : 'rgba(0, 0, 0, 0.05)',
                             p: 2,
-                            borderRadius: 1,
+                            borderRadius: '12px',
                             fontFamily: 'monospace',
-                            fontSize: '0.875rem',
+                            fontSize: '0.8125rem',
+                            margin: 0,
                             whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-all',
-                            maxHeight: isExpanded ? 'none' : '300px',
+                            wordBreak: 'break-word',
+                            color: 'text.primary',
                             overflow: 'auto',
                           }}
                         >
@@ -412,183 +397,22 @@ export default function SecretDetailPage({
                             {isExpanded ? 'Show Less' : 'Show More'}
                           </Button>
                         )}
-                      </Paper>
+                      </Box>
                     )
                   })}
                 </Box>
               )}
-            </Paper>
-          </Grid>
-        </Grid>
-        </Box>
-
-        {/* Right Sidebar - Documentation */}
-        <Box
-          sx={{
-            width: 520,
-            flexShrink: 0,
-            mt: 0,
-            position: 'sticky',
-            top: 0,
-            alignSelf: 'flex-start',
-            maxHeight: '100vh',
-          }}
-        >
-          <GlassPanel
-            open={docsOpen}
-            closeable
-            onClose={() => setDocsOpen(false)}
-            animationType="fade"
-            sx={{ p: 3, overflow: 'auto', maxHeight: '100vh' }}
-          >
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                About Secrets
-              </Typography>
             </Box>
-
-            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-              A Secret is an object that contains a small amount of sensitive data such as a password, token, or key. Secrets are similar to ConfigMaps but are specifically intended to hold confidential data.
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.7 }}>
-              Kubernetes provides several built-in types for some common usage scenarios. These types vary in terms of the validations performed and the constraints Kubernetes imposes on them.
-            </Typography>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Secret Types
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-              <li>
-                <Typography variant="caption">
-                  <strong>Opaque:</strong> Arbitrary user-defined data (default).
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>kubernetes.io/service-account-token:</strong> Service account token.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>kubernetes.io/dockercfg:</strong> Serialized dockercfg file.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>kubernetes.io/tls:</strong> Data for a TLS client or server.
-                </Typography>
-              </li>
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Example Secret
-            </Typography>
-
-            <Box
-              component="pre"
-              sx={{
-                p: 1.5,
-                mb: 2.5,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(0, 0, 0, 0.3)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                borderRadius: 2,
-                overflow: 'auto',
-                fontSize: '0.75rem',
-                lineHeight: 1.5,
-                fontFamily: 'monospace',
-              }}
-            >
-{`apiVersion: v1
-kind: Secret
-metadata:
-  name: mysecret
-type: Opaque
-data:
-  username: YWRtaW4=
-  password: MWYyZDFlMmU2N2Rm`}
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Security Best Practices
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-              <li>
-                <Typography variant="caption">
-                  Enable encryption at rest for Secrets in etcd.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  Use RBAC to restrict access to Secrets.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  Consider using external secret management systems.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  Avoid logging or printing Secret values.
-                </Typography>
-              </li>
-            </Box>
-
-            <Box sx={{
-              mt: 3,
-              pt: 2,
-              borderTop: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.1)',
-            }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5,
-                  color: 'text.secondary',
-                }}
-              >
-                Learn more in the{' '}
-                <Link
-                  href="https://kubernetes.io/docs/concepts/configuration/secret/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '2px',
-                  }}
-                >
-                  <Typography
-                    component="span"
-                    variant="caption"
-                    sx={{
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                  >
-                    official Kubernetes docs
-                  </Typography>
-                  <Box component="span" sx={{ fontSize: '0.65rem' }}>↗</Box>
-                </Link>
-              </Typography>
-            </Box>
-          </GlassPanel>
-        </Box>
       </Box>
+      {/* Documentation content preserved for future use:
+        Right Sidebar - Documentation
+        About Secrets
+        A Secret is an object that contains a small amount of sensitive data such as a password, token, or key.
+        Secret Types: Opaque, kubernetes.io/service-account-token, kubernetes.io/dockercfg, kubernetes.io/tls
+        Example Secret
+        Security Best Practices
+        Learn more: https://kubernetes.io/docs/concepts/configuration/secret/
+      */}
 
       {/* Warning Dialog */}
       <Dialog open={warningDialogOpen} onClose={() => setWarningDialogOpen(false)}>

@@ -3,7 +3,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -11,9 +10,6 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import IconButton from '@mui/material/IconButton'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useCronJob } from '@/lib/hooks/use-cronjobs'
 import { useJobs } from '@/lib/hooks/use-jobs'
@@ -26,6 +22,55 @@ import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import Link from 'next/link'
 
+// Helper function to convert cron schedule to human-readable description
+function getScheduleDescription(schedule: string): string {
+  const parts = schedule.trim().split(/\s+/)
+
+  if (parts.length !== 5) {
+    return 'Custom schedule'
+  }
+
+  const [minute, hour, dayOfMonth, month, dayOfWeek] = parts
+
+  // Common patterns
+  if (schedule === '* * * * *') return 'Every minute'
+  if (schedule === '0 * * * *') return 'Every hour'
+  if (schedule === '0 0 * * *') return 'Daily at midnight'
+  if (schedule === '0 0 * * 0') return 'Weekly on Sunday at midnight'
+  if (schedule === '0 0 1 * *') return 'Monthly on the 1st at midnight'
+
+  // Pattern: */N * * * * (every N minutes)
+  if (minute.startsWith('*/') && hour === '*' && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
+    const n = minute.substring(2)
+    return `Every ${n} minutes`
+  }
+
+  // Pattern: 0 */N * * * (every N hours)
+  if (minute === '0' && hour.startsWith('*/') && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
+    const n = hour.substring(2)
+    return `Every ${n} hours`
+  }
+
+  // Pattern: M H * * * (daily at specific time)
+  if (!minute.includes('*') && !hour.includes('*') && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
+    return `Daily at ${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
+  }
+
+  // Pattern: M H * * N (weekly on specific day)
+  if (!minute.includes('*') && !hour.includes('*') && dayOfMonth === '*' && month === '*' && !dayOfWeek.includes('*')) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const day = days[parseInt(dayOfWeek)] || `day ${dayOfWeek}`
+    return `Weekly on ${day} at ${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
+  }
+
+  // Pattern: M H D * * (monthly on specific day)
+  if (!minute.includes('*') && !hour.includes('*') && !dayOfMonth.includes('*') && month === '*' && dayOfWeek === '*') {
+    return `Monthly on day ${dayOfMonth} at ${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
+  }
+
+  return 'Custom schedule'
+}
+
 export default function CronJobDetailPage() {
   const params = useParams()
   const name = params.name as string
@@ -33,7 +78,7 @@ export default function CronJobDetailPage() {
 
   const { data: cronjob, isLoading, error, refetch } = useCronJob(name)
   const { data: allJobs } = useJobs()
-  const [docsOpen, setDocsOpen] = useState(true)
+  // const [docsOpen, setDocsOpen] = useState(true)
 
   // Filter jobs owned by this cronjob
   const cronJobs = allJobs?.filter((job) => {
@@ -91,7 +136,6 @@ export default function CronJobDetailPage() {
           </Box>
         }
         metadata={[
-          `Namespace: ${cronjob.namespace}`,
           `Age: ${cronjob.age}`,
         ]}
         breadcrumbs={[
@@ -100,28 +144,13 @@ export default function CronJobDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        headerActions={
-          <IconButton
-            onClick={() => setDocsOpen(!docsOpen)}
-            size="medium"
-            title={docsOpen ? "Hide documentation" : "Show documentation"}
-            sx={{
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <InfoOutlinedIcon />
-          </IconButton>
-        }
       />
 
-      <Box sx={{ display: 'flex', gap: 2, position: 'relative' }}>
+      <Box sx={{ maxWidth: '50%' }}>
         {/* Main Content */}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Grid container spacing={3}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {/* CronJob Information */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Box>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 CronJob Information
               </Typography>
@@ -133,6 +162,15 @@ export default function CronJobDetailPage() {
                     </Typography>
                     <Typography variant="body2" fontWeight="medium" sx={{ fontFamily: 'monospace' }}>
                       {cronjob.schedule}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Description:
+                    </Typography>
+                    <Typography variant="body2" fontWeight="medium" color="primary.main">
+                      {getScheduleDescription(cronjob.schedule)}
                     </Typography>
                   </Box>
 
@@ -167,10 +205,10 @@ export default function CronJobDetailPage() {
                   </Box>
                 </Box>
               </GlassPanel>
-            </Grid>
+            </Box>
 
-            {/* Last Execution */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            {/* Execution History */}
+            <Box>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Execution History
               </Typography>
@@ -204,8 +242,8 @@ export default function CronJobDetailPage() {
                   </Box>
                 </Box>
               </GlassPanel>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           {/* Related Jobs */}
           {sortedJobs.length > 0 && (
@@ -332,192 +370,16 @@ export default function CronJobDetailPage() {
               </Box>
             </Box>
           )}
-        </Box>
-
-        {/* Right Sidebar - Documentation */}
-        <Box
-          sx={{
-            width: 520,
-            flexShrink: 0,
-            mt: -12,
-            position: 'sticky',
-            top: 0,
-            alignSelf: 'flex-start',
-            maxHeight: '100vh',
-          }}
-        >
-          <GlassPanel
-            open={docsOpen}
-            closeable
-            onClose={() => setDocsOpen(false)}
-            animationType="fade"
-            sx={{ p: 3, overflow: 'auto', maxHeight: '100vh' }}
-          >
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                About CronJobs
-              </Typography>
-            </Box>
-
-            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-              A CronJob creates Jobs on a repeating schedule. CronJobs are meant for performing regular scheduled actions such as backups, report generation, and so on. Each of those tasks should be configured to recur indefinitely (for example: once a day / week / month); you can define the point in time within that interval when the job should start.
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.7 }}>
-              One CronJob object is like one line of a crontab (cron table) file on a Unix system. It runs a job periodically on a given schedule, written in Cron format.
-            </Typography>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Example CronJob
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-              Here is a CronJob that runs every minute and prints the current time:
-            </Typography>
-
-            <Box
-              component="pre"
-              sx={{
-                p: 1.5,
-                mb: 2.5,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(0, 0, 0, 0.3)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                borderRadius: 2,
-                overflow: 'auto',
-                fontSize: '0.75rem',
-                lineHeight: 1.5,
-                fontFamily: 'monospace',
-              }}
-            >
-{`apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: hello
-spec:
-  schedule: "* * * * *"
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: hello
-            image: busybox:1.28
-            command:
-            - /bin/sh
-            - -c
-            - date; echo Hello from the Kubernetes cluster
-          restartPolicy: OnFailure`}
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Cron Schedule Format
-            </Typography>
-
-            <Box
-              component="pre"
-              sx={{
-                p: 1.5,
-                mb: 2,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(0, 0, 0, 0.3)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                borderRadius: 2,
-                overflow: 'auto',
-                fontSize: '0.75rem',
-                lineHeight: 1.5,
-                fontFamily: 'monospace',
-              }}
-            >
-{`# ┌───────────── minute (0 - 59)
-# │ ┌───────────── hour (0 - 23)
-# │ │ ┌───────────── day of month (1 - 31)
-# │ │ │ ┌───────────── month (1 - 12)
-# │ │ │ │ ┌───────────── day of week (0 - 6)
-# │ │ │ │ │
-# │ │ │ │ │
-# * * * * *`}
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Common Schedule Examples
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-              <li>
-                <Typography variant="caption">
-                  <strong>*/5 * * * *</strong> - Every 5 minutes
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>0 * * * *</strong> - Every hour
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>0 0 * * *</strong> - Daily at midnight
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>0 0 * * 0</strong> - Weekly on Sunday at midnight
-                </Typography>
-              </li>
-            </Box>
-
-            <Box sx={{
-              mt: 3,
-              pt: 2,
-              borderTop: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.1)',
-            }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5,
-                  color: 'text.secondary',
-                }}
-              >
-                Learn more in the{' '}
-                <Link
-                  href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '2px',
-                  }}
-                >
-                  <Typography
-                    component="span"
-                    variant="caption"
-                    sx={{
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                  >
-                    official Kubernetes docs
-                  </Typography>
-                  <Box component="span" sx={{ fontSize: '0.65rem' }}>↗</Box>
-                </Link>
-              </Typography>
-            </Box>
-          </GlassPanel>
-        </Box>
       </Box>
+      {/* Documentation content preserved for future use:
+        Right Sidebar - Documentation
+        About CronJobs
+        A CronJob creates Jobs on a repeating schedule. CronJobs are meant for performing regular scheduled actions such as backups, report generation, and so on.
+        Example CronJob with schedule: "every minute"
+        Cron Schedule Format
+        Common Schedule Examples: every 5 minutes, every hour, daily, weekly
+        Learn more: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+      */}
     </Box>
   )
 }

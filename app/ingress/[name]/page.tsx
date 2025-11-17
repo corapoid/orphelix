@@ -29,7 +29,7 @@ export default function IngressDetailPage() {
   const name = params.name as string
 
   const { data: ingress, isLoading, error, refetch } = useIngress(name)
-  const [docsOpen, setDocsOpen] = useState(true)
+  // const [docsOpen, setDocsOpen] = useState(true)
 
   // Auto-refresh
   useAutoRefresh(refetch)
@@ -83,25 +83,10 @@ export default function IngressDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        headerActions={
-          <IconButton
-            onClick={() => setDocsOpen(!docsOpen)}
-            size="medium"
-            title={docsOpen ? "Hide documentation" : "Show documentation"}
-            sx={{
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <InfoOutlinedIcon />
-          </IconButton>
-        }
       />
 
-      <Box sx={{ display: 'flex', gap: 2, position: 'relative' }}>
+      <Box>
         {/* Main Content */}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
           <Grid container spacing={3}>
             {/* Ingress Details */}
             <Grid size={{ xs: 12, md: 6 }}>
@@ -340,160 +325,16 @@ export default function IngressDetailPage() {
               </Box>
             </Box>
           )}
-        </Box>
-
-        {/* Right Sidebar - Documentation */}
-        <Box
-          sx={{
-            width: 520,
-            flexShrink: 0,
-            mt: -12,
-            position: 'sticky',
-            top: 0,
-            alignSelf: 'flex-start',
-            maxHeight: '100vh',
-          }}
-        >
-          <GlassPanel
-            open={docsOpen}
-            closeable
-            onClose={() => setDocsOpen(false)}
-            animationType="fade"
-            sx={{ p: 3, overflow: 'auto', maxHeight: '100vh' }}
-          >
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                About Ingress
-              </Typography>
-            </Box>
-
-            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-              Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource. An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL/TLS, and offer name-based virtual hosting.
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.7 }}>
-              An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
-            </Typography>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Example Ingress
-            </Typography>
-
-            <Box
-              component="pre"
-              sx={{
-                p: 1.5,
-                mb: 2.5,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(0, 0, 0, 0.3)'
-                    : 'rgba(0, 0, 0, 0.05)',
-                borderRadius: 2,
-                overflow: 'auto',
-                fontSize: '0.75rem',
-                lineHeight: 1.5,
-                fontFamily: 'monospace',
-              }}
-            >
-{`apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: minimal-ingress
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: test
-            port:
-              number: 80`}
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              Path Types
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-              <li>
-                <Typography variant="caption">
-                  <strong>Prefix:</strong> Matches based on a URL path prefix split by /. Matching is case sensitive.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>Exact:</strong> Matches the URL path exactly and with case sensitivity.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="caption">
-                  <strong>ImplementationSpecific:</strong> Interpretation depends on the IngressClass.
-                </Typography>
-              </li>
-            </Box>
-
-            <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-              TLS Configuration
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-              You can secure an Ingress by specifying a Secret that contains a TLS private key and certificate. The Ingress resource only supports a single TLS port (443) and assumes TLS termination at the ingress point.
-            </Typography>
-
-            <Box sx={{
-              mt: 3,
-              pt: 2,
-              borderTop: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.1)'
-                  : 'rgba(0, 0, 0, 0.1)',
-            }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5,
-                  color: 'text.secondary',
-                }}
-              >
-                Learn more in the{' '}
-                <Link
-                  href="https://kubernetes.io/docs/concepts/services-networking/ingress/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '2px',
-                  }}
-                >
-                  <Typography
-                    component="span"
-                    variant="caption"
-                    sx={{
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                  >
-                    official Kubernetes docs
-                  </Typography>
-                  <Box component="span" sx={{ fontSize: '0.65rem' }}>↗</Box>
-                </Link>
-              </Typography>
-            </Box>
-          </GlassPanel>
-        </Box>
       </Box>
+      {/* Documentation content preserved for future use:
+        Right Sidebar - Documentation
+        About Ingress
+        Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.
+        Example Ingress with nginx ingressClassName
+        Path Types: Prefix, Exact, ImplementationSpecific
+        TLS Configuration
+        Learn more: https://kubernetes.io/docs/concepts/services-networking/ingress/
+      */}
     </Box>
   )
 }

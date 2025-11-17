@@ -32,7 +32,7 @@ export default function JobDetailPage() {
 
   const { data: job, isLoading, error, refetch } = useJob(name)
   const { data: allPods } = usePods()
-  const [docsOpen, setDocsOpen] = useState(true)
+  // const [docsOpen, setDocsOpen] = useState(true)
 
   // Filter pods owned by this job
   const jobPods = allPods?.filter((pod) => {
@@ -84,28 +84,11 @@ export default function JobDetailPage() {
         ]}
         onRefresh={refetch}
         isRefreshing={isLoading}
-        headerActions={
-          <IconButton
-            onClick={() => setDocsOpen(!docsOpen)}
-            size="medium"
-            title={docsOpen ? "Hide documentation" : "Show documentation"}
-            sx={{
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            <InfoOutlinedIcon />
-          </IconButton>
-        }
       />
 
-      <Box sx={{ display: 'flex', gap: 2, position: 'relative' }}>
+      <Box sx={{ maxWidth: '50%' }}>
         {/* Main Content */}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            {/* Details + Statistics */}
-            <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
           {/* Details */}
           <Box>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -170,8 +153,7 @@ export default function JobDetailPage() {
               </Box>
             </GlassPanel>
           </Box>
-        </Grid>
-          </Grid>
+        </Box>
 
           {/* Related Pods */}
           {jobPods.length > 0 && (
@@ -258,23 +240,7 @@ export default function JobDetailPage() {
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Conditions
             </Typography>
-            <Paper
-              elevation={0}
-              sx={{
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
-              }}
-            >
+            <GlassPanel sx={{ p: 0, overflow: 'hidden' }}>
               <TableContainer>
                 <Table size="small">
                   <TableHead>
@@ -313,7 +279,7 @@ export default function JobDetailPage() {
                   </TableBody>
                 </Table>
               </TableContainer>
-            </Paper>
+            </GlassPanel>
         </Box>
       )}
 
@@ -359,160 +325,15 @@ export default function JobDetailPage() {
             </Box>
         </Box>
       )}
-        </Box>
-
-        {/* Right Sidebar - Documentation */}
-        <Box
-          sx={{
-            width: 520,
-            flexShrink: 0,
-            mt: -12,
-            position: 'sticky',
-            top: 0,
-            alignSelf: 'flex-start',
-            maxHeight: '100vh',
-          }}
-        >
-          <GlassPanel
-            open={docsOpen}
-            closeable
-            onClose={() => setDocsOpen(false)}
-            animationType="fade"
-            sx={{ p: 3, overflow: 'auto', maxHeight: '100vh' }}
-          >
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                About Jobs
-              </Typography>
-            </Box>
-
-              <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-                A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.
-                As pods successfully complete, the Job tracks the successful completions. When a specified number of successful completions is reached,
-                the task (ie, Job) is complete.
-              </Typography>
-
-              <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.7 }}>
-                A simple case is to create one Job object in order to reliably run one Pod to completion. The Job object will start a new Pod if
-                the first Pod fails or is deleted (for example due to a node hardware failure or a node reboot).
-              </Typography>
-
-              <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-                Running an example Job
-              </Typography>
-
-              <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-                Here is an example Job config that computes π to 2000 places:
-              </Typography>
-
-              <Box
-                component="pre"
-                sx={{
-                  p: 1.5,
-                  mb: 2.5,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(0, 0, 0, 0.3)'
-                      : 'rgba(0, 0, 0, 0.05)',
-                  borderRadius: 2,
-                  overflow: 'auto',
-                  fontSize: '0.75rem',
-                  lineHeight: 1.5,
-                  fontFamily: 'monospace',
-                }}
-              >
-{`apiVersion: batch/v1
-kind: Job
-metadata:
-  name: pi
-spec:
-  template:
-    spec:
-      containers:
-      - name: pi
-        image: perl:5.34.0
-        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"]
-      restartPolicy: Never
-  backoffLimit: 4`}
-              </Box>
-
-              <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 600 }}>
-                Key Concepts
-              </Typography>
-
-              <Box component="ul" sx={{ pl: 2, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-                <li>
-                  <Typography variant="caption">
-                    <strong>Completions:</strong> Number of successfully finished pods required.
-                  </Typography>
-                </li>
-                <li>
-                  <Typography variant="caption">
-                    <strong>Parallelism:</strong> Maximum number of pods running concurrently.
-                  </Typography>
-                </li>
-                <li>
-                  <Typography variant="caption">
-                    <strong>Backoff Limit:</strong> Number of retries before marking as failed (default: 6).
-                  </Typography>
-                </li>
-                <li>
-                  <Typography variant="caption">
-                    <strong>TTL After Finished:</strong> Automatic cleanup time after completion.
-                  </Typography>
-                </li>
-              </Box>
-
-              <Box sx={{
-                mt: 3,
-                pt: 2,
-                borderTop: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : 'rgba(0, 0, 0, 0.1)',
-              }}>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.5,
-                    color: 'text.secondary',
-                  }}
-                >
-                  Learn more in the{' '}
-                  <Link
-                    href="https://kubernetes.io/docs/concepts/workloads/controllers/job/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      textDecoration: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '2px',
-                    }}
-                  >
-                    <Typography
-                      component="span"
-                      variant="caption"
-                      sx={{
-                        color: 'primary.main',
-                        fontWeight: 600,
-                        '&:hover': {
-                          textDecoration: 'underline',
-                        },
-                      }}
-                    >
-                      official Kubernetes docs
-                    </Typography>
-                    <Box component="span" sx={{ fontSize: '0.65rem' }}>↗</Box>
-                  </Link>
-                </Typography>
-              </Box>
-          </GlassPanel>
-        </Box>
       </Box>
+      {/* Documentation content preserved for future use:
+        Right Sidebar - Documentation
+        About Jobs
+        A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.
+        Running an example Job: computes π to 2000 places
+        Key Concepts: Completions, Parallelism, Backoff Limit, TTL After Finished
+        Learn more: https://kubernetes.io/docs/concepts/workloads/controllers/job/
+      */}
     </Box>
   )
 }
