@@ -427,7 +427,7 @@ export default function SecretDetailPage({
           sx={{
             width: 520,
             flexShrink: 0,
-            mt: -12,
+            mt: 0,
             position: 'sticky',
             top: 0,
             alignSelf: 'flex-start',
