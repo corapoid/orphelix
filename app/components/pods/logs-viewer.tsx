@@ -263,7 +263,10 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
           fontSize: '0.875rem',
           maxHeight: 600,
           overflow: 'auto',
-          borderRadius: 'inherit',
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          borderBottomLeftRadius: '12px',
+          borderBottomRightRadius: '12px',
           '& .log-line': {
             py: 0.25,
             whiteSpace: 'pre-wrap',
