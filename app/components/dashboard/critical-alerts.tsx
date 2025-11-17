@@ -39,14 +39,25 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
     return true
   })
 
-  const { data: pods } = usePods()
-  const { data: nodes } = useNodes()
-  const { data: deployments } = useDeployments()
+  const { data: pods, refetch: refetchPods } = usePods()
+  const { data: nodes, refetch: refetchNodes } = useNodes()
+  const { data: deployments, refetch: refetchDeployments } = useDeployments()
 
   // Save to localStorage when expanded changes
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, expanded.toString())
   }, [expanded])
+
+  // Auto-refresh critical alerts every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetchPods()
+      refetchNodes()
+      refetchDeployments()
+    }, 5000) // 5 seconds
+
+    return () => clearInterval(interval)
+  }, [refetchPods, refetchNodes, refetchDeployments])
 
   const getCriticalAlerts = (): AlertItem[] => {
     const alerts: AlertItem[] = []
