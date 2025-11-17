@@ -228,7 +228,7 @@ export default function IngressDetailPage() {
                   borderRadius: 3,
                 }}
               >
-                <Box sx={{ px: 3, py: 1.5, bgcolor: 'action.hover' }}>
+                <Box sx={{ px: 3, py: 1.5, bgcolor: 'action.hover', borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }}>
                   <Typography variant="subtitle2" fontWeight="bold">
                     {rule.host || 'All hosts (*)'}
                   </Typography>
