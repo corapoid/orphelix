@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
 import SearchIcon from '@mui/icons-material/Search'
 import DownloadIcon from '@mui/icons-material/Download'
 import RefreshIcon from '@mui/icons-material/Refresh'
@@ -12,7 +13,6 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
-import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 
 interface LogLine {
   line: number
@@ -199,23 +199,51 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
             size="small"
             color={viewMode === 'formatted' ? 'primary' : 'default'}
             onClick={() => setViewMode('formatted')}
-            sx={{ cursor: 'pointer' }}
+            sx={{
+              cursor: 'pointer',
+              fontWeight: viewMode === 'formatted' ? 600 : 400,
+              opacity: viewMode === 'formatted' ? 1 : 0.7,
+            }}
           />
           <LiquidGlassChip
             label="Raw"
             size="small"
             color={viewMode === 'raw' ? 'primary' : 'default'}
             onClick={() => setViewMode('raw')}
-            sx={{ cursor: 'pointer' }}
+            sx={{
+              cursor: 'pointer',
+              fontWeight: viewMode === 'raw' ? 600 : 400,
+              opacity: viewMode === 'raw' ? 1 : 0.7,
+            }}
           />
           {onRefresh && (
-            <LiquidGlassButton onClick={onRefresh} size="small" title="Refresh logs" sx={{ minWidth: 'auto', px: 1.5 }}>
+            <IconButton
+              onClick={onRefresh}
+              size="small"
+              title="Refresh logs"
+              sx={{
+                color: 'text.primary',
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+              }}
+            >
               <RefreshIcon fontSize="small" />
-            </LiquidGlassButton>
+            </IconButton>
           )}
-          <LiquidGlassButton onClick={handleDownload} size="small" title="Download logs" sx={{ minWidth: 'auto', px: 1.5 }}>
+          <IconButton
+            onClick={handleDownload}
+            size="small"
+            title="Download logs"
+            sx={{
+              color: 'text.primary',
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+            }}
+          >
             <DownloadIcon fontSize="small" />
-          </LiquidGlassButton>
+          </IconButton>
         </Box>
       </Box>
 

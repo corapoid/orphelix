@@ -177,6 +177,14 @@ export default function PodDetailPage() {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2" color="text.secondary">
+                  Container:
+                </Typography>
+                <Typography variant="body2" fontWeight="medium">
+                  {pod.containers.length > 0 ? pod.containers[0].name : 'N/A'}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="body2" color="text.secondary">
                   Node:
                 </Typography>
                 <Link
@@ -235,7 +243,6 @@ export default function PodDetailPage() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
                     <TableCell>Image</TableCell>
                     <TableCell align="center">Ready</TableCell>
                     <TableCell align="center">Restarts</TableCell>
@@ -244,11 +251,6 @@ export default function PodDetailPage() {
                 <TableBody>
                   {pod.containers.map((container) => (
                     <TableRow key={container.name} hover>
-                      <TableCell>
-                        <Typography variant="body2" fontWeight="medium">
-                          {container.name}
-                        </Typography>
-                      </TableCell>
                       <TableCell>
                         <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>
                           {container.image}
