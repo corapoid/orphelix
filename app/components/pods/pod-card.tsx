@@ -45,7 +45,7 @@ export function PodCard({ pod, onClick }: PodCardProps) {
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 lineHeight: 1.3,
-                fontSize: '0.8rem',
+                fontSize: '0.7rem',
               }}
             >
               {pod.nodeName || 'N/A'}
