@@ -155,27 +155,7 @@ export default function PodDetailPage() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Details
           </Typography>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 2,
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(30, 30, 46, 0.6)'
-                  : 'rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              border: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : 'rgba(209, 213, 219, 0.4)',
-              borderRadius: 3,
-            }}
-          >
+          <GlassPanel sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2" color="text.secondary">
@@ -217,31 +197,14 @@ export default function PodDetailPage() {
                 </Typography>
               </Box>
             </Box>
-          </Paper>
+          </GlassPanel>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Containers
           </Typography>
-          <Paper
-            elevation={0}
-            sx={{
-              flex: 1,
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(30, 30, 46, 0.6)'
-                  : 'rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              border: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : 'rgba(209, 213, 219, 0.4)',
-              borderRadius: 3,
-            }}
-          >
+          <GlassPanel sx={{ flex: 1 }}>
             <TableContainer>
               <Table>
                 <TableHead>
