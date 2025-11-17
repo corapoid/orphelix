@@ -2,6 +2,8 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import Alert from '@mui/material/Alert'
+import Tooltip from '@mui/material/Tooltip'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { GlassPanel } from '../common/glass-panel'
 import type { Container, Probe } from '@/types/kubernetes'
 
@@ -25,6 +27,19 @@ function ProbeDisplay({ probe, type }: { probe: Probe; type: string }) {
     }
   }
 
+  const getProbeTooltip = () => {
+    switch (type) {
+      case 'Liveness':
+        return 'Determines if the container is running. If the probe fails, Kubernetes will restart the container.'
+      case 'Readiness':
+        return 'Determines if the container is ready to accept traffic. If the probe fails, the container will be removed from service endpoints.'
+      case 'Startup':
+        return 'Checks if the application has started. Delays liveness and readiness probes until this succeeds, useful for slow-starting containers.'
+      default:
+        return ''
+    }
+  }
+
   return (
     <Box sx={{ mb: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -37,6 +52,17 @@ function ProbeDisplay({ probe, type }: { probe: Probe; type: string }) {
         <Typography variant="body2" fontWeight={500}>
           {getProbeTypeLabel()}
         </Typography>
+        <Tooltip title={getProbeTooltip()} arrow placement="top">
+          <InfoOutlinedIcon
+            sx={{
+              fontSize: 16,
+              color: 'text.secondary',
+              cursor: 'help',
+              opacity: 0.7,
+              '&:hover': { opacity: 1 }
+            }}
+          />
+        </Tooltip>
       </Box>
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, pl: 2 }}>
         <Box>
