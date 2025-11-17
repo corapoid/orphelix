@@ -6,13 +6,13 @@ import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
-import IconButton from '@mui/material/IconButton'
 import DownloadIcon from '@mui/icons-material/Download'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
-import Chip from '@mui/material/Chip'
 import { useState, useMemo, useRef, useEffect } from 'react'
+import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
+import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 
 interface LogLine {
   line: number
@@ -141,9 +141,25 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
   }
 
   return (
-    <Paper>
+    <Paper
+      elevation={0}
+      sx={{
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(30, 30, 46, 0.6)'
+            : 'rgba(255, 255, 255, 0.25)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        border: '1px solid',
+        borderColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.12)'
+            : 'rgba(209, 213, 219, 0.4)',
+        borderRadius: 3,
+      }}
+    >
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField
             size="small"
             placeholder="Search logs..."
@@ -156,16 +172,36 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                 </InputAdornment>
               ),
             }}
-            sx={{ flex: 1 }}
+            sx={{
+              flex: 1,
+              minWidth: 200,
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+                '& fieldset': {
+                  border: 'none',
+                },
+              },
+            }}
           />
-          <Chip
+          <LiquidGlassChip
             label="Formatted"
             size="small"
             color={viewMode === 'formatted' ? 'primary' : 'default'}
             onClick={() => setViewMode('formatted')}
             sx={{ cursor: 'pointer' }}
           />
-          <Chip
+          <LiquidGlassChip
             label="Raw"
             size="small"
             color={viewMode === 'raw' ? 'primary' : 'default'}
@@ -173,13 +209,13 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
             sx={{ cursor: 'pointer' }}
           />
           {onRefresh && (
-            <IconButton onClick={onRefresh} size="small" title="Refresh logs">
-              <RefreshIcon />
-            </IconButton>
+            <LiquidGlassButton onClick={onRefresh} size="small" title="Refresh logs" sx={{ minWidth: 'auto', px: 1.5 }}>
+              <RefreshIcon fontSize="small" />
+            </LiquidGlassButton>
           )}
-          <IconButton onClick={handleDownload} size="small" title="Download logs">
-            <DownloadIcon />
-          </IconButton>
+          <LiquidGlassButton onClick={handleDownload} size="small" title="Download logs" sx={{ minWidth: 'auto', px: 1.5 }}>
+            <DownloadIcon fontSize="small" />
+          </LiquidGlassButton>
         </Box>
       </Box>
 
@@ -279,14 +315,13 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                   {logLine.message}
                 </Typography>
                 {logLine.isJson && (
-                  <Chip
+                  <LiquidGlassChip
                     label="JSON"
                     size="small"
+                    color="primary"
                     sx={{
                       height: '16px',
                       fontSize: '0.65rem',
-                      bgcolor: 'primary.dark',
-                      color: 'primary.contrastText',
                     }}
                   />
                 )}
