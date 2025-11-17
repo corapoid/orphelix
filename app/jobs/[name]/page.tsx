@@ -18,7 +18,6 @@ import { useParams } from 'next/navigation'
 import { useJob } from '@/lib/hooks/use-jobs'
 import { usePods } from '@/lib/hooks/use-pods'
 import { StatusBadge } from '@/app/components/common/status-badge'
-import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
@@ -86,13 +85,19 @@ export default function JobDetailPage() {
         isRefreshing={isLoading}
         actions={
           !docsOpen && (
-            <LiquidGlassButton
-              startIcon={<InfoOutlinedIcon />}
+            <IconButton
               onClick={() => setDocsOpen(true)}
               size="small"
+              title="About Jobs"
+              sx={{
+                color: 'text.primary',
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+              }}
             >
-              About Jobs
-            </LiquidGlassButton>
+              <InfoOutlinedIcon fontSize="small" />
+            </IconButton>
           )
         }
       />
