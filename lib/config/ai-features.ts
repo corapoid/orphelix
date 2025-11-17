@@ -21,14 +21,27 @@ export const AI_FEATURES: Record<string, AIFeature> = {
     requiredProvider: 'openai',
     enabled: true,
   },
-  // Future features can be added here:
-  // RESOURCE_RECOMMENDATIONS: {
-  //   id: 'resource-recommendations',
-  //   name: 'Resource Recommendations',
-  //   description: 'AI-powered resource limit and request recommendations',
-  //   requiredProvider: 'openai',
-  //   enabled: false,
-  // },
+  TROUBLESHOOTING: {
+    id: 'troubleshooting',
+    name: 'AI Troubleshooting Assistant',
+    description: 'Get intelligent help diagnosing and fixing Kubernetes issues',
+    requiredProvider: 'openai',
+    enabled: true,
+  },
+  ISSUE_DETECTION: {
+    id: 'issue-detection',
+    name: 'Automated Issue Detection',
+    description: 'Automatic detection of common problems like crash loops and resource exhaustion',
+    requiredProvider: 'openai',
+    enabled: true,
+  },
+  ROOT_CAUSE_ANALYSIS: {
+    id: 'root-cause-analysis',
+    name: 'Root Cause Analysis',
+    description: 'Deep analysis of events, logs, and resource state to find root causes',
+    requiredProvider: 'openai',
+    enabled: true,
+  },
 }
 
 /**

@@ -23,8 +23,6 @@ export function SecretGridView({ secrets }: SecretGridViewProps) {
     >
       {secrets.map((secret) => {
         const keyCount = secret.keys.length
-        const keys = secret.keys.slice(0, 3)
-        const hasMore = keyCount > 3
 
         return (
           <ResourceCard

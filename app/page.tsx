@@ -9,6 +9,7 @@ import { CriticalAlerts } from './components/dashboard/critical-alerts'
 import { ResourceOverviewV2 } from './components/dashboard/resource-overview-v2'
 import { ResourceUtilization } from './components/dashboard/resource-utilization'
 import { RecentEvents } from './components/dashboard/recent-events'
+import { IssueDetector } from './components/ai/issue-detector'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
 import { useResourceQuotas } from '@/lib/hooks/use-resourcequotas'
 import { useModeStore } from '@/lib/core/store'
@@ -78,12 +79,17 @@ export default function DashboardPage() {
         <CriticalAlerts summary={summary} />
       </Box>
 
-      {/* 2. Resource Overview */}
+      {/* 2. AI Issue Detection */}
+      <Box sx={{ mb: 3 }}>
+        <IssueDetector events={events || []} />
+      </Box>
+
+      {/* 3. Resource Overview */}
       <Box sx={{ mb: 3 }}>
         <ResourceOverviewV2 summary={summary} />
       </Box>
 
-      {/* 3. Cluster Resource Utilization (left) + Recent Activity (right) */}
+      {/* 4. Cluster Resource Utilization (left) + Recent Activity (right) */}
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
         {/* Cluster Resource Utilization */}
         {quotas && quotas.length > 0 ? (

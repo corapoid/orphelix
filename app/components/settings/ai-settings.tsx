@@ -148,7 +148,7 @@ export function AISettings() {
                         mb: 0.5,
                       }}
                     >
-                      YAML Editor
+                      {feature.name}
                     </Typography>
                     <Typography variant="caption" color="text.secondary" sx={{ opacity: 0.8 }}>
                       AI-Powered

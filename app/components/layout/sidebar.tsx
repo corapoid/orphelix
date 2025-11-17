@@ -38,6 +38,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import StorageIcon from '@mui/icons-material/Storage'
 import SettingsSystemDaydreamIcon from '@mui/icons-material/SettingsSystemDaydream'
 import LabelIcon from '@mui/icons-material/Label'
+import SmartToyIcon from '@mui/icons-material/SmartToy'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -97,6 +98,12 @@ const navGroups: (NavItem | NavGroup)[] = [
       { label: 'HPA', icon: <HpaIcon />, path: '/hpa', color: '#64748B' },
       { label: 'Events', icon: <EventIcon />, path: '/events', color: '#06B6D4' },
       { label: 'Labels', icon: <LabelIcon />, path: '/labels', color: '#10B981' },
+    ],
+  },
+  {
+    label: 'AI & Tools',
+    items: [
+      { label: 'AI Troubleshooting', icon: <SmartToyIcon />, path: '/troubleshooting', color: '#F59E0B' },
     ],
   },
 ]
@@ -365,7 +372,6 @@ export function Sidebar() {
             // Render group header
             const isExpanded = expandedGroups[item.label]
             const pinnedItems = item.items.filter((subItem) => isPinned(subItem.path))
-            const unpinnedItems = item.items.filter((subItem) => !isPinned(subItem.path))
 
             if (collapsed) {
               // In collapsed mode, show all pinned items from groups without headers

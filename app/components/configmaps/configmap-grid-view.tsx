@@ -23,8 +23,6 @@ export function ConfigMapGridView({ configMaps }: ConfigMapGridViewProps) {
     >
       {configMaps.map((cm) => {
         const keyCount = Object.keys(cm.data).length
-        const keys = Object.keys(cm.data).slice(0, 3)
-        const hasMore = keyCount > 3
 
         return (
           <ResourceCard
