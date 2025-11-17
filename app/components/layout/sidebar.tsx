@@ -18,6 +18,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import PushPinIcon from '@mui/icons-material/PushPin'
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
+import EditIcon from '@mui/icons-material/Edit'
+import DoneIcon from '@mui/icons-material/Done'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DeploymentIcon from '@mui/icons-material/AccountTree'
 import PodIcon from '@mui/icons-material/Widgets'
@@ -110,7 +112,7 @@ export function Sidebar() {
   const { isPinned, togglePin } = useSidebarPins()
   const [collapsed, setCollapsed] = useState(false)
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [editMode, setEditMode] = useState(false)
 
   useEffect(() => {
     setExpandedGroups({
@@ -209,15 +211,12 @@ export function Sidebar() {
     }
 
     const pinned = isPinned(item.path)
-    const isHovered = hoveredItem === item.path
 
     return (
       <ListItem
         key={item.path}
         disablePadding
         sx={{ mb: 0.4, position: 'relative' }}
-        onMouseEnter={() => setHoveredItem(item.path)}
-        onMouseLeave={() => setHoveredItem(null)}
       >
         <ListItemButton
           selected={isActive}
@@ -228,7 +227,9 @@ export function Sidebar() {
             pr: 1,
             py: 0.75,
             transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            border: '0.5px solid transparent',
+            border: editMode ? '1px dashed' : '0.5px solid transparent',
+            borderColor: editMode ? 'primary.main' : 'transparent',
+            opacity: editMode ? 0.85 : 1,
             '&.Mui-selected': {
               background: (theme) =>
                 theme.palette.mode === 'light'
@@ -285,27 +286,27 @@ export function Sidebar() {
               color: isActive ? 'primary.main' : 'inherit',
             }}
           />
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation()
-              togglePin(item.path)
-            }}
-            sx={{
-              opacity: isHovered || !pinned ? 1 : 0,
-              transition: 'opacity 0.2s',
-              ml: 0.5,
-              '&:hover': {
-                bgcolor: 'transparent',
-              },
-            }}
-          >
-            {pinned ? (
-              <PushPinIcon sx={{ fontSize: '1rem', color: 'primary.main' }} />
-            ) : (
-              <PushPinOutlinedIcon sx={{ fontSize: '1rem', opacity: 0.5 }} />
-            )}
-          </IconButton>
+          {editMode && (
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation()
+                togglePin(item.path)
+              }}
+              sx={{
+                ml: 0.5,
+                '&:hover': {
+                  bgcolor: 'transparent',
+                },
+              }}
+            >
+              {pinned ? (
+                <PushPinIcon sx={{ fontSize: '1rem', color: 'primary.main' }} />
+              ) : (
+                <PushPinOutlinedIcon sx={{ fontSize: '1rem', opacity: 0.5 }} />
+              )}
+            </IconButton>
+          )}
         </ListItemButton>
       </ListItem>
     )
@@ -486,6 +487,21 @@ export function Sidebar() {
         <Box sx={{ px: 1, py: 0.75 }}>
         {collapsed ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            <Tooltip title={editMode ? 'Done editing' : 'Edit menu'} placement="right">
+              <IconButton
+                onClick={() => setEditMode(!editMode)}
+                size="small"
+                sx={{
+                  color: editMode ? 'primary.main' : 'text.secondary',
+                  bgcolor: editMode ? 'action.selected' : 'transparent',
+                  '&:hover': {
+                    bgcolor: editMode ? 'action.selected' : 'action.hover',
+                  },
+                }}
+              >
+                {editMode ? <DoneIcon sx={{ fontSize: 18 }} /> : <EditIcon sx={{ fontSize: 18 }} />}
+              </IconButton>
+            </Tooltip>
             <Tooltip title="GitHub" placement="right">
               <IconButton
                 component="a"
@@ -532,6 +548,21 @@ export function Sidebar() {
               v1.0.0
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Tooltip title={editMode ? 'Done editing' : 'Edit menu'}>
+                <IconButton
+                  onClick={() => setEditMode(!editMode)}
+                  size="small"
+                  sx={{
+                    color: editMode ? 'primary.main' : 'text.secondary',
+                    bgcolor: editMode ? 'action.selected' : 'transparent',
+                    '&:hover': {
+                      bgcolor: editMode ? 'action.selected' : 'action.hover',
+                    },
+                  }}
+                >
+                  {editMode ? <DoneIcon sx={{ fontSize: 18 }} /> : <EditIcon sx={{ fontSize: 18 }} />}
+                </IconButton>
+              </Tooltip>
               <IconButton
                 component="a"
                 href="https://github.com/dmachard/kubevista"
