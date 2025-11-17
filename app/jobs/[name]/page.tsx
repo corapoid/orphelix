@@ -399,9 +399,9 @@ export default function JobDetailPage() {
               width: 400,
               flexShrink: 0,
               position: 'sticky',
-              top: 0,
+              top: -80,
               alignSelf: 'flex-start',
-              maxHeight: 'calc(100vh - 32px)',
+              maxHeight: 'calc(100vh + 48px)',
               overflow: 'auto',
             }}
           >
