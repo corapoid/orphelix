@@ -25,10 +25,7 @@ export default function LabelsPage() {
   if (error) {
     return (
       <Box>
-        <PageHeader
-          title="Labels"
-          breadcrumbs={[{ label: 'Labels' }]}
-        />
+        <PageHeader title="Labels" />
         <ErrorState
           error={error}
           onRetry={refetch}
@@ -55,11 +52,7 @@ export default function LabelsPage() {
     <Box>
       <PageHeader
         title="Labels"
-        metadata={[
-          `${data?.totalResources || 0} resources`,
-          `${data?.labels.length || 0} unique labels`,
-        ]}
-        breadcrumbs={[{ label: 'Labels' }]}
+        subtitle={`${data?.totalResources || 0} resources • ${data?.labels.length || 0} unique labels`}
         onRefresh={refetch}
       />
 
