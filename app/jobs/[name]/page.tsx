@@ -84,20 +84,18 @@ export default function JobDetailPage() {
         onRefresh={refetch}
         isRefreshing={isLoading}
         headerActions={
-          !docsOpen && (
-            <IconButton
-              onClick={() => setDocsOpen(true)}
-              size="medium"
-              title="About Jobs"
-              sx={{
-                '&:hover': {
-                  bgcolor: 'action.hover',
-                },
-              }}
-            >
-              <InfoOutlinedIcon />
-            </IconButton>
-          )
+          <IconButton
+            onClick={() => setDocsOpen(!docsOpen)}
+            size="medium"
+            title={docsOpen ? "Hide documentation" : "Show documentation"}
+            sx={{
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+            }}
+          >
+            <InfoOutlinedIcon />
+          </IconButton>
         }
       />
 
@@ -106,7 +104,7 @@ export default function JobDetailPage() {
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Grid container spacing={3} sx={{ mb: 3 }}>
             {/* Details + Statistics */}
-            <Grid size={{ xs: 12, md: docsOpen ? 6 : 4 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Details */}
           <Box>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -403,9 +401,9 @@ export default function JobDetailPage() {
               width: 400,
               flexShrink: 0,
               position: 'sticky',
-              top: -80,
+              top: -140,
               alignSelf: 'flex-start',
-              maxHeight: 'calc(100vh + 48px)',
+              maxHeight: 'calc(100vh + 108px)',
               overflow: 'auto',
             }}
           >
