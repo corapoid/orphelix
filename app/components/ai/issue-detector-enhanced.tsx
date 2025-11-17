@@ -60,9 +60,12 @@ export function IssueDetectorEnhanced({ events = [], metrics }: IssueDetectorEnh
   useEffect(() => {
     const detectedIssues: DetectedIssue[] = []
 
+    console.log('[IssueDetector] Analyzing events:', events.length)
+
     // Detect issues from events with related events
     if (events.length > 0) {
       const eventIssues = detectIssuesFromEvents(events)
+      console.log('[IssueDetector] Detected issues:', eventIssues)
       eventIssues.forEach(issue => {
         // Find related events for this issue
         const relatedEvents = events.filter(e => {
@@ -188,8 +191,28 @@ Keep it concise and practical.`
     }
   }
 
+  // Show widget even if no issues detected (for testing)
   if (issues.length === 0) {
-    return null
+    return (
+      <GlassPanel sx={{ p: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <SmartToyIcon color="success" />
+          <Typography variant="body1" fontWeight={600} color="success.main">
+            No Issues Detected
+          </Typography>
+          <Chip
+            label="All Good"
+            size="small"
+            color="success"
+          />
+        </Box>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          {events.length > 0
+            ? `Analyzed ${events.length} event${events.length > 1 ? 's' : ''} - everything looks healthy!`
+            : 'No events to analyze yet. Events will appear here as they occur.'}
+        </Typography>
+      </GlassPanel>
+    )
   }
 
   const errorCount = issues.filter(i => i.severity === 'error').length
