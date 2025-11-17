@@ -160,6 +160,9 @@ export default function PodDetailPage() {
             elevation={0}
             sx={{
               p: 2,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
               backgroundColor: (theme) =>
                 theme.palette.mode === 'dark'
                   ? 'rgba(30, 30, 46, 0.6)'
@@ -174,7 +177,7 @@ export default function PodDetailPage() {
               borderRadius: 3,
             }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2" color="text.secondary">
                   Container:
@@ -225,6 +228,7 @@ export default function PodDetailPage() {
           <Paper
             elevation={0}
             sx={{
+              height: '100%',
               backgroundColor: (theme) =>
                 theme.palette.mode === 'dark'
                   ? 'rgba(30, 30, 46, 0.6)'
