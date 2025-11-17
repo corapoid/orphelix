@@ -10,7 +10,7 @@ import LinearProgress from '@mui/material/LinearProgress'
 import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import { useQuery } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/core/store'
 
@@ -264,7 +264,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
                 title={`${formatCPU(aggregatedMetrics.cpu.current)} / ${formatCPU(aggregatedMetrics.cpu.limit)}`}
                 arrow
               >
-                <LiquidGlassChip
+                <StatusBadge
                   label={`${aggregatedMetrics.cpu.usagePercent.toFixed(1)}%`}
                   color={getUsageColor(aggregatedMetrics.cpu.usagePercent)}
                   size="small"
@@ -347,7 +347,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
                 title={`${formatMemory(aggregatedMetrics.memory.current)} / ${formatMemory(aggregatedMetrics.memory.limit)}`}
                 arrow
               >
-                <LiquidGlassChip
+                <StatusBadge
                   label={`${aggregatedMetrics.memory.usagePercent.toFixed(1)}%`}
                   color={getUsageColor(aggregatedMetrics.memory.usagePercent)}
                   size="small"

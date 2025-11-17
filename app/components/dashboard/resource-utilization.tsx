@@ -1,7 +1,7 @@
-import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
+import { GlassPanel } from '@/app/components/common/glass-panel'
 import type { ResourceQuota } from '@/types/kubernetes'
 
 interface ResourceUtilizationProps {
@@ -107,29 +107,7 @@ export function ResourceUtilization({ quotas }: ResourceUtilizationProps) {
   }
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 3,
-        mt: 5,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(30, 30, 46, 0.6)'
-            : 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: '1px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.12)'
-            : 'rgba(209, 213, 219, 0.4)',
-        borderRadius: 3,
-        boxShadow: (theme) =>
-          theme.palette.mode === 'dark'
-            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
-            : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
-      }}
-    >
+    <GlassPanel sx={{ p: 3, mt: 5 }}>
       <Typography variant="body1" gutterBottom sx={{ fontWeight: 700 }}>
         Cluster Resource Utilization
       </Typography>
@@ -170,6 +148,6 @@ export function ResourceUtilization({ quotas }: ResourceUtilizationProps) {
           </Box>
         )
       })}
-    </Paper>
+    </GlassPanel>
   )
 }

@@ -12,7 +12,7 @@ import RefreshIcon from '@mui/icons-material/Refresh'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import { useState, useMemo, useRef, useEffect } from 'react'
-import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
+import { StatusBadge } from '@/app/components/common/status-badge'
 
 interface LogLine {
   line: number
@@ -194,7 +194,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
               },
             }}
           />
-          <LiquidGlassChip
+          <StatusBadge
             label="Formatted"
             size="small"
             color={viewMode === 'formatted' ? 'primary' : 'default'}
@@ -205,7 +205,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
               opacity: viewMode === 'formatted' ? 1 : 0.7,
             }}
           />
-          <LiquidGlassChip
+          <StatusBadge
             label="Raw"
             size="small"
             color={viewMode === 'raw' ? 'primary' : 'default'}
@@ -365,7 +365,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                   {logLine.message}
                 </Typography>
                 {logLine.isJson && (
-                  <LiquidGlassChip
+                  <StatusBadge
                     label="JSON"
                     size="small"
                     color="primary"

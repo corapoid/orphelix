@@ -22,7 +22,6 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
 import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
-import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { usePod, usePodLogs } from '@/lib/hooks/use-pods'
@@ -269,7 +268,7 @@ export default function PodDetailPage() {
                       </TableCell>
                       <TableCell align="center">
                         {container.restartCount > 0 ? (
-                          <LiquidGlassChip
+                          <StatusBadge
                             label={container.restartCount}
                             size="small"
                             color={container.restartCount > 5 ? 'error' : 'warning'}

@@ -4,9 +4,9 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import CloudIcon from '@mui/icons-material/Cloud'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import { useState } from 'react'
-import { useNavigateTo } from 'next/navigation'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useServices } from '@/lib/hooks/use-services'
 import { TableOnlyResourceList, TableColumn } from '@/app/components/common/table-only-resource-list'
 import type { Service, ServiceType } from '@/types/kubernetes'
@@ -45,7 +45,7 @@ export default function ServicesPage() {
       field: 'type',
       label: 'Type',
       render: (service) => (
-        <LiquidGlassChip label={service.type} size="small" color={getServiceTypeColor(service.type)} />
+        <StatusBadge label={service.type} size="small" color={getServiceTypeColor(service.type)} />
       ),
     },
     {

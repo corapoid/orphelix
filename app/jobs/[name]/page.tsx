@@ -11,7 +11,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import IconButton from '@mui/material/IconButton'
-import CloseIcon from '@mui/icons-material/Close'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
@@ -19,10 +18,10 @@ import { useJob } from '@/lib/hooks/use-jobs'
 import { usePods } from '@/lib/hooks/use-pods'
 import { useBuildPath } from '@/lib/hooks/use-navigate-to'
 import { StatusBadge } from '@/app/components/common/status-badge'
-import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
+import { GlassPanel } from '@/app/components/common/glass-panel'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import Link from 'next/link'
 
@@ -101,7 +100,7 @@ export default function JobDetailPage() {
         }
       />
 
-      <Box sx={{ display: 'flex', gap: 3, position: 'relative' }}>
+      <Box sx={{ display: 'flex', gap: 2, position: 'relative' }}>
         {/* Main Content */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Grid container spacing={3} sx={{ mb: 3 }}>
@@ -112,24 +111,7 @@ export default function JobDetailPage() {
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Details
             </Typography>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 2.5,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
-              }}
-            >
+            <GlassPanel>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
@@ -149,7 +131,7 @@ export default function JobDetailPage() {
                   </Typography>
                 </Box>
               </Box>
-            </Paper>
+            </GlassPanel>
           </Box>
 
           {/* Execution Statistics */}
@@ -157,53 +139,36 @@ export default function JobDetailPage() {
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Execution Statistics
             </Typography>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 2.5,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
-              }}
-            >
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <GlassPanel>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
                     Succeeded:
                   </Typography>
-                  <Typography variant="h5" fontWeight="bold" color="success.main">
+                  <Typography variant="body2" fontWeight="medium">
                     {job.succeeded}
                   </Typography>
                 </Box>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
                     Failed:
                   </Typography>
-                  <Typography variant="h5" fontWeight="bold" color="error.main">
+                  <Typography variant="body2" fontWeight="medium">
                     {job.failed}
                   </Typography>
                 </Box>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
                     Active:
                   </Typography>
-                  <Typography variant="h5" fontWeight="bold" color="info.main">
+                  <Typography variant="body2" fontWeight="medium">
                     {job.active}
                   </Typography>
                 </Box>
               </Box>
-            </Paper>
+            </GlassPanel>
           </Box>
         </Grid>
           </Grid>
@@ -329,7 +294,7 @@ export default function JobDetailPage() {
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <LiquidGlassChip
+                          <StatusBadge
                             label={condition.status}
                             size="small"
                             color={condition.status === 'True' ? 'success' : 'default'}
@@ -397,53 +362,29 @@ export default function JobDetailPage() {
         </Box>
 
         {/* Right Sidebar - Documentation */}
-        {docsOpen && (
-          <Box
-            sx={{
-              width: 400,
-              flexShrink: 0,
-              position: 'sticky',
-              top: -140,
-              alignSelf: 'flex-start',
-              maxHeight: 'calc(100vh + 108px)',
-              overflow: 'auto',
-            }}
+        <Box
+          sx={{
+            width: 520,
+            flexShrink: 0,
+            mt: -12,
+            position: 'sticky',
+            top: 0,
+            alignSelf: 'flex-start',
+            maxHeight: '100vh',
+          }}
+        >
+          <GlassPanel
+            open={docsOpen}
+            closeable
+            onClose={() => setDocsOpen(false)}
+            animationType="fade"
+            sx={{ p: 3, overflow: 'auto', maxHeight: '100vh' }}
           >
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
-              }}
-            >
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  About Jobs
-                </Typography>
-                <IconButton
-                  size="small"
-                  onClick={() => setDocsOpen(false)}
-                  sx={{
-                    color: 'text.secondary',
-                    '&:hover': {
-                      bgcolor: 'action.hover',
-                    },
-                  }}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </Box>
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                About Jobs
+              </Typography>
+            </Box>
 
               <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
                 A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.
@@ -569,9 +510,8 @@ spec:
                   </Link>
                 </Typography>
               </Box>
-            </Paper>
-          </Box>
-        )}
+          </GlassPanel>
+        </Box>
       </Box>
     </Box>
   )

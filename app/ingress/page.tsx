@@ -13,9 +13,9 @@ import Typography from '@mui/material/Typography'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import HttpIcon from '@mui/icons-material/Http'
 import LockIcon from '@mui/icons-material/Lock'
-import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
+import { StatusBadge } from '@/app/components/common/status-badge'
 import { useMemo } from 'react'
-import { useNavigateTo } from 'next/navigation'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useIngresses } from '@/lib/hooks/use-ingress'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
@@ -140,7 +140,7 @@ export default function IngressPage() {
                   </TableCell>
                   <TableCell>
                     {ingress.className ? (
-                      <LiquidGlassChip label={ingress.className} size="small" />
+                      <StatusBadge label={ingress.className} size="small" />
                     ) : (
                       <Typography variant="body2" color="text.secondary">
                         default
@@ -150,7 +150,7 @@ export default function IngressPage() {
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                       {ingress.hosts.slice(0, 2).map((host, idx) => (
-                        <LiquidGlassChip
+                        <StatusBadge
                           key={idx}
                           label={host}
                           size="small"
@@ -175,7 +175,7 @@ export default function IngressPage() {
                   </TableCell>
                   <TableCell>
                     {ingress.tls && ingress.tls.length > 0 ? (
-                      <LiquidGlassChip
+                      <StatusBadge
                         icon={<LockIcon sx={{ fontSize: 14 }} />}
                         label="Secured"
                         size="small"

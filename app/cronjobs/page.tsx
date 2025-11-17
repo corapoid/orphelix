@@ -4,8 +4,8 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
-import { useNavigateTo } from 'next/navigation'
+import { StatusBadge } from '@/app/components/common/status-badge'
+import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useCronJobs } from '@/lib/hooks/use-cronjobs'
 import { CronJobCard } from '@/app/components/cronjobs/cronjob-card'
 import { ResourceListView, TableColumn } from '@/app/components/common/resource-list-view'
@@ -38,7 +38,7 @@ export default function CronJobsPage() {
       field: 'suspend',
       label: 'Status',
       render: (cronJob) => (
-        <LiquidGlassChip
+        <StatusBadge
           label={cronJob.suspend ? 'Suspended' : 'Active'}
           size="small"
           color={cronJob.suspend ? 'warning' : 'success'}
