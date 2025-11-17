@@ -80,17 +80,118 @@ export default function JobDetailPage() {
         isRefreshing={isLoading}
       />
 
-      <Grid container spacing={3}>
-        {/* Job Information */}
-        <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        {/* Left Column - Details + Statistics */}
+        <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {/* Details */}
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Details
+            </Typography>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2.5,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+              }}
+            >
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Completions:
+                  </Typography>
+                  <Typography variant="body2" fontWeight="medium">
+                    {job.succeeded} / {job.completions}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Duration:
+                  </Typography>
+                  <Typography variant="body2" fontWeight="medium" sx={{ fontFamily: 'monospace' }}>
+                    {job.duration || 'N/A'}
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
+
+          {/* Execution Statistics */}
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Execution Statistics
+            </Typography>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2.5,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+              }}
+            >
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Succeeded:
+                  </Typography>
+                  <Typography variant="h5" fontWeight="bold" color="success.main">
+                    {job.succeeded}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Failed:
+                  </Typography>
+                  <Typography variant="h5" fontWeight="bold" color="error.main">
+                    {job.failed}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Active:
+                  </Typography>
+                  <Typography variant="h5" fontWeight="bold" color="info.main">
+                    {job.active}
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
+        </Grid>
+
+        {/* Right Column - Resource Info */}
+        <Grid size={{ xs: 12, md: 8 }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-            Details
+            About Jobs
           </Typography>
           <Paper
             elevation={0}
             sx={{
-              p: 2.5,
-              flex: 1,
+              p: 3,
               backgroundColor: (theme) =>
                 theme.palette.mode === 'dark'
                   ? 'rgba(30, 30, 46, 0.6)'
@@ -105,86 +206,71 @@ export default function JobDetailPage() {
               borderRadius: 3,
             }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Completions:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {job.succeeded} / {job.completions}
-                </Typography>
-              </Box>
+            <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
+              A <strong>Job</strong> creates one or more Pods and ensures that a specified number of them successfully terminate.
+              As pods successfully complete, the Job tracks the successful completions.
+            </Typography>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Duration:
+            <Typography variant="h6" sx={{ mt: 3, mb: 1.5, fontWeight: 600, fontSize: '1rem' }}>
+              Key Concepts
+            </Typography>
+
+            <Box component="ul" sx={{ pl: 2.5, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
+              <li>
+                <Typography variant="body2">
+                  <strong>Completions:</strong> The number of pods that need to successfully complete for the job to be considered done.
                 </Typography>
-                <Typography variant="body2" fontWeight="medium" sx={{ fontFamily: 'monospace' }}>
-                  {job.duration || 'N/A'}
+              </li>
+              <li>
+                <Typography variant="body2">
+                  <strong>Parallelism:</strong> The maximum number of pods that can run concurrently.
                 </Typography>
-              </Box>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  <strong>Backoff Limit:</strong> The number of retries before considering the job as failed.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  <strong>TTL After Finished:</strong> Automatic cleanup time after job completion.
+                </Typography>
+              </li>
+            </Box>
+
+            <Typography variant="h6" sx={{ mt: 3, mb: 1.5, fontWeight: 600, fontSize: '1rem' }}>
+              Common Use Cases
+            </Typography>
+
+            <Box component="ul" sx={{ pl: 2.5, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
+              <li>
+                <Typography variant="body2">
+                  Batch processing and data transformation tasks
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  Database migrations and backups
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  Report generation and analytics
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  CI/CD pipeline steps and deployment tasks
+                </Typography>
+              </li>
             </Box>
           </Paper>
         </Grid>
+      </Grid>
 
-        {/* Execution Statistics */}
-        <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-            Execution Statistics
-          </Typography>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 2.5,
-              flex: 1,
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(30, 30, 46, 0.6)'
-                  : 'rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              border: '1px solid',
-              borderColor: (theme) =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : 'rgba(209, 213, 219, 0.4)',
-              borderRadius: 3,
-            }}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', height: '100%' }}>
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                  Succeeded
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="success.main">
-                  {job.succeeded}
-                </Typography>
-              </Box>
-
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                  Failed
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="error.main">
-                  {job.failed}
-                </Typography>
-              </Box>
-
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                  Active
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="info.main">
-                  {job.active}
-                </Typography>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
-
-        {/* Related Pods */}
-        {jobPods.length > 0 && (
-          <Grid size={{ xs: 12 }} sx={{ mt: 3 }}>
+      {/* Related Pods */}
+      {jobPods.length > 0 && (
+        <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Pods ({jobPods.length})
             </Typography>
@@ -258,12 +344,12 @@ export default function JobDetailPage() {
                 </Table>
               </TableContainer>
             </Paper>
-          </Grid>
-        )}
+        </Box>
+      )}
 
-        {/* Conditions */}
-        {job.conditions && job.conditions.length > 0 && (
-          <Grid size={{ xs: 12 }} sx={{ mt: 3 }}>
+      {/* Conditions */}
+      {job.conditions && job.conditions.length > 0 && (
+        <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Conditions
             </Typography>
@@ -323,12 +409,12 @@ export default function JobDetailPage() {
                 </Table>
               </TableContainer>
             </Paper>
-          </Grid>
-        )}
+        </Box>
+      )}
 
-        {/* Labels */}
-        {Object.keys(job.labels).length > 0 && (
-          <Grid size={{ xs: 12 }} sx={{ mt: 3 }}>
+      {/* Labels */}
+      {Object.keys(job.labels).length > 0 && (
+        <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Labels
             </Typography>
@@ -366,9 +452,8 @@ export default function JobDetailPage() {
                 </Paper>
               ))}
             </Box>
-          </Grid>
-        )}
-      </Grid>
+        </Box>
+      )}
     </Box>
   )
 }
