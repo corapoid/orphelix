@@ -251,19 +251,29 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
         ref={logsContainerRef}
         sx={{
           p: 2,
-          bgcolor: 'grey.900',
-          color: 'grey.100',
+          bgcolor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(0, 0, 0, 0.4)'
+              : 'rgba(0, 0, 0, 0.05)',
+          color: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.9)'
+              : 'rgba(0, 0, 0, 0.87)',
           fontFamily: 'monospace',
           fontSize: '0.875rem',
           maxHeight: 600,
           overflow: 'auto',
+          borderRadius: 2,
           '& .log-line': {
             py: 0.25,
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-all',
           },
           '& .log-line:hover': {
-            bgcolor: 'rgba(255, 255, 255, 0.05)',
+            bgcolor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.05)'
+                : 'rgba(0, 0, 0, 0.08)',
           },
         }}
       >
@@ -290,13 +300,19 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                   display: 'flex',
                   gap: 1,
                   alignItems: 'flex-start',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                  borderBottom: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? '1px solid rgba(255, 255, 255, 0.05)'
+                      : '1px solid rgba(0, 0, 0, 0.08)',
                 }}
               >
                 <Typography
                   component="span"
                   sx={{
-                    color: 'grey.600',
+                    color: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.4)'
+                        : 'rgba(0, 0, 0, 0.4)',
                     fontSize: '0.75rem',
                     minWidth: '40px',
                     flexShrink: 0,
@@ -308,7 +324,10 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                   <Typography
                     component="span"
                     sx={{
-                      color: 'grey.500',
+                      color: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(255, 255, 255, 0.5)'
+                          : 'rgba(0, 0, 0, 0.5)',
                       fontSize: '0.75rem',
                       minWidth: '180px',
                       flexShrink: 0,
@@ -334,7 +353,10 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                 <Typography
                   component="span"
                   sx={{
-                    color: 'grey.100',
+                    color: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.9)'
+                        : 'rgba(0, 0, 0, 0.87)',
                     flex: 1,
                     whiteSpace: 'pre-wrap',
                     wordBreak: 'break-word',
