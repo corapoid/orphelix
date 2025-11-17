@@ -84,6 +84,33 @@ export interface Probe {
   failureThreshold?: number
 }
 
+export interface ProbeFailure {
+  timestamp: string
+  probeType: 'liveness' | 'readiness' | 'startup'
+  containerName: string
+  reason: string
+  message?: string
+}
+
+export interface ContainerRestartEvent {
+  timestamp: string
+  containerName: string
+  exitCode?: number
+  reason: string
+  message?: string
+  restartCount: number
+}
+
+export interface HealthCheckStatus {
+  container: string
+  livenessStatus: 'healthy' | 'unhealthy' | 'not-configured'
+  readinessStatus: 'ready' | 'not-ready' | 'not-configured'
+  startupStatus: 'started' | 'not-started' | 'not-configured'
+  lastProbeTime?: string
+  failureCount: number
+  restartCount: number
+}
+
 export interface ContainerState {
   waiting?: {
     reason: string
