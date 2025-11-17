@@ -38,64 +38,44 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
     )
   }
 
-  // Full version - centered modal with liquid glass
+  // Full version - detailed error with liquid glass styling
   return (
     <Box
       sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 9999,
-        bgcolor: 'rgba(0, 0, 0, 0.5)',
-        backdropFilter: 'blur(4px)',
-        p: 2,
+        m: 2,
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(30, 30, 46, 0.8)'
+            : 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        border: '1px solid',
+        borderColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'rgba(255, 100, 100, 0.3)'
+            : 'rgba(211, 47, 47, 0.3)',
+        borderRadius: '12px',
+        boxShadow: (theme) =>
+          theme.palette.mode === 'dark'
+            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
+            : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+        p: 3,
       }}
     >
-      <Box
-        sx={{
-          maxWidth: 600,
-          width: '100%',
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.95)'
-              : 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          border: '1px solid',
-          borderColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.12)'
-              : 'rgba(209, 213, 219, 0.4)',
-          borderRadius: '16px',
-          boxShadow: (theme) =>
-            theme.palette.mode === 'dark'
-              ? '0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
-              : '0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
-          p: 4,
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-          <CloudOffIcon sx={{ fontSize: 48, color: 'error.main' }} />
-          <Box>
-            <Typography variant="h5" fontWeight={600} gutterBottom>
-              Cluster Connection Failed
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {health?.message || 'Unable to connect to Kubernetes cluster.'}
-            </Typography>
-          </Box>
-        </Box>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+        <CloudOffIcon sx={{ fontSize: 32, color: 'error.main', mt: 0.5 }} />
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h6" fontWeight={600} gutterBottom>
+            Cluster Connection Failed
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {health?.message || 'Unable to connect to Kubernetes cluster.'}
+          </Typography>
 
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" fontWeight={600} gutterBottom>
+          <Typography variant="subtitle2" fontWeight={600} gutterBottom sx={{ mt: 2 }}>
             Troubleshooting Steps:
           </Typography>
-          <Box component="ul" sx={{ mt: 1.5, pl: 2.5, mb: 0, '& li': { mb: 1 } }}>
+          <Box component="ul" sx={{ mt: 1, pl: 2.5, mb: 0, '& li': { mb: 0.5 } }}>
             <li>
               <Typography variant="body2">
                 Check your <code style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>kubeconfig</code> file is properly configured
@@ -127,30 +107,29 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
               </Typography>
             </li>
           </Box>
-        </Box>
 
-        {health?.code && (
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
-            Error Code: {health.code}
-          </Typography>
-        )}
-
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            variant="contained"
-            startIcon={<RefreshIcon />}
-            onClick={() => refetch()}
-            sx={{
-              px: 3,
-              py: 1,
-              borderRadius: '8px',
-              textTransform: 'none',
-              fontWeight: 600,
-            }}
-          >
-            Retry Connection
-          </Button>
+          {health?.code && (
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
+              Error Code: {health.code}
+            </Typography>
+          )}
         </Box>
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<RefreshIcon />}
+          onClick={() => refetch()}
+          sx={{
+            px: 2,
+            py: 0.75,
+            borderRadius: '8px',
+            textTransform: 'none',
+            fontWeight: 600,
+            flexShrink: 0,
+          }}
+        >
+          Retry
+        </Button>
       </Box>
     </Box>
   )
