@@ -4,15 +4,12 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
@@ -25,9 +22,12 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
+import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
+import { LiquidGlassChip } from '@/app/components/common/liquid-glass-chip'
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { usePod, usePodLogs } from '@/lib/hooks/use-pods'
 import { useRestartPod } from '@/lib/hooks/use-restart-pod'
 import { StatusBadge } from '@/app/components/common/status-badge'
@@ -40,7 +40,6 @@ import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 
 export default function PodDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const name = params.name as string
 
   const { data: pod, isLoading, error, refetch } = usePod(name)
@@ -164,223 +163,369 @@ export default function PodDetailPage() {
         onRefresh={refetch}
         isRefreshing={isLoading}
         actions={
-          <Button
-            variant="outlined"
-            color="warning"
+          <LiquidGlassButton
             startIcon={<RestartAltIcon />}
             onClick={handleRestartClick}
+            sx={{
+              color: (theme) => theme.palette.warning.main,
+              borderColor: (theme) => theme.palette.warning.main,
+            }}
           >
             Restart Pod
-          </Button>
+          </LiquidGlassButton>
         }
       />
 
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Details
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  IP Address:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {pod.ip}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Restart Count:
-                </Typography>
-                <Chip
-                  label={pod.restartCount}
-                  size="small"
-                  color={pod.restartCount > 5 ? 'error' : pod.restartCount > 0 ? 'warning' : 'success'}
-                />
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Containers:
-                </Typography>
-                <Typography variant="body2" fontWeight="medium">
-                  {pod.containers.length}
-                </Typography>
-              </Box>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Details
+        </Typography>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(30, 30, 46, 0.6)'
+                : 'rgba(255, 255, 255, 0.25)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid',
+            borderColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.12)'
+                : 'rgba(209, 213, 219, 0.4)',
+            borderRadius: 3,
+          }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                IP Address:
+              </Typography>
+              <Typography variant="body2" fontWeight="medium">
+                {pod.ip}
+              </Typography>
             </Box>
-          </Paper>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Labels
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {Object.entries(pod.labels).map(([key, value]) => (
-                <Chip key={key} label={`${key}: ${value}`} size="small" variant="outlined" />
-              ))}
-            </Box>
-            <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-              Resources
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {pod.configMaps.length > 0 ? (
-                pod.configMaps.map((cm) => (
-                  <Chip
-                    key={cm}
-                    label={`ConfigMap: ${cm}`}
-                    size="small"
-                    color="info"
-                    clickable
-                    onClick={() => router.push(`/configmaps/${encodeURIComponent(cm)}`)}
-                    sx={{ cursor: 'pointer' }}
-                  />
-                ))
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  No ConfigMaps
-                </Typography>
-              )}
-              {pod.secrets.length > 0 ? (
-                pod.secrets.map((secret) => (
-                  <Chip
-                    key={secret}
-                    label={`Secret: ${secret}`}
-                    size="small"
-                    color="warning"
-                    clickable
-                    onClick={() => router.push(`/secrets/${encodeURIComponent(secret)}`)}
-                    sx={{ cursor: 'pointer' }}
-                  />
-                ))
-              ) : pod.configMaps.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  No Secrets
-                </Typography>
-              ) : null}
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      <Paper sx={{ mb: 3 }}>
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-          <Typography variant="h6">Containers</Typography>
-        </Box>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell align="center">Ready</TableCell>
-                <TableCell align="center">Restarts</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {pod.containers.map((container) => (
-                <TableRow key={container.name} hover>
-                  <TableCell>
-                    <Typography variant="body2" fontWeight="medium">
-                      {container.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>
-                      {container.image}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    {container.ready ? (
-                      <CheckCircleIcon color="success" fontSize="small" />
-                    ) : (
-                      <ErrorIcon color="error" fontSize="small" />
-                    )}
-                  </TableCell>
-                  <TableCell align="center">
-                    {container.restartCount > 0 ? (
-                      <Chip
-                        label={container.restartCount}
-                        size="small"
-                        color={container.restartCount > 5 ? 'error' : 'warning'}
-                      />
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        0
-                      </Typography>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-
-      {pod.containers.length > 0 && (
-        <Paper sx={{ mb: 3, overflow: 'hidden' }}>
-          <Box
-            sx={{
-              p: 2,
-              borderBottom: logsExpanded ? 1 : 0,
-              borderColor: 'divider',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-            onClick={() => setLogsExpanded(!logsExpanded)}
-          >
-            <Typography variant="h6">Container Logs</Typography>
-            <IconButton
-              size="small"
-              disableRipple
-              sx={{
-                '&:hover': {
-                  bgcolor: 'transparent',
-                },
-              }}
-            >
-              {logsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </IconButton>
-          </Box>
-          <Collapse in={logsExpanded}>
-            <Box sx={{ p: 2 }}>
-              {pod.containers.length > 1 && (
-                <Box sx={{ mb: 2 }}>
-                  <FormControl size="small" sx={{ minWidth: 200 }}>
-                    <InputLabel>Select Container</InputLabel>
-                    <Select
-                      value={selectedContainer}
-                      label="Select Container"
-                      onChange={(e) => setSelectedContainer(e.target.value)}
-                    >
-                      {pod.containers.map((container) => (
-                        <MenuItem key={container.name} value={container.name}>
-                          {container.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-              )}
-              <LogsViewer
-                logs={logs}
-                parsed={parsedLogs}
-                isLoading={logsLoading}
-                error={logsError}
-                containerName={selectedContainer}
-                onRefresh={() => refetchLogs()}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Restart Count:
+              </Typography>
+              <LiquidGlassChip
+                label={pod.restartCount}
+                size="small"
+                color={pod.restartCount > 5 ? 'error' : pod.restartCount > 0 ? 'warning' : 'success'}
               />
             </Box>
-          </Collapse>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="body2" color="text.secondary">
+                Containers:
+              </Typography>
+              <Typography variant="body2" fontWeight="medium">
+                {pod.containers.length}
+              </Typography>
+            </Box>
+          </Box>
         </Paper>
+      </Box>
+
+      {/* Labels Section */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Labels
+        </Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+          {Object.entries(pod.labels).map(([key, value]) => (
+            <Paper
+              key={key}
+              elevation={0}
+              sx={{
+                px: 2,
+                py: 1,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                {key}:
+              </Typography>
+              <Typography variant="body2" fontWeight={500}>
+                {value}
+              </Typography>
+            </Paper>
+          ))}
+        </Box>
+      </Box>
+
+      {/* Resources Section */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Resources
+        </Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+          {pod.configMaps.map((cm) => (
+            <Link
+              key={cm}
+              href={`/configmaps/${encodeURIComponent(cm)}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  minWidth: 200,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                  borderRadius: 3,
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(59, 130, 246, 0.5)'
+                        : 'rgba(59, 130, 246, 0.4)',
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="caption" color="info.main" fontWeight={600}>
+                    ConfigMap
+                  </Typography>
+                  <OpenInNewIcon fontSize="small" sx={{ color: 'info.main', opacity: 0.6 }} />
+                </Box>
+                <Typography variant="body1" fontWeight={500}>
+                  {cm}
+                </Typography>
+              </Paper>
+            </Link>
+          ))}
+          {pod.secrets.map((secret) => (
+            <Link
+              key={secret}
+              href={`/secrets/${encodeURIComponent(secret)}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  minWidth: 200,
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                  borderRadius: 3,
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(234, 179, 8, 0.5)'
+                        : 'rgba(234, 179, 8, 0.4)',
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="caption" color="warning.main" fontWeight={600}>
+                    Secret
+                  </Typography>
+                  <OpenInNewIcon fontSize="small" sx={{ color: 'warning.main', opacity: 0.6 }} />
+                </Box>
+                <Typography variant="body1" fontWeight={500}>
+                  {secret}
+                </Typography>
+              </Paper>
+            </Link>
+          ))}
+        </Box>
+      </Box>
+
+      {/* Containers Section */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Containers
+        </Typography>
+        <Paper
+          elevation={0}
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(30, 30, 46, 0.6)'
+                : 'rgba(255, 255, 255, 0.25)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid',
+            borderColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.12)'
+                : 'rgba(209, 213, 219, 0.4)',
+            borderRadius: 3,
+          }}
+        >
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Image</TableCell>
+                  <TableCell align="center">Ready</TableCell>
+                  <TableCell align="center">Restarts</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pod.containers.map((container) => (
+                  <TableRow key={container.name} hover>
+                    <TableCell>
+                      <Typography variant="body2" fontWeight="medium">
+                        {container.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>
+                        {container.image}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      {container.ready ? (
+                        <CheckCircleIcon color="success" fontSize="small" />
+                      ) : (
+                        <ErrorIcon color="error" fontSize="small" />
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      {container.restartCount > 0 ? (
+                        <LiquidGlassChip
+                          label={container.restartCount}
+                          size="small"
+                          color={container.restartCount > 5 ? 'error' : 'warning'}
+                        />
+                      ) : (
+                        <Typography variant="body2" color="text.secondary">
+                          0
+                        </Typography>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Box>
+
+      {/* Container Logs Section */}
+      {pod.containers.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              overflow: 'hidden',
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(30, 30, 46, 0.6)'
+                  : 'rgba(255, 255, 255, 0.25)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              border: '1px solid',
+              borderColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(209, 213, 219, 0.4)',
+              borderRadius: 3,
+            }}
+          >
+            <Box
+              sx={{
+                p: 2,
+                borderBottom: logsExpanded ? 1 : 0,
+                borderColor: 'divider',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s',
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+              }}
+              onClick={() => setLogsExpanded(!logsExpanded)}
+            >
+              <Typography variant="h6" fontWeight={600}>Container Logs</Typography>
+              <IconButton
+                size="small"
+                disableRipple
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'transparent',
+                  },
+                }}
+              >
+                {logsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </IconButton>
+            </Box>
+            <Collapse in={logsExpanded}>
+              <Box sx={{ p: 2 }}>
+                {pod.containers.length > 1 && (
+                  <Box sx={{ mb: 2 }}>
+                    <FormControl size="small" sx={{ minWidth: 200 }}>
+                      <InputLabel>Select Container</InputLabel>
+                      <Select
+                        value={selectedContainer}
+                        label="Select Container"
+                        onChange={(e) => setSelectedContainer(e.target.value)}
+                      >
+                        {pod.containers.map((container) => (
+                          <MenuItem key={container.name} value={container.name}>
+                            {container.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                )}
+                <LogsViewer
+                  logs={logs}
+                  parsed={parsedLogs}
+                  isLoading={logsLoading}
+                  error={logsError}
+                  containerName={selectedContainer}
+                  onRefresh={() => refetchLogs()}
+                />
+              </Box>
+            </Collapse>
+          </Paper>
+        </Box>
       )}
 
       {/* Restart confirmation dialog */}
