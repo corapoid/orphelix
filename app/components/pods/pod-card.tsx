@@ -22,7 +22,7 @@ export function PodCard({ pod, onClick }: PodCardProps) {
       onClick={onClick}
       statusBadge={<StatusBadge status={pod.status} />}
       metrics={
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 1.5 }}>
           <Box>
             <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
               Restarts
