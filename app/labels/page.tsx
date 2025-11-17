@@ -5,8 +5,6 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Chip from '@mui/material/Chip'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
 import LabelIcon from '@mui/icons-material/Label'
 import { useState } from 'react'
 import { PageHeader } from '@/app/components/common/page-header'
@@ -28,7 +26,7 @@ export default function LabelsPage() {
     return (
       <Box>
         <PageHeader
-          title="Labels & Annotations"
+          title="Labels"
           breadcrumbs={[{ label: 'Labels' }]}
         />
         <ErrorState
@@ -56,12 +54,7 @@ export default function LabelsPage() {
   return (
     <Box>
       <PageHeader
-        title={
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <LabelIcon />
-            Labels Browser
-          </Box>
-        }
+        title="Labels"
         metadata={[
           `${data?.totalResources || 0} resources`,
           `${data?.labels.length || 0} unique labels`,
@@ -72,8 +65,8 @@ export default function LabelsPage() {
 
       {/* Label Selector Search */}
       <GlassPanel sx={{ mb: 3 }}>
-        <Typography variant="h6" gutterBottom>
-          Label Selector
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          Filter resources using Kubernetes label selector syntax
         </Typography>
         <form onSubmit={handleSelectorSubmit}>
           <TextField
@@ -81,23 +74,16 @@ export default function LabelsPage() {
             fullWidth
             placeholder="app=nginx,environment=production"
             defaultValue={selector}
-            helperText="Use Kubernetes label selector syntax: key=value, key!=value, key, !key"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
+            size="small"
           />
         </form>
         {selector && (
           <Box sx={{ mt: 2 }}>
             <Chip
-              label={`Selector: ${selector}`}
+              label={selector}
               onDelete={() => setSelector('')}
               color="primary"
-              variant="outlined"
+              size="small"
             />
           </Box>
         )}
@@ -110,54 +96,26 @@ export default function LabelsPage() {
           placeholder="Search labels..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
+          size="small"
         />
       </GlassPanel>
 
-      {/* Label Statistics */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-          Label Distribution ({filteredLabels.length} labels)
-        </Typography>
+      {/* Label Distribution */}
+      {filteredLabels.length > 0 ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {filteredLabels.map((labelGroup) => (
-            <Paper
-              key={labelGroup.key}
-              elevation={0}
-              sx={{
-                p: 3,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
-              }}
-            >
+            <GlassPanel key={labelGroup.key}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <LabelIcon color="primary" />
-                  <Typography variant="h6" fontWeight={600}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <LabelIcon fontSize="small" color="primary" />
+                  <Typography variant="body1" fontWeight={600}>
                     {labelGroup.key}
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', gap: 1 }}>
                   <Chip
                     label={`${labelGroup.totalCount} resources`}
                     size="small"
-                    color="primary"
                     variant="outlined"
                   />
                   <Chip
@@ -170,56 +128,45 @@ export default function LabelsPage() {
 
               {/* Resource Types */}
               <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                  Resource Types:
+                <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5 }}>
+                  Resource Types
                 </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
                   {labelGroup.resourceTypes.map((type) => (
                     <Chip
                       key={type}
                       label={type}
                       size="small"
-                      sx={{ fontSize: '0.75rem' }}
                     />
                   ))}
                 </Box>
               </Box>
 
               {/* Values */}
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                Values:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {labelGroup.values.map(({ value, count }) => (
-                  <Chip
-                    key={value}
-                    label={`${value} (${count})`}
-                    size="medium"
-                    variant="filled"
-                    sx={{
-                      bgcolor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(99, 102, 241, 0.2)'
-                          : 'rgba(99, 102, 241, 0.1)',
-                      '&:hover': {
-                        bgcolor: (theme) =>
-                          theme.palette.mode === 'dark'
-                            ? 'rgba(99, 102, 241, 0.3)'
-                            : 'rgba(99, 102, 241, 0.2)',
-                      },
-                    }}
-                    onClick={() => setSelector(`${labelGroup.key}=${value}`)}
-                  />
-                ))}
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5 }}>
+                  Values
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 0.5 }}>
+                  {labelGroup.values.map(({ value, count }) => (
+                    <Chip
+                      key={value}
+                      label={`${value} (${count})`}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                      onClick={() => setSelector(`${labelGroup.key}=${value}`)}
+                      sx={{ cursor: 'pointer' }}
+                    />
+                  ))}
+                </Box>
               </Box>
-            </Paper>
+            </GlassPanel>
           ))}
         </Box>
-      </Box>
-
-      {filteredLabels.length === 0 && (
+      ) : (
         <GlassPanel>
-          <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Box sx={{ textAlign: 'center', py: 8 }}>
             <LabelIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
             <Typography variant="h6" gutterBottom>
               No labels found
