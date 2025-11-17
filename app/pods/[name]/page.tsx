@@ -205,9 +205,8 @@ export default function PodDetailPage() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Containers
           </Typography>
-          <GlassPanel sx={{ flex: 1, overflow: 'hidden' }}>
-            <TableContainer>
-              <Table>
+          <GlassPanel sx={{ flex: 1 }}>
+            <Table>
                 <TableHead>
                   <TableRow>
                     <TableCell>Image</TableCell>
@@ -247,7 +246,6 @@ export default function PodDetailPage() {
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer>
           </GlassPanel>
         </Grid>
       </Grid>
