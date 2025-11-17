@@ -82,7 +82,7 @@ export default function JobDetailPage() {
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
         {/* Left Column - Details + Statistics */}
-        <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Grid size={{ xs: 12, md: 3 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Details */}
           <Box>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -184,7 +184,7 @@ export default function JobDetailPage() {
         </Grid>
 
         {/* Right Column - Resource Info */}
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid size={{ xs: 12, md: 9 }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             About Jobs
           </Typography>
@@ -206,63 +206,139 @@ export default function JobDetailPage() {
               borderRadius: 3,
             }}
           >
-            <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.7 }}>
-              A <strong>Job</strong> creates one or more Pods and ensures that a specified number of them successfully terminate.
-              As pods successfully complete, the Job tracks the successful completions.
+            <Typography variant="body1" sx={{ mb: 2.5, lineHeight: 1.8 }}>
+              A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.
+              As pods successfully complete, the Job tracks the successful completions. When a specified number of successful completions is reached,
+              the task (ie, Job) is complete. Deleting a Job will clean up the Pods it created. Suspending a Job will delete its active Pods until
+              the Job is resumed again.
             </Typography>
 
-            <Typography variant="h6" sx={{ mt: 3, mb: 1.5, fontWeight: 600, fontSize: '1rem' }}>
+            <Typography variant="body1" sx={{ mb: 2.5, lineHeight: 1.8 }}>
+              A simple case is to create one Job object in order to reliably run one Pod to completion. The Job object will start a new Pod if
+              the first Pod fails or is deleted (for example due to a node hardware failure or a node reboot). You can also use a Job to run
+              multiple Pods in parallel.
+            </Typography>
+
+            <Typography variant="h6" sx={{ mt: 3, mb: 2, fontWeight: 600, fontSize: '1.05rem' }}>
+              Running an example Job
+            </Typography>
+
+            <Typography variant="body1" sx={{ mb: 2.5, lineHeight: 1.8 }}>
+              Here is an example Job config that computes π to 2000 places and prints it out. It takes around 10s to complete:
+            </Typography>
+
+            <Box
+              component="pre"
+              sx={{
+                p: 2,
+                mb: 3,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(0, 0, 0, 0.3)'
+                    : 'rgba(0, 0, 0, 0.05)',
+                borderRadius: 2,
+                overflow: 'auto',
+                fontSize: '0.85rem',
+                lineHeight: 1.6,
+                fontFamily: 'monospace',
+              }}
+            >
+{`apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl:5.34.0
+        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  backoffLimit: 4`}
+            </Box>
+
+            <Typography variant="h6" sx={{ mt: 3, mb: 2, fontWeight: 600, fontSize: '1.05rem' }}>
               Key Concepts
             </Typography>
 
-            <Box component="ul" sx={{ pl: 2.5, mb: 2, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
+            <Box component="ul" sx={{ pl: 2.5, mb: 3, '& li': { mb: 1.5, lineHeight: 1.8 } }}>
               <li>
                 <Typography variant="body2">
-                  <strong>Completions:</strong> The number of pods that need to successfully complete for the job to be considered done.
+                  <strong>Completions:</strong> Specifies the desired number of successfully finished pods the job should be run with.
+                  Setting to null means that the success of any pod signals the success of all pods.
                 </Typography>
               </li>
               <li>
                 <Typography variant="body2">
-                  <strong>Parallelism:</strong> The maximum number of pods that can run concurrently.
+                  <strong>Parallelism:</strong> Specifies the maximum desired number of pods the job should run at any given time.
+                  The actual number of pods running in steady state will be less than this number when work is left to do.
                 </Typography>
               </li>
               <li>
                 <Typography variant="body2">
-                  <strong>Backoff Limit:</strong> The number of retries before considering the job as failed.
+                  <strong>Backoff Limit:</strong> Specifies the number of retries before marking this job failed. Defaults to 6.
                 </Typography>
               </li>
               <li>
                 <Typography variant="body2">
-                  <strong>TTL After Finished:</strong> Automatic cleanup time after job completion.
+                  <strong>Active Deadline Seconds:</strong> Specifies the duration in seconds relative to the startTime that the job may be active
+                  before the system tries to terminate it.
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body2">
+                  <strong>TTL After Finished:</strong> Limits the lifetime of a Job that has finished execution (either Complete or Failed).
+                  After TTL seconds, the Job is eligible to be automatically deleted.
                 </Typography>
               </li>
             </Box>
 
-            <Typography variant="h6" sx={{ mt: 3, mb: 1.5, fontWeight: 600, fontSize: '1rem' }}>
-              Common Use Cases
-            </Typography>
-
-            <Box component="ul" sx={{ pl: 2.5, '& li': { mb: 1.5, lineHeight: 1.7 } }}>
-              <li>
-                <Typography variant="body2">
-                  Batch processing and data transformation tasks
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  Database migrations and backups
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  Report generation and analytics
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2">
-                  CI/CD pipeline steps and deployment tasks
-                </Typography>
-              </li>
+            <Box sx={{
+              mt: 4,
+              pt: 3,
+              borderTop: '1px solid',
+              borderColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'rgba(0, 0, 0, 0.1)',
+            }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  color: 'text.secondary',
+                }}
+              >
+                Learn more in the{' '}
+                <Link
+                  href="https://kubernetes.io/docs/concepts/workloads/controllers/job/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  <Typography
+                    component="span"
+                    sx={{
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    official Kubernetes documentation
+                  </Typography>
+                  <Box component="span" sx={{ fontSize: '0.75rem' }}>↗</Box>
+                </Link>
+              </Typography>
             </Box>
           </Paper>
         </Grid>
