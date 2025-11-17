@@ -37,7 +37,9 @@ export default async function DemoSlugPage({ params }: { params: Promise<{ slug:
   // Check if this is a detail page (e.g., /demo/jobs/my-job)
   if (slug.length === 2 && detailPages[pageSlug]) {
     const DetailPageComponent = (await detailPages[pageSlug]()).default
-    return <DetailPageComponent />
+    // Pass the resource name as params to the detail page
+    const detailParams = Promise.resolve({ name: slug[1] })
+    return <DetailPageComponent params={detailParams} />
   }
 
   // Otherwise, it's a list page (e.g., /demo/jobs)
