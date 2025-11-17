@@ -1,4 +1,5 @@
 import Chip from '@mui/material/Chip'
+import type { ChipProps } from '@mui/material/Chip'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
@@ -7,12 +8,14 @@ import type { DeploymentStatus, PodStatus, NodeStatus } from '@/types/kubernetes
 
 type Status = DeploymentStatus | PodStatus | NodeStatus | string
 
-interface StatusBadgeProps {
-  status: Status
-  size?: 'small' | 'medium'
+interface StatusBadgeProps extends Omit<ChipProps, 'color'> {
+  status?: Status
+  label?: string
+  color?: 'success' | 'error' | 'warning' | 'info' | 'default'
+  size?: 'small' | 'medium' | 'large'
 }
 
-// Config for status colors and icons
+// Config for Kubernetes status colors
 const statusConfig: Record<string, {
   color: 'success' | 'error' | 'warning' | 'info' | 'default'
   icon?: React.ReactElement
@@ -43,57 +46,68 @@ const statusConfig: Record<string, {
   Unknown: { color: 'default', icon: <HelpOutlineIcon /> },
 }
 
-/**
- * StatusBadge - iOS Style
- *
- * Clean, minimal badge design inspired by iOS
- */
-export function StatusBadge({ status, size = 'small' }: StatusBadgeProps) {
-  const config = statusConfig[status] || statusConfig.Unknown
+const getColors = (colorType: 'success' | 'error' | 'warning' | 'info' | 'default') => {
+  const colorMap = {
+    success: {
+      bg: 'rgba(52, 199, 89, 0.15)',
+      bgDark: 'rgba(52, 199, 89, 0.2)',
+      text: '#34C759',
+      textDark: '#30D158',
+    },
+    error: {
+      bg: 'rgba(255, 59, 48, 0.15)',
+      bgDark: 'rgba(255, 69, 58, 0.2)',
+      text: '#FF3B30',
+      textDark: '#FF453A',
+    },
+    warning: {
+      bg: 'rgba(255, 149, 0, 0.15)',
+      bgDark: 'rgba(255, 159, 10, 0.2)',
+      text: '#FF9500',
+      textDark: '#FF9F0A',
+    },
+    info: {
+      bg: 'rgba(0, 122, 255, 0.15)',
+      bgDark: 'rgba(10, 132, 255, 0.2)',
+      text: '#007AFF',
+      textDark: '#0A84FF',
+    },
+    default: {
+      bg: 'rgba(142, 142, 147, 0.15)',
+      bgDark: 'rgba(142, 142, 147, 0.2)',
+      text: '#8E8E93',
+      textDark: '#98989D',
+    },
+  }
+  return colorMap[colorType] || colorMap.default
+}
 
-  // iOS-style color mapping
-  const getColors = (colorType: typeof config.color) => {
-    const colorMap = {
-      success: {
-        bg: 'rgba(52, 199, 89, 0.15)',
-        bgDark: 'rgba(52, 199, 89, 0.2)',
-        text: '#34C759',
-        textDark: '#30D158',
-      },
-      error: {
-        bg: 'rgba(255, 59, 48, 0.15)',
-        bgDark: 'rgba(255, 69, 58, 0.2)',
-        text: '#FF3B30',
-        textDark: '#FF453A',
-      },
-      warning: {
-        bg: 'rgba(255, 149, 0, 0.15)',
-        bgDark: 'rgba(255, 159, 10, 0.2)',
-        text: '#FF9500',
-        textDark: '#FF9F0A',
-      },
-      info: {
-        bg: 'rgba(0, 122, 255, 0.15)',
-        bgDark: 'rgba(10, 132, 255, 0.2)',
-        text: '#007AFF',
-        textDark: '#0A84FF',
-      },
-      default: {
-        bg: 'rgba(142, 142, 147, 0.15)',
-        bgDark: 'rgba(142, 142, 147, 0.2)',
-        text: '#8E8E93',
-        textDark: '#98989D',
-      },
-    }
-    return colorMap[colorType] || colorMap.default
+/**
+ * StatusBadge - iOS Style Glass Morphism Chip
+ *
+ * Universal chip component for both Kubernetes statuses and custom labels.
+ * - Use with `status` prop for automatic Kubernetes status color mapping
+ * - Use with `label` and `color` props for custom colored chips
+ */
+export function StatusBadge({ status, label, color, size = 'small', sx, ...props }: StatusBadgeProps) {
+  // Determine color and label
+  let finalColor = color || 'default'
+  let finalLabel = label || status || ''
+
+  // If status is provided, use status config
+  if (status && !color) {
+    const config = statusConfig[status] || statusConfig.Unknown
+    finalColor = config.color
+    finalLabel = status
   }
 
-  const colors = getColors(config.color)
+  const colors = getColors(finalColor)
 
   return (
     <Chip
-      label={status}
+      label={finalLabel}
       size={size}
+      {...props}
       sx={{
         fontWeight: 500,
         fontSize: '0.6875rem',
@@ -113,6 +127,13 @@ export function StatusBadge({ status, size = 'small' }: StatusBadgeProps) {
         '& .MuiChip-label': {
           padding: '0 8px',
         },
+        '& .MuiChip-icon': {
+          marginLeft: '4px',
+          marginRight: '-4px',
+          fontSize: '0.875rem',
+          color: (theme) => theme.palette.mode === 'dark' ? colors.textDark : colors.text,
+        },
+        ...sx,
       }}
     />
   )
