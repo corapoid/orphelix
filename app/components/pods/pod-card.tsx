@@ -41,7 +41,11 @@ export function PodCard({ pod, onClick }: PodCardProps) {
               sx={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                lineHeight: 1.3,
+                fontSize: '0.8rem',
               }}
             >
               {pod.nodeName || 'N/A'}
