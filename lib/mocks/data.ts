@@ -157,11 +157,14 @@ export function generateMockPods(): Pod[] {
       const status = i === 0 && Math.random() > 0.8 ? randomItem(statuses) : 'Running'
       const hash = Math.random().toString(36).substring(2, 12)
 
+      const restartCount = status === 'CrashLoopBackOff' ? Math.floor(Math.random() * 10) : 0
+      const hasProbes = Math.random() > 0.3 // 70% of pods have probes
+
       pods.push({
         name: `${app}-${hash}`,
         namespace: 'default',
         status,
-        restartCount: status === 'CrashLoopBackOff' ? Math.floor(Math.random() * 10) : 0,
+        restartCount,
         age: calculateAge(randomDate(30)),
         nodeName: randomItem(nodes),
         ip: `10.0.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
@@ -170,7 +173,63 @@ export function generateMockPods(): Pod[] {
             name: app,
             image: `${app}:latest`,
             ready: status === 'Running',
-            restartCount: status === 'CrashLoopBackOff' ? Math.floor(Math.random() * 10) : 0,
+            restartCount,
+            livenessProbe: hasProbes ? {
+              type: 'httpGet' as const,
+              httpGet: {
+                path: '/healthz',
+                port: 8080,
+                scheme: 'HTTP',
+              },
+              initialDelaySeconds: 15,
+              periodSeconds: 10,
+              timeoutSeconds: 1,
+              successThreshold: 1,
+              failureThreshold: 3,
+            } : undefined,
+            readinessProbe: hasProbes ? {
+              type: 'httpGet' as const,
+              httpGet: {
+                path: '/ready',
+                port: 8080,
+                scheme: 'HTTP',
+              },
+              initialDelaySeconds: 5,
+              periodSeconds: 5,
+              timeoutSeconds: 1,
+              successThreshold: 1,
+              failureThreshold: 3,
+            } : undefined,
+          },
+        ],
+        containerStatuses: [
+          {
+            name: app,
+            ready: status === 'Running',
+            restartCount,
+            state: status === 'Running' ? {
+              running: {
+                startedAt: randomDate(7).toISOString(),
+              },
+            } : status === 'CrashLoopBackOff' ? {
+              waiting: {
+                reason: 'CrashLoopBackOff',
+                message: 'Back-off 5m0s restarting failed container',
+              },
+            } : {
+              waiting: {
+                reason: 'ContainerCreating',
+              },
+            },
+            lastState: restartCount > 0 ? {
+              terminated: {
+                exitCode: 1,
+                reason: 'Error',
+                message: 'Application crashed due to uncaught exception',
+                startedAt: randomDate(7).toISOString(),
+                finishedAt: randomDate(6).toISOString(),
+              },
+            } : undefined,
           },
         ],
         labels: {
