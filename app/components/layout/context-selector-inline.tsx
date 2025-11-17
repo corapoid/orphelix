@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
 import Divider from '@mui/material/Divider'
-import CloudIcon from '@mui/icons-material/Cloud'
 import { useModeStore, useClusterAliases } from '@/lib/core/store'
 
 interface KubeContext {
@@ -116,7 +115,6 @@ export function ContextSelectorInline() {
     const demoDisplayName = getDisplayName('demo-cluster')
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <CloudIcon sx={{ fontSize: 18, color: 'primary.main' }} />
         <Typography variant="caption" color="text.secondary" fontWeight={600}>
           Cluster:
         </Typography>
@@ -130,7 +128,6 @@ export function ContextSelectorInline() {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <CloudIcon sx={{ fontSize: 18, color: 'primary.main' }} />
         <Typography variant="caption" color="text.secondary" fontWeight={600}>
           Cluster:
         </Typography>
@@ -143,7 +140,6 @@ export function ContextSelectorInline() {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <CloudIcon sx={{ fontSize: 18, color: 'primary.main' }} />
       <Typography variant="caption" color="text.secondary" fontWeight={600}>
         Cluster:
       </Typography>
