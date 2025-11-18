@@ -20,10 +20,27 @@ const mockTree: Record<string, TreeItem[]> = {
     { name: '.gitignore', path: '.gitignore', type: 'file', size: 456 },
   ],
   'k8s': [
+    { name: 'base', path: 'k8s/base', type: 'dir' },
+    { name: 'overlays', path: 'k8s/overlays', type: 'dir' },
     { name: 'deployments', path: 'k8s/deployments', type: 'dir' },
     { name: 'services', path: 'k8s/services', type: 'dir' },
     { name: 'configmaps', path: 'k8s/configmaps', type: 'dir' },
     { name: 'namespace.yaml', path: 'k8s/namespace.yaml', type: 'file', size: 234 },
+  ],
+  'k8s/base': [
+    { name: 'kustomization.yaml', path: 'k8s/base/kustomization.yaml', type: 'file', size: 345 },
+    { name: 'frontend-deployment.yaml', path: 'k8s/base/frontend-deployment.yaml', type: 'file', size: 1200 },
+    { name: 'frontend-service.yaml', path: 'k8s/base/frontend-service.yaml', type: 'file', size: 400 },
+  ],
+  'k8s/overlays': [
+    { name: 'dev', path: 'k8s/overlays/dev', type: 'dir' },
+    { name: 'prod', path: 'k8s/overlays/prod', type: 'dir' },
+  ],
+  'k8s/overlays/dev': [
+    { name: 'kustomization.yaml', path: 'k8s/overlays/dev/kustomization.yaml', type: 'file', size: 250 },
+  ],
+  'k8s/overlays/prod': [
+    { name: 'kustomization.yaml', path: 'k8s/overlays/prod/kustomization.yaml', type: 'file', size: 280 },
   ],
   'k8s/deployments': [
     { name: 'frontend.yaml', path: 'k8s/deployments/frontend.yaml', type: 'file', size: 1567 },
@@ -255,6 +272,46 @@ data:
   LOG_LEVEL: "info"
   API_TIMEOUT: "30000"
   MAX_CONNECTIONS: "100"
+`,
+
+  'k8s/base/kustomization.yaml': `apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- frontend-deployment.yaml
+- frontend-service.yaml
+
+commonLabels:
+  environment: base
+  managed-by: kustomize
+`,
+
+  'k8s/overlays/dev/kustomization.yaml': `apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+- ../../base
+
+namePrefix: dev-
+
+commonLabels:
+  environment: dev
+`,
+
+  'k8s/overlays/prod/kustomization.yaml': `apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+- ../../base
+
+namePrefix: prod-
+
+commonLabels:
+  environment: production
+
+replicas:
+- name: frontend
+  count: 5
 `,
 
   'k8s/configmaps/nginx-config.yaml': `apiVersion: v1
