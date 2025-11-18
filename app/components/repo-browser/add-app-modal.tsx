@@ -188,20 +188,24 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     if (!generatedFiles) return
 
     // Add files to edit basket
-    Object.values(generatedFiles).forEach((file) => {
-      if (file) {
-        addToBasket({
-          filePath: file.path,
-          content: file.content,
-          originalContent: '', // New file
-          sha: file.sha || '', // New file
-        })
-      }
+    const filesToAdd = []
+    if (generatedFiles.deployment) filesToAdd.push(generatedFiles.deployment)
+    if (generatedFiles.service) filesToAdd.push(generatedFiles.service)
+    if (generatedFiles.kustomization) filesToAdd.push(generatedFiles.kustomization)
+    if (generatedFiles.overlays) filesToAdd.push(...generatedFiles.overlays)
+
+    filesToAdd.forEach((file) => {
+      addToBasket({
+        filePath: file.path,
+        content: file.content,
+        originalContent: '', // New file
+        sha: file.sha || '', // New file
+      })
     })
 
     // Close modal and show success
     onClose()
-    alert(`${Object.keys(generatedFiles).length} files added to your changes. Review and commit when ready.`)
+    alert(`${filesToAdd.length} files added to your changes. Review and commit when ready.`)
   }
 
   const handleClose = () => {
@@ -341,21 +345,38 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
       case 2:
         if (!generatedFiles) return <CircularProgress />
 
-        const fileEntries = Object.entries(generatedFiles).filter(([_, file]) => file)
+        // Flatten all files into a single array for display
+        const allFiles: Array<{ name: string; file: { path: string; content: string } }> = []
+
+        if (generatedFiles.deployment) {
+          allFiles.push({ name: 'Deployment', file: generatedFiles.deployment })
+        }
+        if (generatedFiles.service) {
+          allFiles.push({ name: 'Service', file: generatedFiles.service })
+        }
+        if (generatedFiles.kustomization) {
+          allFiles.push({ name: 'Base Kustomization', file: generatedFiles.kustomization })
+        }
+        if (generatedFiles.overlays) {
+          generatedFiles.overlays.forEach((overlay, idx) => {
+            const envName = overlay.path.split('/').filter(p => p !== 'kustomization.yaml').pop() || `overlay-${idx}`
+            allFiles.push({ name: `${envName} Kustomization`, file: overlay })
+          })
+        }
 
         return (
           <Box>
             <Tabs value={previewTab} onChange={(_, val) => setPreviewTab(val)}>
-              {fileEntries.map(([name]) => (
-                <Tab key={name} label={name.charAt(0).toUpperCase() + name.slice(1)} />
+              {allFiles.map(({ name }) => (
+                <Tab key={name} label={name} />
               ))}
             </Tabs>
 
             <Box sx={{ mt: 2 }}>
-              {fileEntries.map(([name, file], index) => (
+              {allFiles.map(({ name, file }, index) => (
                 <Box key={name} sx={{ display: previewTab === index ? 'block' : 'none' }}>
                   <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                    {file?.path}
+                    {file.path}
                   </Typography>
                   <Box
                     sx={{
@@ -369,7 +390,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                     <Editor
                       height="400px"
                       language="yaml"
-                      value={file?.content}
+                      value={file.content}
                       options={{
                         readOnly: true,
                         minimap: { enabled: false },
@@ -385,20 +406,31 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
         )
 
       case 3:
+        if (!generatedFiles) return null
+
+        // Collect all file paths
+        const filePaths: string[] = []
+        if (generatedFiles.deployment) filePaths.push(generatedFiles.deployment.path)
+        if (generatedFiles.service) filePaths.push(generatedFiles.service.path)
+        if (generatedFiles.kustomization) filePaths.push(generatedFiles.kustomization.path)
+        if (generatedFiles.overlays) {
+          generatedFiles.overlays.forEach(overlay => filePaths.push(overlay.path))
+        }
+
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <Alert severity="info">
               Files will be added to your changes. You can review and commit them from the changes panel.
             </Alert>
 
-            {generatedFiles && (
-              <Box>
-                <Typography variant="subtitle2" gutterBottom>Files to be created:</Typography>
-                {Object.entries(generatedFiles).map(([name, file]) => file && (
-                  <Chip key={name} label={file.path} sx={{ mr: 1, mb: 1 }} />
-                ))}
-              </Box>
-            )}
+            <Box>
+              <Typography variant="subtitle2" gutterBottom>
+                Files to be created ({filePaths.length}):
+              </Typography>
+              {filePaths.map(path => (
+                <Chip key={path} label={path} sx={{ mr: 1, mb: 1 }} />
+              ))}
+            </Box>
           </Box>
         )
 
