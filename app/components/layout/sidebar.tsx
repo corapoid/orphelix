@@ -99,6 +99,7 @@ const navGroups: (NavItem | NavGroup)[] = [
       { label: 'Labels', icon: <LabelIcon />, path: '/labels', color: '#10B981' },
     ],
   },
+  { label: 'Repository Browser', icon: <GitHubIcon />, path: '/repo-browser', color: '#6366F1' },
 ]
 
 function isNavGroup(item: NavItem | NavGroup): item is NavGroup {

@@ -241,6 +241,62 @@ export class GitHubClient {
   }
 
   /**
+   * List all branches in a repository
+   */
+  async listBranches(owner: string, repo: string): Promise<Array<{ name: string; protected: boolean }>> {
+    const { data } = await this.octokit.repos.listBranches({
+      owner,
+      repo,
+      per_page: 100,
+    })
+
+    return data.map((branch) => ({
+      name: branch.name,
+      protected: branch.protected,
+    }))
+  }
+
+  /**
+   * Get full repository tree (all files and directories)
+   */
+  async getRepositoryTree(
+    owner: string,
+    repo: string,
+    ref: string = 'main',
+    path: string = ''
+  ): Promise<Array<{ name: string; path: string; type: 'file' | 'dir'; size?: number }>> {
+    try {
+      const { data } = await this.octokit.repos.getContent({
+        owner,
+        repo,
+        path,
+        ref,
+      })
+
+      if (!Array.isArray(data)) {
+        // Single file
+        return [{
+          name: data.name,
+          path: data.path,
+          type: 'file',
+          size: data.size,
+        }]
+      }
+
+      // Directory - return all items
+      return data.map((item) => ({
+        name: item.name,
+        path: item.path,
+        type: item.type === 'dir' ? 'dir' : 'file',
+        size: item.type === 'file' ? item.size : undefined,
+      }))
+    } catch (error) {
+      console.error(`Error getting tree for ${path}:`, error)
+      return []
+    }
+  }
+
+  /**
    * Create a new branch
    */
   async createBranch(
