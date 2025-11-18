@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
+
+const ChangesModal = lazy(() => import('@/app/components/repo-browser/changes-modal').then(m => ({ default: m.ChangesModal })))
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Menu from '@mui/material/Menu'
@@ -17,23 +20,28 @@ import CloudIcon from '@mui/icons-material/Cloud'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
+import EditNoteIcon from '@mui/icons-material/EditNote'
 import { NamespaceSelector } from './namespace-selector'
 import { RealtimeStatus } from './realtime-status'
 import { ContextSelectorInline } from './context-selector-inline'
+import { BranchSelectorInline } from './branch-selector-inline'
 import { SearchBar } from '../common/search-bar'
-import { useModeStore } from '@/lib/core/store'
+import { useModeStore, useGitHubStore } from '@/lib/core/store'
 import { usePathname, useRouter } from 'next/navigation'
 import { useThemeMode } from '../theme-provider'
 import { useSearch } from '@/lib/contexts/search-context'
 
 export function TopBar() {
   const mode = useModeStore((state) => state.mode)
+  const { selectedRepo, editBasket } = useGitHubStore()
   const pathname = usePathname()
   const router = useRouter()
   const { mode: themeMode, setThemeMode } = useThemeMode()
   const { searchQuery, setSearchQuery, searchPlaceholder } = useSearch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [changesModalOpen, setChangesModalOpen] = useState(false)
   const open = Boolean(anchorEl)
+  const editedFilesCount = editBasket.size
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -73,9 +81,9 @@ export function TopBar() {
           gap: 3,
         }}
       >
-      {/* Left side - Cluster selector */}
+      {/* Left side - Cluster/Branch selector */}
       <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
-        <ContextSelectorInline />
+        {pathname === '/repo-browser' ? <BranchSelectorInline /> : <ContextSelectorInline />}
       </Box>
 
       {/* Center - Search with context (hidden on dashboard) */}
@@ -92,9 +100,50 @@ export function TopBar() {
         </Box>
       )}
 
-      {/* Right side - Namespace, Status, and Settings */}
+      {/* Right side - Namespace/Repo, Status, and Settings */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
-        <NamespaceSelector />
+        {pathname === '/repo-browser' && selectedRepo ? (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {editedFilesCount > 0 && (
+              <Tooltip title={`${editedFilesCount} file${editedFilesCount > 1 ? 's' : ''} modified - Click to review`}>
+                <Box
+                  onClick={() => setChangesModalOpen(true)}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 1,
+                    bgcolor: 'warning.main',
+                    color: 'warning.contrastText',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      bgcolor: 'warning.dark',
+                      transform: 'scale(1.05)',
+                    },
+                  }}
+                >
+                  <EditNoteIcon sx={{ fontSize: 18 }} />
+                  <Typography variant="body2" fontWeight={600}>
+                    {editedFilesCount}
+                  </Typography>
+                </Box>
+              </Tooltip>
+            )}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                Repository:
+              </Typography>
+              <Typography variant="body2" fontWeight={600}>
+                {selectedRepo.owner}/{selectedRepo.repo}
+              </Typography>
+            </Box>
+          </Box>
+        ) : (
+          <NamespaceSelector />
+        )}
         <RealtimeStatus />
         <IconButton
           onClick={handleClick}
@@ -214,6 +263,13 @@ export function TopBar() {
         </Menu>
       </Box>
     </Box>
+
+    {/* Changes Modal */}
+    {changesModalOpen && (
+      <Suspense fallback={null}>
+        <ChangesModal open={changesModalOpen} onClose={() => setChangesModalOpen(false)} />
+      </Suspense>
+    )}
     </>
   )
 }
