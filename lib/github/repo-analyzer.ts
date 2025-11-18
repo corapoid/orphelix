@@ -36,13 +36,15 @@ export async function analyzeRepository(
   owner: string,
   repo: string,
   branch: string,
-  mode?: 'mock'
+  mode?: 'mock',
+  baseUrl?: string
 ): Promise<RepoStructure> {
   const modeParam = mode === 'mock' ? '&mode=mock' : ''
+  const base = baseUrl || (typeof window !== 'undefined' ? '' : 'http://localhost:3000')
 
   // Get root directory structure
   const rootResponse = await fetch(
-    `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${modeParam}`
+    `${base}/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${modeParam}`
   )
 
   if (!rootResponse.ok) {
@@ -83,7 +85,7 @@ export async function analyzeRepository(
 
     if (hasYamlInRoot) {
       structure.structure = 'flat'
-      await analyzeDirectory('', rootItems, structure, owner, repo, branch, modeParam)
+      await analyzeDirectory('', rootItems, structure, owner, repo, branch, modeParam, base)
       return structure
     }
 
@@ -93,7 +95,7 @@ export async function analyzeRepository(
   // Analyze k8s directories
   for (const k8sDir of k8sDirs) {
     const dirResponse = await fetch(
-      `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(k8sDir.path)}${modeParam}`
+      `${base}/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(k8sDir.path)}${modeParam}`
     )
 
     if (!dirResponse.ok) continue
@@ -131,7 +133,7 @@ export async function analyzeRepository(
 
     if (overlaysDir) {
       const overlaysResponse = await fetch(
-        `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(overlaysDir.path)}${modeParam}`
+        `${base}/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(overlaysDir.path)}${modeParam}`
       )
 
       if (overlaysResponse.ok) {
@@ -147,7 +149,7 @@ export async function analyzeRepository(
     }
 
     // Analyze subdirectories
-    await analyzeDirectory(k8sDir.path, dirItems, structure, owner, repo, branch, modeParam)
+    await analyzeDirectory(k8sDir.path, dirItems, structure, owner, repo, branch, modeParam, base)
   }
 
   // If we found Kustomize indicators but structure is still unknown, set it
@@ -173,7 +175,8 @@ async function analyzeDirectory(
   owner: string,
   repo: string,
   branch: string,
-  modeParam: string
+  modeParam: string,
+  base: string
 ): Promise<void> {
   for (const item of items) {
     if (item.type !== 'dir') continue
@@ -195,7 +198,7 @@ async function analyzeDirectory(
     if (namespaceKeywords.some(kw => dirName.includes(kw))) {
       // Fetch YAML files in this directory
       const nsResponse = await fetch(
-        `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(item.path)}${modeParam}`
+        `${base}/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(item.path)}${modeParam}`
       )
 
       if (nsResponse.ok) {
