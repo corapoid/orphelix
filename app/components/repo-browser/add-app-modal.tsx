@@ -46,7 +46,7 @@ interface AddAppModalProps {
   onClose: () => void
 }
 
-const STEPS = ['Type', 'Configure', 'Preview', 'Commit']
+const STEPS = ['Type', 'Configure', 'Autoscaling', 'Preview', 'Commit']
 
 const POPULAR_IMAGES = [
   'nginx:latest',
@@ -148,7 +148,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
 
   const handleNext = () => {
     if (activeStep === 1) {
-      // Validate form before moving to preview
+      // Validate form before moving to autoscaling
       if (!appName || nameError) {
         setError('Please provide a valid application name')
         return
@@ -157,8 +157,10 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
         setError('Please provide a valid Docker image')
         return
       }
+    }
 
-      // Generate manifests for preview
+    if (activeStep === 2) {
+      // Generate manifests for preview after autoscaling configuration
       if (repoStructure) {
         const template: AppTemplate = {
           name: appName,
@@ -298,7 +300,10 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
             />
 
             <Box>
-              <Typography gutterBottom>Replicas: {replicas}</Typography>
+              <Typography gutterBottom>
+                Replicas: {replicas}
+                {enableAutoscaling && <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>(Initial)</Typography>}
+              </Typography>
               <Slider
                 value={replicas}
                 onChange={(_, value) => setReplicas(value as number)}
@@ -306,15 +311,67 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                 max={10}
                 marks
                 valueLabelDisplay="auto"
-                disabled={enableAutoscaling}
               />
-              {enableAutoscaling && (
-                <Typography variant="caption" color="text.secondary">
-                  Replicas are managed by autoscaler
-                </Typography>
-              )}
             </Box>
 
+            <FormControl fullWidth>
+              <InputLabel>Resource Preset</InputLabel>
+              <Select
+                value={resourcePreset}
+                label="Resource Preset"
+                onChange={(e) => setResourcePreset(e.target.value as keyof typeof RESOURCE_PRESETS)}
+              >
+                <MenuItem value="small">
+                  Small (128Mi/250m → 256Mi/500m)
+                </MenuItem>
+                <MenuItem value="medium">
+                  Medium (256Mi/500m → 512Mi/1000m)
+                </MenuItem>
+                <MenuItem value="large">
+                  Large (512Mi/1000m → 1Gi/2000m)
+                </MenuItem>
+              </Select>
+            </FormControl>
+
+            <Autocomplete
+              freeSolo
+              options={POPULAR_IMAGES}
+              value={dockerImage}
+              onChange={(_, newValue) => setDockerImage(newValue || '')}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Docker Image"
+                  error={!!imageError}
+                  helperText={imageError || 'e.g., nginx:latest or myregistry.com/app:v1.0'}
+                  required
+                />
+              )}
+            />
+
+            <TextField
+              label="Port (optional)"
+              type="number"
+              value={port}
+              onChange={(e) => setPort(e.target.value === '' ? '' : parseInt(e.target.value))}
+              helperText="Container port to expose. Service will be created if specified."
+              fullWidth
+            />
+
+            <TextField
+              label="Repository URL (optional)"
+              value={repoUrl}
+              onChange={(e) => setRepoUrl(e.target.value)}
+              fullWidth
+              helperText="Link to source code repository (e.g., https://github.com/user/repo)"
+              placeholder="https://github.com/..."
+            />
+          </Box>
+        )
+
+      case 2:
+        return (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <FormControlLabel
               control={
                 <Switch
@@ -322,11 +379,15 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                   onChange={(e) => setEnableAutoscaling(e.target.checked)}
                 />
               }
-              label="Enable Autoscaling (HPA)"
+              label="Enable Horizontal Pod Autoscaling (HPA)"
             />
 
-            {enableAutoscaling && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pl: 2, borderLeft: 2, borderColor: 'primary.main' }}>
+            {enableAutoscaling ? (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Alert severity="info">
+                  HPA will automatically scale your application between min and max replicas based on CPU and memory utilization.
+                </Alert>
+
                 <Box>
                   <Typography gutterBottom>Min Replicas: {minReplicas}</Typography>
                   <Slider
@@ -390,64 +451,15 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                   />
                 </Box>
               </Box>
+            ) : (
+              <Alert severity="info">
+                Autoscaling is disabled. Your application will run with the fixed number of replicas specified in the configuration step.
+              </Alert>
             )}
-
-            <FormControl fullWidth>
-              <InputLabel>Resource Preset</InputLabel>
-              <Select
-                value={resourcePreset}
-                label="Resource Preset"
-                onChange={(e) => setResourcePreset(e.target.value as keyof typeof RESOURCE_PRESETS)}
-              >
-                <MenuItem value="small">
-                  Small (128Mi/250m → 256Mi/500m)
-                </MenuItem>
-                <MenuItem value="medium">
-                  Medium (256Mi/500m → 512Mi/1000m)
-                </MenuItem>
-                <MenuItem value="large">
-                  Large (512Mi/1000m → 1Gi/2000m)
-                </MenuItem>
-              </Select>
-            </FormControl>
-
-            <Autocomplete
-              freeSolo
-              options={POPULAR_IMAGES}
-              value={dockerImage}
-              onChange={(_, newValue) => setDockerImage(newValue || '')}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Docker Image"
-                  error={!!imageError}
-                  helperText={imageError || 'e.g., nginx:latest or myregistry.com/app:v1.0'}
-                  required
-                />
-              )}
-            />
-
-            <TextField
-              label="Port (optional)"
-              type="number"
-              value={port}
-              onChange={(e) => setPort(e.target.value === '' ? '' : parseInt(e.target.value))}
-              helperText="Container port to expose. Service will be created if specified."
-              fullWidth
-            />
-
-            <TextField
-              label="Repository URL (optional)"
-              value={repoUrl}
-              onChange={(e) => setRepoUrl(e.target.value)}
-              fullWidth
-              helperText="Link to source code repository (e.g., https://github.com/user/repo)"
-              placeholder="https://github.com/..."
-            />
           </Box>
         )
 
-      case 2:
+      case 3:
         if (!generatedFiles) return <CircularProgress />
 
         // Flatten all files into a single array for display
@@ -513,7 +525,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
           </Box>
         )
 
-      case 3:
+      case 4:
         if (!generatedFiles) return null
 
         // Collect all file paths
