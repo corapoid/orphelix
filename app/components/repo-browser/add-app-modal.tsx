@@ -331,9 +331,16 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                   <Typography gutterBottom>Min Replicas: {minReplicas}</Typography>
                   <Slider
                     value={minReplicas}
-                    onChange={(_, value) => setMinReplicas(value as number)}
+                    onChange={(_, value) => {
+                      const newMin = value as number
+                      setMinReplicas(newMin)
+                      // Ensure max is always >= min
+                      if (maxReplicas < newMin) {
+                        setMaxReplicas(newMin)
+                      }
+                    }}
                     min={1}
-                    max={5}
+                    max={20}
                     marks
                     valueLabelDisplay="auto"
                   />
