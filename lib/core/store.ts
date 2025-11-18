@@ -200,6 +200,83 @@ export const useUIPreferences = create<UIPreferencesStore>()(
 )
 
 /**
+ * Critical Issues Settings Store
+ * Manages which resource types should be monitored for critical issues
+ */
+export type CriticalIssueResourceType = 'pods' | 'nodes' | 'deployments' | 'pv'
+
+interface CriticalIssuesSettingsStore {
+  enabledResources: Set<CriticalIssueResourceType>
+  isResourceEnabled: (resource: CriticalIssueResourceType) => boolean
+  toggleResource: (resource: CriticalIssueResourceType) => void
+  enableResource: (resource: CriticalIssueResourceType) => void
+  disableResource: (resource: CriticalIssueResourceType) => void
+}
+
+export const useCriticalIssuesSettings = create<CriticalIssuesSettingsStore>()(
+  persist(
+    (set, get) => ({
+      enabledResources: new Set<CriticalIssueResourceType>([
+        'pods',
+        'nodes',
+        'deployments',
+        'pv',
+      ]),
+      isResourceEnabled: (resource) => get().enabledResources.has(resource),
+      toggleResource: (resource) =>
+        set((state) => {
+          const newEnabled = new Set(state.enabledResources)
+          if (newEnabled.has(resource)) {
+            newEnabled.delete(resource)
+          } else {
+            newEnabled.add(resource)
+          }
+          return { enabledResources: newEnabled }
+        }),
+      enableResource: (resource) =>
+        set((state) => ({
+          enabledResources: new Set([...state.enabledResources, resource]),
+        })),
+      disableResource: (resource) =>
+        set((state) => {
+          const newEnabled = new Set(state.enabledResources)
+          newEnabled.delete(resource)
+          return { enabledResources: newEnabled }
+        }),
+    }),
+    {
+      name: 'orphelix-critical-issues-settings',
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name)
+          if (!str) return null
+          const { state } = JSON.parse(str)
+          return {
+            state: {
+              ...state,
+              enabledResources: new Set(state.enabledResources || []),
+            },
+          }
+        },
+        setItem: (name, value) => {
+          const { state } = value
+          localStorage.setItem(
+            name,
+            JSON.stringify({
+              state: {
+                ...state,
+                enabledResources: Array.from(state.enabledResources),
+              },
+            })
+          )
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
+    }
+  )
+)
+
+/**
  * Sidebar Pins Store
  * Manages which navigation items are pinned/visible in the sidebar
  */

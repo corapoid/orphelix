@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { AISettings } from '@/app/components/settings/ai-settings'
 import { ClusterAliases } from '@/app/components/settings/cluster-aliases'
+import { CriticalIssuesSettings } from '@/app/components/settings/critical-issues-settings'
 import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import { backgroundPresets, BackgroundPreset } from '@/lib/ui/color-skins'
 
@@ -116,6 +117,13 @@ export default function SettingsPage() {
               Cluster Aliases
             </Typography>
             <ClusterAliases />
+          </Box>
+
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Critical Issues Monitoring
+            </Typography>
+            <CriticalIssuesSettings />
           </Box>
 
           <Box>

@@ -21,7 +21,7 @@ import { usePods } from '@/lib/hooks/use-pods'
 import { useNodes } from '@/lib/hooks/use-nodes'
 import { useDeployments } from '@/lib/hooks/use-deployments'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
-import { useSidebarPins, useModeStore } from '@/lib/core/store'
+import { useSidebarPins, useModeStore, useCriticalIssuesSettings } from '@/lib/core/store'
 import { collectFailingPodsContext } from '@/lib/ai/context-collector'
 
 interface CriticalAlertsProps {
@@ -56,6 +56,7 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
   const { data: deployments, refetch: refetchDeployments } = useDeployments()
   const navigateTo = useNavigateTo()
   const { isPinned } = useSidebarPins()
+  const { isResourceEnabled } = useCriticalIssuesSettings()
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
 
@@ -146,8 +147,8 @@ Keep it concise and practical.`
   const getCriticalAlerts = (): AlertItem[] => {
     const alerts: AlertItem[] = []
 
-    // Critical: Failed pods (only if pods are visible)
-    if (isPinned('/pods') && summary.pods.failed > 0) {
+    // Critical: Failed pods (only if pods are visible and enabled)
+    if (isPinned('/pods') && isResourceEnabled('pods') && summary.pods.failed > 0) {
       const failedPods = pods?.filter((p) => p.status === 'Failed' || p.status === 'CrashLoopBackOff') || []
       if (failedPods.length === 1) {
         // Single pod - go directly to pod details
@@ -169,8 +170,8 @@ Keep it concise and practical.`
       }
     }
 
-    // Critical: Not ready nodes (only if nodes are visible)
-    if (isPinned('/nodes') && summary.nodes.notReady > 0) {
+    // Critical: Not ready nodes (only if nodes are visible and enabled)
+    if (isPinned('/nodes') && isResourceEnabled('nodes') && summary.nodes.notReady > 0) {
       const notReadyNodes = nodes?.filter((n) => n.status === 'NotReady') || []
       if (notReadyNodes.length === 1) {
         // Single node - go directly to node details
@@ -189,8 +190,8 @@ Keep it concise and practical.`
       }
     }
 
-    // Critical: Degraded deployments (only if deployments are visible)
-    if (isPinned('/deployments') && summary.deployments.degraded > 0) {
+    // Critical: Degraded deployments (only if deployments are visible and enabled)
+    if (isPinned('/deployments') && isResourceEnabled('deployments') && summary.deployments.degraded > 0) {
       const degradedDeployments = deployments?.filter((d) => d.status === 'Degraded') || []
       const percent = (summary.deployments.degraded / summary.deployments.total) * 100
 
@@ -219,8 +220,8 @@ Keep it concise and practical.`
       }
     }
 
-    // Warning: Many pending pods (only if pods are visible)
-    if (isPinned('/pods') && summary.pods.pending > 0) {
+    // Warning: Many pending pods (only if pods are visible and enabled)
+    if (isPinned('/pods') && isResourceEnabled('pods') && summary.pods.pending > 0) {
       const percent = (summary.pods.pending / summary.pods.total) * 100
       if (percent > 20) {
         alerts.push({
@@ -231,8 +232,8 @@ Keep it concise and practical.`
       }
     }
 
-    // Warning: Unbound volumes (only if PVs are visible)
-    if (isPinned('/pv')) {
+    // Warning: Unbound volumes (only if PVs are visible and enabled)
+    if (isPinned('/pv') && isResourceEnabled('pv')) {
       const unboundVolumes = summary.pv.total - summary.pv.bound
       if (unboundVolumes > 5) {
         alerts.push({
