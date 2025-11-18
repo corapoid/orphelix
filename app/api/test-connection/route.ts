@@ -6,35 +6,48 @@ const execAsync = promisify(exec)
 
 export async function GET() {
   try {
-    // Try to run a simple kubectl command to test connection
-    const { stdout, stderr } = await execAsync('kubectl cluster-info', {
+    // Use 'kubectl version' instead of 'kubectl cluster-info'
+    // This works without kube-system access and just tests API connectivity
+    const { stdout, stderr } = await execAsync('kubectl version --short 2>&1 || kubectl version', {
       timeout: 5000, // 5 second timeout
     })
 
-    if (stderr && !stdout) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Failed to connect to cluster',
-          details: stderr
-        },
-        { status: 500 }
-      )
+    // Check if we got any output that indicates successful connection
+    // kubectl version will show both client and server versions if connected
+    if (stdout && (stdout.includes('Server Version') || stdout.includes('serverVersion'))) {
+      return NextResponse.json({
+        success: true,
+        message: 'Successfully connected to cluster'
+      })
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Successfully connected to cluster'
-    })
-  } catch (error) {
-    console.error('Cluster connection test failed:', error)
+    // If we have output but no server version, connection failed
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-        details: 'Unable to connect to Kubernetes cluster. Make sure kubectl is configured correctly.',
+        error: 'Failed to connect to cluster',
+        details: stderr || stdout || 'No server version found'
       },
       { status: 500 }
+    )
+  } catch (error: any) {
+    console.error('Cluster connection test failed:', error)
+
+    // Check if it's a permission error (this shouldn't happen with kubectl version)
+    const errorMessage = error.message || ''
+    const isPermissionError = errorMessage.includes('Forbidden') || errorMessage.includes('forbidden')
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: isPermissionError
+          ? 'Connection successful but limited permissions detected'
+          : (error instanceof Error ? error.message : 'Unknown error'),
+        details: isPermissionError
+          ? 'Connected to cluster but with restricted permissions. This is normal for namespace-scoped users.'
+          : 'Unable to connect to Kubernetes cluster. Make sure kubectl is configured correctly.',
+      },
+      { status: isPermissionError ? 200 : 500 }
     )
   }
 }

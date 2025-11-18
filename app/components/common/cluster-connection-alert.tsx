@@ -99,7 +99,7 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
             </li>
             <li>
               <Typography variant="body2">
-                Run <code style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>kubectl cluster-info</code> to verify connectivity
+                Run <code style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>kubectl version</code> to verify connectivity
               </Typography>
             </li>
             <li>
