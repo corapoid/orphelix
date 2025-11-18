@@ -28,6 +28,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
+import Snackbar from '@mui/material/Snackbar'
 import Editor from '@monaco-editor/react'
 import { useTheme } from '@mui/material/styles'
 import type { RepoStructure } from '@/lib/github/repo-analyzer'
@@ -68,6 +69,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [repoStructure, setRepoStructure] = useState<RepoStructure | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   // Form state
   const [appType, setAppType] = useState<'deployment' | 'statefulset'>('deployment')
@@ -216,8 +218,8 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     })
 
     // Close modal and show success
+    setSuccessMessage(`${filesToAdd.length} files added to your changes. Review and commit when ready.`)
     onClose()
-    alert(`${filesToAdd.length} files added to your changes. Review and commit when ready.`)
   }
 
   const handleClose = () => {
@@ -643,6 +645,22 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
           </LiquidGlassButton>
         )}
       </DialogActions>
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={() => setSuccessMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSuccessMessage(null)}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </Dialog>
   )
 }
