@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -38,11 +38,6 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile }: Fi
   const [dirContents, setDirContents] = useState<Record<string, TreeItem[]>>({ '/': [] })
   const [loadingDirs, setLoadingDirs] = useState<Set<string>>(new Set())
 
-  // Load root directory on mount
-  useState(() => {
-    loadDirectory('/')
-  })
-
   const loadDirectory = async (path: string) => {
     if (dirContents[path]) return // Already loaded
 
@@ -67,6 +62,11 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile }: Fi
       })
     }
   }
+
+  // Load root directory on mount
+  useEffect(() => {
+    loadDirectory('/')
+  }, [owner, repo, branch]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleDirectory = (path: string) => {
     const isExpanded = expandedDirs.has(path)
