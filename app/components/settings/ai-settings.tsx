@@ -23,6 +23,8 @@ export function AISettings() {
   const [showKey, setShowKey] = useState(false)
   const [saved, setSaved] = useState(false)
   const [hasKey, setHasKey] = useState(false)
+  const [testing, setTesting] = useState(false)
+  const [testError, setTestError] = useState<string | null>(null)
 
   useEffect(() => {
     // Load existing key from localStorage
@@ -30,26 +32,71 @@ export function AISettings() {
     if (stored) {
       setApiKey(stored)
       setHasKey(true)
+      console.log('[AI Settings] Loaded API key from localStorage, ends with:', stored.slice(-4))
+    } else {
+      console.log('[AI Settings] No API key found in localStorage')
     }
   }, [])
 
-  const handleSave = () => {
-    if (apiKey.trim()) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, apiKey.trim())
+  const testApiKey = async () => {
+    const trimmedKey = apiKey.trim()
+    if (!trimmedKey) return
+
+    setTesting(true)
+    setTestError(null)
+
+    try {
+      // Test the API key with a minimal request
+      const response = await fetch('https://api.openai.com/v1/models', {
+        headers: {
+          'Authorization': `Bearer ${trimmedKey}`,
+        },
+      })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Invalid API key')
+        }
+        throw new Error(`API test failed: ${response.statusText}`)
+      }
+
+      // Key is valid, save it
+      localStorage.setItem(LOCAL_STORAGE_KEY, trimmedKey)
       setHasKey(true)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
 
       // Dispatch event so other components know the key was updated
       window.dispatchEvent(new Event('openai-key-updated'))
+
+      console.log('[AI Settings] API key validated and saved, ends with:', trimmedKey.slice(-4))
+    } catch (error) {
+      setTestError(error instanceof Error ? error.message : 'Failed to validate API key')
+    } finally {
+      setTesting(false)
     }
+  }
+
+  const handleSave = () => {
+    testApiKey()
   }
 
   const handleClear = () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY)
     setApiKey('')
     setHasKey(false)
+    setTestError(null)
+    setSaved(false)
     window.dispatchEvent(new Event('openai-key-updated'))
+
+    // Show confirmation in console
+    console.log('[AI Settings] API key cleared from localStorage')
+    const remaining = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (remaining) {
+      console.error('[AI Settings] WARNING: Key still exists in localStorage!', remaining.slice(-4))
+    } else {
+      console.log('[AI Settings] Confirmed: No API key in localStorage')
+    }
   }
 
   const availableFeatures = Object.values(AI_FEATURES).filter(f => f.enabled)
@@ -215,15 +262,16 @@ export function AISettings() {
           <Button
             variant="contained"
             onClick={handleSave}
-            disabled={!apiKey.trim() || apiKey === localStorage.getItem(LOCAL_STORAGE_KEY)}
+            disabled={!apiKey.trim() || apiKey.trim() === localStorage.getItem(LOCAL_STORAGE_KEY) || testing}
           >
-            Save API Key
+            {testing ? 'Testing...' : 'Save & Test API Key'}
           </Button>
           {hasKey && (
             <Button
               variant="outlined"
               color="error"
               onClick={handleClear}
+              disabled={testing}
             >
               Clear Key
             </Button>
@@ -231,8 +279,14 @@ export function AISettings() {
         </Box>
 
         {saved && (
-          <Alert severity="success">
-            API key saved successfully!
+          <Alert severity="success" sx={{ mb: 2 }}>
+            API key validated and saved successfully!
+          </Alert>
+        )}
+
+        {testError && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {testError}
           </Alert>
         )}
       </Box>
