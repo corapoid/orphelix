@@ -1631,23 +1631,18 @@ export async function fetchNamespace(name: string, contextName?: string): Promis
  * Fetch all resource quotas in a namespace
  */
 export async function fetchResourceQuotas(namespace: string, contextName?: string): Promise<ResourceQuota[]> {
-  try {
-    const coreApi = getCoreApi(contextName)
-    const response = await coreApi.listNamespacedResourceQuota({ namespace })
-    const quotas = response.items
+  const coreApi = getCoreApi(contextName)
+  const response = await coreApi.listNamespacedResourceQuota({ namespace })
+  const quotas = response.items
 
-    return quotas.map((quota) => ({
-      name: quota.metadata?.name || '',
-      namespace: quota.metadata?.namespace || namespace,
-      age: calculateAge(quota.metadata?.creationTimestamp),
-      hard: quota.status?.hard || {},
-      used: quota.status?.used || {},
-      labels: quota.metadata?.labels || {},
-    }))
-  } catch (error) {
-    console.error(`[K8s] Failed to fetch resource quotas in ${namespace}:`, error)
-    return []
-  }
+  return quotas.map((quota) => ({
+    name: quota.metadata?.name || '',
+    namespace: quota.metadata?.namespace || namespace,
+    age: calculateAge(quota.metadata?.creationTimestamp),
+    hard: quota.status?.hard || {},
+    used: quota.status?.used || {},
+    labels: quota.metadata?.labels || {},
+  }))
 }
 
 /**
@@ -1681,33 +1676,28 @@ export async function fetchResourceQuota(
  * Fetch all limit ranges in a namespace
  */
 export async function fetchLimitRanges(namespace: string, contextName?: string): Promise<LimitRange[]> {
-  try {
-    const coreApi = getCoreApi(contextName)
-    const response = await coreApi.listNamespacedLimitRange({ namespace })
-    const limitRanges = response.items
+  const coreApi = getCoreApi(contextName)
+  const response = await coreApi.listNamespacedLimitRange({ namespace })
+  const limitRanges = response.items
 
-    return limitRanges.map((lr) => {
-      const limits: LimitRangeItem[] = (lr.spec?.limits || []).map((limit) => ({
-        type: limit.type || 'Container',
-        max: limit.max || undefined,
-        min: limit.min || undefined,
-        default: limit.default || undefined,
-        defaultRequest: limit.defaultRequest || undefined,
-        maxLimitRequestRatio: limit.maxLimitRequestRatio || undefined,
-      }))
+  return limitRanges.map((lr) => {
+    const limits: LimitRangeItem[] = (lr.spec?.limits || []).map((limit) => ({
+      type: limit.type || 'Container',
+      max: limit.max || undefined,
+      min: limit.min || undefined,
+      default: limit._default || undefined,
+      defaultRequest: limit.defaultRequest || undefined,
+      maxLimitRequestRatio: limit.maxLimitRequestRatio || undefined,
+    }))
 
-      return {
-        name: lr.metadata?.name || '',
-        namespace: lr.metadata?.namespace || namespace,
-        age: calculateAge(lr.metadata?.creationTimestamp),
-        limits,
-        labels: lr.metadata?.labels || {},
-      }
-    })
-  } catch (error) {
-    console.error(`[K8s] Failed to fetch limit ranges in ${namespace}:`, error)
-    return []
-  }
+    return {
+      name: lr.metadata?.name || '',
+      namespace: lr.metadata?.namespace || namespace,
+      age: calculateAge(lr.metadata?.creationTimestamp),
+      limits,
+      labels: lr.metadata?.labels || {},
+    }
+  })
 }
 
 /**
@@ -1723,7 +1713,7 @@ export async function fetchLimitRange(name: string, namespace: string, contextNa
       type: limit.type || 'Container',
       max: limit.max || undefined,
       min: limit.min || undefined,
-      default: limit.default || undefined,
+      default: limit._default || undefined,
       defaultRequest: limit.defaultRequest || undefined,
       maxLimitRequestRatio: limit.maxLimitRequestRatio || undefined,
     }))

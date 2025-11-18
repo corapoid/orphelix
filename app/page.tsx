@@ -84,17 +84,15 @@ export default function DashboardPage() {
       </Box>
 
       {/* 4. Cluster Resource Utilization (left) + Recent Activity (right) */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: quotas && quotas.length > 0 ? '1fr 1fr' : '1fr', gap: 3, mb: 3 }}>
         {/* Cluster Resource Utilization */}
-        {quotas && quotas.length > 0 ? (
+        {quotas && quotas.length > 0 && (
           <Box>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Cluster Resource Utilization
             </Typography>
             <ResourceUtilization quotas={quotas} />
           </Box>
-        ) : (
-          <Box />
         )}
 
         {/* Recent Activity */}
