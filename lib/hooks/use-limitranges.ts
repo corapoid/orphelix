@@ -18,22 +18,12 @@ export function useLimitRanges() {
 
       const response = await fetch(`/api/limitranges?namespace=${encodeURIComponent(namespace)}&context=${encodeURIComponent(selectedContext?.name || '')}`)
       if (!response.ok) {
-        // Return empty array for 403 errors (permission denied)
-        if (response.status === 403) {
-          return []
-        }
         const error = await response.json()
         throw new Error(error.error || 'Failed to fetch limit ranges')
       }
       return response.json()
     },
     enabled: mode === 'mock' || !!namespace,
-    retry: (failureCount, error) => {
-      // Don't retry on 403 errors (permission denied)
-      if (error instanceof Error && error.message.includes('Forbidden')) {
-        return false
-      }
-      return failureCount < 3
-    },
+    retry: false, // Don't retry - 403 errors are handled silently in the API
   })
 }

@@ -1631,18 +1631,28 @@ export async function fetchNamespace(name: string, contextName?: string): Promis
  * Fetch all resource quotas in a namespace
  */
 export async function fetchResourceQuotas(namespace: string, contextName?: string): Promise<ResourceQuota[]> {
-  const coreApi = getCoreApi(contextName)
-  const response = await coreApi.listNamespacedResourceQuota({ namespace })
-  const quotas = response.items
+  try {
+    const coreApi = getCoreApi(contextName)
+    const response = await coreApi.listNamespacedResourceQuota({ namespace })
+    const quotas = response.items
 
-  return quotas.map((quota) => ({
-    name: quota.metadata?.name || '',
-    namespace: quota.metadata?.namespace || namespace,
-    age: calculateAge(quota.metadata?.creationTimestamp),
-    hard: quota.status?.hard || {},
-    used: quota.status?.used || {},
-    labels: quota.metadata?.labels || {},
-  }))
+    return quotas.map((quota) => ({
+      name: quota.metadata?.name || '',
+      namespace: quota.metadata?.namespace || namespace,
+      age: calculateAge(quota.metadata?.creationTimestamp),
+      hard: quota.status?.hard || {},
+      used: quota.status?.used || {},
+      labels: quota.metadata?.labels || {},
+    }))
+  } catch (error: any) {
+    // Silently return empty array for 403 (permission denied)
+    // This is expected for users with namespace-scoped permissions
+    if (error?.statusCode === 403 || error?.code === 403) {
+      return []
+    }
+    // Re-throw other errors to be handled by the API route
+    throw error
+  }
 }
 
 /**
@@ -1676,28 +1686,38 @@ export async function fetchResourceQuota(
  * Fetch all limit ranges in a namespace
  */
 export async function fetchLimitRanges(namespace: string, contextName?: string): Promise<LimitRange[]> {
-  const coreApi = getCoreApi(contextName)
-  const response = await coreApi.listNamespacedLimitRange({ namespace })
-  const limitRanges = response.items
+  try {
+    const coreApi = getCoreApi(contextName)
+    const response = await coreApi.listNamespacedLimitRange({ namespace })
+    const limitRanges = response.items
 
-  return limitRanges.map((lr) => {
-    const limits: LimitRangeItem[] = (lr.spec?.limits || []).map((limit) => ({
-      type: limit.type || 'Container',
-      max: limit.max || undefined,
-      min: limit.min || undefined,
-      default: limit._default || undefined,
-      defaultRequest: limit.defaultRequest || undefined,
-      maxLimitRequestRatio: limit.maxLimitRequestRatio || undefined,
-    }))
+    return limitRanges.map((lr) => {
+      const limits: LimitRangeItem[] = (lr.spec?.limits || []).map((limit) => ({
+        type: limit.type || 'Container',
+        max: limit.max || undefined,
+        min: limit.min || undefined,
+        default: limit._default || undefined,
+        defaultRequest: limit.defaultRequest || undefined,
+        maxLimitRequestRatio: limit.maxLimitRequestRatio || undefined,
+      }))
 
-    return {
-      name: lr.metadata?.name || '',
-      namespace: lr.metadata?.namespace || namespace,
-      age: calculateAge(lr.metadata?.creationTimestamp),
-      limits,
-      labels: lr.metadata?.labels || {},
+      return {
+        name: lr.metadata?.name || '',
+        namespace: lr.metadata?.namespace || namespace,
+        age: calculateAge(lr.metadata?.creationTimestamp),
+        limits,
+        labels: lr.metadata?.labels || {},
+      }
+    })
+  } catch (error: any) {
+    // Silently return empty array for 403 (permission denied)
+    // This is expected for users with namespace-scoped permissions
+    if (error?.statusCode === 403 || error?.code === 403) {
+      return []
     }
-  })
+    // Re-throw other errors to be handled by the API route
+    throw error
+  }
 }
 
 /**
