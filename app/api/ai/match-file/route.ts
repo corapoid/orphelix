@@ -35,6 +35,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate API key format
+    const trimmedApiKey = apiKey.trim()
+
+    // Log last 4 characters for debugging (safe to log)
+    console.log('[AI Matcher] API key ends with:', trimmedApiKey.slice(-4))
+
+    if (!trimmedApiKey.startsWith('sk-')) {
+      return NextResponse.json(
+        { error: 'Invalid API key format. OpenAI API keys should start with "sk-"' },
+        { status: 400 }
+      )
+    }
 
     // Filter out base/ files if there are environment-specific files available
     const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
@@ -46,7 +58,7 @@ export async function POST(request: NextRequest) {
     // Prepare file list for AI (limit to first 100 for token efficiency)
     const fileList = filesToSearch.slice(0, 100).map((f: any) => f.path).join('\n')
 
-    const prompt = `You are a Kubernetes GitOps expert. Your task is to find which YAML file in a Git repository defines a specific deployed Kubernetes resource.
+    const prompt = `You are a Kubernetes GitOps expert. Your task is to find which YAML files in a Git repository might define a specific deployed Kubernetes resource.
 
 DEPLOYED RESOURCE TO FIND:
 - Name: "${resourceName}"
@@ -61,6 +73,7 @@ IMPORTANT MATCHING LOGIC:
    - Case may differ between resource name and directory name
 3. Look for these typical file names: helm-release.yaml, application.yaml, deployment.yaml, kustomization.yaml
 4. Files from base/ directory have been excluded - only environment-specific files are listed below
+5. There may be multiple environment overlays (dev, staging, prod) - return TOP 2 most likely matches
 
 AVAILABLE FILES IN REPOSITORY (environment-specific only):
 ${fileList}
@@ -69,26 +82,36 @@ STEP-BY-STEP ANALYSIS:
 1. Extract the base name from "${resourceName}" (remove suffixes like -main, -dev, etc.)
 2. Find directories that match this base name (ignoring case and separators - vs _)
 3. In those directories, look for typical deployment definition files
+4. If multiple environments exist, prioritize based on namespace and resource name hints
 
 RESPONSE FORMAT (return ONLY valid JSON, no markdown):
 {
-  "matchedFile": "path/to/matched/file.yaml",
-  "confidence": 85,
-  "reasoning": "Explanation of why this file matches"
+  "matches": [
+    {
+      "file": "path/to/matched/file1.yaml",
+      "confidence": 90,
+      "environment": "production",
+      "reasoning": "Explanation of why this file matches"
+    },
+    {
+      "file": "path/to/matched/file2.yaml",
+      "confidence": 75,
+      "environment": "staging",
+      "reasoning": "Explanation of why this file matches"
+    }
+  ]
 }
 
-If no good match exists, return:
+If no good matches exist, return:
 {
-  "matchedFile": null,
-  "confidence": 0,
-  "reasoning": "No matching file found"
+  "matches": []
 }`
 
     const startTime = Date.now()
 
     // Create OpenAI client with user's API key
     const openaiClient = createOpenAI({
-      apiKey,
+      apiKey: trimmedApiKey,
     })
 
     const result = await generateText({
@@ -102,15 +125,36 @@ If no good match exists, return:
     // Parse AI response
     const response = JSON.parse(result.text.trim())
 
-
-    return NextResponse.json({
-      matchedFile: response.matchedFile,
-      confidence: response.confidence,
-      reasoning: response.reasoning,
-      duration,
-    })
-  } catch (error) {
+    // Support both old and new format
+    if (response.matches) {
+      // New format with multiple matches
+      return NextResponse.json({
+        matches: response.matches,
+        duration,
+      })
+    } else {
+      // Old format - convert to new format for backwards compatibility
+      return NextResponse.json({
+        matches: response.matchedFile ? [{
+          file: response.matchedFile,
+          confidence: response.confidence,
+          environment: 'unknown',
+          reasoning: response.reasoning,
+        }] : [],
+        duration,
+      })
+    }
+  } catch (error: any) {
     console.error('[AI Matcher] Error:', error)
+
+    // Check if it's an API key error
+    if (error?.statusCode === 401 || error?.message?.includes('API key') || error?.message?.includes('Incorrect API key')) {
+      return NextResponse.json(
+        { error: 'Invalid or expired OpenAI API key. Please check your API key in Settings > AI Features.' },
+        { status: 401 }
+      )
+    }
+
     return NextResponse.json(
       {
         error: 'AI matching failed',

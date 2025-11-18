@@ -45,6 +45,8 @@ export function YamlEditorModal({
   const [isMergingPR, setIsMergingPR] = useState(false)
   const [matchingFile, setMatchingFile] = useState(false)
   const [matchInfo, setMatchInfo] = useState<{ method: string; confidence?: number; reasoning?: string } | null>(null)
+  const [matchedFiles, setMatchedFiles] = useState<Array<{ file: string; confidence: number; environment: string; reasoning: string }>>([])
+  const [showFileSelector, setShowFileSelector] = useState(false)
 
   // Check authentication status (both OAuth and GitHub App)
   const { data: authStatus } = useQuery({
@@ -147,19 +149,45 @@ export function YamlEditorModal({
         const data = await response.json()
 
         // Handle different response formats (AI vs pattern matching)
-        const matchedFilePath = openaiKey
-          ? data.matchedFile  // AI returns direct path string
-          : data.matchedFile?.path  // Pattern matcher returns object
+        if (openaiKey && data.matches) {
+          // New AI format with multiple matches
+          setMatchedFiles(data.matches)
 
-        if (matchedFilePath) {
-          setMatchInfo({
-            method: openaiKey ? 'ai' : (data.method || 'pattern'),
-            confidence: data.confidence,
-            reasoning: data.reasoning,
-          })
-          await loadFile(matchedFilePath)
+          if (data.matches.length > 1) {
+            // Multiple matches - show selector
+            setShowFileSelector(true)
+            setMatchInfo({
+              method: 'ai',
+              confidence: data.matches[0]?.confidence,
+              reasoning: `Found ${data.matches.length} possible matches`,
+            })
+          } else if (data.matches.length === 1) {
+            // Single match - load directly
+            setMatchInfo({
+              method: 'ai',
+              confidence: data.matches[0].confidence,
+              reasoning: data.matches[0].reasoning,
+            })
+            await loadFile(data.matches[0].file)
+          } else {
+            console.warn('[YamlEditor] No matches found')
+          }
         } else {
-          console.warn('[YamlEditor] No match found')
+          // Old format or pattern matching
+          const matchedFilePath = openaiKey
+            ? data.matchedFile  // Old AI format
+            : data.matchedFile?.path  // Pattern matcher returns object
+
+          if (matchedFilePath) {
+            setMatchInfo({
+              method: openaiKey ? 'ai' : (data.method || 'pattern'),
+              confidence: data.confidence,
+              reasoning: data.reasoning,
+            })
+            await loadFile(matchedFilePath)
+          } else {
+            console.warn('[YamlEditor] No match found')
+          }
         }
       } catch (error) {
         console.error('Error matching file:', error)
@@ -395,6 +423,50 @@ export function YamlEditorModal({
                   </Typography>
                 )}
               </Alert>
+            )}
+
+            {/* AI Multiple Matches Selector */}
+            {showFileSelector && matchedFiles.length > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  AI found multiple possible matches. Select the environment you want to edit:
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  {matchedFiles.map((match) => (
+                    <Button
+                      key={match.file}
+                      variant={selectedFile === match.file ? 'contained' : 'outlined'}
+                      onClick={async () => {
+                        setShowFileSelector(false)
+                        setMatchInfo({
+                          method: 'ai',
+                          confidence: match.confidence,
+                          reasoning: match.reasoning,
+                        })
+                        await loadFile(match.file)
+                      }}
+                      sx={{
+                        justifyContent: 'flex-start',
+                        textAlign: 'left',
+                        py: 1.5,
+                        px: 2,
+                      }}
+                    >
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" fontWeight={600}>
+                          {match.environment.toUpperCase()} - {match.file.split('/').pop()}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" display="block">
+                          {match.file}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+                          Confidence: {match.confidence}% • {match.reasoning}
+                        </Typography>
+                      </Box>
+                    </Button>
+                  ))}
+                </Box>
+              </Box>
             )}
 
             {/* File Selector */}

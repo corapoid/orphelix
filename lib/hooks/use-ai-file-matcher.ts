@@ -32,13 +32,15 @@ export function useAIFileMatcher(
       setError(null)
 
       try {
-        // Check for OpenAI API key
-        const apiKey = localStorage.getItem('kubevista_openai_key')
+        // Check for OpenAI API key - get fresh value from localStorage
+        const apiKey = localStorage.getItem('kubevista_openai_key')?.trim()
         if (!apiKey) {
           setError('OpenAI API key not configured')
           setMatching(false)
           return
         }
+
+        console.log('[AI Matcher] Using API key ending with:', apiKey.slice(-4))
 
         const response = await fetch('/api/ai/match-file', {
           method: 'POST',
