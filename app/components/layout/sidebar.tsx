@@ -48,6 +48,16 @@ const DRAWER_WIDTH = 240
 const DRAWER_WIDTH_COLLAPSED = 64
 const DRAWER_PADDING = 16 // Padding on left and right
 
+const SIDEBAR_COLLAPSED_KEY = 'sidebar-collapsed'
+const SIDEBAR_GROUPS_KEY = 'sidebar-expanded-groups'
+const DEFAULT_NAV_GROUP_STATE: Record<string, boolean> = {
+  Workloads: true,
+  Network: true,
+  'Config & Storage': true,
+  Cluster: true,
+  More: false,
+}
+
 
 interface NavItem {
   label: string
@@ -63,6 +73,7 @@ interface NavGroup {
 
 const navGroups: (NavItem | NavGroup)[] = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/', color: '#6366F1' },
+  { label: 'Repository Browser', icon: <GitHubIcon />, path: '/repo-browser', color: '#6366F1' },
   {
     label: 'Workloads',
     items: [
@@ -99,7 +110,6 @@ const navGroups: (NavItem | NavGroup)[] = [
       { label: 'Labels', icon: <LabelIcon />, path: '/labels', color: '#10B981' },
     ],
   },
-  { label: 'Repository Browser', icon: <GitHubIcon />, path: '/repo-browser', color: '#6366F1' },
 ]
 
 function isNavGroup(item: NavItem | NavGroup): item is NavGroup {
@@ -111,18 +121,45 @@ export function Sidebar() {
   const router = useRouter() as AppRouterInstance
   const mode = useModeStore((state) => state.mode)
   const { isPinned, togglePin } = useSidebarPins()
-  const [collapsed, setCollapsed] = useState(false)
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    if (typeof window === 'undefined') {
+      return false
+    }
+    const stored = window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY)
+    return stored === 'true'
+  })
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+    const baseState = { ...DEFAULT_NAV_GROUP_STATE }
+    if (typeof window === 'undefined') {
+      return baseState
+    }
+    const stored = window.localStorage.getItem(SIDEBAR_GROUPS_KEY)
+    if (!stored) {
+      return baseState
+    }
+    try {
+      const parsed = JSON.parse(stored) as Record<string, boolean>
+      return { ...baseState, ...parsed }
+    } catch (error) {
+      console.error('Failed to parse sidebar group state', error)
+      return baseState
+    }
+  })
   const [editMode, setEditMode] = useState(false)
 
   useEffect(() => {
-    setExpandedGroups({
-      Workloads: true,
-      Network: true,
-      'Config & Storage': true,
-      Cluster: true,
-    })
-  }, [])
+    if (typeof window === 'undefined') {
+      return
+    }
+    window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? 'true' : 'false')
+  }, [collapsed])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    window.localStorage.setItem(SIDEBAR_GROUPS_KEY, JSON.stringify(expandedGroups))
+  }, [expandedGroups])
 
   const handleNavigate = (path: string) => {
     // Prefix path with /demo if in mock mode

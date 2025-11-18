@@ -29,13 +29,27 @@ interface GitHubRepo {
   branch: string
 }
 
+export interface FileEdit {
+  filePath: string
+  content: string
+  originalContent: string
+  sha: string
+}
+
 interface GitHubStore {
   selectedRepo: GitHubRepo | null
+  selectedBranch: string
   pendingPRs: Map<string, number> // deploymentKey -> PR number
+  editBasket: Map<string, FileEdit> // filePath -> FileEdit
   setSelectedRepo: (repo: GitHubRepo | null) => void
+  setSelectedBranch: (branch: string) => void
   setPendingPR: (deploymentName: string, namespace: string, prNumber: number) => void
   removePendingPR: (deploymentName: string, namespace: string) => void
   getPendingPR: (deploymentName: string, namespace: string) => number | null
+  addToBasket: (edit: FileEdit) => void
+  removeFromBasket: (filePath: string) => void
+  clearBasket: () => void
+  getBasketSize: () => number
 }
 
 /**
@@ -86,8 +100,11 @@ export const useGitHubStore = create<GitHubStore>()(
   persist(
     (set, get) => ({
       selectedRepo: null,
+      selectedBranch: 'main',
       pendingPRs: new Map(),
+      editBasket: new Map(),
       setSelectedRepo: (repo) => set({ selectedRepo: repo }),
+      setSelectedBranch: (branch) => set({ selectedBranch: branch }),
       setPendingPR: (deploymentName, namespace, prNumber) => {
         const key = `${namespace}/${deploymentName}`
         const newMap = new Map(get().pendingPRs)
@@ -104,6 +121,20 @@ export const useGitHubStore = create<GitHubStore>()(
         const key = `${namespace}/${deploymentName}`
         return get().pendingPRs.get(key) || null
       },
+      addToBasket: (edit) => {
+        const newMap = new Map(get().editBasket)
+        newMap.set(edit.filePath, edit)
+        set({ editBasket: newMap })
+      },
+      removeFromBasket: (filePath) => {
+        const newMap = new Map(get().editBasket)
+        newMap.delete(filePath)
+        set({ editBasket: newMap })
+      },
+      clearBasket: () => {
+        set({ editBasket: new Map() })
+      },
+      getBasketSize: () => get().editBasket.size,
     }),
     {
       name: 'orphelix-github',
@@ -117,6 +148,7 @@ export const useGitHubStore = create<GitHubStore>()(
             state: {
               ...state,
               pendingPRs: new Map(state.pendingPRs || []),
+              editBasket: new Map(state.editBasket || []),
             },
           }
         },
@@ -128,6 +160,7 @@ export const useGitHubStore = create<GitHubStore>()(
               state: {
                 ...state,
                 pendingPRs: Array.from(state.pendingPRs.entries()),
+                editBasket: Array.from(state.editBasket.entries()),
               },
             })
           )
