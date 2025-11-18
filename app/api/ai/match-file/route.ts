@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
     // Use only environment files if available, otherwise include base files
     const filesToSearch = envFiles.length > 0 ? envFiles : files
 
-
-    // Prepare file list for AI (limit to first 100 for token efficiency)
-    const fileList = filesToSearch.slice(0, 100).map((f: any) => f.path).join('\n')
+    // Prepare file list for AI (already pre-filtered in frontend, max 30 files)
+    // This reduces tokens and improves response time
+    const fileList = filesToSearch.map((f: any) => f.path).join('\n')
 
     const prompt = `You are a Kubernetes GitOps expert. Your task is to find which YAML files in a Git repository might define a specific deployed Kubernetes resource.
 
@@ -74,8 +74,9 @@ IMPORTANT MATCHING LOGIC:
 3. Look for these typical file names: helm-release.yaml, application.yaml, deployment.yaml, kustomization.yaml
 4. Files from base/ directory have been excluded - only environment-specific files are listed below
 5. There may be multiple environment overlays (dev, staging, prod) - return TOP 2 most likely matches
+6. Files have been pre-filtered to most relevant matches for faster processing
 
-AVAILABLE FILES IN REPOSITORY (environment-specific only):
+AVAILABLE FILES IN REPOSITORY (${filesToSearch.length} pre-filtered files):
 ${fileList}
 
 STEP-BY-STEP ANALYSIS:

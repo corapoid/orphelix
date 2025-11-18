@@ -95,7 +95,30 @@ export function YamlEditorModal({
         let response: Response
 
         if (openaiKey) {
-          // AI-powered matching
+          // Smart filtering before AI matching for better performance
+          const baseResourceName = resourceName.replace(/-(main|dev|prod|staging|test)$/, '')
+
+          // Filter to only relevant files (max 30 most likely matches)
+          const relevantFiles = files
+            .filter((f: any) => {
+              const path = f.path.toLowerCase()
+              const name = baseResourceName.toLowerCase()
+
+              // Prioritize files that match resource name or type
+              return (
+                path.includes(name) ||
+                path.includes(resourceName.toLowerCase()) ||
+                path.includes('helm-release') ||
+                path.includes('application') ||
+                path.includes(resourceType)
+              )
+            })
+            .slice(0, 30) // Limit to 30 files for speed
+
+          // If no relevant files found, use first 30 files
+          const filesToMatch = relevantFiles.length > 0 ? relevantFiles : files.slice(0, 30)
+
+          // AI-powered matching with filtered files
           response = await fetch('/api/ai/match-file', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -103,41 +126,46 @@ export function YamlEditorModal({
               resourceName,
               namespace,
               resourceType,
-              files: files.map((f: any) => ({ path: f.path, name: f.name })),
+              files: filesToMatch.map((f: any) => ({ path: f.path, name: f.name })),
               apiKey: openaiKey,
             }),
           })
         } else {
-          // Fallback: pattern matching (old method)
-          const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
-          const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
-          const candidateFiles = [...envFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
+          // Fallback: simple pattern matching (no content fetching for speed)
+          const baseResourceName = resourceName.replace(/-(main|dev|prod|staging|test)$/, '')
 
-          const filesWithContent = await Promise.all(
-            candidateFiles.map(async (file: any) => {
-              try {
-                const res = await fetch(
-                  `/api/github/file?owner=${selectedRepo.owner}&repo=${selectedRepo.repo}&path=${file.path}&ref=${selectedRepo.branch}`
-                )
-                if (res.ok) {
-                  const data = await res.json()
-                  return { ...file, content: data.content }
-                }
-              } catch (error) {
-                console.warn(`Could not fetch content for ${file.path}:`, error)
-              }
-              return file
-            })
-          )
+          // Quick pattern matching without fetching file contents
+          const matchedFile = files.find((f: any) => {
+            const path = f.path.toLowerCase()
+            const name = baseResourceName.toLowerCase()
+            const fullName = resourceName.toLowerCase()
 
-          response = await fetch('/api/github/match-file', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              resource: { name: resourceName, namespace, type: resourceType },
-              yamlFiles: filesWithContent,
-            }),
+            // Exact match patterns
+            return (
+              path.includes(`${name}/helm-release.yaml`) ||
+              path.includes(`${name}/application.yaml`) ||
+              path.includes(`${fullName}/helm-release.yaml`) ||
+              path.includes(`${fullName}/application.yaml`) ||
+              (path.includes(name) && (path.includes('helm-release') || path.includes('application')))
+            )
           })
+
+          if (matchedFile) {
+            // Simulate response format
+            await loadFile(matchedFile.path)
+            setMatchInfo({
+              method: 'pattern',
+              confidence: 75,
+              reasoning: 'Matched by file path pattern',
+            })
+            setMatchingFile(false)
+            return
+          }
+
+          // No match found - skip pattern matching API call
+          console.warn('[YamlEditor] No match found with simple pattern matching')
+          setMatchingFile(false)
+          return
         }
 
         if (!response.ok) {
