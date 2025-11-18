@@ -236,11 +236,17 @@ export function TopBar() {
             </Tooltip>
           </Box>
           <Divider />
-          <MenuItem onClick={() => handleNavigation('/settings')}>
+          <MenuItem onClick={() => handleNavigation('/settings?tab=0')}>
             <ListItemIcon>
               <CloudIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>Cluster Settings</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => handleNavigation('/settings?tab=1')}>
+            <ListItemIcon>
+              <GitHubIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>GitHub Integration</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => handleNavigation('/settings?tab=2')}>
             <ListItemIcon>
@@ -249,12 +255,6 @@ export function TopBar() {
             <ListItemText>AI Features</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => handleNavigation('/settings?tab=3')}>
-            <ListItemIcon>
-              <GitHubIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>GitHub Integration</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => handleNavigation('/settings?tab=4')}>
             <ListItemIcon>
               <PaletteOutlinedIcon fontSize="small" />
             </ListItemIcon>
