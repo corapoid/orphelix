@@ -77,6 +77,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
   const [dockerImage, setDockerImage] = useState('')
   const [port, setPort] = useState<number | ''>('')
   const [envVars, setEnvVars] = useState<Array<{ name: string; value: string }>>([])
+  const [repoUrl, setRepoUrl] = useState('')
 
   // Validation errors
   const [nameError, setNameError] = useState<string | null>(null)
@@ -168,6 +169,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
           port: port === '' ? undefined : port,
           type: appType,
           env: envVars.filter(e => e.name && e.value),
+          repoUrl: repoUrl || undefined,
         }
 
         const files = generateManifests(template, repoStructure)
@@ -218,6 +220,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     setDockerImage('')
     setPort('')
     setEnvVars([])
+    setRepoUrl('')
     setError(null)
     setGeneratedFiles(null)
 
@@ -338,6 +341,15 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
               onChange={(e) => setPort(e.target.value === '' ? '' : parseInt(e.target.value))}
               helperText="Container port to expose. Service will be created if specified."
               fullWidth
+            />
+
+            <TextField
+              label="Repository URL (optional)"
+              value={repoUrl}
+              onChange={(e) => setRepoUrl(e.target.value)}
+              fullWidth
+              helperText="Link to source code repository (e.g., https://github.com/user/repo)"
+              placeholder="https://github.com/..."
             />
           </Box>
         )

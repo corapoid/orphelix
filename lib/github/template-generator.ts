@@ -22,6 +22,7 @@ export interface AppTemplate {
   port?: number
   type: 'deployment' | 'statefulset'
   env?: Array<{ name: string; value: string }>
+  repoUrl?: string
 }
 
 export interface GeneratedFile {
@@ -94,7 +95,7 @@ function generateDeployment(
   template: AppTemplate,
   repoStructure: RepoStructure
 ): GeneratedFile {
-  const { name, namespace, replicas, resources, image, port, type, env } = template
+  const { name, namespace, replicas, resources, image, port, type, env, repoUrl } = template
 
   // Determine file path based on repo structure
   let path: string
@@ -119,12 +120,17 @@ function generateDeployment(
     ? `\n        env:\n` + env.map(e => `        - name: ${e.name}\n          value: "${e.value}"`).join('\n')
     : ''
 
+  // Build annotations
+  const annotations = repoUrl
+    ? `\n  annotations:\n    orphelix.io/repository: "${repoUrl}"`
+    : ''
+
   // Generate YAML content
   const content = `apiVersion: ${apiVersion}
 kind: ${kind}
 metadata:
   name: ${name}
-  namespace: ${namespace}
+  namespace: ${namespace}${annotations}
   labels:
     app: ${name}
     managed-by: orphelix
