@@ -14,31 +14,17 @@ export interface AIFeature {
 }
 
 export const AI_FEATURES: Record<string, AIFeature> = {
+  CRITICAL_ALERTS_EXPLAIN: {
+    id: 'critical-alerts-explain',
+    name: 'Critical Alerts AI Explanation',
+    description: 'Get AI-powered explanations for critical issues with pod logs and root cause analysis',
+    requiredProvider: 'openai',
+    enabled: true,
+  },
   YAML_EDITOR: {
     id: 'yaml-editor',
     name: 'AI-Powered YAML Editor',
     description: 'Intelligent file matching for Kubernetes manifests using AI',
-    requiredProvider: 'openai',
-    enabled: true,
-  },
-  TROUBLESHOOTING: {
-    id: 'troubleshooting',
-    name: 'AI Troubleshooting Assistant',
-    description: 'Get intelligent help diagnosing and fixing Kubernetes issues',
-    requiredProvider: 'openai',
-    enabled: true,
-  },
-  ISSUE_DETECTION: {
-    id: 'issue-detection',
-    name: 'Automated Issue Detection',
-    description: 'Automatic detection of common problems like crash loops and resource exhaustion',
-    requiredProvider: 'openai',
-    enabled: true,
-  },
-  ROOT_CAUSE_ANALYSIS: {
-    id: 'root-cause-analysis',
-    name: 'Root Cause Analysis',
-    description: 'Deep analysis of events, logs, and resource state to find root causes',
     requiredProvider: 'openai',
     enabled: true,
   },

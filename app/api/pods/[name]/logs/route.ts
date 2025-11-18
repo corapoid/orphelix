@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { fetchPodLogs } from '@/lib/k8s/api'
+import { getMockPodLogs } from '@/lib/mocks/data'
 
 interface LogLine {
   line: number
@@ -91,6 +92,7 @@ export async function GET(
     const context = searchParams.get('context') || undefined
     const container = searchParams.get('container') || undefined
     const tail = parseInt(searchParams.get('tail') || '100')
+    const previous = searchParams.get('previous') === 'true'
 
     if (!namespace) {
       return NextResponse.json(
@@ -99,7 +101,14 @@ export async function GET(
       )
     }
 
-    const logsRaw = await fetchPodLogs(name, namespace, context, container, tail)
+    // Try to fetch real logs, fall back to mock if it fails (demo mode)
+    let logsRaw: string
+    try {
+      logsRaw = await fetchPodLogs(name, namespace, context, container, tail, previous)
+    } catch {
+      // If real cluster is unavailable, use mock logs
+      logsRaw = getMockPodLogs(name)
+    }
 
     // Parse logs into structured format
     const lines = logsRaw.split('\n')

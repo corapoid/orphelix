@@ -22,8 +22,6 @@ export async function GET(request: NextRequest) {
     const github = new GitHubClient(token)
     const files = await github.listYamlFiles(owner, repo, '', ref)
 
-    console.log(`[GitHub API] Fetched ${files.length} YAML files from ${owner}/${repo}@${ref}`)
-    console.log('[GitHub API] Files:', files.map(f => f.path))
 
     return NextResponse.json(files)
   } catch (error) {

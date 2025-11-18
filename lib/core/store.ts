@@ -73,7 +73,7 @@ export const useModeStore = create<ModeStore>()(
       }),
     }),
     {
-      name: 'k8s-dashboard-mode',
+      name: 'orphelix-mode',
     }
   )
 )
@@ -106,7 +106,7 @@ export const useGitHubStore = create<GitHubStore>()(
       },
     }),
     {
-      name: 'kubevista-github',
+      name: 'orphelix-github',
       // Convert Map to Array for JSON serialization
       storage: {
         getItem: (name) => {
@@ -165,7 +165,7 @@ export const useClusterAliases = create<ClusterAliasesStore>()(
       getAlias: (contextName) => get().aliases[contextName] || null,
     }),
     {
-      name: 'kubevista-cluster-aliases',
+      name: 'orphelix-cluster-aliases',
     }
   )
 )
@@ -194,7 +194,7 @@ export const useUIPreferences = create<UIPreferencesStore>()(
       setCompactMode: (compact) => set({ compactMode: compact }),
     }),
     {
-      name: 'kubevista-ui-preferences',
+      name: 'orphelix-ui-preferences',
     }
   )
 )
@@ -259,7 +259,7 @@ export const useSidebarPins = create<SidebarPinsStore>()(
         }),
     }),
     {
-      name: 'kubevista-sidebar-pins',
+      name: 'orphelix-sidebar-pins',
       storage: {
         getItem: (name) => {
           const str = localStorage.getItem(name)

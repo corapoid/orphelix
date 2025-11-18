@@ -20,8 +20,6 @@ export async function GET(
       )
     }
 
-    console.log(`[API] Fetching pods for deployment: ${name} in namespace: ${namespace}`)
-
     const coreV1Api = getCoreApi()
 
     // Fetch all pods in namespace
@@ -69,8 +67,6 @@ export async function GET(
           secrets: [],
         }
       })
-
-    console.log(`[API] Found ${deploymentPods.length} pods for deployment ${name}`)
 
     return NextResponse.json(deploymentPods)
   } catch (error) {

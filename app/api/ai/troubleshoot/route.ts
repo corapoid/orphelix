@@ -53,9 +53,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log('[AI Troubleshoot] Query:', query.substring(0, 100))
-    console.log('[AI Troubleshoot] Has context:', !!context)
-
     // Build context string
     let contextStr = ''
 

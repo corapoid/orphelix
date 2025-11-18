@@ -40,9 +40,6 @@ export function useAIFileMatcher(
           return
         }
 
-        console.log('[AI Matcher] Starting AI matching for:', resourceName)
-        console.log('[AI Matcher] Total files:', files.length)
-
         const response = await fetch('/api/ai/match-file', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -61,8 +58,6 @@ export function useAIFileMatcher(
         }
 
         const data: MatchResult = await response.json()
-        console.log('[AI Matcher] Match result:', data)
-
         setResult(data)
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'

@@ -8,16 +8,21 @@ import ListItemText from '@mui/material/ListItemText'
 import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import ReactMarkdown from 'react-markdown'
 import type { DashboardSummary } from '@/types/kubernetes'
 import { usePods } from '@/lib/hooks/use-pods'
 import { useNodes } from '@/lib/hooks/use-nodes'
 import { useDeployments } from '@/lib/hooks/use-deployments'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
-import { useSidebarPins } from '@/lib/core/store'
+import { useSidebarPins, useModeStore } from '@/lib/core/store'
+import { collectFailingPodsContext } from '@/lib/ai/context-collector'
 
 interface CriticalAlertsProps {
   summary: DashboardSummary
@@ -27,6 +32,8 @@ interface AlertItem {
   severity: 'error' | 'warning'
   message: string
   path: string
+  type?: 'pod' | 'node' | 'deployment'
+  name?: string
 }
 
 const STORAGE_KEY = 'criticalAlertsExpanded'
@@ -40,11 +47,30 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
     return true
   })
 
+  const [aiExplanations, setAiExplanations] = useState<Record<number, string>>({})
+  const [aiLoading, setAiLoading] = useState<Record<number, boolean>>({})
+  const [hasApiKey, setHasApiKey] = useState(false)
+
   const { data: pods, refetch: refetchPods } = usePods()
   const { data: nodes, refetch: refetchNodes } = useNodes()
   const { data: deployments, refetch: refetchDeployments } = useDeployments()
   const navigateTo = useNavigateTo()
   const { isPinned } = useSidebarPins()
+  const mode = useModeStore((state) => state.mode)
+  const namespace = useModeStore((state) => state.selectedNamespace)
+
+  useEffect(() => {
+    const apiKey = localStorage.getItem('kubevista_openai_key')
+    setHasApiKey(!!apiKey)
+
+    const handleKeyUpdate = () => {
+      const key = localStorage.getItem('kubevista_openai_key')
+      setHasApiKey(!!key)
+    }
+
+    window.addEventListener('openai-key-updated', handleKeyUpdate)
+    return () => window.removeEventListener('openai-key-updated', handleKeyUpdate)
+  }, [])
 
   // Save to localStorage when expanded changes
   useEffect(() => {
@@ -62,6 +88,61 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
     return () => clearInterval(interval)
   }, [refetchPods, refetchNodes, refetchDeployments])
 
+  const getAIExplanation = async (alert: AlertItem, index: number) => {
+    if (!hasApiKey) return
+
+    setAiLoading(prev => ({ ...prev, [index]: true }))
+    setAiExplanations(prev => ({ ...prev, [index]: '' }))
+
+    try {
+      const apiKey = localStorage.getItem('kubevista_openai_key')
+      if (!apiKey) return
+
+      // Collect detailed context from failing pods
+      const failingPodsContext = await collectFailingPodsContext(namespace || 'default', mode)
+
+      const query = `Explain this Kubernetes issue:
+
+**Issue:** ${alert.message}
+
+${failingPodsContext ? `**Detailed Pod Information:**${failingPodsContext}\n` : ''}
+
+Provide only:
+1. **What's happening** - Brief explanation based on the actual logs and events
+2. **Root cause** - Why this is occurring (reference specific errors from logs if available)
+
+Keep it concise and practical.`
+
+      const response = await fetch('/api/ai/troubleshoot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, apiKey }),
+      })
+
+      if (!response.ok) throw new Error('Failed to get AI explanation')
+
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
+      let explanation = ''
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value)
+          explanation += chunk
+          setAiExplanations(prev => ({ ...prev, [index]: explanation }))
+        }
+      }
+
+      setAiLoading(prev => ({ ...prev, [index]: false }))
+    } catch (error) {
+      console.error('Failed to get AI explanation:', error)
+      setAiLoading(prev => ({ ...prev, [index]: false }))
+    }
+  }
+
   const getCriticalAlerts = (): AlertItem[] => {
     const alerts: AlertItem[] = []
 
@@ -74,6 +155,8 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
           severity: 'error',
           message: `1 pod is failing: ${failedPods[0].name}`,
           path: `/pods/${failedPods[0].name}`,
+          type: 'pod',
+          name: failedPods[0].name,
         })
       } else {
         // Multiple pods - go to pods page with Failed filter
@@ -81,6 +164,7 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
           severity: 'error',
           message: `${summary.pods.failed} pods are failing`,
           path: '/pods?status=Failed',
+          type: 'pod',
         })
       }
     }
@@ -245,35 +329,110 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
         <Collapse in={expanded} timeout={300}>
           <List dense sx={{ pt: 1 }}>
             {alerts.map((alert, index) => (
-              <ListItem
-                key={index}
-                onClick={() => navigateTo(alert.path)}
-                sx={{
-                  px: 0,
-                  py: 0.5,
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s',
-                  borderRadius: 1,
-                  '&:hover': {
-                    bgcolor: 'action.hover',
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 32 }}>
-                  {alert.severity === 'error' ? (
-                    <ErrorOutlineIcon sx={{ fontSize: 20, color: 'error.main' }} />
-                  ) : (
-                    <WarningAmberIcon sx={{ fontSize: 20, color: 'warning.main' }} />
-                  )}
-                </ListItemIcon>
-                <ListItemText
-                  primary={alert.message}
-                  primaryTypographyProps={{
-                    variant: 'body2',
-                    fontWeight: 500,
+              <Box key={index}>
+                <ListItem
+                  sx={{
+                    px: 0,
+                    py: 0.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
                   }}
-                />
-              </ListItem>
+                >
+                  <Box
+                    onClick={() => navigateTo(alert.path)}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flex: 1,
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s',
+                      borderRadius: 1,
+                      '&:hover': {
+                        bgcolor: 'action.hover',
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 32 }}>
+                      {alert.severity === 'error' ? (
+                        <ErrorOutlineIcon sx={{ fontSize: 20, color: 'error.main' }} />
+                      ) : (
+                        <WarningAmberIcon sx={{ fontSize: 20, color: 'warning.main' }} />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={alert.message}
+                      primaryTypographyProps={{
+                        variant: 'body2',
+                        fontWeight: 500,
+                      }}
+                    />
+                  </Box>
+                  {hasApiKey && alert.severity === 'error' && (
+                    <Button
+                      size="small"
+                      startIcon={aiLoading[index] ? <CircularProgress size={14} /> : <AutoFixHighIcon />}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        getAIExplanation(alert, index)
+                      }}
+                      disabled={aiLoading[index]}
+                      sx={{
+                        ml: 1,
+                        minWidth: 'auto',
+                        px: 1.5,
+                        py: 0.5,
+                        fontSize: '0.75rem',
+                        textTransform: 'none',
+                        // Liquid glass effect
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(139, 92, 246, 0.15)'
+                            : 'rgba(139, 92, 246, 0.1)',
+                        backdropFilter: 'blur(12px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(139, 92, 246, 0.3)'
+                            : 'rgba(139, 92, 246, 0.2)',
+                        boxShadow: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? '0 2px 8px 0 rgba(139, 92, 246, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)'
+                            : '0 2px 8px 0 rgba(139, 92, 246, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)',
+                        color: 'primary.main',
+                        '&:hover': {
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === 'dark'
+                              ? 'rgba(139, 92, 246, 0.25)'
+                              : 'rgba(139, 92, 246, 0.15)',
+                          borderColor: 'primary.main',
+                        },
+                        '&:disabled': {
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === 'dark'
+                              ? 'rgba(139, 92, 246, 0.1)'
+                              : 'rgba(139, 92, 246, 0.05)',
+                        },
+                      }}
+                    >
+                      AI Explain
+                    </Button>
+                  )}
+                </ListItem>
+
+                {aiExplanations[index] && (
+                  <Box sx={{
+                    ml: 4,
+                    mb: 1,
+                    p: 2,
+                    '& p': { mb: 1 },
+                    '& h1, & h2, & h3, & h4, & h5, & h6': { mt: 2, mb: 1 },
+                  }}>
+                    <ReactMarkdown>{aiExplanations[index]}</ReactMarkdown>
+                  </Box>
+                )}
+              </Box>
             ))}
           </List>
         </Collapse>

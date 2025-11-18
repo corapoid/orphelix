@@ -35,17 +35,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log('[AI Matcher] Matching resource:', resourceName, 'type:', resourceType, 'namespace:', namespace)
-    console.log('[AI Matcher] Total files:', files.length)
 
     // Filter out base/ files if there are environment-specific files available
     const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
-    const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
 
     // Use only environment files if available, otherwise include base files
     const filesToSearch = envFiles.length > 0 ? envFiles : files
 
-    console.log('[AI Matcher] Files after filtering:', filesToSearch.length, '(env:', envFiles.length, 'base:', baseFiles.length, ')')
 
     // Prepare file list for AI (limit to first 100 for token efficiency)
     const fileList = filesToSearch.slice(0, 100).map((f: any) => f.path).join('\n')
@@ -102,13 +98,10 @@ If no good match exists, return:
     })
 
     const duration = Date.now() - startTime
-    console.log(`[AI Matcher] AI response received in ${duration}ms`)
 
     // Parse AI response
     const response = JSON.parse(result.text.trim())
 
-    console.log('[AI Matcher] Match result:', response.matchedFile, 'confidence:', response.confidence)
-    console.log('[AI Matcher] Reasoning:', response.reasoning)
 
     return NextResponse.json({
       matchedFile: response.matchedFile,

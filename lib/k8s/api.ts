@@ -744,7 +744,8 @@ export async function fetchPodLogs(
   namespace: string,
   contextName?: string,
   container?: string,
-  tail = 100
+  tail = 100,
+  previous = false
 ): Promise<string> {
   try {
     const coreApi = getCoreApi(contextName)
@@ -753,6 +754,7 @@ export async function fetchPodLogs(
       namespace,
       container,
       tailLines: tail,
+      previous,
     })
     return response
   } catch (error) {

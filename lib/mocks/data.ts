@@ -1548,3 +1548,44 @@ export function generateMockDaemonSets(): DaemonSet[] {
   setCachedDaemonSets(daemonSets)
   return daemonSets
 }
+
+/**
+ * Mock Pod Logs for Demo Mode
+ */
+export function getMockPodLogs(podName: string, podStatus?: string): string {
+  // Get pod status from cached pods if not provided
+  if (!podStatus) {
+    const pods = getCachedPods()
+    const pod = pods?.find(p => p.name === podName)
+    podStatus = pod?.status
+  }
+
+  // Return failure logs for crashed/failing pods
+  if (podStatus === 'Failed' || podStatus === 'CrashLoopBackOff' || podStatus === 'Error') {
+    // Generate crash logs based on pod name
+    const appName = podName.split('-')[0] || 'app'
+    return `2025-01-17T10:30:45.123Z [INFO] Starting ${appName} service v2.1.0
+2025-01-17T10:30:45.234Z [INFO] Loading configuration from /etc/config/app.yaml
+2025-01-17T10:30:45.345Z [ERROR] Failed to load configuration: ENOENT: no such file or directory, open '/etc/config/app.yaml'
+2025-01-17T10:30:45.456Z [ERROR] Required configuration file not found
+2025-01-17T10:30:45.567Z [ERROR] Cannot start service without configuration
+2025-01-17T10:30:45.678Z [FATAL] Fatal error during startup
+2025-01-17T10:30:45.789Z [FATAL] Exiting with code 1
+Error: ENOENT: no such file or directory, open '/etc/config/app.yaml'
+    at Object.openSync (node:fs:590:3)
+    at Object.readFileSync (node:fs:458:35)
+    at loadConfig (/app/src/config.js:42:18)
+    at startup (/app/src/index.js:12:5)
+Process exited with code 1`
+  }
+
+  // Return healthy logs for running pods
+  const appName = podName.split('-')[0] || 'app'
+  return `2025-01-17T10:20:00.000Z [INFO] ${appName} service v2.1.0 started successfully
+2025-01-17T10:20:05.123Z [INFO] Health check passed
+2025-01-17T10:20:10.234Z [INFO] Listening on port 8080
+2025-01-17T10:20:15.345Z [INFO] Ready to accept connections
+2025-01-17T10:20:20.456Z [INFO] GET /health 200 - 3ms
+2025-01-17T10:20:25.567Z [INFO] GET /metrics 200 - 5ms
+2025-01-17T10:20:30.678Z [INFO] All systems operational`
+}

@@ -1,4 +1,4 @@
-# KubeVista
+# Orphelix
 
 [![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/yourusername/kubevista)
 [![License](https://img.shields.io/badge/license-MPL--2.0-green.svg)](LICENSE)
@@ -10,7 +10,7 @@
 
 > A modern, full-featured Kubernetes dashboard with real-time updates and GitOps integration
 
-**KubeVista** is a comprehensive web dashboard for monitoring and managing Kubernetes resources. The application offers a demo mode with realistic test data, live updates via Server-Sent Events, pod management, topology visualization, and GitHub integration for GitOps workflows.
+**Orphelix** is a comprehensive web dashboard for monitoring and managing Kubernetes resources. The application offers a demo mode with realistic test data, live updates via Server-Sent Events, pod management, topology visualization, and GitHub integration for GitOps workflows.
 
 ## ✨ Features
 
@@ -74,7 +74,7 @@ npm start
 
 Complete user guide available in the `/docs` directory:
 
-- **[Introduction](docs/introduction.mdx)** - What is KubeVista and key features
+- **[Introduction](docs/introduction.mdx)** - What is Orphelix and key features
 - **[Quickstart](docs/quickstart.mdx)** - Get started in 5 minutes
 - **[Installation](docs/installation.mdx)** - Detailed installation guide
 - **[Dashboard Guide](docs/user/dashboard.mdx)** - Using the main dashboard

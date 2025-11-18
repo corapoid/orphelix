@@ -40,15 +40,7 @@ export function initK8sClient(contextName?: string): void {
       kc.setCurrentContext(contextName)
     }
 
-    const currentContext = kc.getCurrentContext()
     const cluster = kc.getCurrentCluster()
-    // eslint-disable-next-line no-console
-    console.log('[K8s] Using kubeconfig file', {
-      context: currentContext,
-      cluster: cluster?.name,
-      server: cluster?.server,
-      requestedContext: contextName || 'default',
-    })
 
     // Validate cluster configuration
     if (!cluster?.server) {

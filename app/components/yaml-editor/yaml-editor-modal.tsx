@@ -90,15 +90,10 @@ export function YamlEditorModal({
         // Check if AI is available (OpenAI key configured)
         const openaiKey = localStorage.getItem('kubevista_openai_key')
 
-        console.log('[YamlEditor] Starting file matching for:', resourceName)
-        console.log('[YamlEditor] Total files:', files.length)
-        console.log('[YamlEditor] AI available:', !!openaiKey)
-
         let response: Response
 
         if (openaiKey) {
           // AI-powered matching
-          console.log('[YamlEditor] Using AI-powered matching')
           response = await fetch('/api/ai/match-file', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -112,8 +107,6 @@ export function YamlEditorModal({
           })
         } else {
           // Fallback: pattern matching (old method)
-          console.log('[YamlEditor] AI not available, using pattern matching')
-
           const baseFiles = files.filter((f: any) => f.path.startsWith('base/'))
           const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
           const candidateFiles = [...envFiles.slice(0, 15), ...baseFiles.slice(0, 5)]
@@ -152,7 +145,6 @@ export function YamlEditorModal({
         }
 
         const data = await response.json()
-        console.log('[YamlEditor] Match result:', JSON.stringify(data, null, 2))
 
         // Handle different response formats (AI vs pattern matching)
         const matchedFilePath = openaiKey

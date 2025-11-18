@@ -5,7 +5,6 @@ import Box from '@mui/material/Box'
 import { Providers } from './components/providers'
 import { Sidebar } from './components/layout/sidebar'
 import { TopBar } from './components/layout/top-bar'
-import { FloatingHelpButton } from './components/ai/floating-help-button'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 
@@ -60,7 +59,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </Box>
               </Box>
             </Box>
-            <FloatingHelpButton />
           </Box>
         </Providers>
       </body>

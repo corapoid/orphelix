@@ -9,16 +9,12 @@ import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Collapse from '@mui/material/Collapse'
 import CircularProgress from '@mui/material/CircularProgress'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
 import { GlassPanel } from '@/app/components/common/glass-panel'
-import { detectIssuesFromEvents, analyzeResourceMetrics } from '@/lib/ai/context-collector'
+import { detectIssuesFromEvents, analyzeResourceMetrics, collectFailingPodsContext } from '@/lib/ai/context-collector'
 import type { Event } from '@/types/kubernetes'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
 import WarningIcon from '@mui/icons-material/Warning'
 import ErrorIcon from '@mui/icons-material/Error'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ReactMarkdown from 'react-markdown'
 
@@ -33,6 +29,7 @@ interface IssueDetectorEnhancedProps {
     nodes?: { notReady: number; total: number }
     deployments?: { degraded: number; total: number }
   }
+  namespace?: string
 }
 
 interface DetectedIssue {
@@ -43,11 +40,20 @@ interface DetectedIssue {
   loading?: boolean
 }
 
-export function IssueDetectorEnhanced({ events = [], metrics, summary }: IssueDetectorEnhancedProps) {
+export function IssueDetectorEnhanced({ events = [], metrics, summary, namespace = 'default' }: IssueDetectorEnhancedProps) {
   const [issues, setIssues] = useState<DetectedIssue[]>([])
   const [expanded, setExpanded] = useState(true)
   const [hasApiKey, setHasApiKey] = useState(false)
   const [autoExplainEnabled, setAutoExplainEnabled] = useState(false)
+
+  // Import useModeStore dynamically to get current mode
+  const [mode, setMode] = useState<'real' | 'mock'>('real')
+  useEffect(() => {
+    import('@/lib/core/store').then(({ useModeStore }) => {
+      const currentMode = useModeStore.getState().mode
+      setMode(currentMode)
+    })
+  }, [])
 
   useEffect(() => {
     const apiKey = localStorage.getItem('kubevista_openai_key')
@@ -64,8 +70,6 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary }: IssueDe
 
   useEffect(() => {
     const detectedIssues: DetectedIssue[] = []
-
-    console.log('[IssueDetector] Analyzing events:', events.length, 'summary:', summary)
 
     // Detect critical issues from summary
     if (summary) {
@@ -94,7 +98,6 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary }: IssueDe
     // Detect issues from events with related events
     if (events.length > 0) {
       const eventIssues = detectIssuesFromEvents(events)
-      console.log('[IssueDetector] Detected issues:', eventIssues)
       eventIssues.forEach(issue => {
         // Find related events for this issue
         const relatedEvents = events.filter(e => {
@@ -128,7 +131,6 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary }: IssueDe
       })
     }
 
-    console.log('[IssueDetector] Total issues detected:', detectedIssues.length)
     setIssues(detectedIssues)
   }, [events, metrics, summary])
 
@@ -151,19 +153,22 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary }: IssueDe
         `[${e.type}] ${e.reason}: ${e.message}${e.count > 1 ? ` (×${e.count})` : ''}`
       ).join('\n') || ''
 
-      const query = `Explain this Kubernetes issue and provide actionable solutions:
+      // Collect detailed context from failing pods (logs, events, etc.)
+      const failingPodsContext = await collectFailingPodsContext(namespace, mode)
+
+      const query = `Explain this Kubernetes issue:
 
 **Issue:** ${issue.message}
 
 ${eventContext ? `**Related Events:**\n${eventContext}\n` : ''}
 
-Provide:
-1. **What's happening** - Brief explanation
-2. **Root cause** - Why this is occurring
-3. **Solution** - Step-by-step fix with kubectl commands
-4. **Prevention** - How to avoid this in the future
+${failingPodsContext ? `**Detailed Pod Information:**${failingPodsContext}\n` : ''}
 
-Keep it concise and practical.`
+Provide only:
+1. **What's happening** - Brief explanation based on the actual logs and events
+2. **Root cause** - Why this is occurring (reference specific errors from logs if available)
+
+Keep it concise and practical. Use the actual pod names, namespaces, and error messages from the context above.`
 
       const response = await fetch('/api/ai/troubleshoot', {
         method: 'POST',
@@ -186,21 +191,22 @@ Keep it concise and practical.`
           if (done) break
 
           const chunk = decoder.decode(value)
-          const lines = chunk.split('\n').filter(line => line.trim())
+          explanation += chunk
 
-          for (const line of lines) {
-            if (line.startsWith('0:')) {
-              const content = line.substring(2).replace(/^"(.*)"$/, '$1')
-              explanation += content
-
-              setIssues(prev => {
-                const updated = [...prev]
-                updated[index] = { ...updated[index], explanation, loading: false }
-                return updated
-              })
-            }
-          }
+          // Update state with accumulated explanation
+          setIssues(prev => {
+            const updated = [...prev]
+            updated[index] = { ...updated[index], explanation, loading: true }
+            return updated
+          })
         }
+
+        // Mark as complete when streaming is done
+        setIssues(prev => {
+          const updated = [...prev]
+          updated[index] = { ...updated[index], explanation, loading: false }
+          return updated
+        })
       }
     } catch (error) {
       console.error('Failed to get AI explanation:', error)
@@ -301,53 +307,35 @@ Keep it concise and practical.`
       <Collapse in={expanded}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {issues.map((issue, idx) => (
-            <Accordion
-              key={idx}
-              elevation={0}
-              sx={{
-                bgcolor: 'transparent',
-                '&:before': { display: 'none' },
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+            <Box key={idx}>
+              <Alert
+                severity={issue.severity}
                 sx={{
-                  p: 0,
-                  minHeight: 'auto',
-                  '& .MuiAccordionSummary-content': {
-                    m: 0,
+                  width: '100%',
+                  mb: 1,
+                  '& .MuiAlert-message': {
+                    width: '100%',
                   },
                 }}
               >
-                <Alert
-                  severity={issue.severity}
-                  sx={{
-                    width: '100%',
-                    '& .MuiAlert-message': {
-                      width: '100%',
-                    },
-                  }}
-                  action={
-                    hasApiKey && !issue.explanation && !issue.loading ? (
-                      <Button
-                        size="small"
-                        startIcon={<SmartToyIcon />}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          getAIExplanation(issue, idx)
-                        }}
-                      >
-                        Explain
-                      </Button>
-                    ) : null
-                  }
-                >
-                  <AlertTitle sx={{ fontWeight: 600, mb: 0 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                  <AlertTitle sx={{ fontWeight: 600, mb: 0, flex: 1 }}>
                     {issue.message}
                   </AlertTitle>
-                </Alert>
-              </AccordionSummary>
-              <AccordionDetails sx={{ pt: 2 }}>
+                  {hasApiKey && !issue.explanation && !issue.loading && (
+                    <Button
+                      size="small"
+                      startIcon={<SmartToyIcon />}
+                      onClick={() => getAIExplanation(issue, idx)}
+                      sx={{ ml: 2 }}
+                    >
+                      Explain
+                    </Button>
+                  )}
+                </Box>
+              </Alert>
+
+              <Box>
                 {issue.loading && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                     <CircularProgress size={20} />
@@ -411,8 +399,8 @@ Keep it concise and practical.`
                     ))}
                   </Box>
                 )}
-              </AccordionDetails>
-            </Accordion>
+              </Box>
+            </Box>
           ))}
 
           {hasApiKey && (

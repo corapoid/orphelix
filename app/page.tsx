@@ -9,7 +9,6 @@ import { CriticalAlerts } from './components/dashboard/critical-alerts'
 import { ResourceOverviewV2 } from './components/dashboard/resource-overview-v2'
 import { ResourceUtilization } from './components/dashboard/resource-utilization'
 import { RecentEvents } from './components/dashboard/recent-events'
-import { IssueDetectorEnhanced } from './components/ai/issue-detector-enhanced'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
 import { useResourceQuotas } from '@/lib/hooks/use-resourcequotas'
 import { useModeStore } from '@/lib/core/store'
@@ -74,24 +73,12 @@ export default function DashboardPage() {
 
   return (
     <Box>
-      {/* 1. Critical Alerts (Conditional) */}
+      {/* 1. Critical Alerts with AI Explanation */}
       <Box sx={{ mb: 3 }}>
         <CriticalAlerts summary={summary} />
       </Box>
 
-      {/* 2. AI Issue Detection */}
-      <Box sx={{ mb: 3 }}>
-        <IssueDetectorEnhanced
-          events={events || []}
-          summary={{
-            pods: summary.pods,
-            nodes: summary.nodes,
-            deployments: summary.deployments,
-          }}
-        />
-      </Box>
-
-      {/* 3. Resource Overview */}
+      {/* 2. Resource Overview */}
       <Box sx={{ mb: 3 }}>
         <ResourceOverviewV2 summary={summary} />
       </Box>

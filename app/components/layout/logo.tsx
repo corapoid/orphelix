@@ -32,7 +32,7 @@ export function Logo({ collapsed = false }: LogoProps) {
             letterSpacing: '-0.05em',
           }}
         >
-          K
+          O
         </Typography>
       </Box>
     )
@@ -68,7 +68,7 @@ export function Logo({ collapsed = false }: LogoProps) {
             letterSpacing: '-0.05em',
           }}
         >
-          K
+          O
         </Typography>
       </Box>
       <Box>
@@ -83,7 +83,7 @@ export function Logo({ collapsed = false }: LogoProps) {
             backgroundClip: 'text',
           }}
         >
-          KubeVista
+          Orphelix
         </Typography>
         <Typography
           variant="caption"
@@ -95,7 +95,7 @@ export function Logo({ collapsed = false }: LogoProps) {
             fontWeight: 600,
           }}
         >
-          Dashboard
+          Kubernetes
         </Typography>
       </Box>
     </Box>

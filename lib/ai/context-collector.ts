@@ -76,7 +76,8 @@ export async function collectDeploymentContext(
 export async function collectPodContext(
   pod: Pod,
   namespace: string,
-  containerName?: string
+  containerName?: string,
+  mode: 'real' | 'mock' = 'real'
 ): Promise<TroubleshootingContext> {
   const context: TroubleshootingContext = {
     resource: {
@@ -96,32 +97,85 @@ export async function collectPodContext(
   }
 
   // Fetch related events
-  try {
-    const eventsRes = await fetch(
-      `/api/pods/${encodeURIComponent(pod.name)}/events?namespace=${namespace}`
-    )
-    if (eventsRes.ok) {
-      const events: Event[] = await eventsRes.json()
-      context.events = events.slice(0, 10).map(e => ({
-        type: e.type,
-        reason: e.reason,
-        message: e.message,
-        count: e.count,
-      }))
+  if (mode === 'mock') {
+    // In mock mode, generate mock events for failing pods
+    if (pod.status === 'Failed' || pod.status === 'CrashLoopBackOff' || pod.status === 'Error') {
+      context.events = [
+        {
+          type: 'Warning',
+          reason: 'BackOff',
+          message: 'Back-off restarting failed container',
+          count: pod.restartCount || 5,
+        },
+        {
+          type: 'Warning',
+          reason: 'Failed',
+          message: 'Error: ENOENT: no such file or directory, open \'/etc/config/app.yaml\'',
+          count: 1,
+        }
+      ]
     }
-  } catch (error) {
-    console.warn('Failed to fetch pod events:', error)
+  } else {
+    try {
+      const eventsRes = await fetch(
+        `/api/pods/${encodeURIComponent(pod.name)}/events?namespace=${namespace}`
+      )
+      if (eventsRes.ok) {
+        const events: Event[] = await eventsRes.json()
+        context.events = events.slice(0, 10).map(e => ({
+          type: e.type,
+          reason: e.reason,
+          message: e.message,
+          count: e.count,
+        }))
+      }
+    } catch (error) {
+      console.warn('Failed to fetch pod events:', error)
+    }
   }
 
   // Fetch logs
   if (containerName || pod.containers.length > 0) {
     const container = containerName || pod.containers[0]
+
+    // In mock mode, use mock logs directly
+    if (mode === 'mock') {
+      const { getMockPodLogs } = await import('@/lib/mocks/data')
+      const logsText = getMockPodLogs(pod.name, pod.status)
+      context.logs = logsText.split('\n').filter(Boolean).slice(-20)
+      return context
+    }
+
+    // For crashed/failing pods, fetch previous logs (from crashed container)
+    const isPodCrashed = pod.status === 'Failed' ||
+                         pod.status === 'CrashLoopBackOff' ||
+                         pod.status === 'Error' ||
+                         (pod.restartCount && pod.restartCount > 0)
+
     try {
-      const logsRes = await fetch(
-        `/api/pods/${encodeURIComponent(pod.name)}/logs?namespace=${namespace}&container=${container}&tail=50`
-      )
+      // Try to get previous logs first if pod has crashed
+      if (isPodCrashed) {
+        const previousLogsUrl = `/api/pods/${encodeURIComponent(pod.name)}/logs?namespace=${namespace}&container=${container}&tail=50&previous=true`
+        const previousLogsRes = await fetch(previousLogsUrl)
+
+        if (previousLogsRes.ok) {
+          const response = await previousLogsRes.json()
+          const logsText = typeof response === 'string' ? response : (response.logs || '')
+          const previousLogs = logsText.split('\n').filter(Boolean).slice(-20)
+
+          if (previousLogs.length > 0) {
+            context.logs = previousLogs
+            return context // Return early with previous logs
+          }
+        }
+      }
+
+      // Fall back to current logs
+      const logsUrl = `/api/pods/${encodeURIComponent(pod.name)}/logs?namespace=${namespace}&container=${container}&tail=50`
+      const logsRes = await fetch(logsUrl)
       if (logsRes.ok) {
-        const logsText = await logsRes.text()
+        const response = await logsRes.json()
+        const logsText = typeof response === 'string' ? response : (response.logs || '')
         context.logs = logsText.split('\n').filter(Boolean).slice(-20)
       }
     } catch (error) {
@@ -210,4 +264,68 @@ export function analyzeResourceMetrics(metrics: {
   }
 
   return issues
+}
+
+/**
+ * Collect detailed context for failing pods including logs
+ * Note: This is a client-side function and should check mode before calling
+ */
+export async function collectFailingPodsContext(namespace: string = 'default', mode: 'real' | 'mock' = 'real'): Promise<string> {
+  try {
+    let pods: Pod[] = []
+
+    if (mode === 'mock') {
+      // In mock mode, use mock data directly instead of calling API
+      const { generateMockPods } = await import('@/lib/mocks/data')
+      pods = generateMockPods()
+    } else {
+      // In real mode, fetch from API
+      const response = await fetch(`/api/pods?namespace=${namespace}`)
+      if (!response.ok) {
+        return ''
+      }
+      pods = await response.json()
+    }
+
+    // Filter failing pods
+    const failingPods = pods.filter(
+      pod => pod.status === 'Failed' ||
+             pod.status === 'CrashLoopBackOff' ||
+             pod.status === 'Error' ||
+             (pod.restartCount && pod.restartCount > 3)
+    )
+
+    if (failingPods.length === 0) return ''
+
+    const contexts = await Promise.all(
+      failingPods.slice(0, 3).map(async pod => { // Limit to first 3 failing pods
+        const podContext = await collectPodContext(pod, pod.namespace || 'default', undefined, mode)
+
+        let contextText = `\n## Pod: ${pod.name} (${pod.namespace || 'default'})\n`
+        contextText += `Status: ${pod.status}\n`
+        contextText += `Restarts: ${pod.restartCount || 0}\n`
+
+        if (podContext.events && podContext.events.length > 0) {
+          contextText += `\nRecent Events:\n`
+          podContext.events.forEach(e => {
+            contextText += `- [${e.type}] ${e.reason}: ${e.message}\n`
+          })
+        }
+
+        if (podContext.logs && podContext.logs.length > 0) {
+          contextText += `\nRecent Logs (last 20 lines):\n`
+          contextText += '```\n'
+          contextText += podContext.logs.join('\n')
+          contextText += '\n```\n'
+        }
+
+        return contextText
+      })
+    )
+
+    return contexts.join('\n')
+  } catch (error) {
+    console.warn('Failed to collect failing pods context:', error)
+    return ''
+  }
 }
