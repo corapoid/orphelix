@@ -299,21 +299,6 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
               helperText="Namespace is set from your current context. Change context in Settings to deploy to a different namespace."
             />
 
-            <Box>
-              <Typography gutterBottom>
-                Replicas: {replicas}
-                {enableAutoscaling && <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>(Initial)</Typography>}
-              </Typography>
-              <Slider
-                value={replicas}
-                onChange={(_, value) => setReplicas(value as number)}
-                min={1}
-                max={10}
-                marks
-                valueLabelDisplay="auto"
-              />
-            </Box>
-
             <FormControl fullWidth>
               <InputLabel>Resource Preset</InputLabel>
               <Select
@@ -389,6 +374,21 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                 </Alert>
 
                 <Box>
+                  <Typography gutterBottom>Initial Replicas: {replicas}</Typography>
+                  <Slider
+                    value={replicas}
+                    onChange={(_, value) => setReplicas(value as number)}
+                    min={1}
+                    max={10}
+                    marks
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    Number of replicas to start with before autoscaling takes effect
+                  </Typography>
+                </Box>
+
+                <Box>
                   <Typography gutterBottom>Min Replicas: {minReplicas}</Typography>
                   <Slider
                     value={minReplicas}
@@ -452,9 +452,26 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                 </Box>
               </Box>
             ) : (
-              <Alert severity="info">
-                Autoscaling is disabled. Your application will run with the fixed number of replicas specified in the configuration step.
-              </Alert>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Alert severity="info">
+                  Autoscaling is disabled. Your application will run with a fixed number of replicas.
+                </Alert>
+
+                <Box>
+                  <Typography gutterBottom>Replicas: {replicas}</Typography>
+                  <Slider
+                    value={replicas}
+                    onChange={(_, value) => setReplicas(value as number)}
+                    min={1}
+                    max={10}
+                    marks
+                    valueLabelDisplay="auto"
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    Fixed number of pod replicas to run
+                  </Typography>
+                </Box>
+              </Box>
             )}
           </Box>
         )
