@@ -62,7 +62,7 @@ const POPULAR_IMAGES = [
 export function AddAppModal({ open, onClose }: AddAppModalProps) {
   const theme = useTheme()
   const { selectedRepo, selectedBranch, addToBasket } = useGitHubStore()
-  const mode = useModeStore((state) => state.mode)
+  const { mode, selectedNamespace: currentNamespace } = useModeStore()
 
   const [activeStep, setActiveStep] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -72,7 +72,6 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
   // Form state
   const [appType, setAppType] = useState<'deployment' | 'statefulset'>('deployment')
   const [appName, setAppName] = useState('')
-  const [namespace, setNamespace] = useState('default')
   const [replicas, setReplicas] = useState(3)
   const [resourcePreset, setResourcePreset] = useState<keyof typeof RESOURCE_PRESETS>('medium')
   const [dockerImage, setDockerImage] = useState('')
@@ -113,11 +112,6 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
 
         const structure: RepoStructure = await response.json()
         setRepoStructure(structure)
-
-        // Set default namespace if available
-        if (structure.namespaces.length > 0) {
-          setNamespace(structure.namespaces[0])
-        }
       } catch (err) {
         const error = err as Error
         setError(error.message || 'Failed to load repository structure')
@@ -168,7 +162,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
       if (repoStructure) {
         const template: AppTemplate = {
           name: appName,
-          namespace,
+          namespace: currentNamespace || 'default',
           replicas,
           resources: RESOURCE_PRESETS[resourcePreset],
           image: dockerImage,
@@ -228,7 +222,6 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     // Reset form
     setActiveStep(0)
     setAppName('')
-    setNamespace('default')
     setReplicas(3)
     setResourcePreset('medium')
     setDockerImage('')
@@ -296,14 +289,12 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
               required
             />
 
-            <Autocomplete
-              freeSolo
-              options={repoStructure?.namespaces || ['default']}
-              value={namespace}
-              onChange={(_, newValue) => setNamespace(newValue || 'default')}
-              renderInput={(params) => (
-                <TextField {...params} label="Namespace" helperText="Select existing or type new" />
-              )}
+            <TextField
+              label="Namespace"
+              value={currentNamespace || 'default'}
+              fullWidth
+              disabled
+              helperText="Namespace is set from your current context. Change context in Settings to deploy to a different namespace."
             />
 
             <Box>
