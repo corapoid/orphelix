@@ -55,7 +55,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.8",
-    "concurrently": "^9.2.1",
     "eslint": "^9.14.0",
     "eslint-config-next": "^16.0.3",
     "jsdom": "^27.2.0",

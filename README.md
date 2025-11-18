@@ -8,8 +8,6 @@
 [![React](https://img.shields.io/badge/React-19.0-61dafb.svg)](https://reactjs.org/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/yourusername/kubevista)
 
-> A modern, full-featured Kubernetes dashboard with real-time updates and GitOps integration
-
 **Orphelix** is a comprehensive web dashboard for monitoring and managing Kubernetes resources. The application offers a demo mode with realistic test data, live updates via Server-Sent Events, pod management, topology visualization, and GitHub integration for GitOps workflows.
 
 ## ✨ Features
