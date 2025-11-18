@@ -97,26 +97,35 @@ export function YamlEditorModal({
         if (openaiKey) {
           // Smart filtering before AI matching for better performance
           const baseResourceName = resourceName.replace(/-(main|dev|prod|staging|test)$/, '')
+          const resourceWords = baseResourceName.toLowerCase().split(/[-_]/)
 
-          // Filter to only relevant files (max 30 most likely matches)
-          const relevantFiles = files
-            .filter((f: any) => {
-              const path = f.path.toLowerCase()
-              const name = baseResourceName.toLowerCase()
+          // Filter to only relevant files (max 50 most likely matches)
+          let relevantFiles = files.filter((f: any) => {
+            const path = f.path.toLowerCase()
+            const name = baseResourceName.toLowerCase()
 
-              // Prioritize files that match resource name or type
-              return (
-                path.includes(name) ||
-                path.includes(resourceName.toLowerCase()) ||
-                path.includes('helm-release') ||
-                path.includes('application') ||
-                path.includes(resourceType)
-              )
-            })
-            .slice(0, 30) // Limit to 30 files for speed
+            // Match if path contains resource name or any word from resource name
+            return (
+              path.includes(name) ||
+              path.includes(resourceName.toLowerCase()) ||
+              resourceWords.some(word => word.length > 2 && path.includes(word)) ||
+              path.includes('helm-release') ||
+              path.includes('application') ||
+              path.includes('deployment') ||
+              path.includes('kustomization') ||
+              path.includes(resourceType)
+            )
+          })
 
-          // If no relevant files found, use first 30 files
-          const filesToMatch = relevantFiles.length > 0 ? relevantFiles : files.slice(0, 30)
+          // If still too many, take first 50
+          if (relevantFiles.length > 50) {
+            relevantFiles = relevantFiles.slice(0, 50)
+          }
+
+          // If no relevant files found, use all files (but limit to 100 for safety)
+          const filesToMatch = relevantFiles.length > 0 ? relevantFiles : files.slice(0, 100)
+
+          console.log(`[YamlEditor] AI matching: filtered ${files.length} files → ${filesToMatch.length} files`)
 
           // AI-powered matching with filtered files
           response = await fetch('/api/ai/match-file', {
