@@ -31,30 +31,32 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body style={{ margin: 0 }} suppressHydrationWarning>
         <Providers>
-          <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+          <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default', overflow: 'hidden' }}>
             <Sidebar />
             <Box
               component="main"
               sx={{
                 flexGrow: 1,
+                minWidth: 0,
                 display: 'flex',
                 flexDirection: 'column',
-                pt: 2,
+                height: '100%',
                 pr: 2,
-                pb: 2,
               }}
             >
               <Box
                 sx={{
-                  flexGrow: 1,
+                  flex: 1,
+                  minWidth: 0,
+                  minHeight: 0,
                   display: 'flex',
                   flexDirection: 'column',
-                  borderRadius: 3,
+                  borderTopRightRadius: 3,
                   overflow: 'hidden',
                 }}
               >
                 <TopBar />
-                <Box sx={{ flexGrow: 1, p: 2, overflowY: 'auto' }}>
+                <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', p: 3 }}>
                   {children}
                 </Box>
               </Box>

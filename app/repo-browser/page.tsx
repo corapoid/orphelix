@@ -1,26 +1,111 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Paper from '@mui/material/Paper'
 import Alert from '@mui/material/Alert'
+import CircularProgress from '@mui/material/CircularProgress'
 import { useGitHubStore } from '@/lib/core/store'
 import { FileTree } from '@/app/components/repo-browser/file-tree'
-import { BranchSelector } from '@/app/components/repo-browser/branch-selector'
-import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
+import { FileViewer } from '@/app/components/repo-browser/file-viewer'
+import { usePageSearch } from '@/lib/contexts/search-context'
 
 export default function RepoBrowserPage() {
-  const { selectedRepo } = useGitHubStore()
-  const [selectedBranch, setSelectedBranch] = useState('main')
+  const { selectedRepo, selectedBranch, setSelectedBranch, setPendingPR } = useGitHubStore()
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
-  const [showEditor, setShowEditor] = useState(false)
+
+  const [sidebarWidth, setSidebarWidth] = useState(300)
+  const [isResizing, setIsResizing] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [startWidth, setStartWidth] = useState(300)
+  const [isCreatingPR, setIsCreatingPR] = useState(false)
+  const [prError, setPrError] = useState<string | null>(null)
+  const sidebarRef = useRef<HTMLDivElement>(null)
+  const searchQuery = usePageSearch('Search files...')
+  const sidebarWidthLoaded = useRef(false)
+
+  // Load sidebar width from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('repo-browser-sidebar-width')
+    console.log('[Sidebar] Load - loaded flag:', sidebarWidthLoaded.current, 'saved value:', saved)
+    if (saved) {
+      const width = parseInt(saved, 10)
+      if (width >= 200 && width <= 600) {
+        console.log('[Sidebar] Load - setting width to:', width)
+        setSidebarWidth(width)
+      }
+    }
+    sidebarWidthLoaded.current = true
+    console.log('[Sidebar] Load - set loaded flag to true')
+  }, [])
+
+  // Save sidebar width to localStorage (only after initial load)
+  useEffect(() => {
+    console.log('[Sidebar] Save - loaded flag:', sidebarWidthLoaded.current, 'width:', sidebarWidth)
+    if (sidebarWidthLoaded.current) {
+      console.log('[Sidebar] Save - saving to localStorage:', sidebarWidth)
+      localStorage.setItem('repo-browser-sidebar-width', sidebarWidth.toString())
+    }
+  }, [sidebarWidth])
+
+  // Load last selected file from localStorage on mount
+  useEffect(() => {
+    if (selectedRepo) {
+      const storageKey = `repo-browser-file-${selectedRepo.owner}-${selectedRepo.repo}-${selectedBranch}`
+      const savedFile = localStorage.getItem(storageKey)
+      if (savedFile) {
+        setSelectedFile(savedFile)
+      }
+    }
+  }, [selectedRepo, selectedBranch])
+
+  // Save selected file to localStorage
+  useEffect(() => {
+    if (selectedRepo && selectedFile) {
+      const storageKey = `repo-browser-file-${selectedRepo.owner}-${selectedRepo.repo}-${selectedBranch}`
+      localStorage.setItem(storageKey, selectedFile)
+    }
+  }, [selectedRepo, selectedBranch, selectedFile])
 
   useEffect(() => {
-    if (selectedRepo?.branch) {
+    if (selectedRepo?.branch && !selectedBranch) {
       setSelectedBranch(selectedRepo.branch)
     }
-  }, [selectedRepo])
+  }, [selectedRepo, selectedBranch, setSelectedBranch])
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return
+      e.preventDefault()
+
+      const delta = e.clientX - startX
+      const newWidth = startWidth + delta
+
+      if (newWidth >= 200 && newWidth <= 600) {
+        setSidebarWidth(newWidth)
+      }
+    }
+
+    const handleMouseUp = () => {
+      setIsResizing(false)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+
+    if (isResizing) {
+      document.body.style.cursor = 'col-resize'
+      document.body.style.userSelect = 'none'
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [isResizing, startX, startWidth])
 
   if (!selectedRepo) {
     return (
@@ -34,72 +119,133 @@ export default function RepoBrowserPage() {
 
   const handleFileSelect = (path: string) => {
     setSelectedFile(path)
-    // For now, only open YAML/YML files in editor
-    if (path.endsWith('.yaml') || path.endsWith('.yml')) {
-      setShowEditor(true)
+  }
+
+  const handleCreatePR = async (content: string, _originalContent: string, sha: string) => {
+    if (!selectedRepo || !selectedFile) return
+
+    setIsCreatingPR(true)
+    setPrError(null)
+
+    try {
+      const branchName = `update-${selectedFile.replace(/\//g, '-')}-${Date.now()}`
+
+      const response = await fetch('/api/github/create-pr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          owner: selectedRepo.owner,
+          repo: selectedRepo.repo,
+          branch: branchName,
+          baseBranch: selectedBranch,
+          filePath: selectedFile,
+          content,
+          sha,
+          commitMessage: `Update ${selectedFile}`,
+          prTitle: `Update ${selectedFile}`,
+          prBody: `Updated configuration file: ${selectedFile}`,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to create PR')
+      }
+
+      const data = await response.json()
+
+      setPendingPR({
+        number: data.number,
+        url: data.url,
+        owner: selectedRepo.owner,
+        repo: selectedRepo.repo,
+        branchName,
+      })
+
+      alert(`Pull Request created successfully! #${data.number}\n${data.url}`)
+    } catch (err) {
+      const error = err as Error
+      setPrError(error.message || 'Failed to create PR')
+    } finally {
+      setIsCreatingPR(false)
     }
   }
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Header */}
-      <Paper
-        elevation={0}
+    <Box sx={{ height: '100%', width: '100%', display: 'flex', overflow: 'hidden', gap: 3 }}>
+      {/* File Tree Sidebar */}
+      <Box
+        ref={sidebarRef}
         sx={{
-          p: 2,
-          borderRadius: 0,
-          borderBottom: 1,
-          borderColor: 'divider',
+          width: sidebarWidth,
+          minWidth: sidebarWidth,
+          maxWidth: sidebarWidth,
+          position: 'relative',
+          flexShrink: 0,
           display: 'flex',
-          alignItems: 'center',
-          gap: 2,
+          flexDirection: 'column',
         }}
       >
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          {selectedRepo.owner}/{selectedRepo.repo}
-        </Typography>
-        <BranchSelector
-          owner={selectedRepo.owner}
-          repo={selectedRepo.repo}
-          selectedBranch={selectedBranch}
-          onBranchChange={setSelectedBranch}
-        />
-      </Paper>
-
-      {/* Content */}
-      <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* File Tree Sidebar */}
-        <Paper
-          elevation={0}
-          sx={{
-            width: 300,
-            borderRight: 1,
-            borderColor: 'divider',
-            overflow: 'auto',
-          }}
-        >
           <FileTree
             owner={selectedRepo.owner}
             repo={selectedRepo.repo}
             branch={selectedBranch}
             onFileSelect={handleFileSelect}
             selectedFile={selectedFile || undefined}
+            searchQuery={searchQuery}
           />
-        </Paper>
+
+          {/* Resize Handle */}
+          <Box
+            onMouseDown={(e) => {
+              e.preventDefault()
+              setStartX(e.clientX)
+              setStartWidth(sidebarWidth)
+              setIsResizing(true)
+            }}
+            sx={{
+              position: 'absolute',
+              right: -4,
+              top: 0,
+              bottom: 0,
+              width: 8,
+              cursor: 'col-resize',
+              backgroundColor: 'transparent',
+              '&:hover': {
+                backgroundColor: 'primary.main',
+              },
+              transition: 'background-color 0.2s',
+              zIndex: 10,
+            }}
+          />
+        </Box>
 
         {/* Main Content Area */}
-        <Box sx={{ flex: 1, p: 3, overflow: 'auto' }}>
-          {selectedFile ? (
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                {selectedFile}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {selectedFile.endsWith('.yaml') || selectedFile.endsWith('.yml')
-                  ? 'Click to open in editor'
-                  : 'Preview not available for this file type'}
-              </Typography>
-            </Box>
+        <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+          {isCreatingPR && (
+            <Alert severity="info" sx={{ mb: 2 }}>
+              <CircularProgress size={16} sx={{ mr: 1 }} />
+              Creating Pull Request...
+            </Alert>
+          )}
+          {prError && (
+            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setPrError(null)}>
+              {prError}
+            </Alert>
+          )}
+
+          {selectedFile && selectedFile.match(/\.(yaml|yml|json|md)$/) ? (
+            <FileViewer
+              owner={selectedRepo.owner}
+              repo={selectedRepo.repo}
+              branch={selectedBranch}
+              filePath={selectedFile}
+              onCreatePR={handleCreatePR}
+            />
+          ) : selectedFile ? (
+            <Alert severity="info">
+              Preview not available for this file type: {selectedFile}
+            </Alert>
           ) : (
             <Box
               sx={{
@@ -115,18 +261,6 @@ export default function RepoBrowserPage() {
             </Box>
           )}
         </Box>
-      </Box>
-
-      {/* YAML Editor Modal */}
-      {showEditor && selectedFile && (
-        <YamlEditorModal
-          open={showEditor}
-          onClose={() => setShowEditor(false)}
-          resourceName={selectedFile.split('/').pop() || ''}
-          namespace="default"
-          resourceType="deployment"
-        />
-      )}
     </Box>
   )
 }
