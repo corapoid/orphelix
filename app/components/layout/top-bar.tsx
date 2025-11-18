@@ -27,6 +27,7 @@ import { ContextSelectorInline } from './context-selector-inline'
 import { BranchSelectorInline } from './branch-selector-inline'
 import { SearchBar } from '../common/search-bar'
 import { useModeStore, useGitHubStore } from '@/lib/core/store'
+import { mockGitHubRepo } from '@/lib/mocks/github-data'
 import { usePathname, useRouter } from 'next/navigation'
 import { useThemeMode } from '../theme-provider'
 import { useSearch } from '@/lib/contexts/search-context'
@@ -36,6 +37,9 @@ export function TopBar() {
   const { selectedRepo, editBasket } = useGitHubStore()
   const pathname = usePathname()
   const router = useRouter()
+
+  // Use mock repo in demo mode
+  const displayRepo = pathname === '/demo/repo-browser' ? mockGitHubRepo : selectedRepo
   const { mode: themeMode, setThemeMode } = useThemeMode()
   const { searchQuery, setSearchQuery, searchPlaceholder } = useSearch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -102,7 +106,7 @@ export function TopBar() {
 
       {/* Right side - Namespace/Repo, Status, and Settings */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
-        {(pathname === '/repo-browser' || pathname === '/demo/repo-browser') && selectedRepo ? (
+        {(pathname === '/repo-browser' || pathname === '/demo/repo-browser') && displayRepo ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {editedFilesCount > 0 && (
               <Tooltip title={`${editedFilesCount} file${editedFilesCount > 1 ? 's' : ''} modified - Click to review`}>
@@ -137,7 +141,7 @@ export function TopBar() {
                 Repository:
               </Typography>
               <Typography variant="body2" fontWeight={600}>
-                {selectedRepo.owner}/{selectedRepo.repo}
+                {displayRepo.owner}/{displayRepo.repo}
               </Typography>
             </Box>
           </Box>
