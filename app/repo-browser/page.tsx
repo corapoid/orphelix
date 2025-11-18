@@ -249,7 +249,7 @@ export default function RepoBrowserPage() {
             </Alert>
           )}
 
-          {selectedFile && selectedFile.match(/\.(yaml|yml|json|md)$/) ? (
+          {selectedFile && selectedFile.match(/\.(yaml|yml|json|md|txt|gitignore|sh|py|js|ts|tsx|jsx|css|html|xml|env|conf|cfg)$|^\.gitignore$|^\.env/) ? (
             <FileViewer
               owner={selectedRepo.owner}
               repo={selectedRepo.repo}
