@@ -83,7 +83,7 @@ export function TopBar() {
       >
       {/* Left side - Cluster/Branch selector */}
       <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
-        {pathname === '/repo-browser' ? <BranchSelectorInline /> : <ContextSelectorInline />}
+        {(pathname === '/repo-browser' || pathname === '/demo/repo-browser') ? <BranchSelectorInline /> : <ContextSelectorInline />}
       </Box>
 
       {/* Center - Search with context (hidden on dashboard) */}
@@ -102,7 +102,7 @@ export function TopBar() {
 
       {/* Right side - Namespace/Repo, Status, and Settings */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
-        {pathname === '/repo-browser' && selectedRepo ? (
+        {(pathname === '/repo-browser' || pathname === '/demo/repo-browser') && selectedRepo ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {editedFilesCount > 0 && (
               <Tooltip title={`${editedFilesCount} file${editedFilesCount > 1 ? 's' : ''} modified - Click to review`}>
