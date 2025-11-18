@@ -23,6 +23,13 @@ export interface AppTemplate {
   type: 'deployment' | 'statefulset'
   env?: Array<{ name: string; value: string }>
   repoUrl?: string
+  autoscaling?: {
+    enabled: boolean
+    minReplicas: number
+    maxReplicas: number
+    targetCPU: number
+    targetMemory: number
+  }
 }
 
 export interface GeneratedFile {
@@ -34,6 +41,7 @@ export interface GeneratedFile {
 export interface GeneratedFiles {
   deployment: GeneratedFile
   service?: GeneratedFile
+  hpa?: GeneratedFile
   kustomization?: GeneratedFile
   overlays?: GeneratedFile[]
 }
@@ -73,6 +81,11 @@ export function generateManifests(
   // Generate service if port is specified
   if (template.port) {
     files.service = generateService(template, repoStructure)
+  }
+
+  // Generate HPA if autoscaling is enabled
+  if (template.autoscaling?.enabled) {
+    files.hpa = generateHPA(template, repoStructure)
   }
 
   // Generate/update kustomization.yaml if repo uses Kustomize
@@ -202,12 +215,83 @@ spec:
 }
 
 /**
+ * Generate HorizontalPodAutoscaler manifest
+ */
+function generateHPA(
+  template: AppTemplate,
+  repoStructure: RepoStructure
+): GeneratedFile {
+  const { name, namespace, autoscaling } = template
+
+  if (!autoscaling) {
+    throw new Error('Autoscaling configuration is required')
+  }
+
+  // Determine file path
+  let path: string
+  if (repoStructure.structure === 'kustomize' && repoStructure.baseDir) {
+    path = `${repoStructure.baseDir}/${name}-hpa.yaml`
+  } else {
+    path = `k8s/hpa/${name}-hpa.yaml`
+  }
+
+  const content = `apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ${name}-hpa
+  namespace: ${namespace}
+  labels:
+    app: ${name}
+    managed-by: orphelix
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ${name}
+  minReplicas: ${autoscaling.minReplicas}
+  maxReplicas: ${autoscaling.maxReplicas}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: ${autoscaling.targetCPU}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: ${autoscaling.targetMemory}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 15
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 15
+      selectPolicy: Max
+`
+
+  return { path, content }
+}
+
+/**
  * Generate or update kustomization.yaml
  */
 function generateKustomization(
   template: AppTemplate,
   repoStructure: RepoStructure,
-  generatedFiles: Pick<GeneratedFiles, 'deployment' | 'service'>
+  generatedFiles: Pick<GeneratedFiles, 'deployment' | 'service' | 'hpa'>
 ): GeneratedFile {
   const { name } = template
 
@@ -228,6 +312,12 @@ function generateKustomization(
   if (generatedFiles.service) {
     const serviceFile = generatedFiles.service.path.split('/').pop()!
     resources.push(serviceFile)
+  }
+
+  // Add HPA file if it exists
+  if (generatedFiles.hpa) {
+    const hpaFile = generatedFiles.hpa.path.split('/').pop()!
+    resources.push(hpaFile)
   }
 
   // Generate kustomization.yaml content

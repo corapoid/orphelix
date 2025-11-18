@@ -18,6 +18,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import Slider from '@mui/material/Slider'
+import Switch from '@mui/material/Switch'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
@@ -78,6 +79,11 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
   const [port, setPort] = useState<number | ''>('')
   const [envVars, setEnvVars] = useState<Array<{ name: string; value: string }>>([])
   const [repoUrl, setRepoUrl] = useState('')
+  const [enableAutoscaling, setEnableAutoscaling] = useState(false)
+  const [minReplicas, setMinReplicas] = useState(1)
+  const [maxReplicas, setMaxReplicas] = useState(10)
+  const [targetCPU, setTargetCPU] = useState(80)
+  const [targetMemory, setTargetMemory] = useState(80)
 
   // Validation errors
   const [nameError, setNameError] = useState<string | null>(null)
@@ -170,6 +176,13 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
           type: appType,
           env: envVars.filter(e => e.name && e.value),
           repoUrl: repoUrl || undefined,
+          autoscaling: enableAutoscaling ? {
+            enabled: true,
+            minReplicas,
+            maxReplicas,
+            targetCPU,
+            targetMemory,
+          } : undefined,
         }
 
         const files = generateManifests(template, repoStructure)
@@ -193,6 +206,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     const filesToAdd = []
     if (generatedFiles.deployment) filesToAdd.push(generatedFiles.deployment)
     if (generatedFiles.service) filesToAdd.push(generatedFiles.service)
+    if (generatedFiles.hpa) filesToAdd.push(generatedFiles.hpa)
     if (generatedFiles.kustomization) filesToAdd.push(generatedFiles.kustomization)
     if (generatedFiles.overlays) filesToAdd.push(...generatedFiles.overlays)
 
@@ -221,6 +235,11 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     setPort('')
     setEnvVars([])
     setRepoUrl('')
+    setEnableAutoscaling(false)
+    setMinReplicas(1)
+    setMaxReplicas(10)
+    setTargetCPU(80)
+    setTargetMemory(80)
     setError(null)
     setGeneratedFiles(null)
 
@@ -296,8 +315,84 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
                 max={10}
                 marks
                 valueLabelDisplay="auto"
+                disabled={enableAutoscaling}
               />
+              {enableAutoscaling && (
+                <Typography variant="caption" color="text.secondary">
+                  Replicas are managed by autoscaler
+                </Typography>
+              )}
             </Box>
+
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={enableAutoscaling}
+                  onChange={(e) => setEnableAutoscaling(e.target.checked)}
+                />
+              }
+              label="Enable Autoscaling (HPA)"
+            />
+
+            {enableAutoscaling && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pl: 2, borderLeft: 2, borderColor: 'primary.main' }}>
+                <Box>
+                  <Typography gutterBottom>Min Replicas: {minReplicas}</Typography>
+                  <Slider
+                    value={minReplicas}
+                    onChange={(_, value) => setMinReplicas(value as number)}
+                    min={1}
+                    max={5}
+                    marks
+                    valueLabelDisplay="auto"
+                  />
+                </Box>
+
+                <Box>
+                  <Typography gutterBottom>Max Replicas: {maxReplicas}</Typography>
+                  <Slider
+                    value={maxReplicas}
+                    onChange={(_, value) => setMaxReplicas(value as number)}
+                    min={minReplicas}
+                    max={20}
+                    marks
+                    valueLabelDisplay="auto"
+                  />
+                </Box>
+
+                <Box>
+                  <Typography gutterBottom>Target CPU Utilization: {targetCPU}%</Typography>
+                  <Slider
+                    value={targetCPU}
+                    onChange={(_, value) => setTargetCPU(value as number)}
+                    min={10}
+                    max={100}
+                    step={5}
+                    marks={[
+                      { value: 50, label: '50%' },
+                      { value: 80, label: '80%' },
+                    ]}
+                    valueLabelDisplay="auto"
+                  />
+                </Box>
+
+                <Box>
+                  <Typography gutterBottom>Target Memory Utilization: {targetMemory}%</Typography>
+                  <Slider
+                    value={targetMemory}
+                    onChange={(_, value) => setTargetMemory(value as number)}
+                    min={10}
+                    max={100}
+                    step={5}
+                    marks={[
+                      { value: 50, label: '50%' },
+                      { value: 80, label: '80%' },
+                    ]}
+                    valueLabelDisplay="auto"
+                  />
+                </Box>
+              </Box>
+            )}
 
             <FormControl fullWidth>
               <InputLabel>Resource Preset</InputLabel>
@@ -366,6 +461,9 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
         if (generatedFiles.service) {
           allFiles.push({ name: 'Service', file: generatedFiles.service })
         }
+        if (generatedFiles.hpa) {
+          allFiles.push({ name: 'HPA', file: generatedFiles.hpa })
+        }
         if (generatedFiles.kustomization) {
           allFiles.push({ name: 'Base Kustomization', file: generatedFiles.kustomization })
         }
@@ -424,6 +522,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
         const filePaths: string[] = []
         if (generatedFiles.deployment) filePaths.push(generatedFiles.deployment.path)
         if (generatedFiles.service) filePaths.push(generatedFiles.service.path)
+        if (generatedFiles.hpa) filePaths.push(generatedFiles.hpa.path)
         if (generatedFiles.kustomization) filePaths.push(generatedFiles.kustomization.path)
         if (generatedFiles.overlays) {
           generatedFiles.overlays.forEach(overlay => filePaths.push(overlay.path))
