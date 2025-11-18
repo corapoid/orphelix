@@ -73,8 +73,14 @@ export default function RepoBrowserPage() {
   useEffect(() => {
     if (mode === 'mock' && !selectedRepo) {
       setSelectedRepo(mockGitHubRepo)
+      setSelectedFile(null) // Clear selected file when switching to mock repo
     }
   }, [mode, selectedRepo, setSelectedRepo])
+
+  // Clear selected file when repo changes
+  useEffect(() => {
+    setSelectedFile(null)
+  }, [selectedRepo?.owner, selectedRepo?.repo])
 
   useEffect(() => {
     if (selectedRepo?.branch && !selectedBranch) {
