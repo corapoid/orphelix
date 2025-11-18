@@ -5,9 +5,13 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
+import Fab from '@mui/material/Fab'
+import Tooltip from '@mui/material/Tooltip'
+import AddIcon from '@mui/icons-material/Add'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { FileTree } from '@/app/components/repo-browser/file-tree'
 import { FileViewer } from '@/app/components/repo-browser/file-viewer'
+import { AddAppModal } from '@/app/components/repo-browser/add-app-modal'
 import { usePageSearch } from '@/lib/contexts/search-context'
 import { mockGitHubRepo } from '@/lib/mocks/github-data'
 
@@ -15,6 +19,7 @@ export default function RepoBrowserPage() {
   const { selectedRepo, selectedBranch, setSelectedBranch, setPendingPR, setSelectedRepo } = useGitHubStore()
   const mode = useModeStore((state) => state.mode)
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
+  const [addAppModalOpen, setAddAppModalOpen] = useState(false)
 
   const [sidebarWidth, setSidebarWidth] = useState(300)
   const [isResizing, setIsResizing] = useState(false)
@@ -122,16 +127,6 @@ export default function RepoBrowserPage() {
     }
   }, [isResizing, startX, startWidth])
 
-  if (!selectedRepo) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="info">
-          Please select a GitHub repository in Settings first.
-        </Alert>
-      </Box>
-    )
-  }
-
   const handleFileSelect = (path: string) => {
     setSelectedFile(path)
   }
@@ -184,6 +179,16 @@ export default function RepoBrowserPage() {
     } finally {
       setIsCreatingPR(false)
     }
+  }
+
+  if (!selectedRepo) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="info">
+          Please select a GitHub repository in Settings first.
+        </Alert>
+      </Box>
+    )
   }
 
   return (
@@ -276,6 +281,28 @@ export default function RepoBrowserPage() {
             </Box>
           )}
         </Box>
-    </Box>
-  )
+
+        {/* Add App FAB Button */}
+        <Tooltip title="Add new application" placement="left">
+          <Fab
+            color="primary"
+            onClick={() => setAddAppModalOpen(true)}
+            sx={{
+              position: 'fixed',
+              bottom: 32,
+              right: 32,
+              zIndex: 1000,
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+
+        {/* Add App Modal */}
+        <AddAppModal
+          open={addAppModalOpen}
+          onClose={() => setAddAppModalOpen(false)}
+        />
+      </Box>
+    )
 }
