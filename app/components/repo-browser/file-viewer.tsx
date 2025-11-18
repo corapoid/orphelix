@@ -10,7 +10,7 @@ import Editor from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
 import SaveIcon from '@mui/icons-material/Save'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import { useGitHubStore } from '@/lib/core/store'
+import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 
 interface FileViewerProps {
@@ -24,6 +24,7 @@ interface FileViewerProps {
 export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
   const theme = useTheme()
   const { addToBasket, editBasket, removeFromBasket } = useGitHubStore()
+  const mode = useModeStore((state) => state.mode)
   const [content, setContent] = useState('')
   const [originalContent, setOriginalContent] = useState('')
   const [fileSha, setFileSha] = useState('')
@@ -39,8 +40,9 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
       setError(null)
 
       try {
+        const modeParam = mode === 'mock' ? '&mode=mock' : ''
         const response = await fetch(
-          `/api/github/file?owner=${owner}&repo=${repo}&path=${encodeURIComponent(filePath)}&ref=${branch}`
+          `/api/github/file?owner=${owner}&repo=${repo}&path=${encodeURIComponent(filePath)}&ref=${branch}${modeParam}`
         )
 
         if (!response.ok) {

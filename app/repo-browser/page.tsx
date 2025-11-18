@@ -5,13 +5,15 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
-import { useGitHubStore } from '@/lib/core/store'
+import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { FileTree } from '@/app/components/repo-browser/file-tree'
 import { FileViewer } from '@/app/components/repo-browser/file-viewer'
 import { usePageSearch } from '@/lib/contexts/search-context'
+import { mockGitHubRepo } from '@/lib/mocks/github-data'
 
 export default function RepoBrowserPage() {
-  const { selectedRepo, selectedBranch, setSelectedBranch, setPendingPR } = useGitHubStore()
+  const { selectedRepo, selectedBranch, setSelectedBranch, setPendingPR, setSelectedRepo } = useGitHubStore()
+  const mode = useModeStore((state) => state.mode)
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
 
   const [sidebarWidth, setSidebarWidth] = useState(300)
@@ -66,6 +68,13 @@ export default function RepoBrowserPage() {
       localStorage.setItem(storageKey, selectedFile)
     }
   }, [selectedRepo, selectedBranch, selectedFile])
+
+  // Set mock repo in demo mode
+  useEffect(() => {
+    if (mode === 'mock' && !selectedRepo) {
+      setSelectedRepo(mockGitHubRepo)
+    }
+  }, [mode, selectedRepo, setSelectedRepo])
 
   useEffect(() => {
     if (selectedRepo?.branch && !selectedBranch) {

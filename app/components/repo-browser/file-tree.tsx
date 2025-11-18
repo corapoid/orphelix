@@ -19,7 +19,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
 import { useTheme } from '@mui/material/styles'
-import { useGitHubStore } from '@/lib/core/store'
+import { useGitHubStore, useModeStore } from '@/lib/core/store'
 
 interface TreeItem {
   name: string
@@ -40,6 +40,7 @@ interface FileTreeProps {
 export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, searchQuery = '' }: FileTreeProps) {
   const theme = useTheme()
   const { editBasket } = useGitHubStore()
+  const mode = useModeStore((state) => state.mode)
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set(['/']))
   const [dirContents, setDirContents] = useState<Record<string, TreeItem[]>>({})
   const [loadingDirs, setLoadingDirs] = useState<Set<string>>(new Set())
@@ -98,7 +99,8 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, sear
     setLoadingDirs(prev => new Set(prev).add(path))
 
     try {
-      const url = `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(path === '/' ? '' : path)}`
+      const modeParam = mode === 'mock' ? '&mode=mock' : ''
+      const url = `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(path === '/' ? '' : path)}${modeParam}`
       console.log(`[FileTree] Fetching: ${url}`)
 
       const response = await fetch(url)
