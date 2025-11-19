@@ -5,7 +5,7 @@ description: 'Step-by-step guide to set up GitHub App authentication'
 
 ## Overview
 
-This guide explains how to create and configure a GitHub App for KubeVista.
+This guide explains how to create and configure a GitHub App for Orphelix.
 
 <Note>
   Setting up a GitHub App takes about 5-10 minutes and provides the most secure integration method.
@@ -43,14 +43,14 @@ Fill in the following fields in the GitHub App creation form:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| **GitHub App name** | `KubeVista` (or any unique name) | Display name for the app |
-| **Homepage URL** | `http://localhost:3000` | Your KubeVista URL |
+| **GitHub App name** | `Orphelix` (or any unique name) | Display name for the app |
+| **Homepage URL** | `http://localhost:3000` | Your Orphelix URL |
 | **Callback URL** | `http://localhost:3000/api/github-app/callback` | OAuth callback endpoint |
 | **Setup URL** | Leave empty | Not needed |
 | **Webhook** | ❌ **Disable "Active"** | We don't use webhooks |
 
 <Warning>
-  Make sure to **uncheck** the "Active" checkbox under Webhook settings - KubeVista doesn't use webhooks.
+  Make sure to **uncheck** the "Active" checkbox under Webhook settings - Orphelix doesn't use webhooks.
 </Warning>
 
 ## Step 3: Set Permissions
@@ -132,7 +132,7 @@ Repository permissions:
 
 ## Step 6: Get Credentials
 
-You need three credentials to configure KubeVista:
+You need three credentials to configure Orphelix:
 
 ### 1. App ID
 
@@ -190,7 +190,7 @@ You need three credentials to configure KubeVista:
 
 ## Step 7: Configure Environment Variables
 
-Create or update `.env.local` in your KubeVista project root:
+Create or update `.env.local` in your Orphelix project root:
 
 ```bash
 # GitHub App Configuration
@@ -250,14 +250,14 @@ openssl rand -base64 32
 ## Step 8: Verify Installation
 
 <Steps>
-  <Step title="Start KubeVista">
+  <Step title="Start Orphelix">
     ```bash
     npm run dev
     ```
   </Step>
 
   <Step title="Open Settings">
-    Navigate to Settings page in KubeVista
+    Navigate to Settings page in Orphelix
   </Step>
 
   <Step title="Click GitHub Integration">

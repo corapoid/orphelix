@@ -1,4 +1,4 @@
-# Technical Documentation - KubeVista
+# Technical Documentation - Orphelix
 
 > Complete documentation for developers
 

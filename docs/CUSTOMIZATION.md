@@ -1,10 +1,10 @@
-# KubeVista Customization Guide
+# Orphelix Customization Guide
 
-This guide explains how to customize your KubeVista experience by hiding/showing menu items and customizing the dashboard.
+This guide explains how to customize your Orphelix experience by hiding/showing menu items and customizing the dashboard.
 
 ## Hiding Menu Items
 
-KubeVista allows you to customize the sidebar navigation by pinning or unpinning menu items. This feature helps you focus on the resources that matter most to you and declutter the interface.
+Orphelix allows you to customize the sidebar navigation by pinning or unpinning menu items. This feature helps you focus on the resources that matter most to you and declutter the interface.
 
 ### How to Hide/Show Menu Items
 
@@ -123,7 +123,7 @@ To reset your customization to default settings:
 
 1. Open your browser's developer console (F12)
 2. Go to the "Application" or "Storage" tab
-3. Find "Local Storage" for your KubeVista domain
+3. Find "Local Storage" for your Orphelix domain
 4. Delete the key named `kubevista-sidebar-pins`
 5. Refresh the page
 

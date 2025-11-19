@@ -1,6 +1,6 @@
-# KubeVista Components Documentation
+# Orphelix Components Documentation
 
-This document provides an overview of all custom components built for the KubeVista application.
+This document provides an overview of all custom components built for the Orphelix application.
 
 ## Table of Contents
 
@@ -277,7 +277,7 @@ Application footer with links and information.
 ### Logo
 **File:** `app/components/layout/logo.tsx`
 
-KubeVista logo component.
+Orphelix logo component.
 
 **Features:**
 - Animated SVG logo

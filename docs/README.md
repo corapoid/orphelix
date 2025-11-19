@@ -1,6 +1,6 @@
-# KubeVista Documentation
+# Orphelix Documentation
 
-This directory contains the complete user documentation for KubeVista, built with [Mintlify](https://mintlify.com).
+This directory contains the complete user documentation for Orphelix, built with [Mintlify](https://mintlify.com).
 
 ## Viewing Documentation Locally
 

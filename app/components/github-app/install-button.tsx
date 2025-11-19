@@ -123,7 +123,7 @@ function GitHubAppInstallButtonContent() {
         </Box>
 
         <Alert severity="info" sx={{ mb: 2 }}>
-          You have granular control over which repositories KubeVista can access.
+          You have granular control over which repositories Orphelix can access.
           <Button
             size="small"
             onClick={handleAddRepositories}

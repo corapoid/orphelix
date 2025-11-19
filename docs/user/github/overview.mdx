@@ -5,7 +5,7 @@ description: 'Enable GitOps workflows with GitHub integration'
 
 ## What is GitHub Integration?
 
-GitHub integration allows you to edit Kubernetes YAML files and create Pull Requests directly from KubeVista, following GitOps best practices.
+GitHub integration allows you to edit Kubernetes YAML files and create Pull Requests directly from Orphelix, following GitOps best practices.
 
 <img src="/images/github-integration.png" alt="GitHub Integration" />
 
@@ -38,7 +38,7 @@ GitHub integration allows you to edit Kubernetes YAML files and create Pull Requ
 ### Smart File Matching
 
 <Info>
-  KubeVista can automatically find the correct YAML file for each deployment using AI-powered matching
+  Orphelix can automatically find the correct YAML file for each deployment using AI-powered matching
 </Info>
 
 Two matching methods:
@@ -58,7 +58,7 @@ Two matching methods:
   </Step>
 
   <Step title="Automatic PR">
-    KubeVista creates a PR with your changes
+    Orphelix creates a PR with your changes
   </Step>
 
   <Step title="Review & Merge">
@@ -125,7 +125,7 @@ spec:
   - name: app
     image: myapp:v1.0.0
 
-# After (edit in KubeVista)
+# After (edit in Orphelix)
 spec:
   containers:
   - name: app
@@ -225,7 +225,7 @@ data:
   </Accordion>
 
   <Accordion title="What if my repo uses Kustomize?">
-    KubeVista automatically detects Kustomize structure and shows base + overlay files in separate tabs.
+    Orphelix automatically detects Kustomize structure and shows base + overlay files in separate tabs.
   </Accordion>
 </AccordionGroup>
 

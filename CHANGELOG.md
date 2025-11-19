@@ -230,7 +230,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ModeSelector**: Now fetches real kubectl contexts instead of mock data
 - **KubernetesContext Type**: Made `namespace` field optional
 - **.gitignore**: Added Turbopack cache, Playwright cache, OS files, temporary files
-- **Project Name**: Rebranded to **KubeVista**
+- **Project Name**: Rebranded to **Orphelix**
 - **Documentation**: Translated all `.md` files to English
 - **README**: Added attractive badges and improved visual appeal
 - **License**: Changed from MIT to **MPL-2.0** (Mozilla Public License 2.0)
@@ -489,6 +489,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Version History:**
 - **1.2.0** (2025-11-13) - Resource metrics, collapsible sections, enhanced UX, settings page improvements
-- **1.1.0** (2025-11-12) - Namespace support, real context detection, rebranding to KubeVista
+- **1.1.0** (2025-11-12) - Namespace support, real context detection, rebranding to Orphelix
 - **1.0.0** (2025-11-12) - Production release with full K8s integration, real-time updates, and GitOps support
 - **0.1.0** (2025-11-11) - Initial release with mock data and core UI features

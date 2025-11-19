@@ -62,7 +62,7 @@ const mockTree: Record<string, TreeItem[]> = {
 const mockFiles: Record<string, string> = {
   'README.md': `# Demo Application
 
-This is a demo Kubernetes application for KubeVista.
+This is a demo Kubernetes application for Orphelix.
 
 ## Structure
 

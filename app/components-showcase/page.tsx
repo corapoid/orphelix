@@ -32,7 +32,7 @@ export default function ComponentShowcasePage() {
 
       <Box sx={{ mb: 4 }}>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-          A comprehensive showcase of all custom components built for KubeVista.
+          A comprehensive showcase of all custom components built for Orphelix.
           These components follow a consistent glass morphism design language.
         </Typography>
         <Typography variant="body2" color="text.secondary">

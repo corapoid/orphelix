@@ -30,18 +30,18 @@ export async function POST(request: NextRequest) {
     await github.createBranch(owner, repo, baseBranch, branchName)
 
     // 3. Commit changes
-    const commitMessage = `Update ${deploymentName} manifest via KubeVista\n\nNamespace: ${namespace}\nFile: ${filePath}`
+    const commitMessage = `Update ${deploymentName} manifest via Orphelix\n\nNamespace: ${namespace}\nFile: ${filePath}`
     await github.commitFile(owner, repo, branchName, filePath, content, sha, commitMessage)
 
     // 4. Create PR
-    const prTitle = `[KubeVista] Update ${namespace}/${deploymentName}`
+    const prTitle = `[Orphelix] Update ${namespace}/${deploymentName}`
     const prBody = `## Changes
 
 Updated \`${filePath}\` for deployment **${deploymentName}** in namespace **${namespace}**.
 
 ---
 
-🤖 Generated with [KubeVista](https://github.com/yourorg/kubevista)
+🤖 Generated with [Orphelix](https://github.com/yourorg/kubevista)
 `
 
     const pr = await github.createPullRequest(owner, repo, prTitle, branchName, baseBranch, prBody)

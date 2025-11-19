@@ -1,5 +1,5 @@
 /**
- * Color Skins for KubeVista
+ * Color Skins for Orphelix
  *
  * Each skin has light and dark variants with glassmorphism support
  */

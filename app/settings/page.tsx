@@ -44,7 +44,7 @@ function GitHubIntegrationTab() {
         GitHub App Integration
       </Typography>
       <Typography variant="body2" color="text.secondary" paragraph>
-        Connect your GitHub App to edit Kubernetes manifests and create Pull Requests directly from KubeVista.
+        Connect your GitHub App to edit Kubernetes manifests and create Pull Requests directly from Orphelix.
       </Typography>
 
       <Box sx={{ mb: 3 }}>
@@ -97,7 +97,7 @@ export default function SettingsPage() {
           Settings
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Configure your KubeVista dashboard preferences
+          Configure your Orphelix dashboard preferences
         </Typography>
       </Box>
 
