@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('theme-mode') || 'light';
+                  var theme = localStorage.getItem('theme-mode') || 'system';
                   var actualTheme = theme;
                   if (theme === 'system') {
                     actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';

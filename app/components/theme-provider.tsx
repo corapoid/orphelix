@@ -23,9 +23,9 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useThemeMode = () => useContext(ThemeContext)
 
-// Get initial theme from localStorage or default to 'light'
+// Get initial theme from localStorage or default to 'system'
 function getInitialTheme(): ThemeMode {
-  if (typeof window === 'undefined') return 'light'
+  if (typeof window === 'undefined') return 'system'
   try {
     const saved = localStorage.getItem('theme-mode')
     if (saved === 'light' || saved === 'dark' || saved === 'system') {
@@ -34,7 +34,7 @@ function getInitialTheme(): ThemeMode {
   } catch {
     // localStorage not available
   }
-  return 'light'
+  return 'system'
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
