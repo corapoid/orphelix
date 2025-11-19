@@ -47,6 +47,8 @@ describe('useDashboardSummary', () => {
       secrets: 5,
       hpa: 3,
       pv: { total: 5, bound: 4 },
+      services: 3,
+      ingress: 2,
     }
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
@@ -83,6 +85,8 @@ describe('useDashboardSummary', () => {
       secrets: 3,
       hpa: 2,
       pv: { total: 3, bound: 3 },
+      services: 3,
+      ingress: 2,
     }
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
@@ -117,6 +121,8 @@ describe('useDashboardSummary', () => {
       secrets: 3,
       hpa: 2,
       pv: { total: 3, bound: 3 },
+      services: 3,
+      ingress: 2,
     }
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
@@ -153,6 +159,8 @@ describe('useDashboardSummary', () => {
       secrets: 3,
       hpa: 2,
       pv: { total: 3, bound: 3 },
+      services: 3,
+      ingress: 2,
     }
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>

@@ -41,10 +41,11 @@ export function initK8sClient(contextName?: string): void {
     }
 
     const cluster = kc.getCurrentCluster()
+    const currentCtx = kc.getCurrentContext()
 
     // Validate cluster configuration
     if (!cluster?.server) {
-      throw new Error(`Cluster server URL is not configured for context: ${contextName || currentContext}`)
+      throw new Error(`Cluster server URL is not configured for context: ${contextName || currentCtx}`)
     }
   } catch (error) {
     console.error('[K8s] Failed to load Kubernetes configuration:', error)

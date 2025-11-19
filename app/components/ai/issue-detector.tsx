@@ -125,7 +125,7 @@ export function IssueDetector({ events = [], metrics }: IssueDetectorProps) {
             startIcon={<SmartToyIcon />}
             onClick={(e) => {
               e.stopPropagation()
-              router.push('/troubleshooting')
+              router.push('/troubleshooting' as any)
             }}
           >
             Ask AI

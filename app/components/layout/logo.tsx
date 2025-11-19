@@ -75,7 +75,9 @@ export function Logo({ collapsed = false }: LogoProps) {
         <Typography
           sx={{
             fontSize: '1.125rem',
-            fontWeight: 700,
+            fontWeight: 800,
+            fontFamily: '"Space Grotesk", "Inter", system-ui, sans-serif',
+            letterSpacing: '0.05em',
             lineHeight: 1,
             background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
             WebkitBackgroundClip: 'text',
@@ -83,7 +85,7 @@ export function Logo({ collapsed = false }: LogoProps) {
             backgroundClip: 'text',
           }}
         >
-          Orphelix
+          ORPHELIX
         </Typography>
         <Typography
           variant="caption"

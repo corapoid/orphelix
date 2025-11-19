@@ -223,33 +223,41 @@ function extractSecretNames(dep: k8s.V1Deployment): string[] {
 export async function fetchStatefulSets(namespace: string, contextName?: string): Promise<StatefulSet[]> {
   try {
     const appsApi = getAppsApi(contextName)
-    const response = await appsApi.listNamespacedStatefulSet(namespace)
+    const response = await appsApi.listNamespacedStatefulSet({ namespace })
 
-    return response.body.items.map((sts) => ({
-      name: sts.metadata?.name || '',
-      namespace: sts.metadata?.namespace || namespace,
-      replicas: {
-        desired: sts.spec?.replicas || 0,
-        ready: sts.status?.readyReplicas || 0,
-        current: sts.status?.currentReplicas || 0,
-        updated: sts.status?.updatedReplicas || 0,
-      },
-      status: getDeploymentStatus({
-        replicas: sts.spec?.replicas || 0,
-        availableReplicas: sts.status?.readyReplicas || 0,
-        updatedReplicas: sts.status?.updatedReplicas || 0,
-        readyReplicas: sts.status?.readyReplicas || 0,
-      }),
-      age: calculateAge(sts.metadata?.creationTimestamp),
-      labels: sts.metadata?.labels || {},
-      selector: sts.spec?.selector?.matchLabels || {},
-      serviceName: sts.spec?.serviceName || '',
-      updateStrategy: sts.spec?.updateStrategy?.type || 'RollingUpdate',
-      podManagementPolicy: sts.spec?.podManagementPolicy || 'OrderedReady',
-      persistentVolumeClaims: extractPVCNames(sts),
-      configMaps: extractConfigMapNamesFromStatefulSet(sts),
-      secrets: extractSecretNamesFromStatefulSet(sts),
-    }))
+    return response.items.map((sts) => {
+      const readyReplicas = sts.status?.readyReplicas || 0
+      const desired = sts.spec?.replicas || 0
+
+      let status: DeploymentStatus = 'Available'
+      if (readyReplicas < desired) {
+        status = 'Progressing'
+      }
+      if (readyReplicas === 0 && desired > 0) {
+        status = 'Degraded'
+      }
+
+      return {
+        name: sts.metadata?.name || '',
+        namespace: sts.metadata?.namespace || namespace,
+        replicas: {
+          desired,
+          ready: readyReplicas,
+          current: sts.status?.currentReplicas || 0,
+          updated: sts.status?.updatedReplicas || 0,
+        },
+        status,
+        age: calculateAge(sts.metadata?.creationTimestamp),
+        labels: sts.metadata?.labels || {},
+        selector: sts.spec?.selector?.matchLabels || {},
+        serviceName: sts.spec?.serviceName || '',
+        updateStrategy: sts.spec?.updateStrategy?.type || 'RollingUpdate',
+        podManagementPolicy: sts.spec?.podManagementPolicy || 'OrderedReady',
+        persistentVolumeClaims: extractPVCNames(sts),
+        configMaps: extractConfigMapNamesFromStatefulSet(sts),
+        secrets: extractSecretNamesFromStatefulSet(sts),
+      }
+    })
   } catch (error) {
     console.error(`[K8s] Failed to fetch statefulsets in namespace ${namespace}:`, error)
     return []
@@ -263,24 +271,30 @@ export async function fetchStatefulSet(
 ): Promise<StatefulSet | null> {
   try {
     const appsApi = getAppsApi(contextName)
-    const response = await appsApi.readNamespacedStatefulSet(name, namespace)
-    const sts = response.body
+    const response = await appsApi.readNamespacedStatefulSet({ name, namespace })
+    const sts = response
+
+    const readyReplicas = sts.status?.readyReplicas || 0
+    const desired = sts.spec?.replicas || 0
+
+    let status: DeploymentStatus = 'Available'
+    if (readyReplicas < desired) {
+      status = 'Progressing'
+    }
+    if (readyReplicas === 0 && desired > 0) {
+      status = 'Degraded'
+    }
 
     return {
       name: sts.metadata?.name || name,
       namespace: sts.metadata?.namespace || namespace,
       replicas: {
-        desired: sts.spec?.replicas || 0,
-        ready: sts.status?.readyReplicas || 0,
+        desired,
+        ready: readyReplicas,
         current: sts.status?.currentReplicas || 0,
         updated: sts.status?.updatedReplicas || 0,
       },
-      status: getDeploymentStatus({
-        replicas: sts.spec?.replicas || 0,
-        availableReplicas: sts.status?.readyReplicas || 0,
-        updatedReplicas: sts.status?.updatedReplicas || 0,
-        readyReplicas: sts.status?.readyReplicas || 0,
-      }),
+      status,
       age: calculateAge(sts.metadata?.creationTimestamp),
       labels: sts.metadata?.labels || {},
       selector: sts.spec?.selector?.matchLabels || {},
@@ -304,9 +318,9 @@ export async function fetchStatefulSet(
 export async function fetchDaemonSets(namespace: string, contextName?: string): Promise<DaemonSet[]> {
   try {
     const appsApi = getAppsApi(contextName)
-    const response = await appsApi.listNamespacedDaemonSet(namespace)
+    const response = await appsApi.listNamespacedDaemonSet({ namespace })
 
-    return response.body.items.map((ds) => ({
+    return response.items.map((ds) => ({
       name: ds.metadata?.name || '',
       namespace: ds.metadata?.namespace || namespace,
       desired: ds.status?.desiredNumberScheduled || 0,
@@ -335,8 +349,8 @@ export async function fetchDaemonSet(
 ): Promise<DaemonSet | null> {
   try {
     const appsApi = getAppsApi(contextName)
-    const response = await appsApi.readNamespacedDaemonSet(name, namespace)
-    const ds = response.body
+    const response = await appsApi.readNamespacedDaemonSet({ name, namespace })
+    const ds = response
 
     return {
       name: ds.metadata?.name || name,
@@ -1461,8 +1475,8 @@ export async function fetchJobs(namespace: string, contextName?: string): Promis
     const conditions: JobCondition[] = (job.status?.conditions || []).map(c => ({
       type: c.type || '',
       status: c.status || '',
-      lastProbeTime: c.lastProbeTime,
-      lastTransitionTime: c.lastTransitionTime,
+      lastProbeTime: c.lastProbeTime?.toISOString(),
+      lastTransitionTime: c.lastTransitionTime?.toISOString(),
       reason: c.reason,
       message: c.message,
     }))
@@ -1475,9 +1489,9 @@ export async function fetchJobs(namespace: string, contextName?: string): Promis
       succeeded,
       failed,
       active,
-      startTime: job.status?.startTime,
-      completionTime: job.status?.completionTime,
-      duration: calculateDuration(job.status?.startTime, job.status?.completionTime),
+      startTime: job.status?.startTime?.toISOString(),
+      completionTime: job.status?.completionTime?.toISOString(),
+      duration: calculateDuration(job.status?.startTime?.toISOString(), job.status?.completionTime?.toISOString()),
       age: calculateAge(job.metadata?.creationTimestamp),
       labels: job.metadata?.labels || {},
       conditions,
@@ -1500,8 +1514,8 @@ export async function fetchJob(name: string, namespace: string, contextName?: st
     const conditions: JobCondition[] = (job.status?.conditions || []).map((c: any) => ({
       type: c.type || '',
       status: c.status || '',
-      lastProbeTime: c.lastProbeTime,
-      lastTransitionTime: c.lastTransitionTime,
+      lastProbeTime: c.lastProbeTime?.toISOString(),
+      lastTransitionTime: c.lastTransitionTime?.toISOString(),
       reason: c.reason,
       message: c.message,
     }))
@@ -1514,9 +1528,9 @@ export async function fetchJob(name: string, namespace: string, contextName?: st
       succeeded,
       failed,
       active,
-      startTime: job.status?.startTime,
-      completionTime: job.status?.completionTime,
-      duration: calculateDuration(job.status?.startTime, job.status?.completionTime),
+      startTime: job.status?.startTime?.toISOString(),
+      completionTime: job.status?.completionTime?.toISOString(),
+      duration: calculateDuration(job.status?.startTime?.toISOString(), job.status?.completionTime?.toISOString()),
       age: calculateAge(job.metadata?.creationTimestamp),
       labels: job.metadata?.labels || {},
       conditions,
@@ -1541,8 +1555,8 @@ export async function fetchCronJobs(namespace: string, contextName?: string): Pr
       schedule: cronJob.spec?.schedule || '',
       suspend: cronJob.spec?.suspend || false,
       active: cronJob.status?.active?.length || 0,
-      lastSchedule: cronJob.status?.lastScheduleTime,
-      lastSuccessfulTime: cronJob.status?.lastSuccessfulTime,
+      lastSchedule: cronJob.status?.lastScheduleTime?.toISOString(),
+      lastSuccessfulTime: cronJob.status?.lastSuccessfulTime?.toISOString(),
       age: calculateAge(cronJob.metadata?.creationTimestamp),
       labels: cronJob.metadata?.labels || {},
     }
@@ -1561,8 +1575,8 @@ export async function fetchCronJob(name: string, namespace: string, contextName?
       schedule: cronJob.spec?.schedule || '',
       suspend: cronJob.spec?.suspend || false,
       active: cronJob.status?.active?.length || 0,
-      lastSchedule: cronJob.status?.lastScheduleTime,
-      lastSuccessfulTime: cronJob.status?.lastSuccessfulTime,
+      lastSchedule: cronJob.status?.lastScheduleTime?.toISOString(),
+      lastSuccessfulTime: cronJob.status?.lastSuccessfulTime?.toISOString(),
       age: calculateAge(cronJob.metadata?.creationTimestamp),
       labels: cronJob.metadata?.labels || {},
     }

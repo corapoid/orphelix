@@ -22,7 +22,7 @@ export function useNavigateTo() {
       ? `/demo${path}`
       : path
 
-    router.push(finalPath)
+    router.push(finalPath as any)
   }
 
   return navigateTo

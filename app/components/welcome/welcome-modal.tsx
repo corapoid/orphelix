@@ -14,9 +14,12 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 import { GlassPanel } from '@/app/components/common/glass-panel'
 import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import { useModeStore } from '@/lib/core/store'
+import { useThemeMode } from '@/app/components/theme-provider'
 
 interface KubeContext {
   name: string
@@ -28,6 +31,7 @@ interface KubeContext {
 
 export function WelcomeModal() {
   const { hasCompletedWelcome, setMode, setContext, setNamespace, setHasCompletedWelcome } = useModeStore()
+  const { actualTheme, setThemeMode } = useThemeMode()
   const [open, setOpen] = useState(!hasCompletedWelcome)
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [selectedContextName, setSelectedContextName] = useState('')
@@ -38,6 +42,10 @@ export function WelcomeModal() {
   useEffect(() => {
     setOpen(!hasCompletedWelcome)
   }, [hasCompletedWelcome])
+
+  const handleThemeToggle = () => {
+    setThemeMode(actualTheme === 'light' ? 'dark' : 'light')
+  }
 
   const handleDemoMode = () => {
     setMode('mock')
@@ -126,13 +134,29 @@ export function WelcomeModal() {
     >
       <GlassPanel
         sx={{
-          maxWidth: 560,
+          maxWidth: 680,
           width: '100%',
-          p: 4,
+          p: 5,
+          position: 'relative',
         }}
       >
-        {/* Header with links */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, gap: 1 }}>
+        {/* Header with theme toggle and links */}
+        <Box sx={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
+          display: 'flex',
+          gap: 1,
+        }}>
+          <Tooltip title={actualTheme === 'light' ? 'Dark mode' : 'Light mode'} arrow>
+            <IconButton
+              onClick={handleThemeToggle}
+              size="small"
+              sx={{ color: 'text.secondary' }}
+            >
+              {actualTheme === 'light' ? <Brightness4Icon fontSize="small" /> : <Brightness7Icon fontSize="small" />}
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Documentation" arrow>
             <IconButton
               component={Link}
@@ -159,39 +183,41 @@ export function WelcomeModal() {
           </Tooltip>
         </Box>
 
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
+        <Box sx={{ textAlign: 'center', mb: 5, mt: 3 }}>
           {/* Logo/Icon */}
           <Box
             sx={{
-              width: 80,
-              height: 80,
+              width: 96,
+              height: 96,
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 24px',
+              margin: '0 auto 28px',
               boxShadow: '0 8px 32px rgba(102, 126, 234, 0.4)',
             }}
           >
-            <Typography variant="h3" sx={{ color: 'white', fontWeight: 700 }}>
+            <Typography variant="h2" sx={{ color: 'white', fontWeight: 700 }}>
               O
             </Typography>
           </Box>
 
           {/* App Name */}
           <Typography
-            variant="h3"
+            variant="h2"
             gutterBottom
             sx={{
-              fontWeight: 700,
+              fontWeight: 800,
+              fontFamily: '"Space Grotesk", "Inter", system-ui, sans-serif',
+              letterSpacing: '0.05em',
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: 1,
+              mb: 1.5,
             }}
           >
-            Orphelix
+            ORPHELIX
           </Typography>
 
           {/* Welcome Message */}
@@ -199,9 +225,9 @@ export function WelcomeModal() {
             Modern Kubernetes Dashboard
           </Typography>
 
-          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 400, mx: 'auto' }}>
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 480, mx: 'auto' }}>
             Connect to your Kubernetes cluster to monitor deployments, pods, services, and more.
-            Or explore the demo mode to see what Orphelix can do.
+            Or explore the demo mode to see what ORPHELIX can do.
           </Typography>
         </Box>
 
@@ -212,13 +238,12 @@ export function WelcomeModal() {
         )}
 
         {contexts.length === 0 ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, alignItems: 'center' }}>
             <LiquidGlassButton
               onClick={handleRealMode}
               disabled={loading}
-              fullWidth
               size="large"
-              sx={{ py: 1.5 }}
+              sx={{ py: 2, fontSize: '1rem', minWidth: 320 }}
             >
               {loading ? (
                 <CircularProgress size={24} color="inherit" />
@@ -234,9 +259,8 @@ export function WelcomeModal() {
             <LiquidGlassButton
               onClick={handleDemoMode}
               variant="outlined"
-              fullWidth
               size="large"
-              sx={{ py: 1.5 }}
+              sx={{ py: 2, fontSize: '1rem', minWidth: 320 }}
             >
               Explore Demo Mode
             </LiquidGlassButton>
@@ -271,6 +295,7 @@ export function WelcomeModal() {
                 variant="outlined"
                 fullWidth
                 size="large"
+                sx={{ py: 2, fontSize: '1rem' }}
               >
                 Back
               </LiquidGlassButton>
@@ -279,6 +304,7 @@ export function WelcomeModal() {
                 disabled={!selectedContextName}
                 fullWidth
                 size="large"
+                sx={{ py: 2, fontSize: '1rem' }}
               >
                 Connect
               </LiquidGlassButton>

@@ -99,7 +99,7 @@ export async function collectPodContext(
   // Fetch related events
   if (mode === 'mock') {
     // In mock mode, generate mock events for failing pods
-    if (pod.status === 'Failed' || pod.status === 'CrashLoopBackOff' || pod.status === 'Error') {
+    if (pod.status === 'Failed' || pod.status === 'CrashLoopBackOff') {
       context.events = [
         {
           type: 'Warning',
@@ -149,7 +149,6 @@ export async function collectPodContext(
     // For crashed/failing pods, fetch previous logs (from crashed container)
     const isPodCrashed = pod.status === 'Failed' ||
                          pod.status === 'CrashLoopBackOff' ||
-                         pod.status === 'Error' ||
                          (pod.restartCount && pod.restartCount > 0)
 
     try {
@@ -291,7 +290,6 @@ export async function collectFailingPodsContext(namespace: string = 'default', m
     const failingPods = pods.filter(
       pod => pod.status === 'Failed' ||
              pod.status === 'CrashLoopBackOff' ||
-             pod.status === 'Error' ||
              (pod.restartCount && pod.restartCount > 3)
     )
 
