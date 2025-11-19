@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
@@ -11,6 +9,12 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
+import Link from '@mui/material/Link'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import GitHubIcon from '@mui/icons-material/GitHub'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import { GlassPanel } from '@/app/components/common/glass-panel'
 import { LiquidGlassButton } from '@/app/components/common/liquid-glass-button'
 import { useModeStore } from '@/lib/core/store'
 
@@ -88,35 +92,60 @@ export function WelcomeModal() {
     setOpen(false)
   }
 
+  if (!open) return null
+
   return (
-    <Dialog
-      open={open}
-      maxWidth="sm"
-      fullWidth
-      disableEscapeKeyDown
-      PaperProps={{
-        sx: {
-          borderRadius: 4,
-          backdropFilter: 'blur(40px)',
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.95)'
-              : 'rgba(255, 255, 255, 0.95)',
-          border: '1px solid',
-          borderColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.1)'
-              : 'rgba(0, 0, 0, 0.1)',
-        },
-      }}
-      BackdropProps={{
-        sx: {
-          backdropFilter: 'blur(8px)',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        },
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 9999,
+        p: 3,
       }}
     >
-      <DialogContent sx={{ p: 4 }}>
+      <GlassPanel
+        sx={{
+          maxWidth: 560,
+          width: '100%',
+          p: 4,
+        }}
+      >
+        {/* Header with links */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, gap: 1 }}>
+          <Tooltip title="Documentation" arrow>
+            <IconButton
+              component={Link}
+              href="#" // TODO: Add documentation link
+              target="_blank"
+              rel="noopener noreferrer"
+              size="small"
+              sx={{ color: 'text.secondary' }}
+            >
+              <MenuBookIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="GitHub Repository" arrow>
+            <IconButton
+              component={Link}
+              href="https://github.com/dmakowski-rasp/kubevista"
+              target="_blank"
+              rel="noopener noreferrer"
+              size="small"
+              sx={{ color: 'text.secondary' }}
+            >
+              <GitHubIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           {/* Logo/Icon */}
           <Box
@@ -243,7 +272,7 @@ export function WelcomeModal() {
             </Box>
           </Box>
         )}
-      </DialogContent>
-    </Dialog>
+      </GlassPanel>
+    </Box>
   )
 }
