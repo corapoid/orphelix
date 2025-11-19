@@ -125,8 +125,6 @@ export function YamlEditorModal({
           // If no relevant files found, use all files (but limit to 100 for safety)
           const filesToMatch = relevantFiles.length > 0 ? relevantFiles : files.slice(0, 100)
 
-          console.log(`[YamlEditor] AI matching: filtered ${files.length} files → ${filesToMatch.length} files`)
-
           // AI-powered matching with filtered files
           response = await fetch('/api/ai/match-file', {
             method: 'POST',

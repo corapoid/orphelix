@@ -34,23 +34,18 @@ export default function RepoBrowserPage() {
   // Load sidebar width from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('repo-browser-sidebar-width')
-    console.log('[Sidebar] Load - loaded flag:', sidebarWidthLoaded.current, 'saved value:', saved)
     if (saved) {
       const width = parseInt(saved, 10)
       if (width >= 200 && width <= 600) {
-        console.log('[Sidebar] Load - setting width to:', width)
         setSidebarWidth(width)
       }
     }
     sidebarWidthLoaded.current = true
-    console.log('[Sidebar] Load - set loaded flag to true')
   }, [])
 
   // Save sidebar width to localStorage (only after initial load)
   useEffect(() => {
-    console.log('[Sidebar] Save - loaded flag:', sidebarWidthLoaded.current, 'width:', sidebarWidth)
     if (sidebarWidthLoaded.current) {
-      console.log('[Sidebar] Save - saving to localStorage:', sidebarWidth)
       localStorage.setItem('repo-browser-sidebar-width', sidebarWidth.toString())
     }
   }, [sidebarWidth])

@@ -32,9 +32,6 @@ export function AISettings() {
     if (stored) {
       setApiKey(stored)
       setHasKey(true)
-      console.log('[AI Settings] Loaded API key from localStorage, ends with:', stored.slice(-4))
-    } else {
-      console.log('[AI Settings] No API key found in localStorage')
     }
   }, [])
 
@@ -68,8 +65,6 @@ export function AISettings() {
 
       // Dispatch event so other components know the key was updated
       window.dispatchEvent(new Event('openai-key-updated'))
-
-      console.log('[AI Settings] API key validated and saved, ends with:', trimmedKey.slice(-4))
     } catch (error) {
       setTestError(error instanceof Error ? error.message : 'Failed to validate API key')
     } finally {
@@ -88,15 +83,6 @@ export function AISettings() {
     setTestError(null)
     setSaved(false)
     window.dispatchEvent(new Event('openai-key-updated'))
-
-    // Show confirmation in console
-    console.log('[AI Settings] API key cleared from localStorage')
-    const remaining = localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (remaining) {
-      console.error('[AI Settings] WARNING: Key still exists in localStorage!', remaining.slice(-4))
-    } else {
-      console.log('[AI Settings] Confirmed: No API key in localStorage')
-    }
   }
 
   const availableFeatures = Object.values(AI_FEATURES).filter(f => f.enabled)

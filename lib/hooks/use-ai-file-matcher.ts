@@ -40,8 +40,6 @@ export function useAIFileMatcher(
           return
         }
 
-        console.log('[AI Matcher] Using API key ending with:', apiKey.slice(-4))
-
         const response = await fetch('/api/ai/match-file', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

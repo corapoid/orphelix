@@ -38,9 +38,6 @@ export async function POST(request: NextRequest) {
     // Validate API key format
     const trimmedApiKey = apiKey.trim()
 
-    // Log last 4 characters for debugging (safe to log)
-    console.log('[AI Matcher] API key ends with:', trimmedApiKey.slice(-4))
-
     if (!trimmedApiKey.startsWith('sk-')) {
       return NextResponse.json(
         { error: 'Invalid API key format. OpenAI API keys should start with "sk-"' },

@@ -95,19 +95,16 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, sear
   const loadDirectory = async (path: string) => {
     if (dirContents[path] && dirContents[path].length > 0) return // Already loaded
 
-    console.log(`[FileTree] Loading directory: ${path}`)
     setLoadingDirs(prev => new Set(prev).add(path))
 
     try {
       const modeParam = mode === 'mock' ? '&mode=mock' : ''
       const url = `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(path === '/' ? '' : path)}${modeParam}`
-      console.log(`[FileTree] Fetching: ${url}`)
 
       const response = await fetch(url)
 
       if (response.ok) {
         const items: TreeItem[] = await response.json()
-        console.log(`[FileTree] Loaded ${items.length} items for ${path}`, items)
         setDirContents(prev => ({ ...prev, [path]: items }))
       } else {
         console.error(`[FileTree] Failed to load ${path}:`, response.status, await response.text())
