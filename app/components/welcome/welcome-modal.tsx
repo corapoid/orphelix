@@ -73,8 +73,13 @@ export function WelcomeModal() {
       if (response.ok && data.contexts && data.contexts.length > 0) {
         setContexts(data.contexts)
         setStep('cluster-selection')
-        // Don't auto-select - user must explicitly choose
-        setSelectedContextName('')
+        // If only one cluster, pre-select it
+        if (data.contexts.length === 1) {
+          setSelectedContextName(data.contexts[0].name)
+        } else {
+          // Multiple clusters - don't auto-select, user must choose
+          setSelectedContextName('')
+        }
       } else {
         throw new Error('No Kubernetes contexts found. Please configure kubectl locally.')
       }
@@ -440,12 +445,27 @@ export function WelcomeModal() {
           {step === 'cluster-selection' && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <FormControl fullWidth>
-                <InputLabel>Select Kubernetes Cluster</InputLabel>
+                <InputLabel id="cluster-select-label">Select Kubernetes Cluster</InputLabel>
                 <Select
+                  labelId="cluster-select-label"
+                  id="cluster-select"
                   value={selectedContextName}
                   label="Select Kubernetes Cluster"
                   onChange={(e) => setSelectedContextName(e.target.value)}
+                  displayEmpty={false}
+                  MenuProps={{
+                    sx: {
+                      zIndex: 10000,
+                    }
+                  }}
                 >
+                  {selectedContextName === '' && (
+                    <MenuItem value="" disabled>
+                      <Typography variant="body2" color="text.secondary">
+                        Choose a cluster...
+                      </Typography>
+                    </MenuItem>
+                  )}
                   {contexts.map((context) => (
                     <MenuItem key={context.name} value={context.name}>
                       <Box>
