@@ -242,9 +242,9 @@ export function WelcomeModal() {
               variant="h2"
               gutterBottom
               sx={{
-                fontWeight: 800,
-                fontFamily: '"BBH Sans Hegarty", system-ui, sans-serif',
-                letterSpacing: '0.08em',
+                fontWeight: 700,
+                fontFamily: '"Momo Trust Display", system-ui, sans-serif',
+                letterSpacing: '0.06em',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
