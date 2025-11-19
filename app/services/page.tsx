@@ -55,7 +55,7 @@ export default function ServicesPage() {
     {
       field: 'externalIP',
       label: 'External IP',
-      render: (service) => service.externalIP || '-',
+      render: (service) => service.externalIPs?.join(', ') || '-',
     },
     {
       field: 'ports',
