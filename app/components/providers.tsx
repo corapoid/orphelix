@@ -1,5 +1,6 @@
 'use client'
 
+import { SessionProvider } from 'next-auth/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState, ReactNode, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
@@ -39,13 +40,15 @@ export function Providers({ children }: { children: ReactNode }) {
   )
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <SearchProvider>
-          <ModeSync />
-          {children}
-        </SearchProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <SearchProvider>
+            <ModeSync />
+            {children}
+          </SearchProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </SessionProvider>
   )
 }

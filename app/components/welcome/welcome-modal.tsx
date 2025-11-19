@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { signIn, useSession } from 'next-auth/react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
@@ -31,6 +32,7 @@ interface KubeContext {
 type WelcomeStep = 'initial' | 'github-required' | 'cluster-selection'
 
 export function WelcomeModal() {
+  const { data: session, status } = useSession()
   const { hasCompletedWelcome, setMode, setContext, setNamespace, setHasCompletedWelcome } = useModeStore()
   const { actualTheme, setThemeMode } = useThemeMode()
   const [open, setOpen] = useState(!hasCompletedWelcome)
@@ -46,6 +48,13 @@ export function WelcomeModal() {
     setOpen(!hasCompletedWelcome)
   }, [hasCompletedWelcome])
 
+  // Auto-advance to cluster loading if user is authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && step === 'initial') {
+      setStep('github-required')
+    }
+  }, [status, step])
+
   const handleThemeToggle = () => {
     setThemeMode(actualTheme === 'light' ? 'dark' : 'light')
   }
@@ -56,10 +65,8 @@ export function WelcomeModal() {
     setOpen(false)
   }
 
-  const handleGitHubLogin = () => {
-    // TODO: Implement actual GitHub OAuth flow
-    // For now, simulate successful login
-    setStep('github-required')
+  const handleGitHubLogin = async () => {
+    await signIn('github', { redirect: false })
   }
 
   const handleLoadClusters = async () => {
