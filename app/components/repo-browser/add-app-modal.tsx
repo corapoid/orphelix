@@ -47,7 +47,7 @@ interface AddAppModalProps {
   onClose: () => void
 }
 
-const STEPS = ['Type', 'Configure', 'Autoscaling', 'Preview', 'Commit']
+const STEPS = ['Type', 'Configure', 'Autoscaling', 'Preview', 'Summary']
 
 const POPULAR_IMAGES = [
   'nginx:latest',
@@ -62,7 +62,7 @@ const POPULAR_IMAGES = [
 
 export function AddAppModal({ open, onClose }: AddAppModalProps) {
   const theme = useTheme()
-  const { selectedRepo, selectedBranch, addToBasket } = useGitHubStore()
+  const { selectedRepo, selectedBranch } = useGitHubStore()
   const { mode, selectedNamespace: currentNamespace } = useModeStore()
 
   const [activeStep, setActiveStep] = useState(0)
@@ -70,6 +70,9 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
   const [error, setError] = useState<string | null>(null)
   const [repoStructure, setRepoStructure] = useState<RepoStructure | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [createdPR, setCreatedPR] = useState<{ number: number; url: string; branchName: string } | null>(null)
+  const [isCreatingPR, setIsCreatingPR] = useState(false)
+  const [isMergingPR, setIsMergingPR] = useState(false)
 
   // Form state
   const [appType, setAppType] = useState<'deployment' | 'statefulset'>('deployment')
@@ -109,7 +112,8 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
         )
 
         if (!response.ok) {
-          throw new Error('Failed to analyze repository structure')
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || 'Failed to analyze repository structure')
         }
 
         const structure: RepoStructure = await response.json()
@@ -197,29 +201,104 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     setActiveStep((prev) => prev - 1)
   }
 
-  const handleFinish = () => {
-    if (!generatedFiles) return
+  const handleCreatePR = async () => {
+    if (!generatedFiles || !selectedRepo) return
 
-    // Add files to edit basket
-    const filesToAdd = []
-    if (generatedFiles.deployment) filesToAdd.push(generatedFiles.deployment)
-    if (generatedFiles.service) filesToAdd.push(generatedFiles.service)
-    if (generatedFiles.hpa) filesToAdd.push(generatedFiles.hpa)
-    if (generatedFiles.kustomization) filesToAdd.push(generatedFiles.kustomization)
-    if (generatedFiles.overlays) filesToAdd.push(...generatedFiles.overlays)
+    setIsCreatingPR(true)
+    setError(null)
 
-    filesToAdd.forEach((file) => {
-      addToBasket({
-        filePath: file.path,
-        content: file.content,
-        originalContent: '', // New file
-        sha: file.sha || '', // New file
+    try {
+      const filesToAdd = []
+      if (generatedFiles.deployment) filesToAdd.push(generatedFiles.deployment)
+      if (generatedFiles.service) filesToAdd.push(generatedFiles.service)
+      if (generatedFiles.hpa) filesToAdd.push(generatedFiles.hpa)
+      if (generatedFiles.kustomization) filesToAdd.push(generatedFiles.kustomization)
+      if (generatedFiles.overlays) filesToAdd.push(...generatedFiles.overlays)
+
+      const branchName = `add-${appName}-${Date.now()}`
+      const commitMessage = `Add ${appName} ${appType}\n\nCreated with Orphelix`
+
+      // Create multi-file PR
+      const response = await fetch('/api/github/create-multi-file-pr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          owner: selectedRepo.owner,
+          repo: selectedRepo.repo,
+          branch: branchName,
+          baseBranch: selectedBranch,
+          files: filesToAdd.map(f => ({ path: f.path, content: f.content })),
+          commitMessage,
+          prTitle: `Add ${appName} application`,
+          prBody: `## New Application: ${appName}
+
+**Type:** ${appType === 'deployment' ? 'Deployment' : 'StatefulSet'}
+**Namespace:** ${currentNamespace || 'default'}
+**Replicas:** ${replicas}${enableAutoscaling ? ` (autoscaling: ${minReplicas}-${maxReplicas})` : ''}
+**Image:** ${dockerImage}
+${port ? `**Port:** ${port}` : ''}
+${repoUrl ? `**Source:** ${repoUrl}` : ''}
+
+### Files Created
+${filesToAdd.map(f => `- \`${f.path}\``).join('\n')}
+
+---
+🤖 Generated with Orphelix`,
+        }),
       })
-    })
 
-    // Close modal and show success
-    setSuccessMessage(`${filesToAdd.length} files added to your changes. Review and commit when ready.`)
-    onClose()
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to create PR')
+      }
+
+      const data = await response.json()
+      setCreatedPR({
+        number: data.number,
+        url: data.url,
+        branchName,
+      })
+
+      // Move to summary step
+      setActiveStep(4)
+    } catch (err) {
+      const error = err as Error
+      setError(error.message || 'Failed to create pull request')
+    } finally {
+      setIsCreatingPR(false)
+    }
+  }
+
+  const handleMergePR = async () => {
+    if (!createdPR || !selectedRepo) return
+
+    setIsMergingPR(true)
+    setError(null)
+
+    try {
+      const response = await fetch('/api/github/merge-pr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          owner: selectedRepo.owner,
+          repo: selectedRepo.repo,
+          pullNumber: createdPR.number,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to merge PR')
+      }
+
+      setSuccessMessage(`Pull request #${createdPR.number} merged successfully!`)
+      onClose()
+    } catch (err) {
+      const error = err as Error
+      setError(error.message || 'Failed to merge pull request')
+    } finally {
+      setIsMergingPR(false)
+    }
   }
 
   const handleClose = () => {
@@ -239,6 +318,9 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
     setTargetMemory(80)
     setError(null)
     setGeneratedFiles(null)
+    setCreatedPR(null)
+    setIsCreatingPR(false)
+    setIsMergingPR(false)
 
     onClose()
   }
@@ -545,31 +627,51 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
         )
 
       case 4:
-        if (!generatedFiles) return null
-
-        // Collect all file paths
-        const filePaths: string[] = []
-        if (generatedFiles.deployment) filePaths.push(generatedFiles.deployment.path)
-        if (generatedFiles.service) filePaths.push(generatedFiles.service.path)
-        if (generatedFiles.hpa) filePaths.push(generatedFiles.hpa.path)
-        if (generatedFiles.kustomization) filePaths.push(generatedFiles.kustomization.path)
-        if (generatedFiles.overlays) {
-          generatedFiles.overlays.forEach(overlay => filePaths.push(overlay.path))
-        }
+        if (!createdPR) return null
 
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            <Alert severity="info">
-              Files will be added to your changes. You can review and commit them from the changes panel.
+            <Alert severity="success">
+              Pull request created successfully!
             </Alert>
 
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Files to be created ({filePaths.length}):
-              </Typography>
-              {filePaths.map(path => (
-                <Chip key={path} label={path} sx={{ mr: 1, mb: 1 }} />
-              ))}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Typography variant="subtitle2">PR Number:</Typography>
+                <Chip label={`#${createdPR.number}`} color="primary" />
+              </Box>
+
+              <Box>
+                <Typography variant="subtitle2" gutterBottom>PR URL:</Typography>
+                <Typography
+                  component="a"
+                  href={createdPR.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ color: 'primary.main', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                >
+                  {createdPR.url}
+                </Typography>
+              </Box>
+
+              <Box>
+                <Typography variant="subtitle2" gutterBottom>Branch:</Typography>
+                <Chip label={createdPR.branchName} variant="outlined" />
+              </Box>
+
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle2" gutterBottom>Application Summary:</Typography>
+                <Box sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
+                  <Typography variant="body2"><strong>Name:</strong> {appName}</Typography>
+                  <Typography variant="body2"><strong>Type:</strong> {appType === 'deployment' ? 'Deployment' : 'StatefulSet'}</Typography>
+                  <Typography variant="body2"><strong>Namespace:</strong> {currentNamespace || 'default'}</Typography>
+                  <Typography variant="body2"><strong>Image:</strong> {dockerImage}</Typography>
+                  {port && <Typography variant="body2"><strong>Port:</strong> {port}</Typography>}
+                  <Typography variant="body2">
+                    <strong>Scaling:</strong> {enableAutoscaling ? `Autoscaling (${minReplicas}-${maxReplicas})` : `Fixed (${replicas})`}
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
           </Box>
         )
@@ -632,16 +734,23 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Box sx={{ flex: 1 }} />
-        {activeStep > 0 && (
+        {activeStep > 0 && activeStep < 4 && (
           <Button onClick={handleBack}>Back</Button>
         )}
-        {activeStep < STEPS.length - 1 ? (
-          <LiquidGlassButton onClick={handleNext} disabled={loading}>
-            Next
+        {activeStep === 3 ? (
+          // Preview step - Create PR button
+          <LiquidGlassButton onClick={handleCreatePR} disabled={isCreatingPR || !generatedFiles}>
+            {isCreatingPR ? <CircularProgress size={24} /> : 'Create Pull Request'}
+          </LiquidGlassButton>
+        ) : activeStep === 4 ? (
+          // Summary step - Merge PR button
+          <LiquidGlassButton onClick={handleMergePR} disabled={isMergingPR || !createdPR}>
+            {isMergingPR ? <CircularProgress size={24} /> : 'Merge Pull Request'}
           </LiquidGlassButton>
         ) : (
-          <LiquidGlassButton onClick={handleFinish} disabled={loading || !generatedFiles}>
-            Add to Changes
+          // Steps 0-2 - Next button
+          <LiquidGlassButton onClick={handleNext} disabled={loading}>
+            Next
           </LiquidGlassButton>
         )}
       </DialogActions>
