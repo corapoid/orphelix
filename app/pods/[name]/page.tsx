@@ -46,6 +46,7 @@ export default function PodDetailPage() {
   useAutoRefresh(refetch)
 
   const [selectedContainer, setSelectedContainer] = useState('')
+  const [logLines, setLogLines] = useState(100)
   const [restartDialogOpen, setRestartDialogOpen] = useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
@@ -63,7 +64,7 @@ export default function PodDetailPage() {
     isLoading: logsLoading,
     error: logsError,
     refetch: refetchLogs,
-  } = usePodLogs(name, selectedContainer, 100)
+  } = usePodLogs(name, selectedContainer, logLines)
 
   const logs = logsData?.logs || ''
   const parsedLogs = logsData?.parsed
@@ -233,7 +234,7 @@ export default function PodDetailPage() {
                       <TableCell align="center">
                         {container.restartCount > 0 ? (
                           <StatusBadge
-                            label={container.restartCount}
+                            label={container.restartCount.toString()}
                             size="small"
                             color={container.restartCount > 5 ? 'error' : 'warning'}
                           />
@@ -458,6 +459,8 @@ export default function PodDetailPage() {
             error={logsError}
             containerName={selectedContainer}
             onRefresh={() => refetchLogs()}
+            logLines={logLines}
+            onLogLinesChange={setLogLines}
           />
         </Box>
       )}

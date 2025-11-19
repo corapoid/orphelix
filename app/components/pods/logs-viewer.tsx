@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import SearchIcon from '@mui/icons-material/Search'
 import DownloadIcon from '@mui/icons-material/Download'
 import RefreshIcon from '@mui/icons-material/Refresh'
@@ -31,16 +33,18 @@ interface LogsViewerProps {
   error: Error | null
   containerName: string
   onRefresh?: () => void
+  logLines?: number
+  onLogLinesChange?: (lines: number) => void
 }
 
-export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRefresh }: LogsViewerProps) {
+export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRefresh, logLines = 100, onLogLinesChange }: LogsViewerProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [autoScroll, setAutoScroll] = useState(true)
   const [viewMode, setViewMode] = useState<'formatted' | 'raw'>('formatted')
   const logsEndRef = useRef<HTMLDivElement>(null)
   const logsContainerRef = useRef<HTMLDivElement>(null)
 
-  const logLines = useMemo((): LogLine[] => {
+  const parsedLogLines = useMemo((): LogLine[] => {
     if (parsed && parsed.length > 0) {
       return parsed
     }
@@ -56,9 +60,9 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
   }, [logs, parsed])
 
   const filteredLogs = useMemo(() => {
-    if (!searchQuery) return logLines
+    if (!searchQuery) return parsedLogLines
 
-    return logLines.filter((logLine) => {
+    return parsedLogLines.filter((logLine) => {
       const searchLower = searchQuery.toLowerCase()
       return (
         logLine.message.toLowerCase().includes(searchLower) ||
@@ -66,7 +70,7 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
         logLine.level?.toLowerCase().includes(searchLower)
       )
     })
-  }, [logLines, searchQuery])
+  }, [parsedLogLines, searchQuery])
 
   const getLevelColor = (level?: string): string => {
     if (!level) return 'grey.400'
@@ -105,8 +109,8 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
     const logsData = {
       container: containerName,
       timestamp: new Date().toISOString(),
-      totalLines: logLines.length,
-      logs: logLines,
+      totalLines: parsedLogLines.length,
+      logs: parsedLogLines,
     }
 
     const blob = new Blob([JSON.stringify(logsData, null, 2)], { type: 'application/json' })
@@ -216,6 +220,39 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
               opacity: viewMode === 'raw' ? 1 : 0.7,
             }}
           />
+          {onLogLinesChange && (
+            <Select
+              size="small"
+              value={logLines}
+              onChange={(e) => onLogLinesChange(Number(e.target.value))}
+              sx={{
+                minWidth: 100,
+                height: 32,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(30, 30, 46, 0.6)'
+                    : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(209, 213, 219, 0.4)',
+                borderRadius: 3,
+                '& .MuiOutlinedInput-notchedOutline': {
+                  border: 'none',
+                },
+              }}
+            >
+              <MenuItem value={100}>100 lines</MenuItem>
+              <MenuItem value={250}>250 lines</MenuItem>
+              <MenuItem value={500}>500 lines</MenuItem>
+              <MenuItem value={1000}>1000 lines</MenuItem>
+              <MenuItem value={2500}>2500 lines</MenuItem>
+              <MenuItem value={5000}>5000 lines</MenuItem>
+            </Select>
+          )}
           {onRefresh && (
             <IconButton
               onClick={onRefresh}
