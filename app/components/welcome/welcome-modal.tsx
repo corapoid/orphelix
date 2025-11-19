@@ -189,37 +189,33 @@ export function WelcomeModal() {
         flex: 1,
         p: 3,
       }}>
-        <GlassPanel
-          sx={{
-            maxWidth: 680,
-            width: '100%',
-            p: 5,
-            position: 'relative',
-            overflow: 'hidden',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter2)'/%3E%3C/svg%3E")`,
-              opacity: (theme) => theme.palette.mode === 'dark' ? 0.25 : 0.18,
-              pointerEvents: 'none',
-              mixBlendMode: 'overlay',
-              zIndex: 1,
-            },
-            '& > *': {
-              position: 'relative',
-              zIndex: 2,
-            },
-          }}
-        >
-          {/* GitHub link in panel */}
+        <Box sx={{
+          position: 'relative',
+          maxWidth: 680,
+          width: '100%',
+        }}>
+          {/* Grain texture overlay */}
+          <Box sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderRadius: '12px',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+            backgroundSize: '150px 150px',
+            opacity: (theme) => theme.palette.mode === 'dark' ? 0.4 : 0.3,
+            pointerEvents: 'none',
+            zIndex: 2,
+            mixBlendMode: 'overlay',
+          }} />
+
+          {/* GitHub link - outside panel */}
           <Box sx={{
             position: 'absolute',
             top: 20,
             right: 20,
+            zIndex: 3,
           }}>
             <Tooltip title="GitHub Repository" arrow>
               <IconButton
@@ -228,12 +224,27 @@ export function WelcomeModal() {
                 target="_blank"
                 rel="noopener noreferrer"
                 size="small"
-                sx={{ color: 'text.secondary' }}
+                sx={{
+                  color: 'text.secondary',
+                  bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.3)',
+                  '&:hover': {
+                    bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)',
+                  }
+                }}
               >
                 <GitHubIcon fontSize="small" />
               </IconButton>
             </Tooltip>
           </Box>
+
+          <GlassPanel
+            sx={{
+              width: '100%',
+              p: 5,
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
 
           <Box sx={{ textAlign: 'center', mb: 5, mt: 3 }}>
             {/* Logo/Icon */}
@@ -316,6 +327,16 @@ export function WelcomeModal() {
                   minWidth: 320,
                   justifyContent: 'center',
                   textAlign: 'center',
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.4)'
+                      : 'rgba(255, 255, 255, 0.15)',
+                  '&:hover': {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(50, 50, 70, 0.5)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                  },
                 }}
               >
                 Sign in with GitHub
@@ -335,6 +356,16 @@ export function WelcomeModal() {
                   minWidth: 320,
                   justifyContent: 'center',
                   textAlign: 'center',
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.3)'
+                      : 'rgba(255, 255, 255, 0.1)',
+                  '&:hover': {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(50, 50, 70, 0.4)'
+                        : 'rgba(255, 255, 255, 0.2)',
+                  },
                 }}
               >
                 Demo
@@ -355,6 +386,16 @@ export function WelcomeModal() {
                   minWidth: 320,
                   justifyContent: 'center',
                   textAlign: 'center',
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.4)'
+                      : 'rgba(255, 255, 255, 0.15)',
+                  '&:hover': {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(50, 50, 70, 0.5)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                  },
                 }}
               >
                 {loading ? (
@@ -378,6 +419,16 @@ export function WelcomeModal() {
                   minWidth: 320,
                   justifyContent: 'center',
                   textAlign: 'center',
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.3)'
+                      : 'rgba(255, 255, 255, 0.1)',
+                  '&:hover': {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(50, 50, 70, 0.4)'
+                        : 'rgba(255, 255, 255, 0.2)',
+                  },
                 }}
               >
                 Demo
@@ -425,6 +476,16 @@ export function WelcomeModal() {
                     fontSize: '1rem',
                     justifyContent: 'center',
                     textAlign: 'center',
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.3)'
+                        : 'rgba(255, 255, 255, 0.1)',
+                    '&:hover': {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(50, 50, 70, 0.4)'
+                          : 'rgba(255, 255, 255, 0.2)',
+                    },
                   }}
                 >
                   Back
@@ -439,6 +500,16 @@ export function WelcomeModal() {
                     fontSize: '1rem',
                     justifyContent: 'center',
                     textAlign: 'center',
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.4)'
+                        : 'rgba(255, 255, 255, 0.15)',
+                    '&:hover': {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(50, 50, 70, 0.5)'
+                          : 'rgba(255, 255, 255, 0.25)',
+                    },
                   }}
                 >
                   {verifyingConnection ? (
@@ -451,6 +522,7 @@ export function WelcomeModal() {
             </Box>
           )}
         </GlassPanel>
+        </Box>
       </Box>
     </Box>
   )
