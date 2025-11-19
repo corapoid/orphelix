@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import { Providers } from './components/providers'
 import { Sidebar } from './components/layout/sidebar'
 import { TopBar } from './components/layout/top-bar'
+import { WelcomeModal } from './components/welcome/welcome-modal'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body style={{ margin: 0 }} suppressHydrationWarning>
         <Providers>
+          <WelcomeModal />
           <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default', overflow: 'hidden' }}>
             <Sidebar />
             <Box
