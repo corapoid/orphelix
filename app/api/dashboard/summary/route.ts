@@ -86,8 +86,8 @@ export async function GET(request: NextRequest) {
       },
       daemonsets: {
         total: daemonsets.length,
-        ready: daemonsets.filter((d) => d.numberReady === d.desiredNumberScheduled).length,
-        notReady: daemonsets.filter((d) => d.numberReady !== d.desiredNumberScheduled).length,
+        ready: daemonsets.filter((d) => d.ready === d.desired).length,
+        notReady: daemonsets.filter((d) => d.ready !== d.desired).length,
       },
     }
 
