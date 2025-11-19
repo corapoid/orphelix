@@ -23,22 +23,21 @@ interface KubeContext {
 }
 
 export function WelcomeModal() {
-  const { mode, selectedContext, setMode, setContext, setNamespace } = useModeStore()
-  const [open, setOpen] = useState(true)
+  const { hasCompletedWelcome, setMode, setContext, setNamespace, setHasCompletedWelcome } = useModeStore()
+  const [open, setOpen] = useState(!hasCompletedWelcome)
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [selectedContextName, setSelectedContextName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Check if user has already connected
+  // Update open state when hasCompletedWelcome changes
   useEffect(() => {
-    if (selectedContext || mode === 'mock') {
-      setOpen(false)
-    }
-  }, [selectedContext, mode])
+    setOpen(!hasCompletedWelcome)
+  }, [hasCompletedWelcome])
 
   const handleDemoMode = () => {
     setMode('mock')
+    setHasCompletedWelcome(true)
     setOpen(false)
   }
 
@@ -85,6 +84,7 @@ export function WelcomeModal() {
       setNamespace(context.namespace)
     }
 
+    setHasCompletedWelcome(true)
     setOpen(false)
   }
 
@@ -93,6 +93,7 @@ export function WelcomeModal() {
       open={open}
       maxWidth="sm"
       fullWidth
+      disableEscapeKeyDown
       PaperProps={{
         sx: {
           borderRadius: 4,

@@ -12,6 +12,7 @@ interface ModeStore {
   realtimeEnabled: boolean
   autoRefreshEnabled: boolean
   autoRefreshInterval: number // seconds
+  hasCompletedWelcome: boolean // Flag to track if user has completed initial setup
   setMode: (mode: AppMode) => void
   setContext: (context: KubernetesContext | null) => void
   setNamespace: (namespace: string) => void
@@ -20,6 +21,7 @@ interface ModeStore {
   setRealtimeEnabled: (enabled: boolean) => void
   setAutoRefreshEnabled: (enabled: boolean) => void
   setAutoRefreshInterval: (interval: number) => void
+  setHasCompletedWelcome: (completed: boolean) => void
   reset: () => void
 }
 
@@ -67,6 +69,7 @@ export const useModeStore = create<ModeStore>()(
       realtimeEnabled: false,
       autoRefreshEnabled: false,
       autoRefreshInterval: 30, // 30 seconds default
+      hasCompletedWelcome: false, // User hasn't completed welcome flow
       setMode: (mode) => set({ mode }),
       setContext: (context) => set({ selectedContext: context }),
       setNamespace: (namespace) => set({ selectedNamespace: namespace }),
@@ -75,6 +78,7 @@ export const useModeStore = create<ModeStore>()(
       setRealtimeEnabled: (enabled) => set({ realtimeEnabled: enabled }),
       setAutoRefreshEnabled: (enabled) => set({ autoRefreshEnabled: enabled }),
       setAutoRefreshInterval: (interval) => set({ autoRefreshInterval: interval }),
+      setHasCompletedWelcome: (completed) => set({ hasCompletedWelcome: completed }),
       reset: () => set({
         mode: 'real',
         selectedContext: null,
@@ -84,6 +88,7 @@ export const useModeStore = create<ModeStore>()(
         realtimeEnabled: false,
         autoRefreshEnabled: false,
         autoRefreshInterval: 30,
+        hasCompletedWelcome: false,
       }),
     }),
     {
