@@ -755,6 +755,7 @@ export async function fetchPodLogs(
       container,
       tailLines: tail,
       previous,
+      timestamps: true,
     })
     return response
   } catch (error) {
