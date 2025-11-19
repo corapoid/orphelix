@@ -105,10 +105,23 @@ export function WelcomeModal() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backdropFilter: 'blur(8px)',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         zIndex: 9999,
         p: 3,
+        background: (theme) =>
+          theme.palette.mode === 'dark'
+            ? 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.15), transparent 50%), radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.15), transparent 50%), linear-gradient(180deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 35, 0.98) 100%)'
+            : 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.08), transparent 50%), radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.08), transparent 50%), linear-gradient(180deg, rgba(250, 250, 255, 0.98) 0%, rgba(240, 242, 255, 1) 100%)',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`,
+          opacity: (theme) => theme.palette.mode === 'dark' ? 0.3 : 0.2,
+          pointerEvents: 'none',
+        },
       }}
     >
       <GlassPanel

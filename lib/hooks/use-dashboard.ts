@@ -11,6 +11,7 @@ export function useDashboardSummary() {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
   const selectedContext = useModeStore((state) => state.selectedContext)
+  const hasCompletedWelcome = useModeStore((state) => state.hasCompletedWelcome)
 
   return useQuery<DashboardSummary>({
     queryKey: ['dashboard-summary', mode, namespace, selectedContext?.name || ''],
@@ -29,7 +30,7 @@ export function useDashboardSummary() {
       if (!response.ok) throw new Error('Failed to fetch dashboard summary')
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: hasCompletedWelcome && (mode === 'mock' || !!namespace),
   })
 }
 
@@ -41,6 +42,7 @@ export function useRecentEvents(timeRangeHours = 24) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
   const selectedContext = useModeStore((state) => state.selectedContext)
+  const hasCompletedWelcome = useModeStore((state) => state.hasCompletedWelcome)
 
   return useQuery<Event[]>({
     queryKey: ['recent-events', mode, namespace, timeRangeHours],
@@ -73,6 +75,6 @@ export function useRecentEvents(timeRangeHours = 24) {
       if (!response.ok) throw new Error('Failed to fetch events')
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: hasCompletedWelcome && (mode === 'mock' || !!namespace),
   })
 }

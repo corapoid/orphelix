@@ -26,6 +26,7 @@ async function fetchClusterHealth(mode: 'mock' | 'real'): Promise<ClusterHealthR
 
 export function useClusterHealth() {
   const mode = useModeStore((state) => state.mode)
+  const hasCompletedWelcome = useModeStore((state) => state.hasCompletedWelcome)
 
   return useQuery<ClusterHealthResponse>({
     queryKey: ['cluster-health', mode],
@@ -33,5 +34,6 @@ export function useClusterHealth() {
     staleTime: 30000, // Consider data fresh for 30 seconds
     refetchInterval: 60000, // Refetch every 60 seconds
     retry: 1, // Only retry once
+    enabled: hasCompletedWelcome, // Don't check health until user has selected cluster
   })
 }
