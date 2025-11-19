@@ -16,18 +16,24 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Get base URL for server-side fetch
+    const protocol = request.headers.get('x-forwarded-proto') || 'http'
+    const host = request.headers.get('host') || 'localhost:3000'
+    const baseUrl = `${protocol}://${host}`
+
     const structure = await analyzeRepository(
       owner,
       repo,
       ref,
-      mode === 'mock' ? 'mock' : undefined
+      mode === 'mock' ? 'mock' : undefined,
+      baseUrl
     )
 
     return NextResponse.json(structure)
   } catch (error) {
     console.error('Failed to analyze repository structure:', error)
     return NextResponse.json(
-      { error: 'Failed to analyze repository structure' },
+      { error: error instanceof Error ? error.message : 'Failed to analyze repository structure' },
       { status: 500 }
     )
   }

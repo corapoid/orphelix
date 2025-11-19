@@ -48,7 +48,8 @@ export async function analyzeRepository(
   )
 
   if (!rootResponse.ok) {
-    throw new Error('Failed to fetch repository structure')
+    const error = await rootResponse.json().catch(() => ({ error: 'Unknown error' }))
+    throw new Error(error.error || `Failed to fetch repository structure: ${rootResponse.statusText}`)
   }
 
   const rootItems: TreeItem[] = await rootResponse.json()
