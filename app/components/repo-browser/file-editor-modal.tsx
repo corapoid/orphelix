@@ -20,7 +20,7 @@ interface FileEditorModalProps {
 }
 
 export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorModalProps) {
-  const { selectedRepo, setPendingPR } = useGitHubStore()
+  const { selectedRepo } = useGitHubStore()
 
   const [yamlContent, setYamlContent] = useState('')
   const [originalContent, setOriginalContent] = useState('')
@@ -95,15 +95,6 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
 
       const data = await response.json()
       setPrCreated({ number: data.number, url: data.url })
-
-      // Store PR info for later use
-      setPendingPR({
-        number: data.number,
-        url: data.url,
-        owner: selectedRepo.owner,
-        repo: selectedRepo.repo,
-        branchName,
-      })
     } catch (err: any) {
       setError(err.message || 'Failed to create PR')
     } finally {
@@ -133,8 +124,7 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
         throw new Error(error.error || 'Failed to merge PR')
       }
 
-      // Clear pending PR and close modal
-      setPendingPR(null)
+      // Close modal
       onClose()
     } catch (err: any) {
       setError(err.message || 'Failed to merge PR')

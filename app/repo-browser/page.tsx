@@ -16,7 +16,7 @@ import { usePageSearch } from '@/lib/contexts/search-context'
 import { mockGitHubRepo } from '@/lib/mocks/github-data'
 
 export default function RepoBrowserPage() {
-  const { selectedRepo, selectedBranch, setSelectedBranch, setPendingPR, setSelectedRepo } = useGitHubStore()
+  const { selectedRepo, selectedBranch, setSelectedBranch, setSelectedRepo } = useGitHubStore()
   const mode = useModeStore((state) => state.mode)
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [addAppModalOpen, setAddAppModalOpen] = useState(false)
@@ -164,13 +164,7 @@ export default function RepoBrowserPage() {
 
       const data = await response.json()
 
-      setPendingPR({
-        number: data.number,
-        url: data.url,
-        owner: selectedRepo.owner,
-        repo: selectedRepo.repo,
-        branchName,
-      })
+      // PR created successfully - data contains { number, url }
 
       alert(`Pull Request created successfully! #${data.number}\n${data.url}`)
     } catch (err) {
