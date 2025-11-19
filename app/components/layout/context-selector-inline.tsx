@@ -189,39 +189,38 @@ export function ContextSelectorInline() {
           const displayName = getDisplayName(context.name)
           const alias = getAlias(context.name)
 
-          return (
-            <Box key={context.name}>
-              {index > 0 && <Divider sx={{ my: 0.5 }} />}
-              <MenuItem
-                value={context.name}
-                sx={{
-                  py: 1,
-                  px: 2,
+          return [
+            index > 0 && <Divider key={`divider-${context.name}`} sx={{ my: 0.5 }} />,
+            <MenuItem
+              key={context.name}
+              value={context.name}
+              sx={{
+                py: 1,
+                px: 2,
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+                '&.Mui-selected': {
+                  bgcolor: 'primary.main',
+                  color: 'primary.contrastText',
                   '&:hover': {
-                    bgcolor: 'action.hover',
+                    bgcolor: 'primary.dark',
                   },
-                  '&.Mui-selected': {
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
-                    '&:hover': {
-                      bgcolor: 'primary.dark',
-                    },
-                  },
-                }}
-              >
-                <Box sx={{ width: '100%' }}>
-                  <Typography variant="body2" fontWeight={500} noWrap>
-                    {displayName}
+                },
+              }}
+            >
+              <Box sx={{ width: '100%' }}>
+                <Typography variant="body2" fontWeight={500} noWrap>
+                  {displayName}
+                </Typography>
+                {alias && (
+                  <Typography variant="caption" color="text.secondary" noWrap sx={{ opacity: 0.7 }}>
+                    {context.cluster}
                   </Typography>
-                  {alias && (
-                    <Typography variant="caption" color="text.secondary" noWrap sx={{ opacity: 0.7 }}>
-                      {context.cluster}
-                    </Typography>
-                  )}
-                </Box>
-              </MenuItem>
-            </Box>
-          )
+                )}
+              </Box>
+            </MenuItem>
+          ]
         })}
       </Select>
     </Box>
