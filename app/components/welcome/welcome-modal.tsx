@@ -196,21 +196,22 @@ export function WelcomeModal() {
             p: 5,
             position: 'relative',
             overflow: 'hidden',
-            '&::after': {
+            '&::before': {
               content: '""',
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter2)' opacity='0.08'/%3E%3C/svg%3E")`,
-              opacity: (theme) => theme.palette.mode === 'dark' ? 0.4 : 0.25,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter2)'/%3E%3C/svg%3E")`,
+              opacity: (theme) => theme.palette.mode === 'dark' ? 0.25 : 0.18,
               pointerEvents: 'none',
-              zIndex: 0,
+              mixBlendMode: 'overlay',
+              zIndex: 1,
             },
             '& > *': {
               position: 'relative',
-              zIndex: 1,
+              zIndex: 2,
             },
           }}
         >
