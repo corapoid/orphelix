@@ -242,9 +242,9 @@ export function WelcomeModal() {
               variant="h2"
               gutterBottom
               sx={{
-                fontWeight: 800,
-                fontFamily: '"Space Grotesk", "Inter", system-ui, sans-serif',
-                letterSpacing: '0.05em',
+                fontWeight: 700,
+                fontFamily: '"Roboto Mono", monospace',
+                letterSpacing: '0.1em',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
