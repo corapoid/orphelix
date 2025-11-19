@@ -38,8 +38,11 @@ function getInitialTheme(): ThemeMode {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<ThemeMode>('light')
-  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light')
+  const [mode, setMode] = useState<ThemeMode>('system')
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
   const [mounted, setMounted] = useState(false)
 
   // Get background preset from store
