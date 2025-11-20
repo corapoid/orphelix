@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { signIn, useSession } from 'next-auth/react'
+import { useRouter, usePathname } from 'next/navigation'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
@@ -29,16 +30,26 @@ interface KubeContext {
   current: boolean
 }
 
+interface KubeNamespace {
+  name: string
+  status: string
+}
+
 type WelcomeStep = 'initial' | 'github-required' | 'cluster-selection'
 
 export function WelcomeModal() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
+  const router = useRouter()
+  const pathname = usePathname()
   const { hasCompletedWelcome, setMode, setContext, setNamespace, setHasCompletedWelcome } = useModeStore()
   const { actualTheme, setThemeMode } = useThemeMode()
   const [open, setOpen] = useState(!hasCompletedWelcome)
   const [step, setStep] = useState<WelcomeStep>('initial')
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [selectedContextName, setSelectedContextName] = useState('')
+  const [namespaces, setNamespaces] = useState<KubeNamespace[]>([])
+  const [selectedNamespace, setSelectedNamespace] = useState('')
+  const [loadingNamespaces, setLoadingNamespaces] = useState(false)
   const [loading, setLoading] = useState(false)
   const [verifyingConnection, setVerifyingConnection] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -55,18 +66,110 @@ export function WelcomeModal() {
     }
   }, [status, step])
 
+  // Load namespaces when cluster is selected
+  useEffect(() => {
+    const loadNamespaces = async () => {
+      if (!selectedContextName) {
+        setNamespaces([])
+        return
+      }
+
+      setLoadingNamespaces(true)
+      try {
+        const response = await fetch(`/api/namespaces?context=${encodeURIComponent(selectedContextName)}`)
+
+        if (!response.ok) {
+          const error = await response.json()
+          console.error('Failed to fetch namespaces:', error)
+          setNamespaces([])
+          return
+        }
+
+        const data = await response.json()
+        console.log('Namespaces loaded:', data)
+
+        if (Array.isArray(data)) {
+          setNamespaces(data)
+          // Auto-select 'default' if exists
+          const defaultNs = data.find((ns: KubeNamespace) => ns.name === 'default')
+          if (defaultNs) {
+            setSelectedNamespace('default')
+          }
+        } else {
+          console.error('Invalid namespaces response format:', data)
+          setNamespaces([])
+        }
+      } catch (err) {
+        console.error('Failed to load namespaces:', err)
+        setNamespaces([])
+        // Don't block - namespaces are optional
+      } finally {
+        setLoadingNamespaces(false)
+      }
+    }
+
+    loadNamespaces()
+  }, [selectedContextName])
+
   const handleThemeToggle = () => {
     setThemeMode(actualTheme === 'light' ? 'dark' : 'light')
   }
 
+  const isValidRoute = (path: string) => {
+    // List of valid routes in the app
+    const validRoutes = [
+      '/',
+      '/deployments',
+      '/statefulsets',
+      '/daemonsets',
+      '/pods',
+      '/jobs',
+      '/cronjobs',
+      '/services',
+      '/ingress',
+      '/configmaps',
+      '/secrets',
+      '/namespaces',
+      '/nodes',
+      '/hpa',
+      '/pv',
+      '/events',
+      '/labels',
+      '/topology',
+      '/settings',
+      '/repo-browser',
+    ]
+
+    // Check if path matches valid routes or dynamic routes (e.g., /pods/[name])
+    return validRoutes.some(route => path === route || path.startsWith(route + '/'))
+  }
+
   const handleDemoMode = () => {
-    setMode('mock')
+    setMode('demo')
+    setContext(null) // Clear any real cluster context
+    setNamespace('default') // Set default namespace for demo
     setHasCompletedWelcome(true)
     setOpen(false)
+
+    // Set cookie for server-side middleware validation
+    document.cookie = 'app-mode=demo; path=/; max-age=31536000; SameSite=Lax'
+
+    // Redirect to home if on invalid route
+    if (!isValidRoute(pathname)) {
+      router.push('/')
+    }
   }
 
   const handleGitHubLogin = async () => {
-    await signIn('github', { redirect: false })
+    try {
+      await signIn('github', {
+        callbackUrl: '/',
+        redirect: true
+      })
+    } catch (error) {
+      console.error('GitHub sign in error:', error)
+      setError('Failed to sign in with GitHub. Please try again.')
+    }
   }
 
   const handleLoadClusters = async () => {
@@ -126,12 +229,20 @@ export function WelcomeModal() {
         user: context.user,
       })
 
-      if (context.namespace) {
-        setNamespace(context.namespace)
-      }
+      // Set namespace - use selected or fallback to context default or 'default'
+      const namespaceToSet = selectedNamespace || context.namespace || 'default'
+      setNamespace(namespaceToSet)
 
       setHasCompletedWelcome(true)
       setOpen(false)
+
+      // Set cookie for server-side middleware validation
+      document.cookie = 'app-mode=real; path=/; max-age=31536000; SameSite=Lax'
+
+      // Redirect to home if on invalid route
+      if (!isValidRoute(pathname)) {
+        router.push('/')
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to verify cluster connection')
     } finally {
@@ -487,6 +598,55 @@ export function WelcomeModal() {
                   ))}
                 </Select>
               </FormControl>
+
+              {/* Namespace selector (optional) */}
+              {selectedContextName && (
+                <FormControl fullWidth>
+                  <InputLabel id="namespace-select-label">Namespace (optional)</InputLabel>
+                  <Select
+                    labelId="namespace-select-label"
+                    id="namespace-select"
+                    value={selectedNamespace}
+                    label="Namespace (optional)"
+                    onChange={(e) => setSelectedNamespace(e.target.value)}
+                    disabled={loadingNamespaces}
+                    endAdornment={
+                      loadingNamespaces ? (
+                        <Box sx={{ position: 'absolute', right: 40, display: 'flex', alignItems: 'center' }}>
+                          <CircularProgress size={20} />
+                        </Box>
+                      ) : null
+                    }
+                    MenuProps={{
+                      sx: {
+                        zIndex: 10000,
+                      }
+                    }}
+                  >
+                    <MenuItem value="">
+                      <em>
+                        {loadingNamespaces
+                          ? 'Loading namespaces...'
+                          : namespaces.length === 0
+                          ? 'Unable to load namespaces (using default)'
+                          : 'Use cluster default'}
+                      </em>
+                    </MenuItem>
+                    {namespaces.map((ns) => (
+                      <MenuItem key={ns.name} value={ns.name}>
+                        <Box>
+                          <Typography variant="body2" fontWeight={500}>
+                            {ns.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {ns.status}
+                          </Typography>
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
 
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <LiquidGlassButton
