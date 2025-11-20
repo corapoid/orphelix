@@ -38,7 +38,9 @@ export default function WhyOrphelix() {
       id="why"
       sx={{
         py: { xs: 8, md: 12 },
-        background: 'rgba(255, 255, 255, 0.02)',
+        background: (theme) => theme.palette.mode === 'dark'
+          ? 'rgba(255, 255, 255, 0.02)'
+          : 'rgba(0, 0, 0, 0.01)',
       }}
     >
       <Container maxWidth="lg">
@@ -50,7 +52,7 @@ export default function WhyOrphelix() {
               fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
               fontWeight: 700,
               mb: 2,
-              color: 'white',
+              color: 'text.primary',
             }}
           >
             Why Choose Orphelix?
@@ -59,7 +61,7 @@ export default function WhyOrphelix() {
             variant="h6"
             sx={{
               fontSize: { xs: '1rem', sm: '1.1rem' },
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: 'text.secondary',
               maxWidth: '700px',
               mx: 'auto',
             }}
@@ -75,7 +77,7 @@ export default function WhyOrphelix() {
               <Box
                 className="glass-card"
                 sx={{
-                  p: 4,
+                  p: 3,
                   height: '100%',
                   animation: `slideIn 0.6s ease-out ${index * 0.15}s both`,
                   '@keyframes slideIn': {
@@ -115,7 +117,7 @@ export default function WhyOrphelix() {
                       sx={{
                         fontSize: { xs: '1.25rem', md: '1.5rem' },
                         fontWeight: 600,
-                        color: 'white',
+                        color: 'text.primary',
                       }}
                     >
                       {reason.title}
@@ -124,7 +126,7 @@ export default function WhyOrphelix() {
                     <Typography
                       variant="body1"
                       sx={{
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: 'text.secondary',
                         lineHeight: 1.7,
                       }}
                     >
@@ -175,7 +177,7 @@ export default function WhyOrphelix() {
               <Typography
                 variant="body1"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: 'text.secondary',
                   fontWeight: 500,
                 }}
               >

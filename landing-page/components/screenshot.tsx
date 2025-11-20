@@ -21,7 +21,7 @@ export default function Screenshot() {
               fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
               fontWeight: 700,
               mb: 2,
-              color: 'white',
+              color: 'text.primary',
             }}
           >
             See It In Action
@@ -30,7 +30,7 @@ export default function Screenshot() {
             variant="h6"
             sx={{
               fontSize: { xs: '1rem', sm: '1.1rem' },
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: 'text.secondary',
               maxWidth: '600px',
               mx: 'auto',
             }}
@@ -59,15 +59,17 @@ export default function Screenshot() {
               justifyContent: 'center',
               flexDirection: 'column',
               gap: 2,
-              border: '2px dashed rgba(255, 255, 255, 0.2)',
+              border: (theme) => theme.palette.mode === 'dark'
+                ? '2px dashed rgba(255, 255, 255, 0.2)'
+                : '2px dashed rgba(0, 0, 0, 0.15)',
               overflow: 'hidden',
             }}
           >
-            <ImageIcon sx={{ fontSize: 80, color: 'rgba(255, 255, 255, 0.3)' }} />
+            <ImageIcon sx={{ fontSize: 80, color: 'text.disabled', opacity: 0.5 }} />
             <Typography
               variant="h6"
               sx={{
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: 'text.secondary',
                 textAlign: 'center',
                 px: 2,
               }}
@@ -77,7 +79,7 @@ export default function Screenshot() {
             <Typography
               variant="body2"
               sx={{
-                color: 'rgba(255, 255, 255, 0.4)',
+                color: 'text.disabled',
                 textAlign: 'center',
                 px: 2,
               }}
@@ -107,14 +109,18 @@ export default function Screenshot() {
                 textAlign: 'center',
                 p: 3,
                 borderRadius: 3,
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: (theme) => theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.02)'
+                  : 'rgba(0, 0, 0, 0.02)',
+                border: (theme) => theme.palette.mode === 'dark'
+                  ? '1px solid rgba(255, 255, 255, 0.1)'
+                  : '1px solid rgba(0, 0, 0, 0.08)',
               }}
             >
               <Typography
                 variant="body1"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.8)',
+                  color: 'text.primary',
                   fontWeight: 500,
                 }}
               >

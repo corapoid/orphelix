@@ -1,7 +1,8 @@
 'use client'
 
-import { Box, Container, Typography, Button, Stack } from '@mui/material'
-import { GitHub, PlayArrow, MenuBook } from '@mui/icons-material'
+import { Box, Container, Typography, Stack } from '@mui/material'
+import { GitHub, PlayArrow } from '@mui/icons-material'
+import { LiquidGlassButton } from '@/components/common/liquid-glass-button'
 
 export default function Hero() {
   return (
@@ -51,7 +52,7 @@ export default function Hero() {
               fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
               fontWeight: 600,
               mb: 3,
-              color: 'rgba(255, 255, 255, 0.9)',
+              color: 'text.primary',
             }}
           >
             Modern Kubernetes Dashboard
@@ -64,7 +65,7 @@ export default function Hero() {
               fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
               fontWeight: 400,
               mb: 6,
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: 'text.secondary',
               maxWidth: '800px',
               mx: 'auto',
               lineHeight: 1.6,
@@ -81,17 +82,13 @@ export default function Hero() {
             justifyContent="center"
             sx={{ mb: 4 }}
           >
-            <Button
-              variant="contained"
+            <LiquidGlassButton
               size="large"
               startIcon={<PlayArrow />}
               href="http://localhost:3000"
               target="_blank"
               sx={{
                 background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem',
                 boxShadow: '0 8px 32px rgba(59, 130, 246, 0.4)',
                 '&:hover': {
                   background: 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
@@ -100,47 +97,16 @@ export default function Hero() {
               }}
             >
               Try Demo
-            </Button>
+            </LiquidGlassButton>
 
-            <Button
-              variant="outlined"
+            <LiquidGlassButton
               size="large"
               startIcon={<GitHub />}
               href="https://github.com/dmakowski-rasp/kubevista"
               target="_blank"
-              sx={{
-                borderColor: 'rgba(255, 255, 255, 0.3)',
-                color: 'white',
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem',
-                '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                },
-              }}
             >
               View on GitHub
-            </Button>
-
-            <Button
-              variant="text"
-              size="large"
-              startIcon={<MenuBook />}
-              href="#"
-              sx={{
-                color: 'rgba(255, 255, 255, 0.8)',
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem',
-                '&:hover': {
-                  color: 'white',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                },
-              }}
-            >
-              Documentation
-            </Button>
+            </LiquidGlassButton>
           </Stack>
 
           {/* Badge */}
@@ -152,15 +118,19 @@ export default function Hero() {
               px: 3,
               py: 1,
               borderRadius: 8,
-              background: 'rgba(255, 255, 255, 0.05)',
+              background: (theme) => theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.05)'
+                : 'rgba(0, 0, 0, 0.03)',
               backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: (theme) => theme.palette.mode === 'dark'
+                ? '1px solid rgba(255, 255, 255, 0.1)'
+                : '1px solid rgba(0, 0, 0, 0.08)',
             }}
           >
             <Typography
               variant="body2"
               sx={{
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: 'text.secondary',
                 fontSize: '0.9rem',
               }}
             >

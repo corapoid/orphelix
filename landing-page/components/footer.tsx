@@ -9,8 +9,12 @@ export default function Footer() {
       component="footer"
       sx={{
         py: 6,
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-        background: 'rgba(0, 0, 0, 0.2)',
+        borderTop: (theme) => theme.palette.mode === 'dark'
+          ? '1px solid rgba(255, 255, 255, 0.1)'
+          : '1px solid rgba(0, 0, 0, 0.08)',
+        background: (theme) => theme.palette.mode === 'dark'
+          ? 'rgba(0, 0, 0, 0.2)'
+          : 'rgba(255, 255, 255, 0.3)',
       }}
     >
       <Container maxWidth="lg">
@@ -41,7 +45,7 @@ export default function Footer() {
             <Typography
               variant="body2"
               sx={{
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: 'text.secondary',
                 lineHeight: 1.6,
               }}
             >
@@ -56,7 +60,7 @@ export default function Footer() {
               sx={{
                 fontWeight: 600,
                 mb: 2,
-                color: 'white',
+                color: 'text.primary',
               }}
             >
               Product
@@ -65,9 +69,9 @@ export default function Footer() {
               <Link
                 href="#features"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 Features
@@ -76,9 +80,9 @@ export default function Footer() {
                 href="http://localhost:3000"
                 target="_blank"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 Try Demo
@@ -86,9 +90,9 @@ export default function Footer() {
               <Link
                 href="#"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 Documentation
@@ -103,7 +107,7 @@ export default function Footer() {
               sx={{
                 fontWeight: 600,
                 mb: 2,
-                color: 'white',
+                color: 'text.primary',
               }}
             >
               Resources
@@ -113,12 +117,12 @@ export default function Footer() {
                 href="https://github.com/dmakowski-rasp/kubevista"
                 target="_blank"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 0.5,
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 <GitHub fontSize="small" />
@@ -127,12 +131,12 @@ export default function Footer() {
               <Link
                 href="#"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 0.5,
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 <MenuBook fontSize="small" />
@@ -142,12 +146,12 @@ export default function Footer() {
                 href="https://github.com/dmakowski-rasp/kubevista/blob/main/CHANGELOG.md"
                 target="_blank"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 0.5,
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 <Article fontSize="small" />
@@ -163,7 +167,7 @@ export default function Footer() {
               sx={{
                 fontWeight: 600,
                 mb: 2,
-                color: 'white',
+                color: 'text.primary',
               }}
             >
               Legal
@@ -173,9 +177,9 @@ export default function Footer() {
                 href="https://github.com/dmakowski-rasp/kubevista/blob/main/LICENSE"
                 target="_blank"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 MPL-2.0 License
@@ -184,9 +188,9 @@ export default function Footer() {
                 href="https://github.com/dmakowski-rasp/kubevista/blob/main/README.md"
                 target="_blank"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 README
@@ -195,9 +199,9 @@ export default function Footer() {
                 href="https://github.com/dmakowski-rasp/kubevista/blob/main/TECHNICAL.md"
                 target="_blank"
                 sx={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'text.secondary',
                   textDecoration: 'none',
-                  '&:hover': { color: 'white' },
+                  '&:hover': { color: 'text.primary' },
                 }}
               >
                 Technical Docs
@@ -206,7 +210,14 @@ export default function Footer() {
           </Box>
         </Box>
 
-        <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)', mb: 3 }} />
+        <Divider
+          sx={{
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.1)'
+              : 'rgba(0, 0, 0, 0.08)',
+            mb: 3
+          }}
+        />
 
         {/* Bottom Footer */}
         <Box
@@ -221,7 +232,7 @@ export default function Footer() {
           <Typography
             variant="body2"
             sx={{
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: 'text.disabled',
             }}
           >
             © {new Date().getFullYear()} Orphelix. Open source under MPL-2.0.
@@ -230,7 +241,7 @@ export default function Footer() {
           <Typography
             variant="body2"
             sx={{
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: 'text.disabled',
             }}
           >
             Built with ❤️ for the Kubernetes community
