@@ -1,0 +1,60 @@
+/* [project]/app/react-flow-overrides.css [app-client] (css) */
+.react-flow__attribution {
+  display: none !important;
+}
+
+.react-flow__controls {
+  box-shadow: none !important;
+}
+
+.react-flow__controls-button {
+  background-color: #0000 !important;
+  border: none !important;
+  border-bottom: 1px solid #ffffff1a !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .react-flow__controls {
+    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+    background-color: #1e1e2e99 !important;
+    border: 1px solid #ffffff1a !important;
+    border-radius: 8px !important;
+  }
+
+  .react-flow__controls-button {
+    background-color: #0000 !important;
+    border-bottom: 1px solid #ffffff1a !important;
+  }
+
+  .react-flow__controls-button:hover {
+    background-color: #ffffff0d !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .react-flow__controls {
+    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+    background-color: #ffffff40 !important;
+    border: 1px solid #00000014 !important;
+    border-radius: 8px !important;
+  }
+
+  .react-flow__controls-button {
+    background-color: #0000 !important;
+    border-bottom: 1px solid #00000014 !important;
+  }
+
+  .react-flow__controls-button:hover {
+    background-color: #00000008 !important;
+  }
+}
+
+/*# sourceMappingURL=app_react-flow-overrides_css_bad6b30c._.single.css.map*/

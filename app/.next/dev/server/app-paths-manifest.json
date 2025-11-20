@@ -1,0 +1,16 @@
+{
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/cluster/health/route": "app/api/cluster/health/route.js",
+  "/api/contexts/route": "app/api/contexts/route.js",
+  "/api/dashboard/summary/route": "app/api/dashboard/summary/route.js",
+  "/api/events/route": "app/api/events/route.js",
+  "/api/github/branches/route": "app/api/github/branches/route.js",
+  "/api/github/tree/route": "app/api/github/tree/route.js",
+  "/api/namespaces/route": "app/api/namespaces/route.js",
+  "/api/resourcequotas/route": "app/api/resourcequotas/route.js",
+  "/demo/deployments/[name]/page": "app/demo/deployments/[name]/page.js",
+  "/demo/deployments/page": "app/demo/deployments/page.js",
+  "/demo/page": "app/demo/page.js",
+  "/demo/repo-browser/page": "app/demo/repo-browser/page.js",
+  "/page": "app/page.js"
+}

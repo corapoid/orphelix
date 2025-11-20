@@ -14,6 +14,7 @@
     "node": ">=24.0.0"
   },
   "dependencies": {
+    "@orphelix/ui": "*",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^7.3.5",

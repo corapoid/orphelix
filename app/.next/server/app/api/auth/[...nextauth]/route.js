@@ -1,0 +1,10 @@
+var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/auth/[...nextauth]/route.js")
+R.c("server/chunks/[root-of-the-server]__5e02c25a._.js")
+R.c("server/chunks/node_modules_next_0700e68e._.js")
+R.c("server/chunks/node_modules_next_92aaecbe._.js")
+R.c("server/chunks/node_modules_c9103ca8._.js")
+R.c("server/chunks/[root-of-the-server]__42a428ae._.js")
+R.c("server/chunks/node_modules_next_dist_e55271bd._.js")
+R.c("server/chunks/app__next-internal_server_app_api_auth_[___nextauth]_route_actions_7c9bb7af.js")
+R.m(688884)
+module.exports=R.m(688884).exports

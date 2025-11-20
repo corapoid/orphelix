@@ -1,0 +1,3 @@
+{
+  "/api/daemonsets/[name]/route": "app/api/daemonsets/[name]/route.js"
+}

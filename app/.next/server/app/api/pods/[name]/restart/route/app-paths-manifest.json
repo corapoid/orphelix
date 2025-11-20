@@ -1,0 +1,3 @@
+{
+  "/api/pods/[name]/restart/route": "app/api/pods/[name]/restart/route.js"
+}

@@ -1,0 +1,3 @@
+{
+  "/api/statefulsets/route": "app/api/statefulsets/route.js"
+}

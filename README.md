@@ -41,12 +41,38 @@
 - **kubectl** configured with cluster access (for real mode)
 - (Optional) **GitHub OAuth App** or **GitHub App** for YAML editor and PR workflow
 
+## 📁 Project Structure
+
+Orphelix uses a clean monorepo structure with shared UI components:
+
+```
+kubevista/
+├── app/              # Main Kubernetes dashboard application
+├── landing-page/     # Marketing landing page
+├── packages/
+│   └── ui/          # Shared UI library (@orphelix/ui)
+├── docs/            # Documentation
+└── README.md
+```
+
+### Shared UI Library
+
+The `@orphelix/ui` package provides:
+- **3 Visual Presets**: Classic, Glassmorphism, Liquid Glass
+- **Theme Management**: Light/dark mode with system preference support
+- **Auto-Adaptive Components**: Components automatically style based on selected preset
+- **Design Tokens**: Centralized design values for consistency
+
+See [packages/ui/README.md](packages/ui/README.md) for details.
+
 ## 🚀 Quick Start
+
+### Main Application
 
 ```bash
 # 1. Clone repository
 git clone <repository-url>
-cd kubevista
+cd kubevista/app
 
 # 2. Install dependencies
 npm install
@@ -59,6 +85,15 @@ npm run dev
 ```
 
 The application starts in **demo mode** by default. Click the "DEMO MODE" badge to connect to a real cluster.
+
+### Landing Page
+
+```bash
+cd landing-page
+npm install
+npm run dev
+# Opens on http://localhost:3001
+```
 
 ### Production Build
 

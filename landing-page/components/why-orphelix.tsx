@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Container, Typography, Grid, Stack } from '@mui/material'
+import { Box, Container, Typography, Stack } from '@mui/material'
 import {
   CheckCircle,
   LockOpen,
@@ -71,9 +71,9 @@ export default function WhyOrphelix() {
         </Box>
 
         {/* Reasons Grid */}
-        <Grid container spacing={4}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 4 }}>
           {reasons.map((reason, index) => (
-            <Grid item xs={12} sm={6} key={index}>
+            <Box key={index}>
               <Box
                 className="glass-card"
                 sx={{
@@ -135,9 +135,9 @@ export default function WhyOrphelix() {
                   </Stack>
                 </Stack>
               </Box>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
 
         {/* Stats */}
         <Box

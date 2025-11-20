@@ -1,0 +1,3 @@
+{
+  "/api/cluster-health/route": "app/api/cluster-health/route.js"
+}

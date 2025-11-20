@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/demo/layout,_N_T_/demo/daemonsets/layout,_N_T_/demo/daemonsets/page,_N_T_/demo/daemonsets"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/demo/daemonsets/__PAGE__",
+    "/demo/daemonsets",
+    "/demo",
+    "/_index",
+    "/_head"
+  ]
+}

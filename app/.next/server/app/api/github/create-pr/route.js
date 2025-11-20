@@ -1,0 +1,10 @@
+var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/github/create-pr/route.js")
+R.c("server/chunks/[root-of-the-server]__9f9d4fa2._.js")
+R.c("server/chunks/node_modules_62f8abe6._.js")
+R.c("server/chunks/node_modules_next_92aaecbe._.js")
+R.c("server/chunks/node_modules_next_0700e68e._.js")
+R.c("server/chunks/[root-of-the-server]__42a428ae._.js")
+R.c("server/chunks/node_modules_@octokit_rest_dist-src_index_f3677cc9.js")
+R.c("server/chunks/app__next-internal_server_app_api_github_create-pr_route_actions_801415a0.js")
+R.m(321031)
+module.exports=R.m(321031).exports

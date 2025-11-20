@@ -1,0 +1,3 @@
+{
+  "/api/resources/[type]/[name]/yaml/route": "app/api/resources/[type]/[name]/yaml/route.js"
+}

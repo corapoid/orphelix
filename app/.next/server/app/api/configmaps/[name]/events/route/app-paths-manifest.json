@@ -1,0 +1,3 @@
+{
+  "/api/configmaps/[name]/events/route": "app/api/configmaps/[name]/events/route.js"
+}

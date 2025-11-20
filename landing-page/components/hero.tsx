@@ -2,7 +2,7 @@
 
 import { Box, Container, Typography, Stack } from '@mui/material'
 import { GitHub, PlayArrow } from '@mui/icons-material'
-import { LiquidGlassButton } from '@/components/common/liquid-glass-button'
+import { GlassButton } from '@orphelix/ui'
 
 export default function Hero() {
   return (
@@ -82,7 +82,7 @@ export default function Hero() {
             justifyContent="center"
             sx={{ mb: 4 }}
           >
-            <LiquidGlassButton
+            <GlassButton
               size="large"
               startIcon={<PlayArrow />}
               href="http://localhost:3000"
@@ -97,16 +97,16 @@ export default function Hero() {
               }}
             >
               Try Demo
-            </LiquidGlassButton>
+            </GlassButton>
 
-            <LiquidGlassButton
+            <GlassButton
               size="large"
               startIcon={<GitHub />}
               href="https://github.com/dmakowski-rasp/kubevista"
               target="_blank"
             >
               View on GitHub
-            </LiquidGlassButton>
+            </GlassButton>
           </Stack>
 
           {/* Badge */}

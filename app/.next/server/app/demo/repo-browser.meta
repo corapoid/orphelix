@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/demo/layout,_N_T_/demo/repo-browser/layout,_N_T_/demo/repo-browser/page,_N_T_/demo/repo-browser"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/demo/repo-browser/__PAGE__",
+    "/demo/repo-browser",
+    "/demo",
+    "/_index",
+    "/_head"
+  ]
+}
