@@ -115,12 +115,12 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
 
     const blob = new Blob([JSON.stringify(logsData, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${containerName}-logs.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+    const downloadLink = document.createElement('a')
+    downloadLink.href = url
+    downloadLink.download = `${containerName}-logs.json`
+    document.body.appendChild(downloadLink)
+    downloadLink.click()
+    document.body.removeChild(downloadLink)
     URL.revokeObjectURL(url)
   }
 

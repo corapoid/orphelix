@@ -39,8 +39,8 @@ export function formatAge(date: Date | string): string {
  */
 export function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 B'
-  const k = 1024
+  const BYTES_PER_KB = 1024
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
+  const unitIndex = Math.floor(Math.log(bytes) / Math.log(BYTES_PER_KB))
+  return `${parseFloat((bytes / Math.pow(BYTES_PER_KB, unitIndex)).toFixed(2))} ${sizes[unitIndex]}`
 }

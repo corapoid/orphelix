@@ -57,12 +57,12 @@ function formatMemory(bytes: number): string {
   if (bytes === 0) return '0 B'
 
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
-  const k = 1024
+  const BYTES_PER_KB = 1024
   let size = bytes
   let unitIndex = 0
 
-  while (size >= k && unitIndex < units.length - 1) {
-    size /= k
+  while (size >= BYTES_PER_KB && unitIndex < units.length - 1) {
+    size /= BYTES_PER_KB
     unitIndex++
   }
 

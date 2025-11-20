@@ -40,14 +40,14 @@ function getScheduleDescription(schedule: string): string {
 
   // Pattern: */N * * * * (every N minutes)
   if (minute.startsWith('*/') && hour === '*' && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
-    const n = minute.substring(2)
-    return `Every ${n} minutes`
+    const minuteInterval = minute.substring(2)
+    return `Every ${minuteInterval} minutes`
   }
 
   // Pattern: 0 */N * * * (every N hours)
   if (minute === '0' && hour.startsWith('*/') && dayOfMonth === '*' && month === '*' && dayOfWeek === '*') {
-    const n = hour.substring(2)
-    return `Every ${n} hours`
+    const hourInterval = hour.substring(2)
+    return `Every ${hourInterval} hours`
   }
 
   // Pattern: M H * * * (daily at specific time)
