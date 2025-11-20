@@ -12,7 +12,7 @@ export function usePVs() {
   return useQuery<PersistentVolume[]>({
     queryKey: ['pvs', mode],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockPVs()
       }
@@ -34,7 +34,7 @@ export function usePVCs() {
   return useQuery<PersistentVolumeClaim[]>({
     queryKey: ['pvcs', mode],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockPVCs()
       }

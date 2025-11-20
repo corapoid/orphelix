@@ -29,6 +29,7 @@ export default function DashboardPage() {
   }
 
   // If in real mode but no namespace selected, show alert
+  // Don't show this in demo mode - demo always has a default namespace
   if (mode === 'real' && !namespace) {
     return (
       <Alert severity="warning" sx={{ mb: 2 }}>
@@ -48,6 +49,15 @@ export default function DashboardPage() {
           Go to Settings
         </Button>
       </Alert>
+    )
+  }
+
+  // In demo mode, ensure namespace is set
+  if (mode === 'demo' && !namespace) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <CircularProgress />
+      </Box>
     )
   }
 

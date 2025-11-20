@@ -27,7 +27,7 @@ export function ClusterAliases() {
   const [editValue, setEditValue] = useState('')
 
   useEffect(() => {
-    if (mode === 'mock') {
+    if (mode === 'demo') {
       // In demo mode, show a mock demo cluster
       setContexts([{
         name: 'demo-cluster',
@@ -80,7 +80,7 @@ export function ClusterAliases() {
   if (contexts.length === 0) {
     return (
       <Alert severity="info">
-        {mode === 'mock'
+        {mode === 'demo'
           ? 'Demo cluster alias not available.'
           : 'No Kubernetes contexts found. Please configure kubectl first.'}
       </Alert>
@@ -89,7 +89,7 @@ export function ClusterAliases() {
   return (
     <Box>
       <Typography variant="body2" color="text.secondary" paragraph>
-        {mode === 'mock'
+        {mode === 'demo'
           ? 'Set a friendly name (alias) for the demo cluster. This will be displayed instead of "demo-cluster" throughout the application.'
           : 'Set friendly names (aliases) for your Kubernetes clusters. These will be displayed instead of the full context names throughout the application.'}
       </Typography>

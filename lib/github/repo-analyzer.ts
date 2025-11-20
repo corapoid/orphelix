@@ -36,10 +36,10 @@ export async function analyzeRepository(
   owner: string,
   repo: string,
   branch: string,
-  mode?: 'mock',
+  mode?: 'demo',
   baseUrl?: string
 ): Promise<RepoStructure> {
-  const modeParam = mode === 'mock' ? '&mode=mock' : ''
+  const modeParam = mode === 'demo' ? '&mode=demo' : ''
   const base = baseUrl || (typeof window !== 'undefined' ? '' : 'http://localhost:3000')
 
   // Get root directory structure

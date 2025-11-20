@@ -14,7 +14,7 @@ export function useHPAs() {
   return useQuery<HPA[]>({
     queryKey: ['hpas', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockHPAs()
       }
@@ -27,7 +27,7 @@ export function useHPAs() {
       if (!response.ok) throw new Error('Failed to fetch HPAs')
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -43,7 +43,7 @@ export function useHPA(name: string) {
   return useQuery<HPA>({
     queryKey: ['hpa', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const hpas = generateMockHPAs()
         const hpa = hpas.find((h) => h.name === name)
@@ -59,6 +59,6 @@ export function useHPA(name: string) {
       if (!response.ok) throw new Error('Failed to fetch HPA')
       return response.json()
     },
-    enabled: !!name && (mode === 'mock' || !!namespace),
+    enabled: !!name && (mode === 'demo' || !!namespace),
   })
 }

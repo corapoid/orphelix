@@ -11,7 +11,7 @@ export function useCronJobs() {
   return useQuery<CronJob[]>({
     queryKey: ['cronjobs', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockCronJobs()
       }
@@ -23,7 +23,7 @@ export function useCronJobs() {
       }
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -35,7 +35,7 @@ export function useCronJob(name: string) {
   return useQuery<CronJob>({
     queryKey: ['cronjobs', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const cronjobs = generateMockCronJobs()
         const cronjob = cronjobs.find((cj) => cj.name === name)
@@ -50,6 +50,6 @@ export function useCronJob(name: string) {
       }
       return response.json()
     },
-    enabled: (mode === 'mock' || !!namespace) && !!name,
+    enabled: (mode === 'demo' || !!namespace) && !!name,
   })
 }

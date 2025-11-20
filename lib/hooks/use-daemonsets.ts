@@ -14,7 +14,7 @@ export function useDaemonSets() {
   return useQuery<DaemonSet[]>({
     queryKey: ['daemonsets', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockDaemonSets()
       }
@@ -40,7 +40,7 @@ export function useDaemonSet(name: string) {
   return useQuery<DaemonSet>({
     queryKey: ['daemonset', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const daemonsets = generateMockDaemonSets()
         const daemonset = daemonsets.find((ds) => ds.name === name)
@@ -55,6 +55,6 @@ export function useDaemonSet(name: string) {
       if (!response.ok) throw new Error('Failed to fetch daemonset')
       return response.json()
     },
-    enabled: !!name && (mode === 'mock' || !!namespace),
+    enabled: !!name && (mode === 'demo' || !!namespace),
   })
 }

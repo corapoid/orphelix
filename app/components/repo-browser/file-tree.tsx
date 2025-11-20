@@ -98,7 +98,7 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, sear
     setLoadingDirs(prev => new Set(prev).add(path))
 
     try {
-      const modeParam = mode === 'mock' ? '&mode=mock' : ''
+      const modeParam = mode === 'demo' ? '&mode=demo' : ''
       const url = `/api/github/tree?owner=${owner}&repo=${repo}&ref=${branch}&path=${encodeURIComponent(path === '/' ? '' : path)}${modeParam}`
 
       const response = await fetch(url)
@@ -133,7 +133,7 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, sear
         loadDirectory(dir)
       }
     })
-  }, [owner, repo, branch, expandedDirs, expandedStateLoaded]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [owner, repo, branch, expandedDirs, expandedStateLoaded])
 
   // Auto-expand directories when searching, restore when search cleared
   useEffect(() => {
@@ -161,7 +161,7 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, sear
       setWasSearching(false)
       setExpandedDirs(preSearchExpanded.size > 0 ? preSearchExpanded : new Set(['/']))
     }
-  }, [searchQuery]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [searchQuery])
 
   const toggleDirectory = (path: string) => {
     const isExpanded = expandedDirs.has(path)

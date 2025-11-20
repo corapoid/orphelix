@@ -26,7 +26,7 @@ export function DeploymentManifestViewer({ name, namespace }: DeploymentManifest
   const { data, isLoading, error } = useQuery({
     queryKey: ['deployment-yaml', name, namespace, mode],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         // In demo mode, load from example manifest
         const response = await fetch(`/examples/manifests/${name}.yaml`)
         if (!response.ok) {

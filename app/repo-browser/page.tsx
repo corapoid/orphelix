@@ -9,15 +9,19 @@ import Fab from '@mui/material/Fab'
 import Tooltip from '@mui/material/Tooltip'
 import AddIcon from '@mui/icons-material/Add'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { FileTree } from '@/app/components/repo-browser/file-tree'
 import { FileViewer } from '@/app/components/repo-browser/file-viewer'
 import { AddAppModal } from '@/app/components/repo-browser/add-app-modal'
+import { RepoSelector } from '@/app/components/repo-browser/repo-selector'
 import { usePageSearch } from '@/lib/contexts/search-context'
 import { mockGitHubRepo } from '@/lib/mocks/github-data'
 
 export default function RepoBrowserPage() {
   const { selectedRepo, selectedBranch, setSelectedBranch, setSelectedRepo } = useGitHubStore()
   const mode = useModeStore((state) => state.mode)
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [addAppModalOpen, setAddAppModalOpen] = useState(false)
 
@@ -69,11 +73,11 @@ export default function RepoBrowserPage() {
     }
   }, [selectedRepo, selectedBranch, selectedFile])
 
-  // Set mock repo in demo mode
+  // Set demo repo in demo mode
   useEffect(() => {
-    if (mode === 'mock' && !selectedRepo) {
+    if (mode === 'demo' && !selectedRepo) {
       setSelectedRepo(mockGitHubRepo)
-      setSelectedFile(null) // Clear selected file when switching to mock repo
+      setSelectedFile(null) // Clear selected file when switching to demo repo
     }
   }, [mode, selectedRepo, setSelectedRepo])
 
@@ -81,6 +85,14 @@ export default function RepoBrowserPage() {
   useEffect(() => {
     setSelectedFile(null)
   }, [selectedRepo?.owner, selectedRepo?.repo])
+
+  // Clean up GitHub App callback URL parameter
+  useEffect(() => {
+    const githubAppStatus = searchParams.get('github_app')
+    if (githubAppStatus === 'connected' || githubAppStatus === 'installed') {
+      router.replace('/repo-browser', { scroll: false })
+    }
+  }, [searchParams, router])
 
   useEffect(() => {
     if (selectedRepo?.branch && !selectedBranch) {
@@ -171,13 +183,7 @@ export default function RepoBrowserPage() {
   }
 
   if (!selectedRepo) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="info">
-          Please select a GitHub repository in Settings first.
-        </Alert>
-      </Box>
-    )
+    return <RepoSelector />
   }
 
   return (

@@ -1,6 +1,6 @@
 // Application-specific types
 
-export type AppMode = 'mock' | 'real'
+export type AppMode = 'demo' | 'real'
 
 export interface KubernetesContext {
   name: string

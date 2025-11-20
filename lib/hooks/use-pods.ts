@@ -15,7 +15,7 @@ export function usePods(statusFilter?: PodStatus) {
   return useQuery<Pod[]>({
     queryKey: ['pods', mode, namespace, statusFilter],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         const pods = generateMockPods()
 
@@ -37,7 +37,7 @@ export function usePods(statusFilter?: PodStatus) {
       if (!response.ok) throw new Error('Failed to fetch pods')
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -53,7 +53,7 @@ export function usePod(name: string) {
   return useQuery<Pod>({
     queryKey: ['pod', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const pods = generateMockPods()
         const pod = pods.find((p) => p.name === name)
@@ -69,7 +69,7 @@ export function usePod(name: string) {
       if (!response.ok) throw new Error('Failed to fetch pod')
       return response.json()
     },
-    enabled: !!name && (mode === 'mock' || !!namespace),
+    enabled: !!name && (mode === 'demo' || !!namespace),
   })
 }
 
@@ -85,7 +85,7 @@ export function usePodEvents(podName: string) {
   return useQuery<Event[]>({
     queryKey: ['pod-events', podName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 150))
         const allEvents = generateMockEvents()
         // Filter events related to this pod
@@ -104,7 +104,7 @@ export function usePodEvents(podName: string) {
       if (!response.ok) throw new Error('Failed to fetch pod events')
       return response.json()
     },
-    enabled: !!podName && (mode === 'mock' || !!namespace),
+    enabled: !!podName && (mode === 'demo' || !!namespace),
   })
 }
 
@@ -122,9 +122,9 @@ export function usePodLogs(podName: string, containerName: string, tail = 100) {
   return useQuery<{ logs: string; parsed?: Array<{ line: number; timestamp?: string; level?: string; message: string; raw: string; isJson: boolean; data?: Record<string, unknown> }> }>({
     queryKey: ['pod-logs', podName, containerName, tail, mode, namespace],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 400))
-        // Generate mock logs
+        // Generate demo logs
         const logLines: string[] = []
         const timestamps = ['2024-01-15', '2024-01-16', '2024-01-17']
         const levels = ['INFO', 'WARN', 'ERROR', 'DEBUG']
@@ -167,7 +167,7 @@ export function usePodLogs(podName: string, containerName: string, tail = 100) {
         parsed: data.parsed,
       }
     },
-    enabled: !!podName && !!containerName && (mode === 'mock' || !!namespace),
+    enabled: !!podName && !!containerName && (mode === 'demo' || !!namespace),
     refetchInterval: false, // Don't auto-refresh logs
     staleTime: Infinity, // Logs don't go stale
   })

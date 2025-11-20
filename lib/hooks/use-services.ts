@@ -11,7 +11,7 @@ export function useServices() {
   return useQuery<Service[]>({
     queryKey: ['services', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockServices()
       }
@@ -23,7 +23,7 @@ export function useServices() {
       }
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -35,7 +35,7 @@ export function useService(name: string) {
   return useQuery<Service>({
     queryKey: ['services', mode, namespace, name],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const services = generateMockServices()
         const service = services.find((s) => s.name === name)
@@ -50,6 +50,6 @@ export function useService(name: string) {
       }
       return response.json()
     },
-    enabled: (mode === 'mock' || !!namespace) && !!name,
+    enabled: (mode === 'demo' || !!namespace) && !!name,
   })
 }

@@ -92,7 +92,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
   const { data, isLoading, error } = useQuery<MetricsResponse>({
     queryKey: ['pod-metrics', deploymentName, ns, mode],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         // Generate random metrics for demo mode
         const podCount = 3
         const metrics: PodMetrics[] = []
@@ -150,7 +150,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
       return response.json()
     },
     enabled: true, // Enable for both demo and real modes
-    refetchInterval: mode === 'mock' ? 5000 : 30000, // Refresh every 5s in demo, 30s in real mode
+    refetchInterval: mode === 'demo' ? 5000 : 30000, // Refresh every 5s in demo, 30s in real mode
   })
 
   const aggregatedMetrics = useMemo(() => {

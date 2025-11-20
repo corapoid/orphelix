@@ -55,13 +55,13 @@ interface GitHubStore {
 }
 
 /**
- * Global store for application mode (mock vs real)
+ * Global store for application mode (demo vs real)
  * Persisted to localStorage
  */
 export const useModeStore = create<ModeStore>()(
   persist(
     (set) => ({
-      mode: 'real', // Default to real mode
+      mode: 'demo', // Default to demo mode (user must choose real or stay in demo)
       selectedContext: null,
       selectedNamespace: '',
       clusterConnected: false,
@@ -80,7 +80,7 @@ export const useModeStore = create<ModeStore>()(
       setAutoRefreshInterval: (interval) => set({ autoRefreshInterval: interval }),
       setHasCompletedWelcome: (completed) => set({ hasCompletedWelcome: completed }),
       reset: () => set({
-        mode: 'real',
+        mode: 'demo',
         selectedContext: null,
         selectedNamespace: '',
         clusterConnected: false,
@@ -331,7 +331,8 @@ export const useSidebarPins = create<SidebarPinsStore>()(
     (set, get) => ({
       pinnedItems: new Set([
         // Default pinned items - all items pinned by default
-        '/dashboard',
+        '/',
+        '/repo-browser',
         '/deployments',
         '/statefulsets',
         '/daemonsets',

@@ -9,7 +9,7 @@ export function useNamespaces() {
   return useQuery<Namespace[]>({
     queryKey: ['namespaces', mode],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockNamespaces()
       }
@@ -31,7 +31,7 @@ export function useNamespace(name: string) {
   return useQuery<Namespace>({
     queryKey: ['namespaces', mode, name],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const namespaces = generateMockNamespaces()
         const namespace = namespaces.find((ns) => ns.name === name)

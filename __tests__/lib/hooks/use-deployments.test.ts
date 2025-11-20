@@ -44,7 +44,7 @@ describe('useDeployments', () => {
   const wrapper = ({ children }: { children: ReactNode }) =>
     React.createElement(QueryClientProvider, { client: queryClient }, children)
 
-  it('should return deployments in mock mode', async () => {
+  it('should return deployments in demo mode', async () => {
     // Arrange
     const mockDeployments: Deployment[] = [
       {
@@ -74,7 +74,7 @@ describe('useDeployments', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -115,7 +115,7 @@ describe('useDeployments', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -140,7 +140,7 @@ describe('useDeployments', () => {
     // Arrange
     const mockDeployments: Deployment[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -166,7 +166,7 @@ describe('useDeployments', () => {
     // Arrange
     const mockDeployments: Deployment[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -179,7 +179,7 @@ describe('useDeployments', () => {
     // The query should be using the correct key (now includes namespace)
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployments', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['deployments', 'demo', 'demo', ''])
   })
 })
 
@@ -231,7 +231,7 @@ describe('useDeployment', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -271,7 +271,7 @@ describe('useDeployment', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -291,7 +291,7 @@ describe('useDeployment', () => {
   it('should be disabled when name is empty', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
 
     // Act
@@ -321,7 +321,7 @@ describe('useDeployment', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -345,7 +345,7 @@ describe('useDeployment', () => {
     // Arrange
     const mockDeployments: Deployment[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockDeployments).mockReturnValue(mockDeployments)
 
@@ -358,7 +358,7 @@ describe('useDeployment', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployment', 'test-deployment', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['deployment', 'test-deployment', 'demo', 'demo', ''])
   })
 })
 
@@ -414,7 +414,7 @@ describe('useDeploymentPods', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
@@ -452,7 +452,7 @@ describe('useDeploymentPods', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
@@ -489,7 +489,7 @@ describe('useDeploymentPods', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
@@ -509,7 +509,7 @@ describe('useDeploymentPods', () => {
   it('should be disabled when deployment name is empty', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
 
     // Act
@@ -525,7 +525,7 @@ describe('useDeploymentPods', () => {
     // Arrange
     const mockPods: Pod[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
@@ -549,7 +549,7 @@ describe('useDeploymentPods', () => {
     // Arrange
     const mockPods: Pod[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
@@ -562,7 +562,7 @@ describe('useDeploymentPods', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployment-pods', 'test-deployment', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['deployment-pods', 'test-deployment', 'demo', 'demo', ''])
   })
 })
 
@@ -623,7 +623,7 @@ describe('useDeploymentEvents', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
@@ -670,7 +670,7 @@ describe('useDeploymentEvents', () => {
     ]
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
@@ -691,7 +691,7 @@ describe('useDeploymentEvents', () => {
   it('should be disabled when deployment name is empty', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
 
     // Act
@@ -707,7 +707,7 @@ describe('useDeploymentEvents', () => {
     // Arrange
     const mockEvents: Event[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
@@ -731,7 +731,7 @@ describe('useDeploymentEvents', () => {
     // Arrange
     const mockEvents: Event[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
@@ -757,7 +757,7 @@ describe('useDeploymentEvents', () => {
     // Arrange
     const mockEvents: Event[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
-      selector({ mode: 'mock', selectedNamespace: 'mock', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
+      selector({ mode: 'demo', selectedNamespace: 'demo', selectedContext: null, realtimeEnabled: false, setMode: vi.fn(), setContext: vi.fn(), setNamespace: vi.fn(), setRealtimeEnabled: vi.fn(), reset: vi.fn() })
     )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
@@ -770,6 +770,6 @@ describe('useDeploymentEvents', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['deployment-events', 'test-deployment', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['deployment-events', 'test-deployment', 'demo', 'demo', ''])
   })
 })

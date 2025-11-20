@@ -10,7 +10,7 @@ export function useLabels(selector?: string) {
   return useQuery<LabelSearchResult>({
     queryKey: ['labels', mode, namespace, selectedContext?.name || '', selector || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         // Return mock label data
         await new Promise((resolve) => setTimeout(resolve, 300))
         return {

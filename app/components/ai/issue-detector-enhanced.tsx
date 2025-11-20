@@ -47,7 +47,7 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary, namespace
   const [autoExplainEnabled, setAutoExplainEnabled] = useState(false)
 
   // Import useModeStore dynamically to get current mode
-  const [mode, setMode] = useState<'real' | 'mock'>('real')
+  const [mode, setMode] = useState<'real' | 'demo'>('real')
   useEffect(() => {
     import('@/lib/core/store').then(({ useModeStore }) => {
       const currentMode = useModeStore.getState().mode

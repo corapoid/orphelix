@@ -14,8 +14,8 @@ export function useNavigateTo() {
   const mode = useModeStore((state) => state.mode)
 
   const navigateTo = (path: string) => {
-    // Check if we're currently on a /demo path or if mode is mock
-    const isDemoMode = pathname.startsWith('/demo') || mode === 'mock'
+    // Check if we're currently on a /demo path or if mode is demo
+    const isDemoMode = pathname.startsWith('/demo') || mode === 'demo'
 
     // If in demo mode and path doesn't already start with /demo, add it
     const finalPath = isDemoMode && !path.startsWith('/demo')
@@ -40,8 +40,8 @@ export function useBuildPath() {
   const mode = useModeStore((state) => state.mode)
 
   const buildPath = (path: string) => {
-    // Check if we're currently on a /demo path or if mode is mock
-    const isDemoMode = pathname.startsWith('/demo') || mode === 'mock'
+    // Check if we're currently on a /demo path or if mode is demo
+    const isDemoMode = pathname.startsWith('/demo') || mode === 'demo'
 
     // If in demo mode and path doesn't already start with /demo, add it
     return isDemoMode && !path.startsWith('/demo')

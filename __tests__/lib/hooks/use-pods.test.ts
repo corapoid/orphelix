@@ -37,7 +37,7 @@ describe('usePods', () => {
   const wrapper = ({ children }: { children: ReactNode }) =>
     React.createElement(QueryClientProvider, { client: queryClient }, children)
 
-  it('should return all pods in mock mode without filter', async () => {
+  it('should return all pods in demo mode without filter', async () => {
     // Arrange
     const mockPods = [
       {
@@ -68,7 +68,19 @@ describe('usePods', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
     // Act
@@ -134,7 +146,19 @@ describe('usePods', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
     // Act - filter by 'Running' status
@@ -172,7 +196,19 @@ describe('usePods', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
     // Act
@@ -196,8 +232,8 @@ describe('usePods', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -235,7 +271,7 @@ describe('usePods', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pods', 'mock', 'mock', 'Running'])
+    expect(queries[0].queryKey).toEqual(['pods', 'demo', 'demo', 'Running'])
   })
 
   it('should simulate network delay', async () => {
@@ -256,7 +292,19 @@ describe('usePods', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
     const startTime = Date.now()
@@ -327,7 +375,19 @@ describe('usePod', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
     // Act
@@ -345,7 +405,19 @@ describe('usePod', () => {
 
   it('should be disabled when name is empty', () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act
     const { result } = renderHook(() => usePod(''), { wrapper })
@@ -372,7 +444,19 @@ describe('usePod', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockPods).mockReturnValue(mockPods)
 
     // Act
@@ -392,8 +476,8 @@ describe('usePod', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -410,7 +494,7 @@ describe('usePod', () => {
     // Assert - verify the query key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pod', 'test-pod', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['pod', 'test-pod', 'demo', 'demo', ''])
   })
 })
 
@@ -470,7 +554,19 @@ describe('usePodEvents', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
     // Act
@@ -490,7 +586,19 @@ describe('usePodEvents', () => {
 
   it('should be disabled when podName is empty', () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act
     const { result } = renderHook(() => usePodEvents(''), { wrapper })
@@ -503,8 +611,8 @@ describe('usePodEvents', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -521,7 +629,7 @@ describe('usePodEvents', () => {
     // Assert - verify the query key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['pod-events', 'test-pod', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['pod-events', 'test-pod', 'demo', 'demo', ''])
   })
 
   it('should handle loading states', async () => {
@@ -540,7 +648,19 @@ describe('usePodEvents', () => {
       },
     ]
 
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
     vi.mocked(mockData.generateMockEvents).mockReturnValue(mockEvents)
 
     // Act
@@ -580,7 +700,19 @@ describe('usePodLogs', () => {
 
   it('should return logs for specific pod container', async () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act
     const { result } = renderHook(
@@ -604,7 +736,19 @@ describe('usePodLogs', () => {
 
   it('should respect tail parameter', async () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act - request only 50 lines
     const { result } = renderHook(() => usePodLogs('web-app-123', 'nginx', 50), {
@@ -623,7 +767,19 @@ describe('usePodLogs', () => {
 
   it('should use default tail of 100', async () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act - don't specify tail parameter
     const { result } = renderHook(() => usePodLogs('web-app-123', 'nginx'), {
@@ -642,7 +798,19 @@ describe('usePodLogs', () => {
 
   it('should be disabled when podName is empty', () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act
     const { result } = renderHook(() => usePodLogs('', 'nginx', 100), { wrapper })
@@ -653,7 +821,19 @@ describe('usePodLogs', () => {
 
   it('should be disabled when containerName is empty', () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act
     const { result } = renderHook(() => usePodLogs('web-app-123', '', 100), {
@@ -668,8 +848,8 @@ describe('usePodLogs', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -691,14 +871,26 @@ describe('usePodLogs', () => {
       'test-pod',
       'test-container',
       50,
-      'mock',
-      'mock',
+      'demo',
+      'demo',
     ])
   })
 
   it('should not auto-refresh logs', async () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act
     const { result } = renderHook(() => usePodLogs('web-app-123', 'nginx', 100), {
@@ -718,7 +910,19 @@ describe('usePodLogs', () => {
 
   it('should handle loading states', async () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     // Act
     const { result } = renderHook(() => usePodLogs('web-app-123', 'nginx', 100), {
@@ -740,7 +944,19 @@ describe('usePodLogs', () => {
 
   it('should simulate network delay', async () => {
     // Arrange
-    vi.mocked(useModeStore).mockReturnValue('mock')
+    vi.mocked(useModeStore).mockImplementation((selector: any) =>
+      selector({
+        mode: 'demo',
+        selectedNamespace: 'demo',
+        selectedContext: null,
+        realtimeEnabled: false,
+        setMode: vi.fn(),
+        setContext: vi.fn(),
+        setNamespace: vi.fn(),
+        setRealtimeEnabled: vi.fn(),
+        reset: vi.fn(),
+      })
+    )
 
     const startTime = Date.now()
 

@@ -33,7 +33,7 @@ interface KubeContext {
 
 export function ModeSelector({ open, onClose }: ModeSelectorProps) {
   const { mode, setMode, selectedContext, setContext } = useModeStore()
-  const [tempMode, setTempMode] = useState<'mock' | 'real'>(mode)
+  const [tempMode, setTempMode] = useState<'demo' | 'real'>(mode)
   const [tempContext, setTempContext] = useState(selectedContext?.name || '')
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
@@ -73,7 +73,7 @@ export function ModeSelector({ open, onClose }: ModeSelectorProps) {
     }
   }
 
-  const handleModeChange = (newMode: 'mock' | 'real') => {
+  const handleModeChange = (newMode: 'demo' | 'real') => {
     setTempMode(newMode)
     if (newMode === 'real' && contexts.length === 0) {
       fetchContexts()
@@ -123,11 +123,11 @@ export function ModeSelector({ open, onClose }: ModeSelectorProps) {
         <Box sx={{ mb: 3 }}>
           <List>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => handleModeChange('mock')} selected={tempMode === 'mock'}>
+              <ListItemButton onClick={() => handleModeChange('demo')} selected={tempMode === 'demo'}>
                 <Radio
-                  checked={tempMode === 'mock'}
-                  onChange={() => handleModeChange('mock')}
-                  value="mock"
+                  checked={tempMode === 'demo'}
+                  onChange={() => handleModeChange('demo')}
+                  value="demo"
                 />
                 <ListItemText
                   primary="Demo Mode"
@@ -222,7 +222,7 @@ export function ModeSelector({ open, onClose }: ModeSelectorProps) {
           variant="contained"
           disabled={tempMode === 'real' && !tempContext}
         >
-          {tempMode === 'mock' ? 'Use Demo Mode' : 'Connect'}
+          {tempMode === 'demo' ? 'Use Demo Mode' : 'Connect'}
         </Button>
       </DialogActions>
     </Dialog>

@@ -7,12 +7,12 @@ export interface ClusterHealthResponse {
   code?: number
 }
 
-async function fetchClusterHealth(mode: 'mock' | 'real'): Promise<ClusterHealthResponse> {
-  // In mock mode, always return connected
-  if (mode === 'mock') {
+async function fetchClusterHealth(mode: 'demo' | 'real'): Promise<ClusterHealthResponse> {
+  // In demo mode, always return connected
+  if (mode === 'demo') {
     return {
       status: 'connected',
-      message: 'Mock mode - simulated cluster connection',
+      message: 'Demo mode - simulated cluster connection',
     }
   }
 

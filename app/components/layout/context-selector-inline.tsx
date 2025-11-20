@@ -111,7 +111,7 @@ export function ContextSelectorInline() {
     }
   }
 
-  if (mode === 'mock') {
+  if (mode === 'demo') {
     const demoDisplayName = getDisplayName('demo-cluster')
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

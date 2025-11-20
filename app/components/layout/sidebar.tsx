@@ -163,7 +163,7 @@ export function Sidebar() {
 
   const handleNavigate = (path: string) => {
     // Prefix path with /demo if in mock mode
-    const finalPath = mode === 'mock' ? `/demo${path}` : path
+    const finalPath = mode === 'demo' ? `/demo${path}` : path
     router.push(finalPath)
   }
 

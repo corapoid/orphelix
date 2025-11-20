@@ -14,7 +14,7 @@ export function useConfigMaps() {
   return useQuery<ConfigMap[]>({
     queryKey: ['configmaps', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockConfigMaps()
       }
@@ -27,7 +27,7 @@ export function useConfigMaps() {
       if (!response.ok) throw new Error('Failed to fetch ConfigMaps')
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -43,7 +43,7 @@ export function useConfigMap(name: string) {
   return useQuery<ConfigMap>({
     queryKey: ['configmap', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const configMaps = generateMockConfigMaps()
         const configMap = configMaps.find((cm) => cm.name === name)
@@ -59,7 +59,7 @@ export function useConfigMap(name: string) {
       if (!response.ok) throw new Error('Failed to fetch ConfigMap')
       return response.json()
     },
-    enabled: !!name && (mode === 'mock' || !!namespace),
+    enabled: !!name && (mode === 'demo' || !!namespace),
   })
 }
 
@@ -75,7 +75,7 @@ export function useConfigMapEvents(configMapName: string) {
   return useQuery<Event[]>({
     queryKey: ['configmap-events', configMapName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 150))
         const allEvents = generateMockEvents()
         // Filter events related to this ConfigMap
@@ -94,6 +94,6 @@ export function useConfigMapEvents(configMapName: string) {
       if (!response.ok) throw new Error('Failed to fetch ConfigMap events')
       return response.json()
     },
-    enabled: !!configMapName && (mode === 'mock' || !!namespace),
+    enabled: !!configMapName && (mode === 'demo' || !!namespace),
   })
 }

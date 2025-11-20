@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Mock mode for demo
-    if (mode === 'mock') {
+    if (mode === 'demo') {
       const tree = getMockRepositoryTree(path)
       return NextResponse.json(tree)
     }

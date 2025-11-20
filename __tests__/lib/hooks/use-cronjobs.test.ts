@@ -37,7 +37,7 @@ describe('useCronJobs', () => {
   const wrapper = ({ children }: { children: ReactNode }) =>
     React.createElement(QueryClientProvider, { client: queryClient }, children)
 
-  it('should return cronjobs in mock mode', async () => {
+  it('should return cronjobs in demo mode', async () => {
     // Arrange
     const mockCronJobs: CronJob[] = [
       {
@@ -75,8 +75,8 @@ describe('useCronJobs', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -123,8 +123,8 @@ describe('useCronJobs', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -158,8 +158,8 @@ describe('useCronJobs', () => {
     const mockCronJobs: CronJob[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -194,8 +194,8 @@ describe('useCronJobs', () => {
     const mockCronJobs: CronJob[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -216,7 +216,7 @@ describe('useCronJobs', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['cronjobs', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['cronjobs', 'demo', 'demo', ''])
   })
 })
 
@@ -265,8 +265,8 @@ describe('useCronJob', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -313,8 +313,8 @@ describe('useCronJob', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -343,8 +343,8 @@ describe('useCronJob', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -380,8 +380,8 @@ describe('useCronJob', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -414,8 +414,8 @@ describe('useCronJob', () => {
     const mockCronJobs: CronJob[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -436,7 +436,7 @@ describe('useCronJob', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['cronjobs', 'test-cronjob', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['cronjobs', 'test-cronjob', 'demo', 'demo', ''])
   })
 
   it('should handle suspended cronjobs correctly', async () => {
@@ -455,8 +455,8 @@ describe('useCronJob', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),

@@ -6,9 +6,9 @@ const execAsync = promisify(exec)
 
 export async function GET() {
   try {
-    // Use 'kubectl version' instead of 'kubectl cluster-info'
-    // This works without kube-system access and just tests API connectivity
-    const { stdout, stderr } = await execAsync('kubectl version --short 2>&1 || kubectl version', {
+    // Use 'kubectl version' to test API connectivity
+    // Removed --short flag as it's deprecated in newer kubectl versions
+    const { stdout, stderr } = await execAsync('kubectl version', {
       timeout: 5000, // 5 second timeout
     })
 

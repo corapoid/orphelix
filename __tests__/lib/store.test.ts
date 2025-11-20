@@ -15,7 +15,7 @@ describe('useModeStore', () => {
       const { mode } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('real')
+      expect(mode).toBe('demo')
     })
 
     it('should initialize with null context', () => {
@@ -43,7 +43,7 @@ describe('useModeStore', () => {
   })
 
   describe('setMode', () => {
-    it('should change mode from mock to real', () => {
+    it('should change mode from demo to real', () => {
       // Arrange
       const { setMode } = useModeStore.getState()
 
@@ -61,17 +61,17 @@ describe('useModeStore', () => {
       setMode('real')
 
       // Act
-      setMode('mock')
+      setMode('demo')
       const { mode } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('mock')
+      expect(mode).toBe('demo')
     })
 
     it('should accept valid AppMode values', () => {
       // Arrange
       const { setMode } = useModeStore.getState()
-      const modes: AppMode[] = ['mock', 'real']
+      const modes: AppMode[] = ['demo', 'real']
 
       // Act & Assert
       modes.forEach((testMode) => {
@@ -207,17 +207,17 @@ describe('useModeStore', () => {
   })
 
   describe('reset', () => {
-    it('should reset mode to real', () => {
+    it('should reset mode to demo', () => {
       // Arrange
       const { setMode, reset } = useModeStore.getState()
-      setMode('mock')
+      setMode('real')
 
       // Act
       reset()
       const { mode } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('real')
+      expect(mode).toBe('demo')
     })
 
     it('should reset selectedContext to null', () => {
@@ -242,7 +242,7 @@ describe('useModeStore', () => {
     it('should reset both mode and context simultaneously', () => {
       // Arrange
       const { setMode, setContext, reset } = useModeStore.getState()
-      setMode('mock')
+      setMode('demo')
       const mockContext: KubernetesContext = {
         name: 'test',
         cluster: 'test-cluster',
@@ -256,14 +256,14 @@ describe('useModeStore', () => {
       const { mode, selectedContext } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('real')
+      expect(mode).toBe('demo')
       expect(selectedContext).toBeNull()
     })
 
     it('should be idempotent (safe to call multiple times)', () => {
       // Arrange
       const { setMode, setContext, reset } = useModeStore.getState()
-      setMode('mock')
+      setMode('demo')
       const mockContext: KubernetesContext = {
         name: 'test',
         cluster: 'test-cluster',
@@ -279,7 +279,7 @@ describe('useModeStore', () => {
       const { mode, selectedContext } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('real')
+      expect(mode).toBe('demo')
       expect(selectedContext).toBeNull()
     })
 
@@ -341,12 +341,12 @@ describe('useModeStore', () => {
       // Act
       setMode('real')
       setContext(context1)
-      setMode('mock')
+      setMode('demo')
       setContext(context2)
       const { mode, selectedContext } = useModeStore.getState()
 
       // Assert
-      expect(mode).toBe('mock')
+      expect(mode).toBe('demo')
       expect(selectedContext).toEqual(context2)
     })
 
@@ -356,7 +356,7 @@ describe('useModeStore', () => {
 
       // Act - rapid updates
       for (let i = 0; i < 10; i++) {
-        setMode(i % 2 === 0 ? 'mock' : 'real')
+        setMode(i % 2 === 0 ? 'demo' : 'real')
         setContext({
           name: `context-${i}`,
           cluster: `cluster-${i}`,

@@ -17,7 +17,7 @@ function ModeSync() {
     const isDemoPath = pathname.startsWith('/demo')
 
     if (isDemoPath) {
-      setMode('mock')
+      setMode('demo')
     } else {
       setMode('real')
     }

@@ -16,7 +16,7 @@ export function useDashboardSummary() {
   return useQuery<DashboardSummary>({
     queryKey: ['dashboard-summary', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         // Simulate network delay
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockDashboardSummary()
@@ -30,7 +30,7 @@ export function useDashboardSummary() {
       if (!response.ok) throw new Error('Failed to fetch dashboard summary')
       return response.json()
     },
-    enabled: hasCompletedWelcome && (mode === 'mock' || !!namespace),
+    enabled: hasCompletedWelcome && (mode === 'demo' || !!namespace),
   })
 }
 
@@ -47,7 +47,7 @@ export function useRecentEvents(timeRangeHours = 24) {
   return useQuery<Event[]>({
     queryKey: ['recent-events', mode, namespace, timeRangeHours],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const events = generateMockEvents()
 
@@ -75,6 +75,6 @@ export function useRecentEvents(timeRangeHours = 24) {
       if (!response.ok) throw new Error('Failed to fetch events')
       return response.json()
     },
-    enabled: hasCompletedWelcome && (mode === 'mock' || !!namespace),
+    enabled: hasCompletedWelcome && (mode === 'demo' || !!namespace),
   })
 }

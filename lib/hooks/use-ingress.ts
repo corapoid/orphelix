@@ -11,7 +11,7 @@ export function useIngresses() {
   return useQuery<Ingress[]>({
     queryKey: ['ingress', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockIngresses()
       }
@@ -23,7 +23,7 @@ export function useIngresses() {
       }
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -35,7 +35,7 @@ export function useIngress(name: string) {
   return useQuery<Ingress>({
     queryKey: ['ingress', mode, namespace, name],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const ingresses = generateMockIngresses()
         const ingress = ingresses.find((i) => i.name === name)
@@ -50,6 +50,6 @@ export function useIngress(name: string) {
       }
       return response.json()
     },
-    enabled: (mode === 'mock' || !!namespace) && !!name,
+    enabled: (mode === 'demo' || !!namespace) && !!name,
   })
 }

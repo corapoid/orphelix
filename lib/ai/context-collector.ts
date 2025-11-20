@@ -77,7 +77,7 @@ export async function collectPodContext(
   pod: Pod,
   namespace: string,
   containerName?: string,
-  mode: 'real' | 'mock' = 'real'
+  mode: 'real' | 'demo' = 'real'
 ): Promise<TroubleshootingContext> {
   const context: TroubleshootingContext = {
     resource: {
@@ -97,8 +97,8 @@ export async function collectPodContext(
   }
 
   // Fetch related events
-  if (mode === 'mock') {
-    // In mock mode, generate mock events for failing pods
+  if (mode === 'demo') {
+    // In demo mode, generate demo events for failing pods
     if (pod.status === 'Failed' || pod.status === 'CrashLoopBackOff') {
       context.events = [
         {
@@ -138,8 +138,8 @@ export async function collectPodContext(
   if (containerName || pod.containers.length > 0) {
     const container = containerName || pod.containers[0]
 
-    // In mock mode, use mock logs directly
-    if (mode === 'mock') {
+    // In demo mode, use demo logs directly
+    if (mode === 'demo') {
       const { getMockPodLogs } = await import('@/lib/mocks/data')
       const logsText = getMockPodLogs(pod.name, pod.status)
       context.logs = logsText.split('\n').filter(Boolean).slice(-20)
@@ -269,12 +269,12 @@ export function analyzeResourceMetrics(metrics: {
  * Collect detailed context for failing pods including logs
  * Note: This is a client-side function and should check mode before calling
  */
-export async function collectFailingPodsContext(namespace: string = 'default', mode: 'real' | 'mock' = 'real'): Promise<string> {
+export async function collectFailingPodsContext(namespace: string = 'default', mode: 'real' | 'demo' = 'real'): Promise<string> {
   try {
     let pods: Pod[] = []
 
-    if (mode === 'mock') {
-      // In mock mode, use mock data directly instead of calling API
+    if (mode === 'demo') {
+      // In demo mode, use demo data directly instead of calling API
       const { generateMockPods } = await import('@/lib/mocks/data')
       pods = generateMockPods()
     } else {

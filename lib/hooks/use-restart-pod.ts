@@ -28,7 +28,7 @@ export function useRestartPod(podName: string) {
 
   return useMutation<RestartPodResponse, RestartPodError, void>({
     mutationFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         // Simulate restart in mock mode
         await new Promise((resolve) => setTimeout(resolve, 1500))
         return {

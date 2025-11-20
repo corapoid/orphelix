@@ -37,7 +37,7 @@ describe('useJobs', () => {
   const wrapper = ({ children }: { children: ReactNode }) =>
     React.createElement(QueryClientProvider, { client: queryClient }, children)
 
-  it('should return jobs in mock mode', async () => {
+  it('should return jobs in demo mode', async () => {
     // Arrange
     const mockJobs: Job[] = [
       {
@@ -92,8 +92,8 @@ describe('useJobs', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -144,8 +144,8 @@ describe('useJobs', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -179,8 +179,8 @@ describe('useJobs', () => {
     const mockJobs: Job[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -215,8 +215,8 @@ describe('useJobs', () => {
     const mockJobs: Job[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -237,7 +237,7 @@ describe('useJobs', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['jobs', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['jobs', 'demo', 'demo', ''])
   })
 })
 
@@ -294,8 +294,8 @@ describe('useJob', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -344,8 +344,8 @@ describe('useJob', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -374,8 +374,8 @@ describe('useJob', () => {
     // Arrange
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -414,8 +414,8 @@ describe('useJob', () => {
 
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -448,8 +448,8 @@ describe('useJob', () => {
     const mockJobs: Job[] = []
     vi.mocked(useModeStore).mockImplementation((selector: any) =>
       selector({
-        mode: 'mock',
-        selectedNamespace: 'mock',
+        mode: 'demo',
+        selectedNamespace: 'demo',
         selectedContext: null,
         realtimeEnabled: false,
         setMode: vi.fn(),
@@ -470,6 +470,6 @@ describe('useJob', () => {
     // The query should be using the correct key
     const queries = queryClient.getQueryCache().getAll()
     expect(queries).toHaveLength(1)
-    expect(queries[0].queryKey).toEqual(['jobs', 'test-job', 'mock', 'mock', ''])
+    expect(queries[0].queryKey).toEqual(['jobs', 'test-job', 'demo', 'demo', ''])
   })
 })

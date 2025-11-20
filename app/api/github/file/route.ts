@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Mock mode for demo
-    if (mode === 'mock') {
+    if (mode === 'demo') {
       try {
         const { content, sha } = getMockFileContent(path)
         return NextResponse.json({ content, sha })

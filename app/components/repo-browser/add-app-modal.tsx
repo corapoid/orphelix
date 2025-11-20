@@ -106,7 +106,7 @@ export function AddAppModal({ open, onClose }: AddAppModalProps) {
       setError(null)
 
       try {
-        const modeParam = mode === 'mock' ? '&mode=mock' : ''
+        const modeParam = mode === 'demo' ? '&mode=mock' : ''
         const response = await fetch(
           `/api/github/analyze-structure?owner=${selectedRepo.owner}&repo=${selectedRepo.repo}&ref=${selectedBranch}${modeParam}`
         )

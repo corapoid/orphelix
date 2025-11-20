@@ -11,7 +11,7 @@ export function useJobs() {
   return useQuery<Job[]>({
     queryKey: ['jobs', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockJobs()
       }
@@ -23,7 +23,7 @@ export function useJobs() {
       }
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -35,7 +35,7 @@ export function useJob(name: string) {
   return useQuery<Job>({
     queryKey: ['jobs', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const jobs = generateMockJobs()
         const job = jobs.find((j) => j.name === name)
@@ -50,6 +50,6 @@ export function useJob(name: string) {
       }
       return response.json()
     },
-    enabled: (mode === 'mock' || !!namespace) && !!name,
+    enabled: (mode === 'demo' || !!namespace) && !!name,
   })
 }

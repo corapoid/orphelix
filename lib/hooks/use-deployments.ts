@@ -14,7 +14,7 @@ export function useDeployments() {
   return useQuery<Deployment[]>({
     queryKey: ['deployments', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockDeployments()
       }
@@ -39,7 +39,7 @@ export function useDeployment(name: string) {
   return useQuery<Deployment>({
     queryKey: ['deployment', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const deployments = generateMockDeployments()
         const deployment = deployments.find((d) => d.name === name)
@@ -52,7 +52,7 @@ export function useDeployment(name: string) {
       if (!response.ok) throw new Error('Failed to fetch deployment')
       return response.json()
     },
-    enabled: !!name && (mode === 'mock' || !!namespace),
+    enabled: !!name && (mode === 'demo' || !!namespace),
   })
 }
 
@@ -68,7 +68,7 @@ export function useDeploymentPods(deploymentName: string) {
   return useQuery<Pod[]>({
     queryKey: ['deployment-pods', deploymentName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const allPods = generateMockPods()
         // Filter pods that belong to this deployment (by owner references or labels)
@@ -88,7 +88,7 @@ export function useDeploymentPods(deploymentName: string) {
       if (!response.ok) throw new Error('Failed to fetch deployment pods')
       return response.json()
     },
-    enabled: !!deploymentName && (mode === 'mock' || !!namespace),
+    enabled: !!deploymentName && (mode === 'demo' || !!namespace),
   })
 }
 
@@ -104,7 +104,7 @@ export function useDeploymentEvents(deploymentName: string) {
   return useQuery<Event[]>({
     queryKey: ['deployment-events', deploymentName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 150))
         const allEvents = generateMockEvents()
         // Filter events related to this deployment
@@ -120,6 +120,6 @@ export function useDeploymentEvents(deploymentName: string) {
       if (!response.ok) throw new Error('Failed to fetch deployment events')
       return response.json()
     },
-    enabled: !!deploymentName && (mode === 'mock' || !!namespace),
+    enabled: !!deploymentName && (mode === 'demo' || !!namespace),
   })
 }

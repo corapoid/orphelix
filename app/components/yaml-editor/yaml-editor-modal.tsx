@@ -15,8 +15,10 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
+import GitHubIcon from '@mui/icons-material/GitHub'
 import Editor from '@monaco-editor/react'
-import { useGitHubStore } from '@/lib/core/store'
+import { useGitHubStore, useModeStore } from '@/lib/core/store'
+import { useRouter } from 'next/navigation'
 
 interface YamlEditorModalProps {
   open: boolean
@@ -34,6 +36,8 @@ export function YamlEditorModal({
   resourceType = 'deployment'
 }: YamlEditorModalProps) {
   const { selectedRepo, setPendingPR } = useGitHubStore()
+  const mode = useModeStore((state) => state.mode)
+  const router = useRouter()
 
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [yamlContent, setYamlContent] = useState('')
@@ -318,10 +322,59 @@ export function YamlEditorModal({
   }
 
   if (!selectedRepo) {
+    const handleInstallApp = () => {
+      // Check if running in browser
+      if (typeof window === 'undefined') return
+
+      const redirectUri = `${window.location.origin}/api/github-app/callback`
+      const state = Math.random().toString(36).substring(7)
+
+      // Use environment variable - this is replaced at build time
+      // TEMPORARY: Hardcoded fallback for testing
+      const clientId = process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID || 'Iv23lipSNqtEiL3HtNnk'
+
+      console.log('Install GitHub App (YAML Editor) - clientId:', clientId)
+
+      if (clientId) {
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`
+      } else {
+        // Fallback to settings if env var not configured
+        onClose()
+        router.push(mode === 'demo' ? '/demo/settings?tab=1' : '/settings?tab=1')
+      }
+    }
+
     return (
       <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
         <DialogContent>
-          <Alert severity="info">Please select a GitHub repository in Settings first.</Alert>
+          <Alert severity="info">
+            <Typography variant="body2" fontWeight={500} gutterBottom>
+              No GitHub repository configured
+            </Typography>
+            <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 2 }}>
+              Install the GitHub App and select a repository to edit YAML files via GitOps.
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<GitHubIcon />}
+                onClick={handleInstallApp}
+              >
+                Install GitHub App
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  onClose()
+                  router.push(mode === 'demo' ? '/demo/settings?tab=1' : '/settings?tab=1')
+                }}
+              >
+                Go to Settings
+              </Button>
+            </Box>
+          </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Close</Button>

@@ -1,10 +1,8 @@
 'use client'
 
 import { ReactNode } from 'react'
-import Box from '@mui/material/Box'
 import { Providers } from './components/providers'
-import { Sidebar } from './components/layout/sidebar'
-import { TopBar } from './components/layout/top-bar'
+import { LayoutContent } from './components/layout/layout-content'
 import { WelcomeModal } from './components/welcome/welcome-modal'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -36,37 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body style={{ margin: 0 }} suppressHydrationWarning>
         <Providers>
           <WelcomeModal />
-          <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default', overflow: 'hidden' }}>
-            <Sidebar />
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                minWidth: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                pr: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  flex: 1,
-                  minWidth: 0,
-                  minHeight: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  borderTopRightRadius: 3,
-                  overflow: 'hidden',
-                }}
-              >
-                <TopBar />
-                <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', p: 3 }}>
-                  {children}
-                </Box>
-              </Box>
-            </Box>
-          </Box>
+          <LayoutContent>{children}</LayoutContent>
         </Providers>
       </body>
     </html>

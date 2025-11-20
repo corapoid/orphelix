@@ -32,6 +32,7 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
   const [error, setError] = useState<string | null>(null)
   const [isSaved, setIsSaved] = useState(false)
   const [monacoInstance, setMonacoInstance] = useState<typeof import('monaco-editor') | null>(null)
+  const [editorInstance, setEditorInstance] = useState<editor.IStandaloneCodeEditor | null>(null)
 
   // Load file on mount or when file path changes
   useEffect(() => {
@@ -40,7 +41,7 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
       setError(null)
 
       try {
-        const modeParam = mode === 'mock' ? '&mode=mock' : ''
+        const modeParam = mode === 'demo' ? '&mode=demo' : ''
         const response = await fetch(
           `/api/github/file?owner=${owner}&repo=${repo}&path=${encodeURIComponent(filePath)}&ref=${branch}${modeParam}`
         )
@@ -116,8 +117,9 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
     }
   }, [content, editBasket, filePath])
 
-  const handleEditorMount = (_editorRef: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
+  const handleEditorMount = (editorRef: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
     setMonacoInstance(monaco)
+    setEditorInstance(editorRef)
 
     monaco.editor.defineTheme('kubevista-theme', {
       base: theme.palette.mode === 'dark' ? 'vs-dark' : 'vs',
@@ -136,6 +138,16 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
     })
     monaco.editor.setTheme('kubevista-theme')
   }
+
+  // Update editor language when file changes
+  useEffect(() => {
+    if (!editorInstance || !monacoInstance) return
+
+    const model = editorInstance.getModel()
+    if (model) {
+      monacoInstance.editor.setModelLanguage(model, editorLanguage)
+    }
+  }, [editorLanguage, editorInstance, monacoInstance])
 
   // Update editor theme when theme mode changes
   useEffect(() => {
@@ -158,14 +170,6 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
     })
     monacoInstance.editor.setTheme('kubevista-theme')
   }, [theme.palette.mode, monacoInstance, theme.palette.primary.main])
-
-  if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <CircularProgress />
-      </Box>
-    )
-  }
 
   if (error) {
     return <Alert severity="error">{error}</Alert>
@@ -249,28 +253,36 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
           pt: 2,
         }}
       >
-        <Editor
-          height="100%"
-          language={editorLanguage}
-          value={content}
-          onChange={(value) => setContent(value || '')}
-          onMount={handleEditorMount}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 13,
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            scrollbar: {
-              vertical: 'visible',
-              horizontal: 'visible',
-              useShadows: false,
-              verticalScrollbarSize: 10,
-              horizontalScrollbarSize: 10,
-            },
-            hideCursorInOverviewRuler: true,
-            overviewRulerLanes: 0,
-          }}
-        />
+        {monacoInstance || !isLoading ? (
+          <Editor
+            height="100%"
+            language={editorLanguage}
+            value={content}
+            theme={theme.palette.mode === 'dark' ? 'vs-dark' : 'vs'}
+            onChange={(value) => setContent(value || '')}
+            onMount={handleEditorMount}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 13,
+              lineNumbers: 'on',
+              scrollBeyondLastLine: false,
+              scrollbar: {
+                vertical: 'visible',
+                horizontal: 'visible',
+                useShadows: false,
+                verticalScrollbarSize: 10,
+                horizontalScrollbarSize: 10,
+              },
+              hideCursorInOverviewRuler: true,
+              overviewRulerLanes: 0,
+              readOnly: isLoading,
+            }}
+          />
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <CircularProgress />
+          </Box>
+        )}
       </Box>
     </Box>
   )

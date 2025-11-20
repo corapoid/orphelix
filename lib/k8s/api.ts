@@ -1587,12 +1587,24 @@ export async function fetchCronJob(name: string, namespace: string, contextName?
 }
 
 /**
+ * Timeout wrapper for API calls
+ */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number = 10000): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`Request timeout after ${timeoutMs}ms`)), timeoutMs)
+    ),
+  ])
+}
+
+/**
  * Fetch all namespaces
  */
 export async function fetchNamespaces(contextName?: string): Promise<Namespace[]> {
   try {
     const coreApi = getCoreApi(contextName)
-    const response = await coreApi.listNamespace()
+    const response = await withTimeout(coreApi.listNamespace(), 10000)
     const namespaces = response.items
 
     return namespaces.map((ns) => {

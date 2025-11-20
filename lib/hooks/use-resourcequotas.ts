@@ -11,7 +11,7 @@ export function useResourceQuotas() {
   return useQuery<ResourceQuota[]>({
     queryKey: ['resourcequotas', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockResourceQuotas()
       }
@@ -23,7 +23,7 @@ export function useResourceQuotas() {
       }
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
     retry: false, // Don't retry - 403 errors are handled silently in the API
   })
 }

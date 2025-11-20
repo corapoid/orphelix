@@ -14,7 +14,7 @@ export function useStatefulSets() {
   return useQuery<StatefulSet[]>({
     queryKey: ['statefulsets', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockStatefulSets()
       }
@@ -40,7 +40,7 @@ export function useStatefulSet(name: string) {
   return useQuery<StatefulSet>({
     queryKey: ['statefulset', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const statefulsets = generateMockStatefulSets()
         const statefulset = statefulsets.find((sts) => sts.name === name)
@@ -55,6 +55,6 @@ export function useStatefulSet(name: string) {
       if (!response.ok) throw new Error('Failed to fetch statefulset')
       return response.json()
     },
-    enabled: !!name && (mode === 'mock' || !!namespace),
+    enabled: !!name && (mode === 'demo' || !!namespace),
   })
 }

@@ -14,7 +14,7 @@ export function useSecrets() {
   return useQuery<Secret[]>({
     queryKey: ['secrets', mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         return generateMockSecrets()
       }
@@ -27,7 +27,7 @@ export function useSecrets() {
       if (!response.ok) throw new Error('Failed to fetch Secrets')
       return response.json()
     },
-    enabled: mode === 'mock' || !!namespace,
+    enabled: mode === 'demo' || !!namespace,
   })
 }
 
@@ -43,7 +43,7 @@ export function useSecret(name: string) {
   return useQuery<Secret>({
     queryKey: ['secret', name, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const secrets = generateMockSecrets()
         const secret = secrets.find((s) => s.name === name)
@@ -59,7 +59,7 @@ export function useSecret(name: string) {
       if (!response.ok) throw new Error('Failed to fetch Secret')
       return response.json()
     },
-    enabled: !!name && (mode === 'mock' || !!namespace),
+    enabled: !!name && (mode === 'demo' || !!namespace),
   })
 }
 
@@ -75,7 +75,7 @@ export function useSecretEvents(secretName: string) {
   return useQuery<Event[]>({
     queryKey: ['secret-events', secretName, mode, namespace, selectedContext?.name || ''],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 150))
         const allEvents = generateMockEvents()
         // Filter events related to this Secret
@@ -94,6 +94,6 @@ export function useSecretEvents(secretName: string) {
       if (!response.ok) throw new Error('Failed to fetch Secret events')
       return response.json()
     },
-    enabled: !!secretName && (mode === 'mock' || !!namespace),
+    enabled: !!secretName && (mode === 'demo' || !!namespace),
   })
 }

@@ -59,7 +59,7 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
     setNamespace(namespaceName)
   }
 
-  if (mode === 'mock') {
+  if (mode === 'demo') {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <Typography variant="caption" color="text.secondary" fontWeight={600}>

@@ -13,7 +13,7 @@ export function useNodes(statusFilter?: NodeStatus) {
   return useQuery<Node[]>({
     queryKey: ['nodes', mode, statusFilter],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 300))
         const nodes = generateMockNodes()
 
@@ -45,7 +45,7 @@ export function useNode(name: string) {
   return useQuery<Node>({
     queryKey: ['node', name, mode],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const nodes = generateMockNodes()
         const node = nodes.find((n) => n.name === name)
@@ -72,7 +72,7 @@ export function useNodeEvents(nodeName: string) {
   return useQuery<Event[]>({
     queryKey: ['node-events', nodeName, mode],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 150))
         const allEvents = generateMockEvents()
         // Filter events related to this node
@@ -111,7 +111,7 @@ export function useNodePods(nodeName: string) {
   return useQuery({
     queryKey: ['node-pods', nodeName, mode, selectedNamespace],
     queryFn: async () => {
-      if (mode === 'mock') {
+      if (mode === 'demo') {
         await new Promise((resolve) => setTimeout(resolve, 200))
         const { generateMockPods } = await import('@/lib/mocks/data')
         const allPods = generateMockPods()
