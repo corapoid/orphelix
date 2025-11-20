@@ -88,12 +88,18 @@
    - **How:** `/api/stream` route with EventSource on client
    - **Impact:** Real-time updates without WebSocket complexity
 
-3. **Mock/Real Mode Toggle**
-   - **Why:** Demo without cluster requirements + safe development
-   - **How:** Zustand store + conditional rendering
-   - **Impact:** Dual data paths (mock-data.ts vs k8s-api.ts)
+3. **Demo/Real Mode Toggle with Server-Side Protection**
+   - **Why:** Demo without cluster requirements + safe development + secure validation
+   - **How:** Zustand store + NextAuth v5 middleware + HTTP cookies
+   - **Impact:** Dual data paths (mock-data.ts vs k8s-api.ts) + server-side route protection
+   - **Security:** Cannot be bypassed from client (validation happens before rendering)
 
-4. **Next.js 15 App Router**
+4. **NextAuth v5 for Authentication and Authorization**
+   - **Why:** Previous client-side validation could be bypassed (localStorage, DevTools, direct URLs)
+   - **How:** Server-side proxy.ts with auth() callback executing before page render
+   - **Impact:** Complete security - route protection happens on server, not client
+
+5. **Next.js 15 App Router**
    - **Why:** Latest features, RSC support, better routing
    - **How:** Migration from Pages Router, Promise-based params
    - **Impact:** Greater complexity, but better performance
@@ -119,6 +125,7 @@
 | Technology | Version | Usage |
 |------------|---------|-------|
 | **@kubernetes/client-node** | 1.0.0 | K8s API client |
+| **NextAuth.js** | 5.0.0-beta.30 | Authentication & authorization |
 | **Octokit** | 4.0.2 | GitHub API (Flux) |
 | **Next.js API Routes** | 15.0.3 | Server-side endpoints |
 
@@ -418,7 +425,88 @@ export default function Page() {
 }
 ```
 
-### 2. Next.js 15 Dynamic Params (Promise-based)
+### 2. NextAuth v5 Server-Side Route Protection
+
+**Problem:** Previous client-side validation could be bypassed by disabling JavaScript, modifying localStorage, or accessing URLs directly.
+
+**Solution:** Server-side proxy with NextAuth v5 authorization callback.
+
+```typescript
+// auth.ts - NextAuth v5 configuration
+import NextAuth from 'next-auth'
+import GithubProvider from 'next-auth/providers/github'
+
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID || '',
+      clientSecret: process.env.GITHUB_SECRET || '',
+    }),
+  ],
+  callbacks: {
+    async authorized({ auth, request }) {
+      const { pathname } = request.nextUrl
+
+      // Allow root and API routes
+      if (pathname === '/') return true
+      if (pathname.startsWith('/api')) return true
+
+      // Check authentication
+      if (auth) return true
+
+      // Check demo mode cookie
+      const appMode = request.cookies.get('app-mode')?.value
+      if (appMode === 'demo') return true
+
+      return false // Redirect to '/'
+    },
+  },
+})
+
+// proxy.ts - Next.js 16 middleware
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/auth'
+
+export async function proxy(request: NextRequest) {
+  const session = await auth()
+  const { pathname } = request.nextUrl
+
+  if (pathname === '/') return NextResponse.next()
+  if (pathname.startsWith('/api')) return NextResponse.next()
+  if (session) return NextResponse.next()
+
+  const appMode = request.cookies.get('app-mode')?.value
+  if (appMode === 'demo') return NextResponse.next()
+
+  return NextResponse.redirect(new URL('/', request.url))
+}
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+}
+
+// Component sets cookie for server validation
+const handleDemoMode = () => {
+  document.cookie = 'app-mode=demo; path=/; max-age=31536000; SameSite=Lax'
+  setMode('demo')
+}
+
+const handleGitHubLogin = async () => {
+  await signIn('github', {
+    callbackUrl: '/',
+    redirect: true
+  })
+}
+```
+
+**Benefits:**
+- ✅ Executes on server before rendering
+- ✅ Cannot be bypassed from client
+- ✅ Cookie-based state accessible to middleware
+- ✅ GitHub OAuth integration
+- ✅ Works with both authenticated and demo modes
+
+### 3. Next.js 15 Dynamic Params (Promise-based)
 
 **Problem:** Next.js 15 requires await for params in dynamic routes.
 
@@ -441,7 +529,7 @@ export async function GET(
 }
 ```
 
-### 3. @kubernetes/client-node API (Object Parameters)
+### 4. @kubernetes/client-node API (Object Parameters)
 
 **Problem:** New version requires object parameters instead of individual args.
 
@@ -467,7 +555,7 @@ const response = await appsApi.listNamespacedDeployment({ namespace })
 return response.items
 ```
 
-### 4. TanStack Query Hooks Pattern
+### 5. TanStack Query Hooks Pattern
 
 ```typescript
 // lib/hooks/use-deployments.ts
@@ -494,7 +582,7 @@ export function useDeployments() {
 }
 ```
 
-### 5. Error Handling Pattern
+### 6. Error Handling Pattern
 
 ```typescript
 // API Route

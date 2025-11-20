@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **NextAuth v5 with Server-Side Route Protection**: Complete security overhaul
+  - NextAuth.js v5 (beta.30) with GitHub OAuth provider
+  - Server-side proxy.ts (Next.js 16 convention) for route protection
+  - HTTP cookie-based app-mode tracking accessible to middleware
+  - Authorization callback with server-side validation
+  - User menu component with sign-out functionality
+  - Repository selector components for GitHub integration
+  - Cannot be bypassed from client-side (JavaScript, localStorage, DevTools)
+  - Demo mode properly validated server-side via cookies
+  - NextAuth type extensions for session management
+  - GitHub App repositories API route
+  - Layout content component with route validation
+
+- **Demo Mode as Default**: Changed application default mode
+  - Default mode changed from 'real' to 'demo' for better UX
+  - Users can try the application immediately without cluster setup
+  - Renamed from 'mock' to 'demo' across entire codebase
+  - Updated all TypeScript types (AppMode = 'demo' | 'real')
+  - Cookie-based mode persistence for server-side validation
+
 - **Detail Pages UI Consistency**: Improved layout and visual consistency
   - Disabled documentation sidebars across all resource detail pages
   - Search bar moved to top bar (centered) alongside namespace selector
@@ -85,6 +105,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Security Architecture**: Complete shift to server-side validation
+  - Moved from client-side localStorage validation to server-side cookies
+  - Route protection now executes before any page rendering
+  - Welcome modal sets HTTP cookies for middleware validation
+  - GitHub OAuth login uses NextAuth v5 signIn() with redirect
+  - Authorization logic centralized in auth.ts callback
+
+- **Mode Terminology**: Renamed 'mock' to 'demo' throughout codebase
+  - Changed type definition: AppMode = 'demo' | 'real'
+  - Updated all hooks (56 files): use-pods, use-deployments, use-jobs, etc.
+  - Updated all tests: changed mockReturnValue to mockImplementation
+  - Fixed query key expectations: ['mock', 'mock'] → ['demo', 'demo']
+  - Updated store default mode: 'real' → 'demo'
+  - Updated all API routes to handle 'demo' mode parameter
+  - Fixed GitHub analyzer mode type: mode?: 'demo'
+
+- **Test Infrastructure**: Improved Zustand mocking pattern
+  - Changed from simple mockReturnValue to mockImplementation with selectors
+  - Proper support for Zustand selector pattern: useModeStore((state) => state.mode)
+  - All 233 tests passing after migration
+  - Fixed 53 test failures related to mode migration
+
+- **Dependencies**: Added NextAuth v5 and updated authentication stack
+  - next-auth@5.0.0-beta.30 (upgraded from v4)
+  - Removed deprecated middleware.ts convention (Next.js 16)
+  - Added proxy.ts for route protection
+
 - **Status Badges**: Complete redesign using MUI Chip component
   - V4 variant: pill-shaped with icons (CheckCircle, Error, HourglassEmpty)
   - Consistent colors: success (green), error (red), warning (orange), info (blue)
@@ -124,6 +171,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Security**: GitHub App tokens stored in HTTP-only cookies (not localStorage)
 
 ### Fixed
+
+- **Security Vulnerability**: Client-side validation could be bypassed
+  - Previous validation in welcome-modal.tsx was client-side only
+  - Could be circumvented by: disabling JavaScript, modifying localStorage, direct URL access
+  - Fixed by implementing server-side proxy with NextAuth v5
+  - Route protection now executes before any rendering
+  - Validation uses HTTP cookies accessible to server middleware
+
+- **GitHub Login Not Working**: Fixed NextAuth v5 signIn() call
+  - Added redirect: true parameter to signIn() function
+  - Added callbackUrl: '/' to redirect after authentication
+  - Fixed error handling with try-catch and user feedback
+
+- **Test Failures After Mock → Demo Migration**: Fixed 53 failing tests
+  - Store tests: Updated default mode expectations from 'real' to 'demo'
+  - Hook tests: Changed mockReturnValue to mockImplementation for proper selector support
+  - Query key tests: Updated expectations from 'mock' to 'demo'
+  - use-pods tests: Fixed all 22 tests with proper Zustand mocking
+  - Fixed selectedNamespace expectations: 'mock' → 'demo'
 
 - **Duplicate Headers**: Removed duplicate title/metadata sections from detail pages
   - Fixed deployment name appearing twice with incorrect namespace

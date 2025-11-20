@@ -18,7 +18,8 @@
 - **Resource Metrics** - CPU/Memory monitoring with color-coded indicators
 - **Topology Visualization** - Interactive dependency graphs with pan, zoom, and fit-to-view controls
 - **Pod Management** - Container logs viewer with search/download, pod restart functionality
-- **Demo Mode** - Realistic test data for presentations without cluster requirements
+- **Demo Mode** - Realistic test data for presentations without cluster requirements (default mode)
+- **Server-Side Security** - NextAuth v5 with route protection that cannot be bypassed from client
 
 ### GitHub Integration & GitOps
 - **Dual Authentication** - GitHub OAuth and GitHub App support with granular permissions
@@ -132,6 +133,10 @@ Note: Mintlify may have dependency issues. Documentation is fully readable as ma
 
 ## 🔒 Security
 
+- ✅ **Server-side route protection** - NextAuth v5 with middleware that executes before rendering
+- ✅ **Cannot bypass validation** - Routes protected on server, not client-side JavaScript
+- ✅ **Cookie-based authentication** - HTTP cookies for server-accessible session state
+- ✅ **GitHub OAuth** - Secure authentication via NextAuth v5
 - ✅ **Local credentials** - Uses kubeconfig from local system
 - ✅ **No data storage** - All data fetched on demand from cluster
 - ✅ **Secrets masked** - Secret values never displayed in UI
