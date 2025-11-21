@@ -17,10 +17,10 @@ export function LayoutContent({ children }: LayoutContentProps) {
   const muiTheme = useMuiTheme()
   const { visualPreset, mode: themeMode } = useTheme()
 
-  // Noise texture for grain effect (fine grain, subtle)
-  const noiseTexture = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E")`
+  // Film grain texture - realistic grain overlay
+  const grainTexture = `url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.12'/%3E%3C/svg%3E")`
 
-  // Get gradient and combine with noise
+  // Get gradient and combine with grain
   const isLiquidGlass = visualPreset === 'liquidGlass'
   const gradient = isLiquidGlass
     ? (themeMode === 'dark'
@@ -28,7 +28,7 @@ export function LayoutContent({ children }: LayoutContentProps) {
         : 'linear-gradient(135deg, #D8E1F0 0%, #E5EAF5 50%, #EDF1F9 100%)')
     : undefined
 
-  const backgroundImage = gradient ? `${noiseTexture}, ${gradient}` : undefined
+  const backgroundImage = gradient ? `${grainTexture}, ${gradient}` : undefined
 
   // Validate welcome completion - if completed but essential data is missing, reset
   useEffect(() => {
