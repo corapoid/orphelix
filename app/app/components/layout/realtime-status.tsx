@@ -98,7 +98,7 @@ export function RealtimeStatus() {
             gap: 0.75,
             px: 1.5,
             py: 0.5,
-            borderRadius: 1.5,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             bgcolor: status === 'connected' ? 'rgba(16, 185, 129, 0.1)' : 'background.default',
             border: '1px solid',
             borderColor: status === 'connected' ? 'rgba(16, 185, 129, 0.3)' : 'divider',

@@ -63,7 +63,7 @@ function StatCard({ title, value, subtitle, icon: Icon, color, trend }: StatCard
             sx={{
               width: 48,
               height: 48,
-              borderRadius: 2,
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
               bgcolor: `${color}15`,
               display: 'flex',
               alignItems: 'center',

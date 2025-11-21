@@ -8,8 +8,11 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { useTheme } from '@orphelix/ui'
 
 function GitHubAppInstallButtonContent() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [installations, setInstallations] = useState<any[]>([])
@@ -155,23 +158,27 @@ function GitHubAppInstallButtonContent() {
           maxWidth: 300,
           py: 2,
           px: 3,
-          borderRadius: 3,
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           color: (theme) => theme.palette.text.primary,
           backgroundColor: (theme) =>
             theme.palette.mode === 'dark'
               ? 'rgba(30, 30, 46, 0.6)'
               : 'rgba(255, 255, 255, 0.25)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          ...(isGlass && {
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          }),
           border: '1px solid',
           borderColor: (theme) =>
             theme.palette.mode === 'dark'
               ? 'rgba(255, 255, 255, 0.12)'
               : 'rgba(209, 213, 219, 0.4)',
-          boxShadow: (theme) =>
-            theme.palette.mode === 'dark'
-              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
-              : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+          ...(isGlass && {
+            boxShadow: (theme) =>
+              theme.palette.mode === 'dark'
+                ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
+                : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+          }),
           '&:hover': {
             backgroundColor: (theme) =>
               theme.palette.mode === 'dark'

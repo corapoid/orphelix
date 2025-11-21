@@ -94,7 +94,7 @@ export function TopBar() {
                     gap: 0.5,
                     px: 1.5,
                     py: 0.5,
-                    borderRadius: 1,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     bgcolor: 'warning.main',
                     color: 'warning.contrastText',
                     cursor: 'pointer',

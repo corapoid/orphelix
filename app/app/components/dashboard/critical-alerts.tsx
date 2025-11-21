@@ -23,6 +23,7 @@ import { useDeployments } from '@/lib/hooks/use-deployments'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useSidebarPins, useModeStore, useCriticalIssuesSettings } from '@/lib/core/store'
 import { collectFailingPodsContext } from '@/lib/ai/context-collector'
+import { useTheme } from '@orphelix/ui'
 
 interface CriticalAlertsProps {
   summary: DashboardSummary
@@ -39,6 +40,8 @@ interface AlertItem {
 const STORAGE_KEY = 'criticalAlertsExpanded'
 
 export function CriticalAlerts({ summary }: CriticalAlertsProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const [expanded, setExpanded] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(STORAGE_KEY)
@@ -263,7 +266,7 @@ Keep it concise and practical.`
         px: 3,
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
-        borderRadius: 3,
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         overflow: 'hidden',
         // Liquid glass effect with gradient
         backgroundColor: (theme) =>
@@ -274,19 +277,23 @@ Keep it concise and practical.`
             : errorAlerts.length > 0
               ? 'rgba(255, 245, 245, 0.25)'
               : 'rgba(255, 250, 245, 0.25)',
-        backdropFilter: 'blur(32px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+        ...(isGlass && {
+          backdropFilter: 'blur(32px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+        }),
         border: '1px solid',
         borderColor: (theme) =>
           theme.palette.mode === 'dark'
             ? 'rgba(255, 255, 255, 0.12)'
             : 'rgba(209, 213, 219, 0.4)',
-        boxShadow: (theme) =>
-          theme.palette.mode === 'dark'
-            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
-            : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+        ...(isGlass && {
+          boxShadow: (theme) =>
+            theme.palette.mode === 'dark'
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
+              : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+        }),
         // Gradient overlay for depth
-        '&::before': {
+        '&::before': isGlass ? {
           content: '""',
           position: 'absolute',
           top: 0,
@@ -302,8 +309,8 @@ Keep it concise and practical.`
                 ? 'linear-gradient(135deg, rgba(211, 47, 47, 0.08) 0%, rgba(211, 47, 47, 0.02) 30%, transparent 50%, rgba(0, 0, 0, 0.03) 100%)'
                 : 'linear-gradient(135deg, rgba(237, 108, 2, 0.08) 0%, rgba(237, 108, 2, 0.02) 30%, transparent 50%, rgba(0, 0, 0, 0.03) 100%)',
           pointerEvents: 'none',
-          borderRadius: 3,
-        },
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+        } : {},
       }}
     >
       <Box sx={{ position: 'relative', zIndex: 1 }}>
@@ -348,7 +355,7 @@ Keep it concise and practical.`
                       flex: 1,
                       cursor: 'pointer',
                       transition: 'background-color 0.2s',
-                      borderRadius: 1,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       '&:hover': {
                         bgcolor: 'action.hover',
                       },
@@ -390,17 +397,21 @@ Keep it concise and practical.`
                           theme.palette.mode === 'dark'
                             ? 'rgba(139, 92, 246, 0.15)'
                             : 'rgba(139, 92, 246, 0.1)',
-                        backdropFilter: 'blur(12px) saturate(180%)',
-                        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                        ...(isGlass && {
+                          backdropFilter: 'blur(12px) saturate(180%)',
+                          WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                        }),
                         border: '1px solid',
                         borderColor: (theme) =>
                           theme.palette.mode === 'dark'
                             ? 'rgba(139, 92, 246, 0.3)'
                             : 'rgba(139, 92, 246, 0.2)',
-                        boxShadow: (theme) =>
-                          theme.palette.mode === 'dark'
-                            ? '0 2px 8px 0 rgba(139, 92, 246, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)'
-                            : '0 2px 8px 0 rgba(139, 92, 246, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)',
+                        ...(isGlass && {
+                          boxShadow: (theme) =>
+                            theme.palette.mode === 'dark'
+                              ? '0 2px 8px 0 rgba(139, 92, 246, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)'
+                              : '0 2px 8px 0 rgba(139, 92, 246, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)',
+                        }),
                         color: 'primary.main',
                         '&:hover': {
                           backgroundColor: (theme) =>

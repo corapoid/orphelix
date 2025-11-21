@@ -19,10 +19,13 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { useTheme } from '@orphelix/ui'
 
 const MAX_PREVIEW_LINES = 10
 
 export default function ConfigMapDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
 
@@ -157,22 +160,24 @@ export default function ConfigMapDetailPage() {
                 Object.entries(configMap.labels).map(([key, value]) => (
                   <Paper
                     key={key}
-                    elevation={0}
+                    elevation={isGlass ? 0 : 1}
                     sx={{
                       px: 2,
                       py: 1,
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(30, 30, 46, 0.6)'
-                          : 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(24px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                      border: '1px solid',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255, 255, 255, 0.12)'
-                          : 'rgba(209, 213, 219, 0.4)',
-                      borderRadius: 3,
+                      ...(isGlass && {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(30, 30, 46, 0.6)'
+                            : 'rgba(255, 255, 255, 0.25)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(255, 255, 255, 0.12)'
+                            : 'rgba(209, 213, 219, 0.4)',
+                      }),
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
@@ -248,7 +253,7 @@ export default function ConfigMapDetailPage() {
                             theme.palette.mode === 'dark'
                               ? 'rgba(0, 0, 0, 0.3)'
                               : 'rgba(0, 0, 0, 0.05)',
-                          borderRadius: '12px',
+                          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                           overflow: 'auto',
                           fontFamily: 'monospace',
                           fontSize: '0.8125rem',

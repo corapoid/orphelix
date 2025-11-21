@@ -78,7 +78,7 @@ export function ErrorState({ error, onRetry, title = 'Error Loading Data' }: Err
               mt: 2,
               p: 1,
               bgcolor: 'grey.100',
-              borderRadius: 1,
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
               fontSize: '0.75rem',
               fontFamily: 'monospace',
               color: 'text.secondary',

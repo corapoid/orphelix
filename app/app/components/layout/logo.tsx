@@ -19,7 +19,7 @@ export function Logo({ collapsed = false }: LogoProps) {
           justifyContent: 'center',
           width: 40,
           height: 40,
-          borderRadius: 2,
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
           boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
         }}
@@ -55,7 +55,7 @@ export function Logo({ collapsed = false }: LogoProps) {
           justifyContent: 'center',
           width: 36,
           height: 36,
-          borderRadius: 2,
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
           boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
         }}

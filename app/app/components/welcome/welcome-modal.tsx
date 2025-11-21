@@ -324,7 +324,7 @@ export function WelcomeModal() {
             left: 0,
             right: 0,
             bottom: 0,
-            borderRadius: '12px',
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
             backgroundSize: '150px 150px',
             opacity: (theme) => theme.palette.mode === 'dark' ? 0.4 : 0.3,

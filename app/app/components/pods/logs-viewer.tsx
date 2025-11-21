@@ -15,6 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { StatusBadge } from '@/app/components/common/status-badge'
+import { useTheme } from '@orphelix/ui'
 
 interface LogLine {
   line: number
@@ -38,6 +39,8 @@ interface LogsViewerProps {
 }
 
 export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRefresh, logLines = 100, onLogLinesChange }: LogsViewerProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const [searchQuery, setSearchQuery] = useState('')
   const [autoScroll, setAutoScroll] = useState(true)
   const [viewMode, setViewMode] = useState<'formatted' | 'raw'>('formatted')
@@ -152,14 +155,16 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
           theme.palette.mode === 'dark'
             ? 'rgba(30, 30, 46, 0.6)'
             : 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        ...(isGlass && {
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        }),
         border: '1px solid',
         borderColor: (theme) =>
           theme.palette.mode === 'dark'
             ? 'rgba(255, 255, 255, 0.12)'
             : 'rgba(209, 213, 219, 0.4)',
-        borderRadius: 3,
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
       }}
     >
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
@@ -184,14 +189,16 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                   theme.palette.mode === 'dark'
                     ? 'rgba(30, 30, 46, 0.6)'
                     : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                ...(isGlass && {
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                }),
                 border: '1px solid',
                 borderColor: (theme) =>
                   theme.palette.mode === 'dark'
                     ? 'rgba(255, 255, 255, 0.12)'
                     : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 '& fieldset': {
                   border: 'none',
                 },
@@ -232,14 +239,16 @@ export function LogsViewer({ logs, parsed, isLoading, error, containerName, onRe
                   theme.palette.mode === 'dark'
                     ? 'rgba(30, 30, 46, 0.6)'
                     : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                ...(isGlass && {
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                }),
                 border: '1px solid',
                 borderColor: (theme) =>
                   theme.palette.mode === 'dark'
                     ? 'rgba(255, 255, 255, 0.12)'
                     : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 '& .MuiOutlinedInput-notchedOutline': {
                   border: 'none',
                 },

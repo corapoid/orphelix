@@ -18,7 +18,7 @@ export function ViewModeToggle({ viewMode, onChange }: ViewModeToggleProps) {
         gap: 0.5,
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: 1,
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         p: 0.5,
       }}
     >

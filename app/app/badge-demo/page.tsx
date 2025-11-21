@@ -141,7 +141,7 @@ export default function BadgeDemoPage() {
         </Box>
       </Box>
 
-      <Box sx={{ mt: 4, p: 3, bgcolor: 'info.light', borderRadius: 2 }}>
+      <Box sx={{ mt: 4, p: 3, bgcolor: 'info.light', borderRadius: (theme) => `${theme.shape.borderRadius}px` }}>
         <Typography variant="h6" gutterBottom>
           📋 My Recommendation
         </Typography>

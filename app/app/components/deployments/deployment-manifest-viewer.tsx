@@ -94,7 +94,7 @@ export function DeploymentManifestViewer({ name, namespace }: DeploymentManifest
           )}
 
           {data?.yaml && (
-            <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1 }}>
+            <Box sx={{ border: 1, borderColor: 'divider', borderRadius: (theme) => `${theme.shape.borderRadius}px` }}>
               <Editor
                 height="500px"
                 defaultLanguage="yaml"

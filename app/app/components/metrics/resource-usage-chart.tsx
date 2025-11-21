@@ -272,7 +272,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
                 variant="determinate"
                 value={Math.min(aggregatedMetrics.cpu.usagePercent, 100)}
                 color={getUsageColor(aggregatedMetrics.cpu.usagePercent)}
-                sx={{ height: 8, borderRadius: 1 }}
+                sx={{ height: 8, borderRadius: (theme) => `${theme.shape.borderRadius}px` }}
               />
             </Box>
 
@@ -342,7 +342,7 @@ export function ResourceUsageChart({ deploymentName, namespace }: ResourceUsageC
                 variant="determinate"
                 value={Math.min(aggregatedMetrics.memory.usagePercent, 100)}
                 color={getUsageColor(aggregatedMetrics.memory.usagePercent)}
-                sx={{ height: 8, borderRadius: 1 }}
+                sx={{ height: 8, borderRadius: (theme) => `${theme.shape.borderRadius}px` }}
               />
             </Box>
 

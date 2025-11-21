@@ -19,7 +19,7 @@ export function GridSkeleton({ cards = 8 }: GridSkeletonProps) {
           key={index}
           sx={{
             p: 2,
-            borderRadius: 3,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             border: '1px solid',
             borderColor: 'divider',
             backgroundColor: (theme) =>

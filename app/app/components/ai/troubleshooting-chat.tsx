@@ -224,7 +224,7 @@ export function TroubleshootingChat({ context }: TroubleshootingChatProps) {
                           bgcolor: 'action.hover',
                           px: 0.5,
                           py: 0.25,
-                          borderRadius: 0.5,
+                          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                           fontFamily: 'monospace',
                           fontSize: '0.875rem',
                         }}
@@ -237,7 +237,7 @@ export function TroubleshootingChat({ context }: TroubleshootingChatProps) {
                         sx={{
                           bgcolor: 'action.hover',
                           p: 2,
-                          borderRadius: 1,
+                          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                           overflow: 'auto',
                           my: 1,
                         }}

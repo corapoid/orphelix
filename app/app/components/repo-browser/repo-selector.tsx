@@ -217,7 +217,7 @@ export function RepoSelector() {
                 height: '100%',
                 display: 'block',
                 textAlign: 'left',
-                borderRadius: '12px',
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 transition: 'transform 0.2s',
                 '&:hover': {
                   transform: 'translateY(-4px)',

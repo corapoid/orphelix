@@ -1,3 +1,0 @@
-{
-  "/api/statefulsets/[name]/route": "app/api/statefulsets/[name]/route.js"
-}

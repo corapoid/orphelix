@@ -131,10 +131,10 @@ export function ResourceUtilization({ quotas }: ResourceUtilizationProps) {
               color={color}
               sx={{
                 height: 8,
-                borderRadius: 1,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 bgcolor: 'action.hover',
                 '& .MuiLinearProgress-bar': {
-                  borderRadius: 1,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 },
               }}
             />

@@ -66,6 +66,7 @@ export default function SettingsPage() {
   const searchParams = useSearchParams()
   const tabParam = searchParams.get('tab')
   const { mode: themeMode, setThemeMode, actualTheme, visualPreset, setVisualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const {
     autoRefreshEnabled,
     setAutoRefreshEnabled,
@@ -129,25 +130,27 @@ export default function SettingsPage() {
               Auto Refresh
             </Typography>
             <Paper
-              elevation={0}
+              elevation={isGlass ? 0 : 1}
               sx={{
                 p: 3,
-                borderRadius: 3,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                boxShadow: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
-                    : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                ...(isGlass && {
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                  boxShadow: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
+                      : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                }),
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 3, flexWrap: 'wrap' }}>

@@ -2864,8 +2864,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$navigate$2d$to$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/hooks/use-navigate-to.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/core/store.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$ai$2f$context$2d$collector$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/ai/context-collector.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
+;
 ;
 ;
 ;
@@ -2893,6 +2896,8 @@ var _s = __turbopack_context__.k.signature();
 const STORAGE_KEY = 'criticalAlertsExpanded';
 function CriticalAlerts({ summary }) {
     _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const [expanded, setExpanded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         "CriticalAlerts.useState": ()=>{
             if ("TURBOPACK compile-time truthy", 1) {
@@ -3133,17 +3138,21 @@ Keep it concise and practical.`;
             px: 3,
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             position: 'relative',
-            borderRadius: 3,
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
             overflow: 'hidden',
             // Liquid glass effect with gradient
             backgroundColor: (theme)=>theme.palette.mode === 'dark' ? errorAlerts.length > 0 ? 'rgba(40, 30, 35, 0.5)' : 'rgba(40, 35, 30, 0.5)' : errorAlerts.length > 0 ? 'rgba(255, 245, 245, 0.25)' : 'rgba(255, 250, 245, 0.25)',
-            backdropFilter: 'blur(32px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+            ...isGlass && {
+                backdropFilter: 'blur(32px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(32px) saturate(180%)'
+            },
             border: '1px solid',
             borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-            boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+            ...isGlass && {
+                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+            },
             // Gradient overlay for depth
-            '&::before': {
+            '&::before': isGlass ? {
                 content: '""',
                 position: 'absolute',
                 top: 0,
@@ -3152,8 +3161,8 @@ Keep it concise and practical.`;
                 height: '100%',
                 background: (theme)=>theme.palette.mode === 'dark' ? errorAlerts.length > 0 ? 'linear-gradient(135deg, rgba(211, 47, 47, 0.12) 0%, rgba(211, 47, 47, 0.04) 30%, transparent 50%, rgba(0, 0, 0, 0.15) 100%)' : 'linear-gradient(135deg, rgba(237, 108, 2, 0.12) 0%, rgba(237, 108, 2, 0.04) 30%, transparent 50%, rgba(0, 0, 0, 0.15) 100%)' : errorAlerts.length > 0 ? 'linear-gradient(135deg, rgba(211, 47, 47, 0.08) 0%, rgba(211, 47, 47, 0.02) 30%, transparent 50%, rgba(0, 0, 0, 0.03) 100%)' : 'linear-gradient(135deg, rgba(237, 108, 2, 0.08) 0%, rgba(237, 108, 2, 0.02) 30%, transparent 50%, rgba(0, 0, 0, 0.03) 100%)',
                 pointerEvents: 'none',
-                borderRadius: 3
-            }
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`
+            } : {}
         },
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
             sx: {
@@ -3180,7 +3189,7 @@ Keep it concise and practical.`;
                             children: errorAlerts.length > 0 ? 'Critical Issues Detected' : 'Warnings'
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                            lineNumber: 320,
+                            lineNumber: 327,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3190,22 +3199,22 @@ Keep it concise and practical.`;
                             },
                             children: expanded ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandLess$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                lineNumber: 327,
+                                lineNumber: 334,
                                 columnNumber: 25
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandMore$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                lineNumber: 327,
+                                lineNumber: 334,
                                 columnNumber: 46
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                            lineNumber: 323,
+                            lineNumber: 330,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                    lineNumber: 310,
+                    lineNumber: 317,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Collapse$2f$Collapse$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3235,7 +3244,7 @@ Keep it concise and practical.`;
                                                     flex: 1,
                                                     cursor: 'pointer',
                                                     transition: 'background-color 0.2s',
-                                                    borderRadius: 1,
+                                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                                     '&:hover': {
                                                         bgcolor: 'action.hover'
                                                     }
@@ -3252,7 +3261,7 @@ Keep it concise and practical.`;
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                            lineNumber: 359,
+                                                            lineNumber: 366,
                                                             columnNumber: 25
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$WarningAmber$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                             sx: {
@@ -3261,12 +3270,12 @@ Keep it concise and practical.`;
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                            lineNumber: 361,
+                                                            lineNumber: 368,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                        lineNumber: 357,
+                                                        lineNumber: 364,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3277,13 +3286,13 @@ Keep it concise and practical.`;
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                        lineNumber: 364,
+                                                        lineNumber: 371,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                lineNumber: 343,
+                                                lineNumber: 350,
                                                 columnNumber: 19
                                             }, this),
                                             hasApiKey && alert.severity === 'error' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3292,11 +3301,11 @@ Keep it concise and practical.`;
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                    lineNumber: 375,
+                                                    lineNumber: 382,
                                                     columnNumber: 53
                                                 }, void 0) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$AutoFixHigh$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                                     fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                    lineNumber: 375,
+                                                    lineNumber: 382,
                                                     columnNumber: 86
                                                 }, void 0),
                                                 onClick: (e)=>{
@@ -3313,11 +3322,15 @@ Keep it concise and practical.`;
                                                     textTransform: 'none',
                                                     // Liquid glass effect
                                                     backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(139, 92, 246, 0.15)' : 'rgba(139, 92, 246, 0.1)',
-                                                    backdropFilter: 'blur(12px) saturate(180%)',
-                                                    WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                                                    ...isGlass && {
+                                                        backdropFilter: 'blur(12px) saturate(180%)',
+                                                        WebkitBackdropFilter: 'blur(12px) saturate(180%)'
+                                                    },
                                                     border: '1px solid',
                                                     borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.2)',
-                                                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 2px 8px 0 rgba(139, 92, 246, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)' : '0 2px 8px 0 rgba(139, 92, 246, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)',
+                                                    ...isGlass && {
+                                                        boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 2px 8px 0 rgba(139, 92, 246, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)' : '0 2px 8px 0 rgba(139, 92, 246, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)'
+                                                    },
                                                     color: 'primary.main',
                                                     '&:hover': {
                                                         backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(139, 92, 246, 0.25)' : 'rgba(139, 92, 246, 0.15)',
@@ -3330,13 +3343,13 @@ Keep it concise and practical.`;
                                                 children: "AI Explain"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                                lineNumber: 373,
+                                                lineNumber: 380,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                        lineNumber: 334,
+                                        lineNumber: 341,
                                         columnNumber: 17
                                     }, this),
                                     aiExplanations[index] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3356,44 +3369,45 @@ Keep it concise and practical.`;
                                             children: aiExplanations[index]
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                            lineNumber: 433,
+                                            lineNumber: 444,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                        lineNumber: 426,
+                                        lineNumber: 437,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, index, true, {
                                 fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                                lineNumber: 333,
+                                lineNumber: 340,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                        lineNumber: 331,
+                        lineNumber: 338,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-                    lineNumber: 330,
+                    lineNumber: 337,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-            lineNumber: 309,
+            lineNumber: 316,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/app/components/dashboard/critical-alerts.tsx",
-        lineNumber: 259,
+        lineNumber: 262,
         columnNumber: 5
     }, this);
 }
-_s(CriticalAlerts, "K0EgCmotVTeq/4FxoWctK5IgvdE=", false, function() {
+_s(CriticalAlerts, "YSzuQ2LkDK7DJnL8U4506XYI1go=", false, function() {
     return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$pods$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePods"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$nodes$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useNodes"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$deployments$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDeployments"],
@@ -3422,14 +3436,22 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Box/Box.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Typography/Typography.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Paper/Paper.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
 ;
 function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, statusBadge, metrics, footer }) {
+    _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
+    const isLiquidGlass = visualPreset === 'liquidGlass';
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
         onClick: onClick,
-        elevation: 0,
+        elevation: isGlass ? 0 : 1,
         sx: {
             p: 2,
             cursor: onClick ? 'pointer' : 'default',
@@ -3438,37 +3460,45 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
-            borderRadius: 3,
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
             overflow: 'hidden',
-            // Liquid glass effect - MORE transparency!
-            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            border: '1px solid',
-            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-            boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-            // Glass shine - diagonal gradient
-            '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '100%',
-                background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
-                pointerEvents: 'none',
-                borderRadius: 3
+            // Conditional glass effects
+            ...isGlass && {
+                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+            },
+            // Gradient shine only for liquid glass
+            ...isLiquidGlass && {
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '100%',
+                    background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
+                    pointerEvents: 'none',
+                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
+                }
             },
             '&:hover': {
-                transform: 'translateY(-2px) scale(1.01)',
-                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
-                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
-                backdropFilter: 'blur(28px) saturate(200%)',
-                WebkitBackdropFilter: 'blur(28px) saturate(200%)',
-                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                ...isGlass && {
+                    transform: 'translateY(-2px) scale(1.01)',
+                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
+                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
+                    backdropFilter: 'blur(28px) saturate(200%)',
+                    WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                }
             },
             '&:active': {
-                transform: 'translateY(0px) scale(0.98)'
+                ...isGlass && {
+                    transform: 'translateY(0px) scale(0.98)'
+                }
             }
         },
         children: [
@@ -3486,12 +3516,14 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                         sx: {
                             width: 44,
                             height: 44,
-                            borderRadius: 2.5,
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             background: (theme)=>theme.palette.mode === 'dark' ? `linear-gradient(135deg, ${resourceColor}25 0%, ${resourceColor}15 100%)` : `linear-gradient(135deg, ${resourceColor}30 0%, ${resourceColor}15 100%)`,
-                            backdropFilter: 'blur(10px)',
+                            ...isGlass && {
+                                backdropFilter: 'blur(10px)'
+                            },
                             border: '1px solid',
                             borderColor: (theme)=>theme.palette.mode === 'dark' ? `${resourceColor}40` : `${resourceColor}30`,
                             flexShrink: 0,
@@ -3505,12 +3537,12 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                             }
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/common/resource-card.tsx",
-                            lineNumber: 125,
+                            lineNumber: 140,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/resource-card.tsx",
-                        lineNumber: 100,
+                        lineNumber: 113,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3534,7 +3566,7 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                                 children: name
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                                lineNumber: 128,
+                                lineNumber: 143,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3546,19 +3578,19 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                                 children: resourceType
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                                lineNumber: 143,
+                                lineNumber: 158,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/common/resource-card.tsx",
-                        lineNumber: 127,
+                        lineNumber: 142,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 99,
+                lineNumber: 112,
                 columnNumber: 7
             }, this),
             statusBadge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3570,7 +3602,7 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                 children: statusBadge
             }, void 0, false, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 151,
+                lineNumber: 166,
                 columnNumber: 9
             }, this),
             metrics && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3582,7 +3614,7 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                 children: metrics
             }, void 0, false, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 158,
+                lineNumber: 173,
                 columnNumber: 9
             }, this),
             footer && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3597,16 +3629,21 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                 children: footer
             }, void 0, false, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 165,
+                lineNumber: 180,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/components/common/resource-card.tsx",
-        lineNumber: 32,
+        lineNumber: 37,
         columnNumber: 5
     }, this);
 }
+_s(ResourceCard, "c0MZhghFmuZD3dgcE5n4BKV0J3M=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
+    ];
+});
 _c = ResourceCard;
 var _c;
 __turbopack_context__.k.register(_c, "ResourceCard");
@@ -4657,10 +4694,10 @@ function ResourceUtilization({ quotas }) {
                         color: color,
                         sx: {
                             height: 8,
-                            borderRadius: 1,
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                             bgcolor: 'action.hover',
                             '& .MuiLinearProgress-bar': {
-                                borderRadius: 1
+                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                             }
                         }
                     }, void 0, false, {
@@ -5294,6 +5331,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$mat
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CloudOff$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/CloudOff.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Refresh$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Refresh.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$cluster$2d$health$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/hooks/use-cluster-health.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -5301,8 +5340,11 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function ClusterConnectionAlert({ minimal = false }) {
     _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { data: health, isLoading, refetch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$cluster$2d$health$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useClusterHealth"])();
     // Don't show anything while loading
     if (isLoading) {
@@ -5332,32 +5374,32 @@ function ClusterConnectionAlert({ minimal = false }) {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 30,
+                        lineNumber: 33,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Button$3e$__["Button"], {
                         size: "small",
                         startIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Refresh$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                            lineNumber: 33,
+                            lineNumber: 36,
                             columnNumber: 43
                         }, void 0),
                         onClick: ()=>refetch(),
                         children: "Retry"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 33,
+                        lineNumber: 36,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                lineNumber: 29,
+                lineNumber: 32,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-            lineNumber: 28,
+            lineNumber: 31,
             columnNumber: 7
         }, this);
     }
@@ -5374,13 +5416,15 @@ function ClusterConnectionAlert({ minimal = false }) {
             sx: {
                 maxWidth: 700,
                 width: '100%',
-                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 100, 100, 0.3)' : 'rgba(211, 47, 47, 0.3)',
-                borderRadius: '12px',
-                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)' : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+                ...isGlass && {
+                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
+                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 100, 100, 0.3)' : 'rgba(211, 47, 47, 0.3)',
+                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)' : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)'
+                },
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                 p: 3
             },
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -5399,7 +5443,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 76,
+                        lineNumber: 81,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -5414,7 +5458,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 children: "Cluster Connection Failed"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 78,
+                                lineNumber: 83,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -5426,7 +5470,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 children: health?.message || 'Unable to connect to Kubernetes cluster.'
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 81,
+                                lineNumber: 86,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -5439,7 +5483,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 children: "Troubleshooting Steps:"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 85,
+                                lineNumber: 90,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -5459,34 +5503,15 @@ function ClusterConnectionAlert({ minimal = false }) {
                                             children: [
                                                 "Check your ",
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
-                                                    style: {
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                                                        padding: '2px 6px',
-                                                        borderRadius: '4px'
-                                                    },
                                                     children: "kubeconfig"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                                    lineNumber: 91,
+                                                    lineNumber: 96,
                                                     columnNumber: 28
                                                 }, this),
                                                 " file is properly configured"
                                             ]
                                         }, void 0, true, {
-                                            fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 90,
-                                            columnNumber: 15
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 89,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
-                                            variant: "body2",
-                                            children: "Verify your cluster credentials are valid and not expired"
-                                        }, void 0, false, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
                                             lineNumber: 95,
                                             columnNumber: 15
@@ -5499,15 +5524,29 @@ function ClusterConnectionAlert({ minimal = false }) {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
                                             variant: "body2",
-                                            children: "Ensure you have network access to your cluster"
+                                            children: "Verify your cluster credentials are valid and not expired"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 98,
+                                            lineNumber: 100,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 97,
+                                        lineNumber: 99,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
+                                            variant: "body2",
+                                            children: "Ensure you have network access to your cluster"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
+                                            lineNumber: 103,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
+                                        lineNumber: 102,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -5516,27 +5555,22 @@ function ClusterConnectionAlert({ minimal = false }) {
                                             children: [
                                                 "Run ",
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
-                                                    style: {
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                                                        padding: '2px 6px',
-                                                        borderRadius: '4px'
-                                                    },
                                                     children: "kubectl version"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                                    lineNumber: 102,
+                                                    lineNumber: 107,
                                                     columnNumber: 21
                                                 }, this),
                                                 " to verify connectivity"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 101,
+                                            lineNumber: 106,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 100,
+                                        lineNumber: 105,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -5555,7 +5589,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                                     children: "Kubernetes documentation"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                                    lineNumber: 108,
+                                                    lineNumber: 113,
                                                     columnNumber: 17
                                                 }, this),
                                                 ' ',
@@ -5563,18 +5597,18 @@ function ClusterConnectionAlert({ minimal = false }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 106,
+                                            lineNumber: 111,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 105,
+                                        lineNumber: 110,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 88,
+                                lineNumber: 93,
                                 columnNumber: 11
                             }, this),
                             health?.code && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -5590,13 +5624,13 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 122,
+                                lineNumber: 127,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 77,
+                        lineNumber: 82,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Button$3e$__["Button"], {
@@ -5604,14 +5638,14 @@ function ClusterConnectionAlert({ minimal = false }) {
                         size: "small",
                         startIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Refresh$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                            lineNumber: 130,
+                            lineNumber: 135,
                             columnNumber: 22
                         }, void 0),
                         onClick: ()=>refetch(),
                         sx: {
                             px: 2,
                             py: 0.75,
-                            borderRadius: '8px',
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                             textTransform: 'none',
                             fontWeight: 600,
                             flexShrink: 0
@@ -5619,28 +5653,29 @@ function ClusterConnectionAlert({ minimal = false }) {
                         children: "Retry"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 127,
+                        lineNumber: 132,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                lineNumber: 75,
+                lineNumber: 80,
                 columnNumber: 7
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-            lineNumber: 52,
+            lineNumber: 55,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-        lineNumber: 43,
+        lineNumber: 46,
         columnNumber: 5
     }, this);
 }
-_s(ClusterConnectionAlert, "3pyd7CEe/z1Oxt/gr5kCEbJJzvs=", false, function() {
+_s(ClusterConnectionAlert, "EuYXqMnJvzJCMOvqXR7I8DeZjak=", false, function() {
     return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$cluster$2d$health$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useClusterHealth"]
     ];
 });

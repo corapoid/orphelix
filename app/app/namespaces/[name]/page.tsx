@@ -18,8 +18,11 @@ import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { QuotaUsageCard } from '@/app/components/namespace/quota-usage-card'
 import { useModeStore } from '@/lib/core/store'
 import { useEffect } from 'react'
+import { useTheme } from '@orphelix/ui'
 
 export default function NamespaceDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
   const setNamespace = useModeStore((state) => state.setNamespace)
@@ -96,25 +99,27 @@ export default function NamespaceDetailPage() {
               {Object.entries(namespace.labels).map(([key, value]) => (
                 <Paper
                   key={key}
-                  elevation={0}
+                  elevation={isGlass ? 0 : 1}
                   sx={{
                     px: 2,
                     py: 1,
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(30, 30, 46, 0.6)'
-                        : 'rgba(255, 255, 255, 0.25)',
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                    border: '1px solid',
-                    borderColor: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(255, 255, 255, 0.12)'
-                        : 'rgba(209, 213, 219, 0.4)',
-                    borderRadius: 3,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1,
+                    ...(isGlass && {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(30, 30, 46, 0.6)'
+                          : 'rgba(255, 255, 255, 0.25)',
+                      backdropFilter: 'blur(24px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                      border: '1px solid',
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(255, 255, 255, 0.12)'
+                          : 'rgba(209, 213, 219, 0.4)',
+                    }),
                   }}
                 >
                   <Typography
@@ -168,25 +173,27 @@ export default function NamespaceDetailPage() {
                 {Object.entries(namespace.annotations).map(([key, value]) => (
                   <Paper
                     key={key}
-                    elevation={0}
+                    elevation={isGlass ? 0 : 1}
                     sx={{
                       px: 2,
                       py: 1,
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(30, 30, 46, 0.6)'
-                          : 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(24px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                      border: '1px solid',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255, 255, 255, 0.12)'
-                          : 'rgba(209, 213, 219, 0.4)',
-                      borderRadius: 3,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
+                      ...(isGlass && {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(30, 30, 46, 0.6)'
+                            : 'rgba(255, 255, 255, 0.25)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(255, 255, 255, 0.12)'
+                            : 'rgba(209, 213, 219, 0.4)',
+                      }),
                     }}
                   >
                     <Typography variant="caption" color="text.secondary" fontWeight={600}>

@@ -80,7 +80,7 @@ export function QuotaUsageCard({ quota }: QuotaUsageCardProps) {
                 variant="determinate"
                 value={Math.min(percentage, 100)}
                 color={color}
-                sx={{ height: 8, borderRadius: 1 }}
+                sx={{ height: 8, borderRadius: (theme) => `${theme.shape.borderRadius}px` }}
               />
             </Box>
           )

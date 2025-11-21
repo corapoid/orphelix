@@ -428,10 +428,12 @@ function FileTree({ owner, repo, branch, onFileSelect, selectedFile, searchQuery
         });
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassPanel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassPanel"], {
+        animationType: "none",
         sx: {
             width: '100%',
             height: '100%',
-            overflow: 'auto'
+            overflow: 'auto',
+            p: 0
         },
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$List$2f$List$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
             dense: true,
@@ -442,7 +444,7 @@ function FileTree({ owner, repo, branch, onFileSelect, selectedFile, searchQuery
             children: renderTree(dirContents['/'] || [])
         }, void 0, false, {
             fileName: "[project]/app/app/components/repo-browser/file-tree.tsx",
-            lineNumber: 324,
+            lineNumber: 326,
             columnNumber: 7
         }, this)
     }, void 0, false, {
@@ -795,56 +797,69 @@ function FileViewer({ owner, repo, branch, filePath }) {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassPanel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassPanel"], {
+                animationType: "none",
                 sx: {
                     flex: 1,
                     overflow: 'hidden',
-                    pt: 2
+                    p: 0,
+                    display: 'flex',
+                    flexDirection: 'column'
                 },
-                children: monacoInstance || !isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$monaco$2d$editor$2f$react$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"], {
-                    height: "100%",
-                    language: editorLanguage,
-                    value: content,
-                    theme: theme.palette.mode === 'dark' ? 'vs-dark' : 'vs',
-                    onChange: (value)=>setContent(value || ''),
-                    onMount: handleEditorMount,
-                    options: {
-                        minimap: {
-                            enabled: false
-                        },
-                        fontSize: 13,
-                        lineNumbers: 'on',
-                        scrollBeyondLastLine: false,
-                        scrollbar: {
-                            vertical: 'visible',
-                            horizontal: 'visible',
-                            useShadows: false,
-                            verticalScrollbarSize: 10,
-                            horizontalScrollbarSize: 10
-                        },
-                        hideCursorInOverviewRuler: true,
-                        overviewRulerLanes: 0,
-                        readOnly: isLoading
-                    }
-                }, void 0, false, {
-                    fileName: "[project]/app/app/components/repo-browser/file-viewer.tsx",
-                    lineNumber: 247,
-                    columnNumber: 11
-                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                     sx: {
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100%'
+                        flex: 1,
+                        minHeight: 0
                     },
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$CircularProgress$2f$CircularProgress$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                    children: monacoInstance || !isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$monaco$2d$editor$2f$react$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"], {
+                        height: "100%",
+                        language: editorLanguage,
+                        value: content,
+                        theme: theme.palette.mode === 'dark' ? 'vs-dark' : 'vs',
+                        onChange: (value)=>setContent(value || ''),
+                        onMount: handleEditorMount,
+                        options: {
+                            minimap: {
+                                enabled: false
+                            },
+                            fontSize: 13,
+                            lineNumbers: 'on',
+                            scrollBeyondLastLine: false,
+                            scrollbar: {
+                                vertical: 'visible',
+                                horizontal: 'visible',
+                                useShadows: false,
+                                verticalScrollbarSize: 10,
+                                horizontalScrollbarSize: 10
+                            },
+                            hideCursorInOverviewRuler: true,
+                            overviewRulerLanes: 0,
+                            readOnly: isLoading
+                        }
+                    }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/file-viewer.tsx",
-                        lineNumber: 273,
+                        lineNumber: 251,
+                        columnNumber: 13
+                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                        sx: {
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%'
+                        },
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$CircularProgress$2f$CircularProgress$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                            fileName: "[project]/app/app/components/repo-browser/file-viewer.tsx",
+                            lineNumber: 277,
+                            columnNumber: 15
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/app/app/components/repo-browser/file-viewer.tsx",
+                        lineNumber: 276,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/repo-browser/file-viewer.tsx",
-                    lineNumber: 272,
-                    columnNumber: 11
+                    lineNumber: 249,
+                    columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/components/repo-browser/file-viewer.tsx",
@@ -1257,11 +1272,13 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$mat
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Snackbar$2f$Snackbar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Snackbar/Snackbar.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$monaco$2d$editor$2f$react$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@monaco-editor/react/dist/index.mjs [app-ssr] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$styles$2f$useTheme$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__useTheme$3e$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/styles/useTheme.js [app-ssr] (ecmascript) <export default as useTheme>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$github$2f$template$2d$generator$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/github/template-generator.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/core/store.ts [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/components/GlassButton.js [app-ssr] (ecmascript)");
 'use client';
+;
 ;
 ;
 ;
@@ -1316,6 +1333,8 @@ const POPULAR_IMAGES = [
 ];
 function AddAppModal({ open, onClose }) {
     const theme = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$styles$2f$useTheme$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__useTheme$3e$__["useTheme"])();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { selectedRepo, selectedBranch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGitHubStore"])();
     const { mode, selectedNamespace: currentNamespace } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useModeStore"])();
     const [activeStep, setActiveStep] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
@@ -1567,7 +1586,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                 children: "Application Type"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                lineNumber: 334,
+                                lineNumber: 337,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$RadioGroup$2f$RadioGroup$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1578,7 +1597,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                         value: "deployment",
                                         control: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Radio$2f$Radio$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 338,
+                                            lineNumber: 341,
                                             columnNumber: 28
                                         }, void 0),
                                         label: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1589,7 +1608,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     children: "Deployment"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 341,
+                                                    lineNumber: 344,
                                                     columnNumber: 23
                                                 }, void 0),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1598,25 +1617,25 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     children: "Stateless applications, can scale horizontally"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 342,
+                                                    lineNumber: 345,
                                                     columnNumber: 23
                                                 }, void 0)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 340,
+                                            lineNumber: 343,
                                             columnNumber: 21
                                         }, void 0)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                        lineNumber: 336,
+                                        lineNumber: 339,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$FormControlLabel$2f$FormControlLabel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                         value: "statefulset",
                                         control: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Radio$2f$Radio$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 350,
+                                            lineNumber: 353,
                                             columnNumber: 28
                                         }, void 0),
                                         label: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1627,7 +1646,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     children: "StatefulSet"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 353,
+                                                    lineNumber: 356,
                                                     columnNumber: 23
                                                 }, void 0),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1636,35 +1655,35 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     children: "Stateful applications with persistent identity"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 354,
+                                                    lineNumber: 357,
                                                     columnNumber: 23
                                                 }, void 0)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 352,
+                                            lineNumber: 355,
                                             columnNumber: 21
                                         }, void 0)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                        lineNumber: 348,
+                                        lineNumber: 351,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                lineNumber: 335,
+                                lineNumber: 338,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 333,
+                        lineNumber: 336,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                    lineNumber: 332,
+                    lineNumber: 335,
                     columnNumber: 11
                 }, this);
             case 1:
@@ -1685,7 +1704,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                             required: true
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 368,
+                            lineNumber: 371,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TextField$2f$TextField$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1696,7 +1715,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                             helperText: "Namespace is set from your current context. Change context in Settings to deploy to a different namespace."
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 378,
+                            lineNumber: 381,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$FormControl$2f$FormControl$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1706,7 +1725,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                     children: "Resource Preset"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 387,
+                                    lineNumber: 390,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Select$2f$Select$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1719,7 +1738,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "Small (128Mi/250m → 256Mi/500m)"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 393,
+                                            lineNumber: 396,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1727,7 +1746,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "Medium (256Mi/500m → 512Mi/1000m)"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 396,
+                                            lineNumber: 399,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1735,19 +1754,19 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "Large (512Mi/1000m → 1Gi/2000m)"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 399,
+                                            lineNumber: 402,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 388,
+                                    lineNumber: 391,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 386,
+                            lineNumber: 389,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Autocomplete$2f$Autocomplete$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"], {
@@ -1763,12 +1782,12 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                     required: true
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 411,
+                                    lineNumber: 414,
                                     columnNumber: 17
                                 }, void 0)
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 405,
+                            lineNumber: 408,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TextField$2f$TextField$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1780,7 +1799,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                             fullWidth: true
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 421,
+                            lineNumber: 424,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TextField$2f$TextField$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1792,13 +1811,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                             placeholder: "https://github.com/..."
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 430,
+                            lineNumber: 433,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                    lineNumber: 367,
+                    lineNumber: 370,
                     columnNumber: 11
                 }, this);
             case 2:
@@ -1815,13 +1834,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                 onChange: (e)=>setEnableAutoscaling(e.target.checked)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                lineNumber: 446,
+                                lineNumber: 449,
                                 columnNumber: 17
                             }, void 0),
                             label: "Enable Horizontal Pod Autoscaling (HPA)"
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 444,
+                            lineNumber: 447,
                             columnNumber: 13
                         }, this),
                         enableAutoscaling ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1836,7 +1855,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                     children: "HPA will automatically scale your application between min and max replicas based on CPU and memory utilization."
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 456,
+                                    lineNumber: 459,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1849,7 +1868,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 461,
+                                            lineNumber: 464,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Slider$2f$Slider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1861,7 +1880,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             valueLabelDisplay: "auto"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 462,
+                                            lineNumber: 465,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1870,13 +1889,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "Number of replicas to start with before autoscaling takes effect"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 470,
+                                            lineNumber: 473,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 460,
+                                    lineNumber: 463,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1889,7 +1908,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 476,
+                                            lineNumber: 479,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Slider$2f$Slider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1908,13 +1927,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             valueLabelDisplay: "auto"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 477,
+                                            lineNumber: 480,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 475,
+                                    lineNumber: 478,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1927,7 +1946,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 495,
+                                            lineNumber: 498,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Slider$2f$Slider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1939,13 +1958,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             valueLabelDisplay: "auto"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 496,
+                                            lineNumber: 499,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 494,
+                                    lineNumber: 497,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1959,7 +1978,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 507,
+                                            lineNumber: 510,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Slider$2f$Slider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1981,13 +2000,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             valueLabelDisplay: "auto"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 508,
+                                            lineNumber: 511,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 506,
+                                    lineNumber: 509,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2001,7 +2020,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 523,
+                                            lineNumber: 526,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Slider$2f$Slider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2023,19 +2042,19 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             valueLabelDisplay: "auto"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 524,
+                                            lineNumber: 527,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 522,
+                                    lineNumber: 525,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 455,
+                            lineNumber: 458,
                             columnNumber: 15
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             sx: {
@@ -2049,7 +2068,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                     children: "Autoscaling is disabled. Your application will run with a fixed number of replicas."
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 540,
+                                    lineNumber: 543,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2062,7 +2081,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 545,
+                                            lineNumber: 548,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Slider$2f$Slider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2074,7 +2093,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             valueLabelDisplay: "auto"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 546,
+                                            lineNumber: 549,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2083,31 +2102,31 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "Fixed number of pod replicas to run"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 554,
+                                            lineNumber: 557,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 544,
+                                    lineNumber: 547,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 539,
+                            lineNumber: 542,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                    lineNumber: 443,
+                    lineNumber: 446,
                     columnNumber: 11
                 }, this);
             case 3:
                 if (!generatedFiles) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$CircularProgress$2f$CircularProgress$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                    lineNumber: 564,
+                    lineNumber: 567,
                     columnNumber: 37
                 }, this);
                 // Flatten all files into a single array for display
@@ -2154,12 +2173,12 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                     label: name
                                 }, name, false, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 592,
+                                    lineNumber: 595,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 590,
+                            lineNumber: 593,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2181,12 +2200,12 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: file.path
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 599,
+                                            lineNumber: 602,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                             sx: {
-                                                borderRadius: 2,
+                                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                                 overflow: 'hidden',
                                                 border: 1,
                                                 borderColor: 'divider',
@@ -2206,29 +2225,29 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                 theme: theme.palette.mode === 'dark' ? 'vs-dark' : 'vs'
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                lineNumber: 611,
+                                                lineNumber: 614,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 602,
+                                            lineNumber: 605,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, name, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 598,
+                                    lineNumber: 601,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 596,
+                            lineNumber: 599,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                    lineNumber: 589,
+                    lineNumber: 592,
                     columnNumber: 11
                 }, this);
             case 4:
@@ -2245,7 +2264,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                             children: "Pull request created successfully!"
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 634,
+                            lineNumber: 637,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2267,7 +2286,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "PR Number:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 640,
+                                            lineNumber: 643,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Chip$2f$Chip$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2275,13 +2294,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             color: "primary"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 641,
+                                            lineNumber: 644,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 639,
+                                    lineNumber: 642,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2292,7 +2311,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "PR URL:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 645,
+                                            lineNumber: 648,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2310,13 +2329,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: createdPR.url
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 646,
+                                            lineNumber: 649,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 644,
+                                    lineNumber: 647,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2327,7 +2346,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "Branch:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 658,
+                                            lineNumber: 661,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Chip$2f$Chip$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2335,13 +2354,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             variant: "outlined"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 659,
+                                            lineNumber: 662,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 657,
+                                    lineNumber: 660,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2355,14 +2374,14 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: "Application Summary:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 663,
+                                            lineNumber: 666,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                             sx: {
                                                 p: 2,
                                                 bgcolor: 'background.default',
-                                                borderRadius: 1
+                                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                             },
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2372,7 +2391,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                             children: "Name:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                            lineNumber: 665,
+                                                            lineNumber: 668,
                                                             columnNumber: 47
                                                         }, this),
                                                         " ",
@@ -2380,7 +2399,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 665,
+                                                    lineNumber: 668,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2390,7 +2409,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                             children: "Type:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                            lineNumber: 666,
+                                                            lineNumber: 669,
                                                             columnNumber: 47
                                                         }, this),
                                                         " ",
@@ -2398,7 +2417,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 666,
+                                                    lineNumber: 669,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2408,7 +2427,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                             children: "Namespace:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                            lineNumber: 667,
+                                                            lineNumber: 670,
                                                             columnNumber: 47
                                                         }, this),
                                                         " ",
@@ -2416,7 +2435,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 667,
+                                                    lineNumber: 670,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2426,7 +2445,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                             children: "Image:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                            lineNumber: 668,
+                                                            lineNumber: 671,
                                                             columnNumber: 47
                                                         }, this),
                                                         " ",
@@ -2434,7 +2453,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 668,
+                                                    lineNumber: 671,
                                                     columnNumber: 19
                                                 }, this),
                                                 port && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2444,7 +2463,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                             children: "Port:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                            lineNumber: 669,
+                                                            lineNumber: 672,
                                                             columnNumber: 56
                                                         }, this),
                                                         " ",
@@ -2452,7 +2471,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 669,
+                                                    lineNumber: 672,
                                                     columnNumber: 28
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2462,7 +2481,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                             children: "Scaling:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                            lineNumber: 671,
+                                                            lineNumber: 674,
                                                             columnNumber: 21
                                                         }, this),
                                                         " ",
@@ -2470,31 +2489,31 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                                    lineNumber: 670,
+                                                    lineNumber: 673,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 664,
+                                            lineNumber: 667,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                    lineNumber: 662,
+                                    lineNumber: 665,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 638,
+                            lineNumber: 641,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                    lineNumber: 633,
+                    lineNumber: 636,
                     columnNumber: 11
                 }, this);
             default:
@@ -2512,7 +2531,9 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
         PaperProps: {
             sx: {
                 bgcolor: 'background.paper',
-                backdropFilter: 'blur(60px)',
+                ...isGlass && {
+                    backdropFilter: 'blur(60px)'
+                },
                 border: theme.palette.mode === 'light' ? '1px solid rgba(209, 213, 219, 0.4)' : '1px solid rgba(255, 255, 255, 0.12)'
             }
         },
@@ -2521,7 +2542,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                 children: "Add New Application"
             }, void 0, false, {
                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                lineNumber: 704,
+                lineNumber: 709,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$DialogContent$2f$DialogContent$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2534,12 +2555,12 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                         },
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$CircularProgress$2f$CircularProgress$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 709,
+                            lineNumber: 714,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 708,
+                        lineNumber: 713,
                         columnNumber: 11
                     }, this),
                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2551,7 +2572,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 714,
+                        lineNumber: 719,
                         columnNumber: 11
                     }, this),
                     !loading && repoStructure && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -2566,17 +2587,17 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                                             children: label
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                            lineNumber: 724,
+                                            lineNumber: 729,
                                             columnNumber: 19
                                         }, this)
                                     }, label, false, {
                                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                        lineNumber: 723,
+                                        lineNumber: 728,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                                lineNumber: 721,
+                                lineNumber: 726,
                                 columnNumber: 13
                             }, this),
                             renderStepContent()
@@ -2585,7 +2606,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                lineNumber: 706,
+                lineNumber: 711,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$DialogActions$2f$DialogActions$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2595,7 +2616,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                         children: "Cancel"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 735,
+                        lineNumber: 740,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2604,7 +2625,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 736,
+                        lineNumber: 741,
                         columnNumber: 9
                     }, this),
                     activeStep > 0 && activeStep < 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2612,7 +2633,7 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                         children: "Back"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 738,
+                        lineNumber: 743,
                         columnNumber: 11
                     }, this),
                     activeStep === 3 ? // Preview step - Create PR button
@@ -2623,12 +2644,12 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                             size: 24
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 743,
+                            lineNumber: 748,
                             columnNumber: 29
                         }, this) : 'Create Pull Request'
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 742,
+                        lineNumber: 747,
                         columnNumber: 11
                     }, this) : activeStep === 4 ? // Summary step - Merge PR button
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassButton"], {
@@ -2638,12 +2659,12 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                             size: 24
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                            lineNumber: 748,
+                            lineNumber: 753,
                             columnNumber: 28
                         }, this) : 'Merge Pull Request'
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 747,
+                        lineNumber: 752,
                         columnNumber: 11
                     }, this) : // Steps 0-2 - Next button
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassButton"], {
@@ -2652,13 +2673,13 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                         children: "Next"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                        lineNumber: 752,
+                        lineNumber: 757,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                lineNumber: 734,
+                lineNumber: 739,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Snackbar$2f$Snackbar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2679,18 +2700,18 @@ ${filesToAdd.map((f)=>`- \`${f.path}\``).join('\n')}
                     children: successMessage
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                    lineNumber: 764,
+                    lineNumber: 769,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-                lineNumber: 758,
+                lineNumber: 763,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/components/repo-browser/add-app-modal.tsx",
-        lineNumber: 689,
+        lineNumber: 692,
         columnNumber: 5
     }, this);
 }
@@ -3377,7 +3398,7 @@ function RepoSelector() {
                                 height: '100%',
                                 display: 'block',
                                 textAlign: 'left',
-                                borderRadius: '12px',
+                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                 transition: 'transform 0.2s',
                                 '&:hover': {
                                     transform: 'translateY(-4px)'
@@ -3759,6 +3780,7 @@ function RepoBrowserPage() {
                     width: sidebarWidth,
                     minWidth: sidebarWidth,
                     maxWidth: sidebarWidth,
+                    height: '100%',
                     position: 'relative',
                     flexShrink: 0,
                     display: 'flex',
@@ -3774,7 +3796,7 @@ function RepoBrowserPage() {
                         searchQuery: searchQuery
                     }, void 0, false, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 204,
+                        lineNumber: 205,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3800,7 +3822,7 @@ function RepoBrowserPage() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 214,
+                        lineNumber: 215,
                         columnNumber: 11
                     }, this)
                 ]
@@ -3831,14 +3853,14 @@ function RepoBrowserPage() {
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/app/repo-browser/page.tsx",
-                                lineNumber: 242,
+                                lineNumber: 243,
                                 columnNumber: 15
                             }, this),
                             "Creating Pull Request..."
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 241,
+                        lineNumber: 242,
                         columnNumber: 13
                     }, this),
                     prError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3850,7 +3872,7 @@ function RepoBrowserPage() {
                         children: prError
                     }, void 0, false, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 247,
+                        lineNumber: 248,
                         columnNumber: 13
                     }, this),
                     selectedFile && selectedFile.match(/\.(yaml|yml|json|md|txt|gitignore|sh|py|js|ts|tsx|jsx|css|html|xml|env|conf|cfg)$|^\.gitignore$|^\.env/) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$repo$2d$browser$2f$file$2d$viewer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FileViewer"], {
@@ -3861,7 +3883,7 @@ function RepoBrowserPage() {
                         onCreatePR: handleCreatePR
                     }, void 0, false, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 253,
+                        lineNumber: 254,
                         columnNumber: 13
                     }, this) : selectedFile ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                         severity: "info",
@@ -3871,7 +3893,7 @@ function RepoBrowserPage() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 261,
+                        lineNumber: 262,
                         columnNumber: 13
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                         sx: {
@@ -3886,18 +3908,18 @@ function RepoBrowserPage() {
                             children: "Select a file from the tree to view"
                         }, void 0, false, {
                             fileName: "[project]/app/app/repo-browser/page.tsx",
-                            lineNumber: 273,
+                            lineNumber: 274,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 265,
+                        lineNumber: 266,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/repo-browser/page.tsx",
-                lineNumber: 239,
+                lineNumber: 240,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tooltip$2f$Tooltip$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -3914,17 +3936,17 @@ function RepoBrowserPage() {
                     },
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Add$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/app/app/repo-browser/page.tsx",
-                        lineNumber: 292,
+                        lineNumber: 293,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/app/repo-browser/page.tsx",
-                    lineNumber: 282,
+                    lineNumber: 283,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/repo-browser/page.tsx",
-                lineNumber: 281,
+                lineNumber: 282,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$repo$2d$browser$2f$add$2d$app$2d$modal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AddAppModal"], {
@@ -3932,7 +3954,7 @@ function RepoBrowserPage() {
                 onClose: ()=>setAddAppModalOpen(false)
             }, void 0, false, {
                 fileName: "[project]/app/app/repo-browser/page.tsx",
-                lineNumber: 297,
+                lineNumber: 298,
                 columnNumber: 9
             }, this)
         ]

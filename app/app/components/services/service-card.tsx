@@ -25,7 +25,7 @@ export function ServiceCard({ service, onClick }: ServiceCardProps) {
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        borderRadius: 3,
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark'
             ? 'rgba(255, 255, 255, 0.08)'
@@ -64,7 +64,7 @@ export function ServiceCard({ service, onClick }: ServiceCardProps) {
           sx={{
             width: 44,
             height: 44,
-            borderRadius: 2.5,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -105,7 +105,7 @@ export function ServiceCard({ service, onClick }: ServiceCardProps) {
             fontWeight: 600,
             fontSize: '0.75rem',
             height: 24,
-            borderRadius: '6px',
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             backgroundColor: (theme) =>
               theme.palette.mode === 'dark' ? 'rgba(0, 188, 212, 0.2)' : 'rgba(0, 188, 212, 0.15)',
             color: (theme) => (theme.palette.mode === 'dark' ? '#4DD0E1' : '#00BCD4'),

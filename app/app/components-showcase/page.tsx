@@ -179,7 +179,7 @@ export default function ComponentShowcasePage() {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Standardized page header component.
             </Typography>
-            <Box sx={{ border: '1px dashed', borderColor: 'divider', borderRadius: 2, p: 2 }}>
+            <Box sx={{ border: '1px dashed', borderColor: 'divider', borderRadius: (theme) => `${theme.shape.borderRadius}px`, p: 2 }}>
               <PageHeader
                 title="Example Page"
                 breadcrumbs={[
@@ -240,12 +240,12 @@ export default function ComponentShowcasePage() {
             </Typography>
 
             <Typography variant="subtitle2" sx={{ mb: 2 }}>Detail Skeleton:</Typography>
-            <Box sx={{ mb: 4, border: '1px dashed', borderColor: 'divider', borderRadius: 2, p: 2 }}>
+            <Box sx={{ mb: 4, border: '1px dashed', borderColor: 'divider', borderRadius: (theme) => `${theme.shape.borderRadius}px`, p: 2 }}>
               <DetailSkeleton />
             </Box>
 
             <Typography variant="subtitle2" sx={{ mb: 2 }}>Table Skeleton:</Typography>
-            <Box sx={{ border: '1px dashed', borderColor: 'divider', borderRadius: 2, p: 2 }}>
+            <Box sx={{ border: '1px dashed', borderColor: 'divider', borderRadius: (theme) => `${theme.shape.borderRadius}px`, p: 2 }}>
               <TableSkeleton rows={3} columns={4} />
             </Box>
           </AccordionDetails>
@@ -288,37 +288,37 @@ export default function ComponentShowcasePage() {
           <Typography variant="h6" sx={{ mb: 2 }}>Color Palette</Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 6, md: 4 }}>
-              <Box sx={{ p: 2, bgcolor: 'primary.main', borderRadius: 2, color: 'white' }}>
+              <Box sx={{ p: 2, bgcolor: 'primary.main', borderRadius: (theme) => `${theme.shape.borderRadius}px`, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>PRIMARY</Typography>
                 <Typography variant="body2">Actions & Links</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 6, md: 4 }}>
-              <Box sx={{ p: 2, bgcolor: 'success.main', borderRadius: 2, color: 'white' }}>
+              <Box sx={{ p: 2, bgcolor: 'success.main', borderRadius: (theme) => `${theme.shape.borderRadius}px`, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>SUCCESS</Typography>
                 <Typography variant="body2">Healthy States</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 6, md: 4 }}>
-              <Box sx={{ p: 2, bgcolor: 'warning.main', borderRadius: 2, color: 'white' }}>
+              <Box sx={{ p: 2, bgcolor: 'warning.main', borderRadius: (theme) => `${theme.shape.borderRadius}px`, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>WARNING</Typography>
                 <Typography variant="body2">Warnings</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 6, md: 4 }}>
-              <Box sx={{ p: 2, bgcolor: 'error.main', borderRadius: 2, color: 'white' }}>
+              <Box sx={{ p: 2, bgcolor: 'error.main', borderRadius: (theme) => `${theme.shape.borderRadius}px`, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>ERROR</Typography>
                 <Typography variant="body2">Failures</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 6, md: 4 }}>
-              <Box sx={{ p: 2, bgcolor: 'info.main', borderRadius: 2, color: 'white' }}>
+              <Box sx={{ p: 2, bgcolor: 'info.main', borderRadius: (theme) => `${theme.shape.borderRadius}px`, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>INFO</Typography>
                 <Typography variant="body2">Information</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 6, md: 4 }}>
-              <Box sx={{ p: 2, bgcolor: 'text.secondary', borderRadius: 2, color: 'white' }}>
+              <Box sx={{ p: 2, bgcolor: 'text.secondary', borderRadius: (theme) => `${theme.shape.borderRadius}px`, color: 'white' }}>
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>SECONDARY</Typography>
                 <Typography variant="body2">Metadata</Typography>
               </Box>

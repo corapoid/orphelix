@@ -28,7 +28,7 @@ export function CronJobCard({ cronJob, onClick }: CronJobCardProps) {
             fontWeight: 600,
             fontSize: '0.75rem',
             height: 24,
-            borderRadius: '6px',
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             backgroundColor: (theme) =>
               cronJob.suspend
                 ? theme.palette.mode === 'dark'

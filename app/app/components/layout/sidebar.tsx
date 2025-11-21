@@ -43,6 +43,7 @@ import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import Divider from '@mui/material/Divider'
 import { useModeStore, useSidebarPins } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 
 const DRAWER_WIDTH = 240
 const DRAWER_WIDTH_COLLAPSED = 64
@@ -117,6 +118,8 @@ function isNavGroup(item: NavItem | NavGroup): item is NavGroup {
 }
 
 export function Sidebar() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const pathname = usePathname()
   const router = useRouter() as AppRouterInstance
   const mode = useModeStore((state) => state.mode)
@@ -191,7 +194,7 @@ export function Sidebar() {
               selected={isActive}
               onClick={() => handleNavigate(item.path)}
               sx={{
-                borderRadius: 1.5,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 minHeight: 40,
                 justifyContent: 'center',
                 px: 1.5,
@@ -202,16 +205,20 @@ export function Sidebar() {
                     theme.palette.mode === 'light'
                       ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
                       : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                  backdropFilter: 'blur(20px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  ...(isGlass && {
+                    backdropFilter: 'blur(20px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  }),
                   borderColor: (theme) =>
                     theme.palette.mode === 'light'
                       ? 'rgba(0, 0, 0, 0.08)'
                       : 'rgba(255, 255, 255, 0.2)',
-                  boxShadow: (theme) =>
-                    theme.palette.mode === 'light'
-                      ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
-                      : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                  ...(isGlass && {
+                    boxShadow: (theme) =>
+                      theme.palette.mode === 'light'
+                        ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                        : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                  }),
                   '&:hover': {
                     background: (theme) =>
                       theme.palette.mode === 'light'
@@ -224,8 +231,10 @@ export function Sidebar() {
                     theme.palette.mode === 'light'
                       ? 'rgba(255, 255, 255, 0.5)'
                       : 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
+                  ...(isGlass && {
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                  }),
                 },
               }}
             >
@@ -260,7 +269,7 @@ export function Sidebar() {
           selected={isActive}
           onClick={() => handleNavigate(item.path)}
           sx={{
-            borderRadius: 1.5,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             pl: isSubItem ? 3.5 : 1.5,
             pr: 1,
             py: 0.75,
@@ -273,16 +282,20 @@ export function Sidebar() {
                 theme.palette.mode === 'light'
                   ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)'
                   : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-              backdropFilter: 'blur(20px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              ...(isGlass && {
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              }),
               borderColor: (theme) =>
                 theme.palette.mode === 'light'
                   ? 'rgba(0, 0, 0, 0.08)'
                   : 'rgba(255, 255, 255, 0.2)',
-              boxShadow: (theme) =>
-                theme.palette.mode === 'light'
-                  ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
-                  : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+              ...(isGlass && {
+                boxShadow: (theme) =>
+                  theme.palette.mode === 'light'
+                    ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                    : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+              }),
               '&:hover': {
                 background: (theme) =>
                   theme.palette.mode === 'light'
@@ -298,8 +311,10 @@ export function Sidebar() {
                 theme.palette.mode === 'light'
                   ? 'rgba(255, 255, 255, 0.5)'
                   : 'rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              ...(isGlass && {
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+              }),
             },
           }}
         >
@@ -378,14 +393,16 @@ export function Sidebar() {
       <Box
         sx={{
           bgcolor: 'background.paper',
-          borderRadius: 3,
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           height: 'calc(100vh - 32px)',
           mt: 2,
           mb: 2,
           display: 'flex',
           flexDirection: 'column',
-          backdropFilter: 'blur(60px)',
-          WebkitBackdropFilter: 'blur(60px)',
+          ...(isGlass && {
+            backdropFilter: 'blur(60px)',
+            WebkitBackdropFilter: 'blur(60px)',
+          }),
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
               ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
@@ -419,7 +436,7 @@ export function Sidebar() {
                 <ListItemButton
                   onClick={() => toggleGroup(item.label)}
                   sx={{
-                    borderRadius: 1.5,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     mb: 0.4,
                     py: 0.6,
                     '&:hover': {
@@ -485,7 +502,7 @@ export function Sidebar() {
                 <ListItemButton
                   onClick={() => toggleGroup('More')}
                   sx={{
-                    borderRadius: 1.5,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     mb: 0.4,
                     py: 0.6,
                     '&:hover': {

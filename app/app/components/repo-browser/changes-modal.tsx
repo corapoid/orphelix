@@ -19,6 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import SendIcon from '@mui/icons-material/Send'
 import { useGitHubStore, type FileEdit } from '@/lib/core/store'
 import { diffLines, Change } from 'diff'
+import { useTheme } from '@orphelix/ui'
 
 interface ChangesModalProps {
   open: boolean
@@ -26,6 +27,8 @@ interface ChangesModalProps {
 }
 
 export function ChangesModal({ open, onClose }: ChangesModalProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const { editBasket, removeFromBasket, clearBasket, selectedRepo, selectedBranch } = useGitHubStore()
   const [isCreatingPR, setIsCreatingPR] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -118,7 +121,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
           bgcolor: 'background.paper',
           border: 1,
           borderColor: 'divider',
-          borderRadius: 1,
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           overflow: 'auto',
           maxHeight: 400,
         }}
@@ -140,7 +143,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
               sx={{
                 bgcolor: (theme) => theme.palette.mode === 'dark' ? '#3a1a1a' : '#ffeef0',
                 p: 1,
-                borderRadius: 1,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 borderLeft: 3,
                 borderColor: 'error.main',
               }}
@@ -166,7 +169,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
               sx={{
                 bgcolor: (theme) => theme.palette.mode === 'dark' ? '#1a3a29' : '#e6ffed',
                 p: 1,
-                borderRadius: 1,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 borderLeft: 3,
                 borderColor: 'success.main',
               }}
@@ -201,29 +204,35 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
       slotProps={{
         backdrop: {
           sx: {
-            backdropFilter: 'blur(8px)',
+            ...(isGlass && {
+              backdropFilter: 'blur(8px)',
+            }),
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }
         }
       }}
       PaperProps={{
         sx: {
-          borderRadius: 3,
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           border: '1px solid',
           backgroundColor: (theme) =>
             theme.palette.mode === 'dark'
               ? 'rgba(30, 30, 46, 0.85)'
               : 'rgba(255, 255, 255, 0.85)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          ...(isGlass && {
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          }),
           borderColor: (theme) =>
             theme.palette.mode === 'dark'
               ? 'rgba(255, 255, 255, 0.12)'
               : 'rgba(209, 213, 219, 0.4)',
-          boxShadow: (theme) =>
-            theme.palette.mode === 'dark'
-              ? '0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
-              : '0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+          ...(isGlass && {
+            boxShadow: (theme) =>
+              theme.palette.mode === 'dark'
+                ? '0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
+                : '0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+          }),
         }
       }}
     >
@@ -254,13 +263,15 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
                 defaultExpanded={edits.length === 1}
                 sx={{
                   mb: 1,
-                  borderRadius: 2,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                   border: '1px solid',
                   backgroundColor: (theme) =>
                     theme.palette.mode === 'dark'
                       ? 'rgba(50, 50, 70, 0.4)'
                       : 'rgba(255, 255, 255, 0.4)',
-                  backdropFilter: 'blur(10px)',
+                  ...(isGlass && {
+                    backdropFilter: 'blur(10px)',
+                  }),
                   borderColor: (theme) =>
                     theme.palette.mode === 'dark'
                       ? 'rgba(255, 255, 255, 0.08)'
@@ -273,7 +284,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   sx={{
-                    borderRadius: 2,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     '& .MuiAccordionSummary-content': {
                       alignItems: 'center',
                       justifyContent: 'space-between',
@@ -308,7 +319,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
         <Button
           onClick={onClose}
           sx={{
-            borderRadius: 2,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             textTransform: 'none',
           }}
         >
@@ -322,7 +333,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
               onClick={clearBasket}
               disabled={isCreatingPR}
               sx={{
-                borderRadius: 2,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 textTransform: 'none',
               }}
             >
@@ -334,7 +345,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
               disabled={isCreatingPR}
               startIcon={isCreatingPR ? <CircularProgress size={16} /> : <SendIcon />}
               sx={{
-                borderRadius: 2,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 textTransform: 'none',
                 px: 3,
               }}

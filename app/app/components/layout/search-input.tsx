@@ -6,8 +6,11 @@ import IconButton from '@mui/material/IconButton'
 import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
 import { useSearch } from '@/lib/contexts/search-context'
+import { useTheme } from '@orphelix/ui'
 
 export function SearchInput() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const { searchQuery, setSearchQuery, searchPlaceholder } = useSearch()
 
   return (
@@ -26,9 +29,11 @@ export function SearchInput() {
             theme.palette.mode === 'dark'
               ? 'rgba(255, 255, 255, 0.05)'
               : 'rgba(255, 255, 255, 0.5)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          borderRadius: 2,
+          ...(isGlass && {
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+          }),
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           transition: 'all 0.2s ease-in-out',
           '& fieldset': {
             borderColor: (theme) =>

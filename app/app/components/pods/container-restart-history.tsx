@@ -123,7 +123,7 @@ export function ContainerRestartHistory({ containerStatuses }: ContainerRestartH
 
             {/* Last Terminated State */}
             {cs.lastState?.terminated && (
-              <Box sx={{ mt: 1, p: 1, bgcolor: 'action.hover', borderRadius: 1 }}>
+              <Box sx={{ mt: 1, p: 1, bgcolor: 'action.hover', borderRadius: (theme) => `${theme.shape.borderRadius}px` }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
                   <ErrorOutlineIcon sx={{ fontSize: 16, color: 'error.main' }} />
                   <Typography variant="caption" fontWeight={600} color="error">

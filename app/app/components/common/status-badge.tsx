@@ -5,6 +5,7 @@ import ErrorIcon from '@mui/icons-material/Error'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import type { DeploymentStatus, PodStatus, NodeStatus } from '@/types/kubernetes'
+import { useTheme } from '@orphelix/ui'
 
 type Status = DeploymentStatus | PodStatus | NodeStatus | string
 
@@ -90,6 +91,9 @@ const getColors = (colorType: 'success' | 'error' | 'warning' | 'info' | 'defaul
  * - Use with `label` and `color` props for custom colored chips
  */
 export function StatusBadge({ status, label, color, size = 'small', sx, ...props }: StatusBadgeProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
+
   // Determine color and label
   let finalColor = color || 'default'
   let finalLabel = label || status || ''
@@ -113,11 +117,13 @@ export function StatusBadge({ status, label, color, size = 'small', sx, ...props
         fontSize: '0.6875rem',
         height: 20,
         minWidth: 70,
-        borderRadius: '10px',
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         backgroundColor: (theme) => theme.palette.mode === 'dark' ? colors.bgDark : colors.bg,
         color: (theme) => theme.palette.mode === 'dark' ? colors.textDark : colors.text,
-        backdropFilter: 'blur(12px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        ...(isGlass && {
+          backdropFilter: 'blur(12px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        }),
         border: '1px solid',
         borderColor: (theme) =>
           theme.palette.mode === 'dark'

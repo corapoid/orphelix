@@ -21,6 +21,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import LockIcon from '@mui/icons-material/Lock'
 import PublicIcon from '@mui/icons-material/Public'
 import { useGitHubStore } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 
 interface SelectRepoModalProps {
   open: boolean
@@ -39,6 +40,8 @@ interface Repository {
 }
 
 export function SelectRepoModal({ open, onClose }: SelectRepoModalProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const { setSelectedRepo } = useGitHubStore()
   const [loading, setLoading] = useState(false)
   const [repositories, setRepositories] = useState<Repository[]>([])
@@ -88,9 +91,11 @@ export function SelectRepoModal({ open, onClose }: SelectRepoModalProps) {
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 2,
-          backdropFilter: 'blur(40px)',
-          WebkitBackdropFilter: 'blur(40px)',
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+          ...(isGlass && {
+            backdropFilter: 'blur(40px)',
+            WebkitBackdropFilter: 'blur(40px)',
+          }),
         },
       }}
     >

@@ -177,7 +177,7 @@ export function ContextSelectorInline() {
           fontSize: '0.875rem',
           '&:hover': {
             bgcolor: 'action.hover',
-            borderRadius: 1,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           },
           '& .MuiSelect-select': {
             py: 0.5,

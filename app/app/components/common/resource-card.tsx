@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import { ReactNode } from 'react'
 import type { SvgIconComponent } from '@mui/icons-material'
+import { useTheme } from '@orphelix/ui'
 
 interface ResourceCardProps {
   name: string
@@ -28,10 +29,14 @@ export function ResourceCard({
   metrics,
   footer,
 }: ResourceCardProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
+  const isLiquidGlass = visualPreset === 'liquidGlass'
+
   return (
     <Paper
       onClick={onClick}
-      elevation={0}
+      elevation={isGlass ? 0 : 1}
       sx={{
         p: 2,
         cursor: onClick ? 'pointer' : 'default',
@@ -40,58 +45,66 @@ export function ResourceCard({
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        borderRadius: 3,
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         overflow: 'hidden',
-        // Liquid glass effect - MORE transparency!
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(30, 30, 46, 0.6)'
-            : 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: '1px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.12)'
-            : 'rgba(209, 213, 219, 0.4)',
-        boxShadow: (theme) =>
-          theme.palette.mode === 'dark'
-            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
-            : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-        // Glass shine - diagonal gradient
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '100%',
-          background: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)'
-              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
-          pointerEvents: 'none',
-          borderRadius: 3,
-        },
-        '&:hover': {
-          transform: 'translateY(-2px) scale(1.01)',
-          borderColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.18)'
-              : 'rgba(209, 213, 219, 0.6)',
+        // Conditional glass effects
+        ...(isGlass && {
           backgroundColor: (theme) =>
             theme.palette.mode === 'dark'
-              ? 'rgba(50, 50, 70, 0.7)'
-              : 'rgba(255, 255, 255, 0.4)',
-          backdropFilter: 'blur(28px) saturate(200%)',
-          WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+              ? 'rgba(30, 30, 46, 0.6)'
+              : 'rgba(255, 255, 255, 0.25)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(209, 213, 219, 0.4)',
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
-              ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)'
-              : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)',
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
+              : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+        }),
+        // Gradient shine only for liquid glass
+        ...(isLiquidGlass && {
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '100%',
+            background: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)'
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
+            pointerEvents: 'none',
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+          },
+        }),
+        '&:hover': {
+          ...(isGlass && {
+            transform: 'translateY(-2px) scale(1.01)',
+            borderColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.18)'
+                : 'rgba(209, 213, 219, 0.6)',
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(50, 50, 70, 0.7)'
+                : 'rgba(255, 255, 255, 0.4)',
+            backdropFilter: 'blur(28px) saturate(200%)',
+            WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+            boxShadow: (theme) =>
+              theme.palette.mode === 'dark'
+                ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)'
+                : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)',
+          }),
         },
         '&:active': {
-          transform: 'translateY(0px) scale(0.98)',
+          ...(isGlass && {
+            transform: 'translateY(0px) scale(0.98)',
+          }),
         },
       }}
     >
@@ -101,7 +114,7 @@ export function ResourceCard({
           sx={{
             width: 44,
             height: 44,
-            borderRadius: 2.5,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -109,7 +122,9 @@ export function ResourceCard({
               theme.palette.mode === 'dark'
                 ? `linear-gradient(135deg, ${resourceColor}25 0%, ${resourceColor}15 100%)`
                 : `linear-gradient(135deg, ${resourceColor}30 0%, ${resourceColor}15 100%)`,
-            backdropFilter: 'blur(10px)',
+            ...(isGlass && {
+              backdropFilter: 'blur(10px)',
+            }),
             border: '1px solid',
             borderColor: (theme) =>
               theme.palette.mode === 'dark'

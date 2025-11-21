@@ -117,7 +117,7 @@ export function StatusBadgeV4({ status, size = 'small' }: StatusBadgeProps) {
       sx={{
         fontWeight: 500,
         minWidth: size === 'small' ? 100 : 120,
-        borderRadius: '16px', // More rounded than default
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`, // More rounded than default
       }}
     />
   )

@@ -31,6 +31,7 @@ import Tab from '@mui/material/Tab'
 import Snackbar from '@mui/material/Snackbar'
 import Editor from '@monaco-editor/react'
 import { useTheme } from '@mui/material/styles'
+import { useTheme as useOrphelixTheme } from '@orphelix/ui'
 import type { RepoStructure } from '@/lib/github/repo-analyzer'
 import {
   type AppTemplate,
@@ -62,6 +63,8 @@ const POPULAR_IMAGES = [
 
 export function AddAppModal({ open, onClose }: AddAppModalProps) {
   const theme = useTheme()
+  const { visualPreset } = useOrphelixTheme()
+  const isGlass = visualPreset !== 'classic'
   const { selectedRepo, selectedBranch } = useGitHubStore()
   const { mode, selectedNamespace: currentNamespace } = useModeStore()
 
@@ -601,7 +604,7 @@ ${filesToAdd.map(f => `- \`${f.path}\``).join('\n')}
                   </Typography>
                   <Box
                     sx={{
-                      borderRadius: 2,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       overflow: 'hidden',
                       border: 1,
                       borderColor: 'divider',
@@ -661,7 +664,7 @@ ${filesToAdd.map(f => `- \`${f.path}\``).join('\n')}
 
               <Box sx={{ mt: 2 }}>
                 <Typography variant="subtitle2" gutterBottom>Application Summary:</Typography>
-                <Box sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
+                <Box sx={{ p: 2, bgcolor: 'background.default', borderRadius: (theme) => `${theme.shape.borderRadius}px` }}>
                   <Typography variant="body2"><strong>Name:</strong> {appName}</Typography>
                   <Typography variant="body2"><strong>Type:</strong> {appType === 'deployment' ? 'Deployment' : 'StatefulSet'}</Typography>
                   <Typography variant="body2"><strong>Namespace:</strong> {currentNamespace || 'default'}</Typography>
@@ -694,7 +697,9 @@ ${filesToAdd.map(f => `- \`${f.path}\``).join('\n')}
       PaperProps={{
         sx: {
           bgcolor: 'background.paper',
-          backdropFilter: 'blur(60px)',
+          ...(isGlass && {
+            backdropFilter: 'blur(60px)',
+          }),
           border: theme.palette.mode === 'light'
             ? '1px solid rgba(209, 213, 219, 0.4)'
             : '1px solid rgba(255, 255, 255, 0.12)',

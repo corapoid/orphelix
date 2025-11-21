@@ -153,12 +153,12 @@ export function ClusterHealthScore({ summary }: ClusterHealthScoreProps) {
         value={score}
         sx={{
           height: 8,
-          borderRadius: 1,
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           mb: 2,
           bgcolor: 'action.hover',
           '& .MuiLinearProgress-bar': {
             bgcolor: config.color,
-            borderRadius: 1,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           },
         }}
       />

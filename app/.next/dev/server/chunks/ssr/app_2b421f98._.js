@@ -12,6 +12,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Error.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HourglassEmpty$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/HourglassEmpty.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HelpOutline$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/HelpOutline.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
+;
 ;
 ;
 ;
@@ -25,7 +28,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 24,
+            lineNumber: 25,
             columnNumber: 40
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -33,7 +36,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 25,
+            lineNumber: 26,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -41,7 +44,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 26,
+            lineNumber: 27,
             columnNumber: 36
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -49,7 +52,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 27,
+            lineNumber: 28,
             columnNumber: 40
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -57,7 +60,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 28,
+            lineNumber: 29,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -65,7 +68,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 29,
+            lineNumber: 30,
             columnNumber: 36
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -73,7 +76,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 30,
+            lineNumber: 31,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -82,7 +85,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 33,
+            lineNumber: 34,
             columnNumber: 35
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -90,7 +93,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 34,
+            lineNumber: 35,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -98,7 +101,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 35,
+            lineNumber: 36,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -106,7 +109,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 36,
+            lineNumber: 37,
             columnNumber: 45
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -115,7 +118,7 @@ const statusConfig = {
         color: 'warning',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HourglassEmpty$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 39,
+            lineNumber: 40,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -123,7 +126,7 @@ const statusConfig = {
         color: 'warning',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 40,
+            lineNumber: 41,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -132,7 +135,7 @@ const statusConfig = {
         color: 'info',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HourglassEmpty$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 43,
+            lineNumber: 44,
             columnNumber: 39
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -141,7 +144,7 @@ const statusConfig = {
         color: 'default',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HelpOutline$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 46,
+            lineNumber: 47,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     }
@@ -182,6 +185,8 @@ const getColors = (colorType)=>{
     return colorMap[colorType] || colorMap.default;
 };
 function StatusBadge({ status, label, color, size = 'small', sx, ...props }) {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     // Determine color and label
     let finalColor = color || 'default';
     let finalLabel = label || status || '';
@@ -201,11 +206,13 @@ function StatusBadge({ status, label, color, size = 'small', sx, ...props }) {
             fontSize: '0.6875rem',
             height: 20,
             minWidth: 70,
-            borderRadius: '10px',
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
             backgroundColor: (theme)=>theme.palette.mode === 'dark' ? colors.bgDark : colors.bg,
             color: (theme)=>theme.palette.mode === 'dark' ? colors.textDark : colors.text,
-            backdropFilter: 'blur(12px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+            ...isGlass && {
+                backdropFilter: 'blur(12px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(12px) saturate(180%)'
+            },
             border: '1px solid',
             borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
             boxShadow: 'none',
@@ -222,7 +229,7 @@ function StatusBadge({ status, label, color, size = 'small', sx, ...props }) {
         }
     }, void 0, false, {
         fileName: "[project]/app/app/components/common/status-badge.tsx",
-        lineNumber: 107,
+        lineNumber: 111,
         columnNumber: 5
     }, this);
 }
@@ -2413,7 +2420,7 @@ function ErrorState({ error, onRetry, title = 'Error Loading Data' }) {
                         mt: 2,
                         p: 1,
                         bgcolor: 'grey.100',
-                        borderRadius: 1,
+                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                         fontSize: '0.75rem',
                         fontFamily: 'monospace',
                         color: 'text.secondary'
@@ -2494,13 +2501,18 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$mat
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CloudOff$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/CloudOff.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Refresh$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Refresh.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$cluster$2d$health$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/hooks/use-cluster-health.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
 'use client';
 ;
 ;
 ;
 ;
 ;
+;
 function ClusterConnectionAlert({ minimal = false }) {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { data: health, isLoading, refetch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$cluster$2d$health$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useClusterHealth"])();
     // Don't show anything while loading
     if (isLoading) {
@@ -2530,32 +2542,32 @@ function ClusterConnectionAlert({ minimal = false }) {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 30,
+                        lineNumber: 33,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Button$3e$__["Button"], {
                         size: "small",
                         startIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Refresh$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                            lineNumber: 33,
+                            lineNumber: 36,
                             columnNumber: 43
                         }, void 0),
                         onClick: ()=>refetch(),
                         children: "Retry"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 33,
+                        lineNumber: 36,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                lineNumber: 29,
+                lineNumber: 32,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-            lineNumber: 28,
+            lineNumber: 31,
             columnNumber: 7
         }, this);
     }
@@ -2572,13 +2584,15 @@ function ClusterConnectionAlert({ minimal = false }) {
             sx: {
                 maxWidth: 700,
                 width: '100%',
-                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 100, 100, 0.3)' : 'rgba(211, 47, 47, 0.3)',
-                borderRadius: '12px',
-                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)' : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+                ...isGlass && {
+                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
+                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 100, 100, 0.3)' : 'rgba(211, 47, 47, 0.3)',
+                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)' : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)'
+                },
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                 p: 3
             },
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -2597,7 +2611,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 76,
+                        lineNumber: 81,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -2612,7 +2626,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 children: "Cluster Connection Failed"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 78,
+                                lineNumber: 83,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -2624,7 +2638,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 children: health?.message || 'Unable to connect to Kubernetes cluster.'
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 81,
+                                lineNumber: 86,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -2637,7 +2651,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 children: "Troubleshooting Steps:"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 85,
+                                lineNumber: 90,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -2657,34 +2671,15 @@ function ClusterConnectionAlert({ minimal = false }) {
                                             children: [
                                                 "Check your ",
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
-                                                    style: {
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                                                        padding: '2px 6px',
-                                                        borderRadius: '4px'
-                                                    },
                                                     children: "kubeconfig"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                                    lineNumber: 91,
+                                                    lineNumber: 96,
                                                     columnNumber: 28
                                                 }, this),
                                                 " file is properly configured"
                                             ]
                                         }, void 0, true, {
-                                            fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 90,
-                                            columnNumber: 15
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 89,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
-                                            variant: "body2",
-                                            children: "Verify your cluster credentials are valid and not expired"
-                                        }, void 0, false, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
                                             lineNumber: 95,
                                             columnNumber: 15
@@ -2697,15 +2692,29 @@ function ClusterConnectionAlert({ minimal = false }) {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
                                             variant: "body2",
-                                            children: "Ensure you have network access to your cluster"
+                                            children: "Verify your cluster credentials are valid and not expired"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 98,
+                                            lineNumber: 100,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 97,
+                                        lineNumber: 99,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
+                                            variant: "body2",
+                                            children: "Ensure you have network access to your cluster"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
+                                            lineNumber: 103,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
+                                        lineNumber: 102,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -2714,27 +2723,22 @@ function ClusterConnectionAlert({ minimal = false }) {
                                             children: [
                                                 "Run ",
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
-                                                    style: {
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                                                        padding: '2px 6px',
-                                                        borderRadius: '4px'
-                                                    },
                                                     children: "kubectl version"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                                    lineNumber: 102,
+                                                    lineNumber: 107,
                                                     columnNumber: 21
                                                 }, this),
                                                 " to verify connectivity"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 101,
+                                            lineNumber: 106,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 100,
+                                        lineNumber: 105,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -2753,7 +2757,7 @@ function ClusterConnectionAlert({ minimal = false }) {
                                                     children: "Kubernetes documentation"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                                    lineNumber: 108,
+                                                    lineNumber: 113,
                                                     columnNumber: 17
                                                 }, this),
                                                 ' ',
@@ -2761,18 +2765,18 @@ function ClusterConnectionAlert({ minimal = false }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                            lineNumber: 106,
+                                            lineNumber: 111,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                        lineNumber: 105,
+                                        lineNumber: 110,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 88,
+                                lineNumber: 93,
                                 columnNumber: 11
                             }, this),
                             health?.code && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -2788,13 +2792,13 @@ function ClusterConnectionAlert({ minimal = false }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                                lineNumber: 122,
+                                lineNumber: 127,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 77,
+                        lineNumber: 82,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Button$3e$__["Button"], {
@@ -2802,14 +2806,14 @@ function ClusterConnectionAlert({ minimal = false }) {
                         size: "small",
                         startIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Refresh$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                            lineNumber: 130,
+                            lineNumber: 135,
                             columnNumber: 22
                         }, void 0),
                         onClick: ()=>refetch(),
                         sx: {
                             px: 2,
                             py: 0.75,
-                            borderRadius: '8px',
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                             textTransform: 'none',
                             fontWeight: 600,
                             flexShrink: 0
@@ -2817,23 +2821,23 @@ function ClusterConnectionAlert({ minimal = false }) {
                         children: "Retry"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                        lineNumber: 127,
+                        lineNumber: 132,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-                lineNumber: 75,
+                lineNumber: 80,
                 columnNumber: 7
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-            lineNumber: 52,
+            lineNumber: 55,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/app/components/common/cluster-connection-alert.tsx",
-        lineNumber: 43,
+        lineNumber: 46,
         columnNumber: 5
     }, this);
 }
@@ -4035,7 +4039,7 @@ function ViewModeToggle({ viewMode, onChange }) {
             gap: 0.5,
             border: '1px solid',
             borderColor: 'divider',
-            borderRadius: 1,
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
             p: 0.5
         },
         children: [
@@ -4116,14 +4120,20 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Box/Box.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Typography/Typography.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Paper/Paper.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
+;
 ;
 ;
 ;
 ;
 function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, statusBadge, metrics, footer }) {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
+    const isLiquidGlass = visualPreset === 'liquidGlass';
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
         onClick: onClick,
-        elevation: 0,
+        elevation: isGlass ? 0 : 1,
         sx: {
             p: 2,
             cursor: onClick ? 'pointer' : 'default',
@@ -4132,37 +4142,45 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
-            borderRadius: 3,
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
             overflow: 'hidden',
-            // Liquid glass effect - MORE transparency!
-            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            border: '1px solid',
-            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-            boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-            // Glass shine - diagonal gradient
-            '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '100%',
-                background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
-                pointerEvents: 'none',
-                borderRadius: 3
+            // Conditional glass effects
+            ...isGlass && {
+                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+            },
+            // Gradient shine only for liquid glass
+            ...isLiquidGlass && {
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '100%',
+                    background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
+                    pointerEvents: 'none',
+                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
+                }
             },
             '&:hover': {
-                transform: 'translateY(-2px) scale(1.01)',
-                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
-                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
-                backdropFilter: 'blur(28px) saturate(200%)',
-                WebkitBackdropFilter: 'blur(28px) saturate(200%)',
-                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                ...isGlass && {
+                    transform: 'translateY(-2px) scale(1.01)',
+                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
+                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
+                    backdropFilter: 'blur(28px) saturate(200%)',
+                    WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                }
             },
             '&:active': {
-                transform: 'translateY(0px) scale(0.98)'
+                ...isGlass && {
+                    transform: 'translateY(0px) scale(0.98)'
+                }
             }
         },
         children: [
@@ -4180,12 +4198,14 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                         sx: {
                             width: 44,
                             height: 44,
-                            borderRadius: 2.5,
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             background: (theme)=>theme.palette.mode === 'dark' ? `linear-gradient(135deg, ${resourceColor}25 0%, ${resourceColor}15 100%)` : `linear-gradient(135deg, ${resourceColor}30 0%, ${resourceColor}15 100%)`,
-                            backdropFilter: 'blur(10px)',
+                            ...isGlass && {
+                                backdropFilter: 'blur(10px)'
+                            },
                             border: '1px solid',
                             borderColor: (theme)=>theme.palette.mode === 'dark' ? `${resourceColor}40` : `${resourceColor}30`,
                             flexShrink: 0,
@@ -4199,12 +4219,12 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                             }
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/common/resource-card.tsx",
-                            lineNumber: 125,
+                            lineNumber: 140,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/resource-card.tsx",
-                        lineNumber: 100,
+                        lineNumber: 113,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -4228,7 +4248,7 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                                 children: name
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                                lineNumber: 128,
+                                lineNumber: 143,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -4240,19 +4260,19 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                                 children: resourceType
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                                lineNumber: 143,
+                                lineNumber: 158,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/common/resource-card.tsx",
-                        lineNumber: 127,
+                        lineNumber: 142,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 99,
+                lineNumber: 112,
                 columnNumber: 7
             }, this),
             statusBadge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -4264,7 +4284,7 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                 children: statusBadge
             }, void 0, false, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 151,
+                lineNumber: 166,
                 columnNumber: 9
             }, this),
             metrics && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -4276,7 +4296,7 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                 children: metrics
             }, void 0, false, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 158,
+                lineNumber: 173,
                 columnNumber: 9
             }, this),
             footer && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -4291,13 +4311,13 @@ function ResourceCard({ name, resourceType, resourceColor, icon: Icon, onClick, 
                 children: footer
             }, void 0, false, {
                 fileName: "[project]/app/app/components/common/resource-card.tsx",
-                lineNumber: 165,
+                lineNumber: 180,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/components/common/resource-card.tsx",
-        lineNumber: 32,
+        lineNumber: 37,
         columnNumber: 5
     }, this);
 }
@@ -4419,7 +4439,7 @@ function GridSkeleton({ cards = 8 }) {
         }).map((_, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 sx: {
                     p: 2,
-                    borderRadius: 3,
+                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                     border: '1px solid',
                     borderColor: 'divider',
                     backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.02)' : 'rgba(0, 0, 0, 0.01)'
@@ -5469,6 +5489,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Warning$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Warning.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Error.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Help$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Help.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
+;
 ;
 ;
 ;
@@ -5515,6 +5538,8 @@ const statusIcons = {
     unknown: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Help$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"]
 };
 function TopologyNodeComponent({ data, selected }) {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const Icon = resourceIcons[data.resourceType];
     const StatusIcon = statusIcons[data.status];
     const statusColor = statusColors[data.status];
@@ -5529,7 +5554,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 59,
+                lineNumber: 62,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -5541,7 +5566,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 60,
+                lineNumber: 63,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -5553,35 +5578,44 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 61,
+                lineNumber: 64,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 sx: {
                     minWidth: 180,
                     maxWidth: 220,
-                    borderRadius: 3,
+                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                     overflow: 'hidden',
                     position: 'relative',
                     transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
-                    // Liquid glass effect
-                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                    border: '1px solid',
-                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-                    // Glass shine gradient overlay
-                    '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '100%',
-                        background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
-                        pointerEvents: 'none',
-                        borderRadius: 3
+                    // Classic mode - solid background with border
+                    ...!isGlass && {
+                        backgroundColor: 'background.paper',
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        boxShadow: (theme)=>theme.customShadows?.elevation1?.boxShadow || '0 1px 3px rgba(0, 0, 0, 0.1)'
+                    },
+                    // Glass mode - glassmorphism effects
+                    ...isGlass && {
+                        backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                        boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                        // Glass shine gradient overlay
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '100%',
+                            background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
+                            pointerEvents: 'none',
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`
+                        }
                     },
                     ...selected && {
                         borderColor: (theme)=>theme.palette.mode === 'dark' ? `${resourceColor}60` : `${resourceColor}40`,
@@ -5589,11 +5623,13 @@ function TopologyNodeComponent({ data, selected }) {
                     },
                     '&:hover': {
                         transform: 'translateY(-2px) scale(1.02)',
-                        borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
-                        backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
-                        backdropFilter: 'blur(28px) saturate(200%)',
-                        WebkitBackdropFilter: 'blur(28px) saturate(200%)',
-                        boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                        ...isGlass && {
+                            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
+                            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
+                            backdropFilter: 'blur(28px) saturate(200%)',
+                            WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+                            boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                        }
                     }
                 },
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -5616,12 +5652,14 @@ function TopologyNodeComponent({ data, selected }) {
                                     sx: {
                                         width: 32,
                                         height: 32,
-                                        borderRadius: 2,
+                                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         background: (theme)=>theme.palette.mode === 'dark' ? `linear-gradient(135deg, ${resourceColor}25 0%, ${resourceColor}15 100%)` : `linear-gradient(135deg, ${resourceColor}30 0%, ${resourceColor}15 100%)`,
-                                        backdropFilter: 'blur(10px)',
+                                        ...isGlass && {
+                                            backdropFilter: 'blur(10px)'
+                                        },
                                         border: '1px solid',
                                         borderColor: (theme)=>theme.palette.mode === 'dark' ? `${resourceColor}40` : `${resourceColor}30`,
                                         flexShrink: 0,
@@ -5635,12 +5673,12 @@ function TopologyNodeComponent({ data, selected }) {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                        lineNumber: 158,
+                                        lineNumber: 174,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 147,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -5661,7 +5699,7 @@ function TopologyNodeComponent({ data, selected }) {
                                             children: data.label
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                            lineNumber: 161,
+                                            lineNumber: 177,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -5674,13 +5712,13 @@ function TopologyNodeComponent({ data, selected }) {
                                             children: data.resourceType
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                            lineNumber: 173,
+                                            lineNumber: 189,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 160,
+                                    lineNumber: 176,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(StatusIcon, {
@@ -5691,13 +5729,13 @@ function TopologyNodeComponent({ data, selected }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 177,
+                                    lineNumber: 193,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                            lineNumber: 132,
+                            lineNumber: 146,
                             columnNumber: 11
                         }, this),
                         data.details && Object.keys(data.details).length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -5723,23 +5761,23 @@ function TopologyNodeComponent({ data, selected }) {
                                     ]
                                 }, key, true, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 183,
+                                    lineNumber: 199,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                            lineNumber: 181,
+                            lineNumber: 197,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                    lineNumber: 131,
+                    lineNumber: 145,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 63,
+                lineNumber: 66,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -5750,7 +5788,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 202,
+                lineNumber: 218,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -5762,7 +5800,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 203,
+                lineNumber: 219,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -5774,7 +5812,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 204,
+                lineNumber: 220,
                 columnNumber: 7
             }, this)
         ]
@@ -6239,7 +6277,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
     const relatedHPAs = hpas.filter((hpa)=>hpa.targetRef.kind === 'Deployment' && hpa.targetRef.name === deployment.name);
     // Calculate vertical centering based on number of resources on left
     const leftResourcesCount = configMaps.length + secrets.length;
-    const deploymentY = Math.max(300, leftResourcesCount * 80);
+    const deploymentY = Math.max(300, leftResourcesCount * 125);
     // Add HPA nodes (above deployment)
     relatedHPAs.forEach((hpa, index)=>{
         const nodeId = `hpa-${hpa.name}`;
@@ -6248,7 +6286,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 500,
-                y: deploymentY - 200 - index * 150
+                y: deploymentY - 300 - index * 250
             },
             data: {
                 label: hpa.name,
@@ -6292,7 +6330,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             }
         }
     });
-    // Add ConfigMap nodes (left side) - increased spacing to 150px
+    // Add ConfigMap nodes (left side) - increased spacing to 250px
     configMaps.forEach((cm, index)=>{
         const nodeId = `configmap-${cm.name}`;
         nodes.push({
@@ -6300,7 +6338,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 50,
-                y: 50 + index * 150
+                y: 50 + index * 250
             },
             data: {
                 label: cm.name,
@@ -6321,7 +6359,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             animated: false
         });
     });
-    // Add Secret nodes (left side, below ConfigMaps) - increased spacing to 150px
+    // Add Secret nodes (left side, below ConfigMaps) - increased spacing to 250px
     secrets.forEach((secret, index)=>{
         const nodeId = `secret-${secret.name}`;
         nodes.push({
@@ -6329,7 +6367,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 50,
-                y: 50 + (configMaps.length + index) * 150
+                y: 50 + (configMaps.length + index) * 250
             },
             data: {
                 label: secret.name,
@@ -6351,7 +6389,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             animated: false
         });
     });
-    // Add Pod nodes (right side) - increased spacing to 150px
+    // Add Pod nodes (right side) - increased spacing to 250px
     pods.forEach((pod, index)=>{
         const nodeId = `pod-${pod.name}`;
         nodes.push({
@@ -6359,7 +6397,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 950,
-                y: 50 + index * 150
+                y: 50 + index * 250
             },
             data: {
                 label: pod.name,
@@ -6837,6 +6875,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Typography/Typography.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Alert/Alert.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
 'use client';
 ;
 ;
@@ -6847,7 +6887,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navi
 ;
 ;
 ;
+;
 function GitHubAppInstallButtonContent() {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const [isAuthenticated, setIsAuthenticated] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
     const [installations, setInstallations] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
@@ -6931,7 +6974,7 @@ function GitHubAppInstallButtonContent() {
                     size: 24
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                    lineNumber: 94,
+                    lineNumber: 97,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -6940,13 +6983,13 @@ function GitHubAppInstallButtonContent() {
                     children: "Loading..."
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                    lineNumber: 95,
+                    lineNumber: 98,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-            lineNumber: 93,
+            lineNumber: 96,
             columnNumber: 7
         }, this);
     }
@@ -6973,7 +7016,7 @@ function GitHubAppInstallButtonContent() {
                                     children: "Connected to GitHub App"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                                    lineNumber: 112,
+                                    lineNumber: 115,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -6991,13 +7034,13 @@ function GitHubAppInstallButtonContent() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                                    lineNumber: 115,
+                                    lineNumber: 118,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                            lineNumber: 111,
+                            lineNumber: 114,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7007,13 +7050,13 @@ function GitHubAppInstallButtonContent() {
                             children: "Disconnect"
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                            lineNumber: 120,
+                            lineNumber: 123,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                    lineNumber: 110,
+                    lineNumber: 113,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7032,13 +7075,13 @@ function GitHubAppInstallButtonContent() {
                             children: "Add More Repositories"
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                            lineNumber: 127,
+                            lineNumber: 130,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                    lineNumber: 125,
+                    lineNumber: 128,
                     columnNumber: 9
                 }, this),
                 installations.map((installation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7057,18 +7100,18 @@ function GitHubAppInstallButtonContent() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                            lineNumber: 138,
+                            lineNumber: 141,
                             columnNumber: 13
                         }, this)
                     }, installation.id, false, {
                         fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                        lineNumber: 137,
+                        lineNumber: 140,
                         columnNumber: 11
                     }, this))
             ]
         }, void 0, true, {
             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-            lineNumber: 109,
+            lineNumber: 112,
             columnNumber: 7
         }, this);
     }
@@ -7077,7 +7120,7 @@ function GitHubAppInstallButtonContent() {
             variant: "contained",
             startIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$GitHub$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                lineNumber: 151,
+                lineNumber: 154,
                 columnNumber: 20
             }, void 0),
             onClick: handleInstall,
@@ -7086,14 +7129,18 @@ function GitHubAppInstallButtonContent() {
                 maxWidth: 300,
                 py: 2,
                 px: 3,
-                borderRadius: 3,
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                 color: (theme)=>theme.palette.text.primary,
                 backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                ...isGlass && {
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)'
+                },
                 border: '1px solid',
                 borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                ...isGlass && {
+                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+                },
                 '&:hover': {
                     backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.7)' : 'rgba(255, 255, 255, 0.35)'
                 }
@@ -7101,12 +7148,12 @@ function GitHubAppInstallButtonContent() {
             children: "Install GitHub App"
         }, void 0, false, {
             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-            lineNumber: 149,
+            lineNumber: 152,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/app/components/github-app/install-button.tsx",
-        lineNumber: 148,
+        lineNumber: 151,
         columnNumber: 5
     }, this);
 }
@@ -7123,7 +7170,7 @@ function GitHubAppInstallButton() {
                     size: 24
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                    lineNumber: 193,
+                    lineNumber: 200,
                     columnNumber: 9
                 }, void 0),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7132,23 +7179,23 @@ function GitHubAppInstallButton() {
                     children: "Loading..."
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/github-app/install-button.tsx",
-                    lineNumber: 194,
+                    lineNumber: 201,
                     columnNumber: 9
                 }, void 0)
             ]
         }, void 0, true, {
             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-            lineNumber: 192,
+            lineNumber: 199,
             columnNumber: 7
         }, void 0),
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(GitHubAppInstallButtonContent, {}, void 0, false, {
             fileName: "[project]/app/app/components/github-app/install-button.tsx",
-            lineNumber: 199,
+            lineNumber: 206,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/app/components/github-app/install-button.tsx",
-        lineNumber: 191,
+        lineNumber: 198,
         columnNumber: 5
     }, this);
 }
@@ -7446,7 +7493,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$VisibilityOff$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/VisibilityOff.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Code$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Code.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$config$2f$ai$2d$features$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/config/ai-features.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
 'use client';
+;
 ;
 ;
 ;
@@ -7465,6 +7515,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$config$2f$ai$2
 ;
 const LOCAL_STORAGE_KEY = 'kubevista_openai_key';
 function AISettings() {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const [apiKey, setApiKey] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [showKey, setShowKey] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [saved, setSaved] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -7540,7 +7592,7 @@ function AISettings() {
                             md: 4
                         },
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                            elevation: 0,
+                            elevation: isGlass ? 0 : 1,
                             sx: {
                                 p: 2,
                                 cursor: 'default',
@@ -7549,26 +7601,28 @@ function AISettings() {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 position: 'relative',
-                                borderRadius: 3,
+                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                 overflow: 'hidden',
-                                // Liquid glass effect
-                                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                                backdropFilter: 'blur(24px) saturate(180%)',
-                                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                                border: '1px solid',
-                                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-                                // Glass shine - diagonal gradient
-                                '&::before': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    height: '100%',
-                                    background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
-                                    pointerEvents: 'none',
-                                    borderRadius: 3
+                                ...isGlass && {
+                                    // Liquid glass effect
+                                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                                    backdropFilter: 'blur(24px) saturate(180%)',
+                                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                                    border: '1px solid',
+                                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                                    // Glass shine - diagonal gradient
+                                    '&::before': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        height: '100%',
+                                        background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
+                                        pointerEvents: 'none',
+                                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`
+                                    }
                                 }
                             },
                             children: [
@@ -7586,12 +7640,14 @@ function AISettings() {
                                             sx: {
                                                 width: 44,
                                                 height: 44,
-                                                borderRadius: 2.5,
+                                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 background: (theme)=>theme.palette.mode === 'dark' ? `linear-gradient(135deg, ${iconColor}25 0%, ${iconColor}15 100%)` : `linear-gradient(135deg, ${iconColor}30 0%, ${iconColor}15 100%)`,
-                                                backdropFilter: 'blur(10px)',
+                                                ...isGlass && {
+                                                    backdropFilter: 'blur(10px)'
+                                                },
                                                 border: '1px solid',
                                                 borderColor: (theme)=>theme.palette.mode === 'dark' ? `${iconColor}40` : `${iconColor}30`,
                                                 flexShrink: 0,
@@ -7605,12 +7661,12 @@ function AISettings() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                                lineNumber: 171,
+                                                lineNumber: 178,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                            lineNumber: 146,
+                                            lineNumber: 151,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7631,7 +7687,7 @@ function AISettings() {
                                                     children: feature.name
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                                    lineNumber: 174,
+                                                    lineNumber: 181,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7643,19 +7699,19 @@ function AISettings() {
                                                     children: "AI-Powered"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                                    lineNumber: 186,
+                                                    lineNumber: 193,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                            lineNumber: 173,
+                                            lineNumber: 180,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                    lineNumber: 145,
+                                    lineNumber: 150,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7670,12 +7726,12 @@ function AISettings() {
                                         color: isAvailable ? 'success' : 'default'
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                        lineNumber: 194,
+                                        lineNumber: 201,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                    lineNumber: 193,
+                                    lineNumber: 200,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7689,29 +7745,29 @@ function AISettings() {
                                         children: feature.description
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                        lineNumber: 203,
+                                        lineNumber: 210,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                    lineNumber: 202,
+                                    lineNumber: 209,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                            lineNumber: 99,
+                            lineNumber: 102,
                             columnNumber: 15
                         }, this)
                     }, feature.id, false, {
                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                        lineNumber: 98,
+                        lineNumber: 101,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                lineNumber: 93,
+                lineNumber: 96,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7725,7 +7781,7 @@ function AISettings() {
                         children: "OpenAI API Key"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                        lineNumber: 215,
+                        lineNumber: 222,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7737,7 +7793,7 @@ function AISettings() {
                         children: "Enable AI-powered features by providing your OpenAI API key. The key is stored locally in your browser and never sent to our servers."
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                        lineNumber: 218,
+                        lineNumber: 225,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7760,33 +7816,33 @@ function AISettings() {
                                         size: "small",
                                         children: showKey ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$VisibilityOff$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                            lineNumber: 238,
+                                            lineNumber: 245,
                                             columnNumber: 32
                                         }, void 0) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Visibility$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                            lineNumber: 238,
+                                            lineNumber: 245,
                                             columnNumber: 56
                                         }, void 0)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                        lineNumber: 233,
+                                        lineNumber: 240,
                                         columnNumber: 19
                                     }, void 0)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                    lineNumber: 232,
+                                    lineNumber: 239,
                                     columnNumber: 17
                                 }, void 0)
                             },
                             helperText: "Get your API key from https://platform.openai.com/api-keys"
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                            lineNumber: 223,
+                            lineNumber: 230,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                        lineNumber: 222,
+                        lineNumber: 229,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7803,7 +7859,7 @@ function AISettings() {
                                 children: testing ? 'Testing...' : 'Save & Test API Key'
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                lineNumber: 248,
+                                lineNumber: 255,
                                 columnNumber: 11
                             }, this),
                             hasKey && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7814,13 +7870,13 @@ function AISettings() {
                                 children: "Clear Key"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                                lineNumber: 256,
+                                lineNumber: 263,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                        lineNumber: 247,
+                        lineNumber: 254,
                         columnNumber: 9
                     }, this),
                     saved && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7831,7 +7887,7 @@ function AISettings() {
                         children: "API key validated and saved successfully!"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                        lineNumber: 268,
+                        lineNumber: 275,
                         columnNumber: 11
                     }, this),
                     testError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7842,19 +7898,19 @@ function AISettings() {
                         children: testError
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                        lineNumber: 274,
+                        lineNumber: 281,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-                lineNumber: 214,
+                lineNumber: 221,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/components/settings/ai-settings.tsx",
-        lineNumber: 91,
+        lineNumber: 94,
         columnNumber: 5
     }, this);
 }
@@ -7879,6 +7935,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Save$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Save.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Cancel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Cancel.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/core/store.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
 'use client';
 ;
 ;
@@ -7893,7 +7951,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$
 ;
 ;
 ;
+;
 function ClusterAliases() {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { aliases, setAlias, removeAlias } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useClusterAliases"])();
     const mode = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useModeStore"])((state)=>state.mode);
     const [contexts, setContexts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
@@ -7957,7 +8018,7 @@ function ClusterAliases() {
             children: "Loading contexts..."
         }, void 0, false, {
             fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-            lineNumber: 78,
+            lineNumber: 81,
             columnNumber: 12
         }, this);
     }
@@ -7967,7 +8028,7 @@ function ClusterAliases() {
             children: mode === 'demo' ? 'Demo cluster alias not available.' : 'No Kubernetes contexts found. Please configure kubectl first.'
         }, void 0, false, {
             fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-            lineNumber: 82,
+            lineNumber: 85,
             columnNumber: 7
         }, this);
     }
@@ -7980,7 +8041,7 @@ function ClusterAliases() {
                 children: mode === 'demo' ? 'Set a friendly name (alias) for the demo cluster. This will be displayed instead of "demo-cluster" throughout the application.' : 'Set friendly names (aliases) for your Kubernetes clusters. These will be displayed instead of the full context names throughout the application.'
             }, void 0, false, {
                 fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                lineNumber: 91,
+                lineNumber: 94,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -7993,16 +8054,18 @@ function ClusterAliases() {
                     const currentAlias = aliases[context.name];
                     const isEditing = editingContext === context.name;
                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                        elevation: 0,
+                        elevation: isGlass ? 0 : 1,
                         sx: {
                             p: 3,
-                            borderRadius: 3,
-                            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                            backdropFilter: 'blur(24px) saturate(180%)',
-                            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                            border: '1px solid',
-                            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                            boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
+                            ...isGlass && {
+                                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                                backdropFilter: 'blur(24px) saturate(180%)',
+                                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                                border: '1px solid',
+                                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+                            }
                         },
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             sx: {
@@ -8031,7 +8094,7 @@ function ClusterAliases() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                        lineNumber: 127,
+                                        lineNumber: 132,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8042,12 +8105,12 @@ function ClusterAliases() {
                                             fontSize: "small"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                            lineNumber: 148,
+                                            lineNumber: 153,
                                             columnNumber: 23
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                        lineNumber: 143,
+                                        lineNumber: 148,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8057,12 +8120,12 @@ function ClusterAliases() {
                                             fontSize: "small"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                            lineNumber: 151,
+                                            lineNumber: 156,
                                             columnNumber: 23
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                        lineNumber: 150,
+                                        lineNumber: 155,
                                         columnNumber: 21
                                     }, this)
                                 ]
@@ -8079,7 +8142,7 @@ function ClusterAliases() {
                                                 children: currentAlias || context.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                                lineNumber: 157,
+                                                lineNumber: 162,
                                                 columnNumber: 23
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8091,13 +8154,13 @@ function ClusterAliases() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                                lineNumber: 160,
+                                                lineNumber: 165,
                                                 columnNumber: 23
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                        lineNumber: 156,
+                                        lineNumber: 161,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8114,12 +8177,12 @@ function ClusterAliases() {
                                                     fontSize: "small"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                                    lineNumber: 170,
+                                                    lineNumber: 175,
                                                     columnNumber: 25
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                                lineNumber: 165,
+                                                lineNumber: 170,
                                                 columnNumber: 23
                                             }, this),
                                             currentAlias && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8130,42 +8193,42 @@ function ClusterAliases() {
                                                     fontSize: "small"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                                    lineNumber: 178,
+                                                    lineNumber: 183,
                                                     columnNumber: 27
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                                lineNumber: 173,
+                                                lineNumber: 178,
                                                 columnNumber: 25
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                                        lineNumber: 164,
+                                        lineNumber: 169,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true)
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                            lineNumber: 124,
+                            lineNumber: 129,
                             columnNumber: 15
                         }, this)
                     }, context.name, false, {
                         fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                        lineNumber: 101,
+                        lineNumber: 104,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-                lineNumber: 96,
+                lineNumber: 99,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/components/settings/cluster-aliases.tsx",
-        lineNumber: 90,
+        lineNumber: 93,
         columnNumber: 5
     }, this);
 }
@@ -8185,7 +8248,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$mat
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$FormControlLabel$2f$FormControlLabel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/FormControlLabel/FormControlLabel.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Switch$2f$Switch$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Switch/Switch.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/core/store.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-ssr] (ecmascript)");
 'use client';
+;
 ;
 ;
 ;
@@ -8217,18 +8283,22 @@ const RESOURCE_OPTIONS = [
     }
 ];
 function CriticalIssuesSettings() {
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { isResourceEnabled, toggleResource } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCriticalIssuesSettings"])();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-        elevation: 0,
+        elevation: isGlass ? 0 : 1,
         sx: {
             p: 3,
-            borderRadius: 3,
-            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            border: '1px solid',
-            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-            boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
+            ...isGlass && {
+                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid',
+                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+            }
         },
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8238,7 +8308,7 @@ function CriticalIssuesSettings() {
                 children: "Select which resource types should be monitored for critical issues on the dashboard."
             }, void 0, false, {
                 fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-                lineNumber: 64,
+                lineNumber: 69,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$FormGroup$2f$FormGroup$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8249,7 +8319,7 @@ function CriticalIssuesSettings() {
                             color: "primary"
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-                            lineNumber: 73,
+                            lineNumber: 78,
                             columnNumber: 15
                         }, void 0),
                         label: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8260,7 +8330,7 @@ function CriticalIssuesSettings() {
                                     children: option.label
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-                                    lineNumber: 81,
+                                    lineNumber: 86,
                                     columnNumber: 17
                                 }, void 0),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8269,13 +8339,13 @@ function CriticalIssuesSettings() {
                                     children: option.description
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-                                    lineNumber: 84,
+                                    lineNumber: 89,
                                     columnNumber: 17
                                 }, void 0)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-                            lineNumber: 80,
+                            lineNumber: 85,
                             columnNumber: 15
                         }, void 0),
                         sx: {
@@ -8283,18 +8353,18 @@ function CriticalIssuesSettings() {
                         }
                     }, option.key, false, {
                         fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-                        lineNumber: 70,
+                        lineNumber: 75,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-                lineNumber: 68,
+                lineNumber: 73,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/components/settings/critical-issues-settings.tsx",
-        lineNumber: 42,
+        lineNumber: 45,
         columnNumber: 5
     }, this);
 }
@@ -8445,6 +8515,7 @@ function SettingsPage() {
     const searchParams = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useSearchParams"])();
     const tabParam = searchParams.get('tab');
     const { mode: themeMode, setThemeMode, actualTheme, visualPreset, setVisualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { autoRefreshEnabled, setAutoRefreshEnabled, autoRefreshInterval, setAutoRefreshInterval } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useModeStore"])();
     const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
     // Set active tab from URL parameter
@@ -8477,7 +8548,7 @@ function SettingsPage() {
                         children: "Settings"
                     }, void 0, false, {
                         fileName: "[project]/app/app/settings/page.tsx",
-                        lineNumber: 94,
+                        lineNumber: 95,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8486,13 +8557,13 @@ function SettingsPage() {
                         children: "Configure your Orphelix dashboard preferences"
                     }, void 0, false, {
                         fileName: "[project]/app/app/settings/page.tsx",
-                        lineNumber: 97,
+                        lineNumber: 98,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/settings/page.tsx",
-                lineNumber: 93,
+                lineNumber: 94,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8509,39 +8580,39 @@ function SettingsPage() {
                             label: "Cluster Configuration"
                         }, void 0, false, {
                             fileName: "[project]/app/app/settings/page.tsx",
-                            lineNumber: 104,
+                            lineNumber: 105,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tab$2f$Tab$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             label: "GitHub Integration"
                         }, void 0, false, {
                             fileName: "[project]/app/app/settings/page.tsx",
-                            lineNumber: 105,
+                            lineNumber: 106,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tab$2f$Tab$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             label: "AI Features"
                         }, void 0, false, {
                             fileName: "[project]/app/app/settings/page.tsx",
-                            lineNumber: 106,
+                            lineNumber: 107,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tab$2f$Tab$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             label: "Design"
                         }, void 0, false, {
                             fileName: "[project]/app/app/settings/page.tsx",
-                            lineNumber: 107,
+                            lineNumber: 108,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/settings/page.tsx",
-                    lineNumber: 103,
+                    lineNumber: 104,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/settings/page.tsx",
-                lineNumber: 102,
+                lineNumber: 103,
                 columnNumber: 7
             }, this),
             activeTab === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8560,18 +8631,18 @@ function SettingsPage() {
                                 children: "Cluster Aliases"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 114,
+                                lineNumber: 115,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$settings$2f$cluster$2d$aliases$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ClusterAliases"], {}, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 117,
+                                lineNumber: 118,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/settings/page.tsx",
-                        lineNumber: 113,
+                        lineNumber: 114,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8588,18 +8659,18 @@ function SettingsPage() {
                                 children: "Critical Issues Monitoring"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 121,
+                                lineNumber: 122,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$settings$2f$critical$2d$issues$2d$settings$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CriticalIssuesSettings"], {}, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 124,
+                                lineNumber: 125,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/settings/page.tsx",
-                        lineNumber: 120,
+                        lineNumber: 121,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8613,20 +8684,22 @@ function SettingsPage() {
                                 children: "Auto Refresh"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 128,
+                                lineNumber: 129,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                elevation: 0,
+                                elevation: isGlass ? 0 : 1,
                                 sx: {
                                     p: 3,
-                                    borderRadius: 3,
-                                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                                    backdropFilter: 'blur(24px) saturate(180%)',
-                                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                                    border: '1px solid',
-                                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
+                                    ...isGlass && {
+                                        backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                                        backdropFilter: 'blur(24px) saturate(180%)',
+                                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                                        border: '1px solid',
+                                        borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                                        boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)'
+                                    }
                                 },
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                     sx: {
@@ -8644,7 +8717,7 @@ function SettingsPage() {
                                                 color: "primary"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 156,
+                                                lineNumber: 159,
                                                 columnNumber: 21
                                             }, void 0),
                                             label: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8655,7 +8728,7 @@ function SettingsPage() {
                                                         children: "Enable auto-refresh"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 164,
+                                                        lineNumber: 167,
                                                         columnNumber: 23
                                                     }, void 0),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8668,18 +8741,18 @@ function SettingsPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 167,
+                                                        lineNumber: 170,
                                                         columnNumber: 23
                                                     }, void 0)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 163,
+                                                lineNumber: 166,
                                                 columnNumber: 21
                                             }, void 0)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 154,
+                                            lineNumber: 157,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8699,7 +8772,7 @@ function SettingsPage() {
                                                     children: "Refresh interval"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/settings/page.tsx",
-                                                    lineNumber: 174,
+                                                    lineNumber: 177,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ButtonGroup$2f$ButtonGroup$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8723,57 +8796,57 @@ function SettingsPage() {
                                                             ]
                                                         }, interval, true, {
                                                             fileName: "[project]/app/app/settings/page.tsx",
-                                                            lineNumber: 193,
+                                                            lineNumber: 196,
                                                             columnNumber: 23
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/settings/page.tsx",
-                                                    lineNumber: 184,
+                                                    lineNumber: 187,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 173,
+                                            lineNumber: 176,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/settings/page.tsx",
-                                    lineNumber: 153,
+                                    lineNumber: 156,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 131,
+                                lineNumber: 132,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/settings/page.tsx",
-                        lineNumber: 127,
+                        lineNumber: 128,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/settings/page.tsx",
-                lineNumber: 112,
+                lineNumber: 113,
                 columnNumber: 9
             }, this),
             activeTab === 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(GitHubIntegrationTab, {}, void 0, false, {
                 fileName: "[project]/app/app/settings/page.tsx",
-                lineNumber: 210,
+                lineNumber: 213,
                 columnNumber: 27
             }, this),
             activeTab === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$settings$2f$ai$2d$settings$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AISettings"], {}, void 0, false, {
                     fileName: "[project]/app/app/settings/page.tsx",
-                    lineNumber: 214,
+                    lineNumber: 217,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/settings/page.tsx",
-                lineNumber: 213,
+                lineNumber: 216,
                 columnNumber: 9
             }, this),
             activeTab === 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8792,7 +8865,7 @@ function SettingsPage() {
                                 children: "Theme Mode"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 221,
+                                lineNumber: 224,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Grid$2f$Grid$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8829,7 +8902,7 @@ function SettingsPage() {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                                lineNumber: 233,
+                                                                lineNumber: 236,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8841,13 +8914,13 @@ function SettingsPage() {
                                                                 children: "Light Mode"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                                lineNumber: 234,
+                                                                lineNumber: 237,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 232,
+                                                        lineNumber: 235,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8859,23 +8932,23 @@ function SettingsPage() {
                                                         children: "Always use light theme"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 238,
+                                                        lineNumber: 241,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 231,
+                                                lineNumber: 234,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 226,
+                                            lineNumber: 229,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/settings/page.tsx",
-                                        lineNumber: 225,
+                                        lineNumber: 228,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Grid$2f$Grid$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8908,7 +8981,7 @@ function SettingsPage() {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                                lineNumber: 252,
+                                                                lineNumber: 255,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8920,13 +8993,13 @@ function SettingsPage() {
                                                                 children: "Dark Mode"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                                lineNumber: 253,
+                                                                lineNumber: 256,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 251,
+                                                        lineNumber: 254,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8938,23 +9011,23 @@ function SettingsPage() {
                                                         children: "Always use dark theme"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 257,
+                                                        lineNumber: 260,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 250,
+                                                lineNumber: 253,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 245,
+                                            lineNumber: 248,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/settings/page.tsx",
-                                        lineNumber: 244,
+                                        lineNumber: 247,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Grid$2f$Grid$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8987,7 +9060,7 @@ function SettingsPage() {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                                lineNumber: 271,
+                                                                lineNumber: 274,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -8999,13 +9072,13 @@ function SettingsPage() {
                                                                 children: "System"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                                lineNumber: 272,
+                                                                lineNumber: 275,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 270,
+                                                        lineNumber: 273,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9020,35 +9093,35 @@ function SettingsPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 276,
+                                                        lineNumber: 279,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 269,
+                                                lineNumber: 272,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 264,
+                                            lineNumber: 267,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/settings/page.tsx",
-                                        lineNumber: 263,
+                                        lineNumber: 266,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 224,
+                                lineNumber: 227,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/settings/page.tsx",
-                        lineNumber: 220,
+                        lineNumber: 223,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9065,7 +9138,7 @@ function SettingsPage() {
                                 children: "Visual Style"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 286,
+                                lineNumber: 289,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9077,7 +9150,7 @@ function SettingsPage() {
                                 children: "Choose your preferred interface style. Each preset changes the overall look and feel."
                             }, void 0, false, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 289,
+                                lineNumber: 292,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Grid$2f$Grid$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9109,7 +9182,7 @@ function SettingsPage() {
                                                         children: "Classic"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 300,
+                                                        lineNumber: 303,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9118,23 +9191,23 @@ function SettingsPage() {
                                                         children: "Solid backgrounds, standard MUI look. Best for accessibility."
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 303,
+                                                        lineNumber: 306,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 299,
+                                                lineNumber: 302,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 294,
+                                            lineNumber: 297,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/settings/page.tsx",
-                                        lineNumber: 293,
+                                        lineNumber: 296,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Grid$2f$Grid$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9162,7 +9235,7 @@ function SettingsPage() {
                                                         children: "Glassmorphism"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 316,
+                                                        lineNumber: 319,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9171,23 +9244,23 @@ function SettingsPage() {
                                                         children: "Transparent with blur effect. Modern and clean."
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 319,
+                                                        lineNumber: 322,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 315,
+                                                lineNumber: 318,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 310,
+                                            lineNumber: 313,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/settings/page.tsx",
-                                        lineNumber: 309,
+                                        lineNumber: 312,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Grid$2f$Grid$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9215,7 +9288,7 @@ function SettingsPage() {
                                                         children: "Liquid Glass ✨"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 332,
+                                                        lineNumber: 335,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -9224,47 +9297,47 @@ function SettingsPage() {
                                                         children: "Premium feel with gradient shine and animations."
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/settings/page.tsx",
-                                                        lineNumber: 335,
+                                                        lineNumber: 338,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/settings/page.tsx",
-                                                lineNumber: 331,
+                                                lineNumber: 334,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/settings/page.tsx",
-                                            lineNumber: 326,
+                                            lineNumber: 329,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/settings/page.tsx",
-                                        lineNumber: 325,
+                                        lineNumber: 328,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/settings/page.tsx",
-                                lineNumber: 292,
+                                lineNumber: 295,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/settings/page.tsx",
-                        lineNumber: 285,
+                        lineNumber: 288,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/settings/page.tsx",
-                lineNumber: 219,
+                lineNumber: 222,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/settings/page.tsx",
-        lineNumber: 92,
+        lineNumber: 93,
         columnNumber: 5
     }, this);
 }
@@ -11166,7 +11239,7 @@ function DetailSkeleton() {
                                 width: 80,
                                 height: 24,
                                 sx: {
-                                    borderRadius: 1
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -11178,7 +11251,7 @@ function DetailSkeleton() {
                                 width: 100,
                                 height: 24,
                                 sx: {
-                                    borderRadius: 1
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -11190,7 +11263,7 @@ function DetailSkeleton() {
                                 width: 60,
                                 height: 24,
                                 sx: {
-                                    borderRadius: 1
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -11318,7 +11391,7 @@ function DetailSkeleton() {
                                                 width: 120,
                                                 height: 32,
                                                 sx: {
-                                                    borderRadius: 2
+                                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                                 }
                                             }, index, false, {
                                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -11365,7 +11438,7 @@ function DetailSkeleton() {
                                         width: "100%",
                                         height: 200,
                                         sx: {
-                                            borderRadius: 1
+                                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/detail-skeleton.tsx",

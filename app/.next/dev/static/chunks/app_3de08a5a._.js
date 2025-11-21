@@ -2518,6 +2518,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Error.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HourglassEmpty$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/HourglassEmpty.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HelpOutline$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/HelpOutline.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
@@ -2531,7 +2535,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 24,
+            lineNumber: 25,
             columnNumber: 40
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2539,7 +2543,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 25,
+            lineNumber: 26,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2547,7 +2551,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 26,
+            lineNumber: 27,
             columnNumber: 36
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2555,7 +2559,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 27,
+            lineNumber: 28,
             columnNumber: 40
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2563,7 +2567,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 28,
+            lineNumber: 29,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2571,7 +2575,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 29,
+            lineNumber: 30,
             columnNumber: 36
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2579,7 +2583,7 @@ const statusConfig = {
         color: 'success',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$CheckCircle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 30,
+            lineNumber: 31,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2588,7 +2592,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 33,
+            lineNumber: 34,
             columnNumber: 35
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2596,7 +2600,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 34,
+            lineNumber: 35,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2604,7 +2608,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 35,
+            lineNumber: 36,
             columnNumber: 37
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2612,7 +2616,7 @@ const statusConfig = {
         color: 'error',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 36,
+            lineNumber: 37,
             columnNumber: 45
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2621,7 +2625,7 @@ const statusConfig = {
         color: 'warning',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HourglassEmpty$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 39,
+            lineNumber: 40,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2629,7 +2633,7 @@ const statusConfig = {
         color: 'warning',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 40,
+            lineNumber: 41,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2638,7 +2642,7 @@ const statusConfig = {
         color: 'info',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HourglassEmpty$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 43,
+            lineNumber: 44,
             columnNumber: 39
         }, ("TURBOPACK compile-time value", void 0))
     },
@@ -2647,7 +2651,7 @@ const statusConfig = {
         color: 'default',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$HelpOutline$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/common/status-badge.tsx",
-            lineNumber: 46,
+            lineNumber: 47,
             columnNumber: 38
         }, ("TURBOPACK compile-time value", void 0))
     }
@@ -2688,6 +2692,9 @@ const getColors = (colorType)=>{
     return colorMap[colorType] || colorMap.default;
 };
 function StatusBadge({ status, label, color, size = 'small', sx, ...props }) {
+    _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     // Determine color and label
     let finalColor = color || 'default';
     let finalLabel = label || status || '';
@@ -2707,11 +2714,13 @@ function StatusBadge({ status, label, color, size = 'small', sx, ...props }) {
             fontSize: '0.6875rem',
             height: 20,
             minWidth: 70,
-            borderRadius: '10px',
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
             backgroundColor: (theme)=>theme.palette.mode === 'dark' ? colors.bgDark : colors.bg,
             color: (theme)=>theme.palette.mode === 'dark' ? colors.textDark : colors.text,
-            backdropFilter: 'blur(12px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+            ...isGlass && {
+                backdropFilter: 'blur(12px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(12px) saturate(180%)'
+            },
             border: '1px solid',
             borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)',
             boxShadow: 'none',
@@ -2728,10 +2737,15 @@ function StatusBadge({ status, label, color, size = 'small', sx, ...props }) {
         }
     }, void 0, false, {
         fileName: "[project]/app/app/components/common/status-badge.tsx",
-        lineNumber: 107,
+        lineNumber: 111,
         columnNumber: 5
     }, this);
 }
+_s(StatusBadge, "c0MZhghFmuZD3dgcE5n4BKV0J3M=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
+    ];
+});
 _c = StatusBadge;
 var _c;
 __turbopack_context__.k.register(_c, "StatusBadge");
@@ -2762,6 +2776,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Warning$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Warning.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Error$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Error.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Help$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Help.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
@@ -2808,6 +2826,9 @@ const statusIcons = {
     unknown: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Help$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"]
 };
 function TopologyNodeComponent({ data, selected }) {
+    _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const Icon = resourceIcons[data.resourceType];
     const StatusIcon = statusIcons[data.status];
     const statusColor = statusColors[data.status];
@@ -2822,7 +2843,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 59,
+                lineNumber: 62,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -2834,7 +2855,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 60,
+                lineNumber: 63,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -2846,35 +2867,44 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 61,
+                lineNumber: 64,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 sx: {
                     minWidth: 180,
                     maxWidth: 220,
-                    borderRadius: 3,
+                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                     overflow: 'hidden',
                     position: 'relative',
                     transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
-                    // Liquid glass effect
-                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                    border: '1px solid',
-                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-                    // Glass shine gradient overlay
-                    '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '100%',
-                        background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
-                        pointerEvents: 'none',
-                        borderRadius: 3
+                    // Classic mode - solid background with border
+                    ...!isGlass && {
+                        backgroundColor: 'background.paper',
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        boxShadow: (theme)=>theme.customShadows?.elevation1?.boxShadow || '0 1px 3px rgba(0, 0, 0, 0.1)'
+                    },
+                    // Glass mode - glassmorphism effects
+                    ...isGlass && {
+                        backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
+                        boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                        // Glass shine gradient overlay
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '100%',
+                            background: (theme)=>theme.palette.mode === 'dark' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
+                            pointerEvents: 'none',
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`
+                        }
                     },
                     ...selected && {
                         borderColor: (theme)=>theme.palette.mode === 'dark' ? `${resourceColor}60` : `${resourceColor}40`,
@@ -2882,11 +2912,13 @@ function TopologyNodeComponent({ data, selected }) {
                     },
                     '&:hover': {
                         transform: 'translateY(-2px) scale(1.02)',
-                        borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
-                        backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
-                        backdropFilter: 'blur(28px) saturate(200%)',
-                        WebkitBackdropFilter: 'blur(28px) saturate(200%)',
-                        boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                        ...isGlass && {
+                            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)',
+                            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
+                            backdropFilter: 'blur(28px) saturate(200%)',
+                            WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+                            boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)'
+                        }
                     }
                 },
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2909,12 +2941,14 @@ function TopologyNodeComponent({ data, selected }) {
                                     sx: {
                                         width: 32,
                                         height: 32,
-                                        borderRadius: 2,
+                                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         background: (theme)=>theme.palette.mode === 'dark' ? `linear-gradient(135deg, ${resourceColor}25 0%, ${resourceColor}15 100%)` : `linear-gradient(135deg, ${resourceColor}30 0%, ${resourceColor}15 100%)`,
-                                        backdropFilter: 'blur(10px)',
+                                        ...isGlass && {
+                                            backdropFilter: 'blur(10px)'
+                                        },
                                         border: '1px solid',
                                         borderColor: (theme)=>theme.palette.mode === 'dark' ? `${resourceColor}40` : `${resourceColor}30`,
                                         flexShrink: 0,
@@ -2928,12 +2962,12 @@ function TopologyNodeComponent({ data, selected }) {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                        lineNumber: 158,
+                                        lineNumber: 174,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 147,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2954,7 +2988,7 @@ function TopologyNodeComponent({ data, selected }) {
                                             children: data.label
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                            lineNumber: 161,
+                                            lineNumber: 177,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2967,13 +3001,13 @@ function TopologyNodeComponent({ data, selected }) {
                                             children: data.resourceType
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                            lineNumber: 173,
+                                            lineNumber: 189,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 160,
+                                    lineNumber: 176,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(StatusIcon, {
@@ -2984,13 +3018,13 @@ function TopologyNodeComponent({ data, selected }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 177,
+                                    lineNumber: 193,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                            lineNumber: 132,
+                            lineNumber: 146,
                             columnNumber: 11
                         }, this),
                         data.details && Object.keys(data.details).length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3016,23 +3050,23 @@ function TopologyNodeComponent({ data, selected }) {
                                     ]
                                 }, key, true, {
                                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                                    lineNumber: 183,
+                                    lineNumber: 199,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                            lineNumber: 181,
+                            lineNumber: 197,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                    lineNumber: 131,
+                    lineNumber: 145,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 63,
+                lineNumber: 66,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -3043,7 +3077,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 202,
+                lineNumber: 218,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -3055,7 +3089,7 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 203,
+                lineNumber: 219,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$xyflow$2f$react$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["Handle"], {
@@ -3067,12 +3101,17 @@ function TopologyNodeComponent({ data, selected }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/app/app/components/topology/topology-node.tsx",
-                lineNumber: 204,
+                lineNumber: 220,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true);
 }
+_s(TopologyNodeComponent, "c0MZhghFmuZD3dgcE5n4BKV0J3M=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
+    ];
+});
 _c = TopologyNodeComponent;
 const TopologyNode = TopologyNodeComponent;
 var _c;
@@ -3453,7 +3492,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
     const relatedHPAs = hpas.filter((hpa)=>hpa.targetRef.kind === 'Deployment' && hpa.targetRef.name === deployment.name);
     // Calculate vertical centering based on number of resources on left
     const leftResourcesCount = configMaps.length + secrets.length;
-    const deploymentY = Math.max(300, leftResourcesCount * 80);
+    const deploymentY = Math.max(300, leftResourcesCount * 125);
     // Add HPA nodes (above deployment)
     relatedHPAs.forEach((hpa, index)=>{
         const nodeId = `hpa-${hpa.name}`;
@@ -3462,7 +3501,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 500,
-                y: deploymentY - 200 - index * 150
+                y: deploymentY - 300 - index * 250
             },
             data: {
                 label: hpa.name,
@@ -3506,7 +3545,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             }
         }
     });
-    // Add ConfigMap nodes (left side) - increased spacing to 150px
+    // Add ConfigMap nodes (left side) - increased spacing to 250px
     configMaps.forEach((cm, index)=>{
         const nodeId = `configmap-${cm.name}`;
         nodes.push({
@@ -3514,7 +3553,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 50,
-                y: 50 + index * 150
+                y: 50 + index * 250
             },
             data: {
                 label: cm.name,
@@ -3535,7 +3574,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             animated: false
         });
     });
-    // Add Secret nodes (left side, below ConfigMaps) - increased spacing to 150px
+    // Add Secret nodes (left side, below ConfigMaps) - increased spacing to 250px
     secrets.forEach((secret, index)=>{
         const nodeId = `secret-${secret.name}`;
         nodes.push({
@@ -3543,7 +3582,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 50,
-                y: 50 + (configMaps.length + index) * 150
+                y: 50 + (configMaps.length + index) * 250
             },
             data: {
                 label: secret.name,
@@ -3565,7 +3604,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             animated: false
         });
     });
-    // Add Pod nodes (right side) - increased spacing to 150px
+    // Add Pod nodes (right side) - increased spacing to 250px
     pods.forEach((pod, index)=>{
         const nodeId = `pod-${pod.name}`;
         nodes.push({
@@ -3573,7 +3612,7 @@ function buildDeploymentTopology(deployment, pods, configMaps, secrets, hpas = [
             type: 'default',
             position: {
                 x: 950,
-                y: 50 + index * 150
+                y: 50 + index * 250
             },
             data: {
                 label: pod.name,
@@ -3946,7 +3985,7 @@ function DetailSkeleton() {
                                 width: 80,
                                 height: 24,
                                 sx: {
-                                    borderRadius: 1
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -3958,7 +3997,7 @@ function DetailSkeleton() {
                                 width: 100,
                                 height: 24,
                                 sx: {
-                                    borderRadius: 1
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -3970,7 +4009,7 @@ function DetailSkeleton() {
                                 width: 60,
                                 height: 24,
                                 sx: {
-                                    borderRadius: 1
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -4098,7 +4137,7 @@ function DetailSkeleton() {
                                                 width: 120,
                                                 height: 32,
                                                 sx: {
-                                                    borderRadius: 2
+                                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                                 }
                                             }, index, false, {
                                                 fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -4145,7 +4184,7 @@ function DetailSkeleton() {
                                         width: "100%",
                                         height: 200,
                                         sx: {
-                                            borderRadius: 1
+                                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/common/detail-skeleton.tsx",
@@ -4301,7 +4340,7 @@ function ErrorState({ error, onRetry, title = 'Error Loading Data' }) {
                         mt: 2,
                         p: 1,
                         bgcolor: 'grey.100',
-                        borderRadius: 1,
+                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                         fontSize: '0.75rem',
                         fontFamily: 'monospace',
                         color: 'text.secondary'
@@ -4709,7 +4748,7 @@ function ResourceUsageChart({ deploymentName, namespace }) {
                                             color: getUsageColor(aggregatedMetrics.cpu.usagePercent),
                                             sx: {
                                                 height: 8,
-                                                borderRadius: 1
+                                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                             }
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/metrics/resource-usage-chart.tsx",
@@ -4933,7 +4972,7 @@ function ResourceUsageChart({ deploymentName, namespace }) {
                                             color: getUsageColor(aggregatedMetrics.memory.usagePercent),
                                             sx: {
                                                 height: 8,
-                                                borderRadius: 1
+                                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                                             }
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/metrics/resource-usage-chart.tsx",
@@ -6062,7 +6101,7 @@ function YamlEditorModal({ open, onClose, resourceName, namespace, resourceType 
                             sx: {
                                 border: 1,
                                 borderColor: 'divider',
-                                borderRadius: 1
+                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                             },
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$monaco$2d$editor$2f$react$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"], {
                                 height: "500px",
@@ -6847,6 +6886,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$common$2f$page$2d$header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/app/components/common/page-header.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$auto$2d$refresh$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/hooks/use-auto-refresh.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassPanel$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/components/GlassPanel.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -6887,8 +6927,11 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function DeploymentDetailPage() {
     _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const params = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useParams"])();
     const name = params.name;
     const [restarting, setRestarting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -6958,7 +7001,7 @@ function DeploymentDetailPage() {
     if (isLoading) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$common$2f$detail$2d$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DetailSkeleton"], {}, void 0, false, {
             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-            lineNumber: 115,
+            lineNumber: 118,
             columnNumber: 12
         }, this);
     }
@@ -6978,7 +7021,7 @@ function DeploymentDetailPage() {
                     ]
                 }, void 0, false, {
                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                    lineNumber: 121,
+                    lineNumber: 124,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$common$2f$error$2d$state$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ErrorState"], {
@@ -6987,13 +7030,13 @@ function DeploymentDetailPage() {
                     title: "Failed to Load Deployment"
                 }, void 0, false, {
                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                    lineNumber: 128,
+                    lineNumber: 131,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-            lineNumber: 120,
+            lineNumber: 123,
             columnNumber: 7
         }, this);
     }
@@ -7013,13 +7056,13 @@ function DeploymentDetailPage() {
                             size: "medium"
                         }, void 0, false, {
                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                            lineNumber: 143,
+                            lineNumber: 146,
                             columnNumber: 13
                         }, void 0)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                    lineNumber: 141,
+                    lineNumber: 144,
                     columnNumber: 11
                 }, void 0),
                 metadata: [
@@ -7045,20 +7088,20 @@ function DeploymentDetailPage() {
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GlassButton"], {
                             startIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Edit$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                lineNumber: 158,
+                                lineNumber: 161,
                                 columnNumber: 26
                             }, void 0),
                             onClick: ()=>setEditorOpen(true),
                             children: "Edit YAML"
                         }, void 0, false, {
                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                            lineNumber: 157,
+                            lineNumber: 160,
                             columnNumber: 13
                         }, void 0),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GlassButton"], {
                             startIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$RestartAlt$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                lineNumber: 164,
+                                lineNumber: 167,
                                 columnNumber: 26
                             }, void 0),
                             onClick: handleRestartClick,
@@ -7070,18 +7113,18 @@ function DeploymentDetailPage() {
                             children: "Restart"
                         }, void 0, false, {
                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                            lineNumber: 163,
+                            lineNumber: 166,
                             columnNumber: 13
                         }, void 0)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                    lineNumber: 156,
+                    lineNumber: 159,
                     columnNumber: 11
                 }, void 0)
             }, void 0, false, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 139,
+                lineNumber: 142,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$yaml$2d$editor$2f$yaml$2d$editor$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["YamlEditorModal"], {
@@ -7092,7 +7135,7 @@ function DeploymentDetailPage() {
                 resourceType: "deployment"
             }, void 0, false, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 178,
+                lineNumber: 181,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$deployments$2f$restart$2d$deployment$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["RestartDeploymentDialog"], {
@@ -7103,7 +7146,7 @@ function DeploymentDetailPage() {
                 onCancel: handleRestartCancel
             }, void 0, false, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 186,
+                lineNumber: 189,
                 columnNumber: 7
             }, this),
             restartSuccess && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7114,7 +7157,7 @@ function DeploymentDetailPage() {
                 children: "Deployment restart initiated successfully!"
             }, void 0, false, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 195,
+                lineNumber: 198,
                 columnNumber: 9
             }, this),
             restartError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Alert$2f$Alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7126,7 +7169,7 @@ function DeploymentDetailPage() {
                 children: restartError
             }, void 0, false, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 201,
+                lineNumber: 204,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7143,7 +7186,7 @@ function DeploymentDetailPage() {
                         children: "Details"
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 207,
+                        lineNumber: 210,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassPanel$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GlassPanel"], {
@@ -7165,11 +7208,11 @@ function DeploymentDetailPage() {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             variant: "body2",
-                                            color: "text.secondary",
+                                            color: isGlass ? "text.secondary" : "text.primary",
                                             children: "Strategy:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 213,
+                                            lineNumber: 216,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7178,13 +7221,13 @@ function DeploymentDetailPage() {
                                             children: deployment.strategy
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 216,
+                                            lineNumber: 219,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 212,
+                                    lineNumber: 215,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7195,11 +7238,11 @@ function DeploymentDetailPage() {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             variant: "body2",
-                                            color: "text.secondary",
+                                            color: isGlass ? "text.secondary" : "text.primary",
                                             children: "Desired Replicas:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 221,
+                                            lineNumber: 224,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7208,13 +7251,13 @@ function DeploymentDetailPage() {
                                             children: deployment.replicas.desired
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 224,
+                                            lineNumber: 227,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 220,
+                                    lineNumber: 223,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7225,11 +7268,11 @@ function DeploymentDetailPage() {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             variant: "body2",
-                                            color: "text.secondary",
+                                            color: isGlass ? "text.secondary" : "text.primary",
                                             children: "Ready Replicas:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 229,
+                                            lineNumber: 232,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7238,13 +7281,13 @@ function DeploymentDetailPage() {
                                             children: deployment.replicas.ready
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 232,
+                                            lineNumber: 235,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 228,
+                                    lineNumber: 231,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7255,11 +7298,11 @@ function DeploymentDetailPage() {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             variant: "body2",
-                                            color: "text.secondary",
+                                            color: isGlass ? "text.secondary" : "text.primary",
                                             children: "Available Replicas:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 237,
+                                            lineNumber: 240,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7268,13 +7311,13 @@ function DeploymentDetailPage() {
                                             children: deployment.replicas.available
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 240,
+                                            lineNumber: 243,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 236,
+                                    lineNumber: 239,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7285,11 +7328,11 @@ function DeploymentDetailPage() {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             variant: "body2",
-                                            color: "text.secondary",
+                                            color: isGlass ? "text.secondary" : "text.primary",
                                             children: "Unavailable Replicas:"
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 245,
+                                            lineNumber: 248,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7298,30 +7341,30 @@ function DeploymentDetailPage() {
                                             children: deployment.replicas.unavailable
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                            lineNumber: 248,
+                                            lineNumber: 251,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 244,
+                                    lineNumber: 247,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                            lineNumber: 211,
+                            lineNumber: 214,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 210,
+                        lineNumber: 213,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 206,
+                lineNumber: 209,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7338,7 +7381,7 @@ function DeploymentDetailPage() {
                         children: "Labels"
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 258,
+                        lineNumber: 261,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7348,19 +7391,21 @@ function DeploymentDetailPage() {
                             gap: 1.5
                         },
                         children: Object.entries(deployment.labels).map(([key, value])=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                elevation: 0,
+                                elevation: isGlass ? 0 : 1,
                                 sx: {
                                     px: 2,
                                     py: 1,
-                                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                                    backdropFilter: 'blur(24px) saturate(180%)',
-                                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                                    border: '1px solid',
-                                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                                    borderRadius: 3,
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: 1
+                                    gap: 1,
+                                    ...isGlass && {
+                                        backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                                        backdropFilter: 'blur(24px) saturate(180%)',
+                                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                                        border: '1px solid',
+                                        borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)'
+                                    }
                                 },
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7373,7 +7418,7 @@ function DeploymentDetailPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                        lineNumber: 286,
+                                        lineNumber: 291,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7382,24 +7427,24 @@ function DeploymentDetailPage() {
                                         children: value
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                        lineNumber: 289,
+                                        lineNumber: 294,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, key, true, {
                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                lineNumber: 263,
+                                lineNumber: 266,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 261,
+                        lineNumber: 264,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 257,
+                lineNumber: 260,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7416,7 +7461,7 @@ function DeploymentDetailPage() {
                         children: "Resources"
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 299,
+                        lineNumber: 304,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7432,21 +7477,25 @@ function DeploymentDetailPage() {
                                         textDecoration: 'none'
                                     },
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                        elevation: 0,
+                                        elevation: isGlass ? 0 : 1,
                                         sx: {
                                             p: 2.5,
                                             minWidth: 200,
-                                            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                                            backdropFilter: 'blur(24px) saturate(180%)',
-                                            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                                            border: '1px solid',
-                                            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                                            borderRadius: 3,
+                                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                             transition: 'all 0.2s',
                                             cursor: 'pointer',
+                                            ...isGlass && {
+                                                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                                                backdropFilter: 'blur(24px) saturate(180%)',
+                                                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                                                border: '1px solid',
+                                                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)'
+                                            },
                                             '&:hover': {
                                                 transform: 'translateY(-2px)',
-                                                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(59, 130, 246, 0.4)'
+                                                ...isGlass && {
+                                                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(59, 130, 246, 0.4)'
+                                                }
                                             }
                                         },
                                         children: [
@@ -7465,7 +7514,7 @@ function DeploymentDetailPage() {
                                                         children: "ConfigMap"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                        lineNumber: 338,
+                                                        lineNumber: 347,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$OpenInNew$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7476,13 +7525,13 @@ function DeploymentDetailPage() {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                        lineNumber: 341,
+                                                        lineNumber: 350,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                lineNumber: 337,
+                                                lineNumber: 346,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7491,18 +7540,18 @@ function DeploymentDetailPage() {
                                                 children: cm
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                lineNumber: 343,
+                                                lineNumber: 352,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                        lineNumber: 309,
+                                        lineNumber: 314,
                                         columnNumber: 15
                                     }, this)
                                 }, cm, false, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 304,
+                                    lineNumber: 309,
                                     columnNumber: 13
                                 }, this)),
                             deployment.secrets.map((secret)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7511,21 +7560,25 @@ function DeploymentDetailPage() {
                                         textDecoration: 'none'
                                     },
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Paper$2f$Paper$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                        elevation: 0,
+                                        elevation: isGlass ? 0 : 1,
                                         sx: {
                                             p: 2.5,
                                             minWidth: 200,
-                                            backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                                            backdropFilter: 'blur(24px) saturate(180%)',
-                                            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                                            border: '1px solid',
-                                            borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                                            borderRadius: 3,
+                                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                             transition: 'all 0.2s',
                                             cursor: 'pointer',
+                                            ...isGlass && {
+                                                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                                                backdropFilter: 'blur(24px) saturate(180%)',
+                                                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                                                border: '1px solid',
+                                                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)'
+                                            },
                                             '&:hover': {
                                                 transform: 'translateY(-2px)',
-                                                borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(234, 179, 8, 0.5)' : 'rgba(234, 179, 8, 0.4)'
+                                                ...isGlass && {
+                                                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(234, 179, 8, 0.5)' : 'rgba(234, 179, 8, 0.4)'
+                                                }
                                             }
                                         },
                                         children: [
@@ -7544,7 +7597,7 @@ function DeploymentDetailPage() {
                                                         children: "Secret"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                        lineNumber: 384,
+                                                        lineNumber: 397,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$OpenInNew$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7555,13 +7608,13 @@ function DeploymentDetailPage() {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                        lineNumber: 387,
+                                                        lineNumber: 400,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                lineNumber: 383,
+                                                lineNumber: 396,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7570,30 +7623,30 @@ function DeploymentDetailPage() {
                                                 children: secret
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                lineNumber: 389,
+                                                lineNumber: 402,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                        lineNumber: 355,
+                                        lineNumber: 364,
                                         columnNumber: 15
                                     }, this)
                                 }, secret, false, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 350,
+                                    lineNumber: 359,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 302,
+                        lineNumber: 307,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 298,
+                lineNumber: 303,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7615,7 +7668,7 @@ function DeploymentDetailPage() {
                                 children: "Pods"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                lineNumber: 401,
+                                lineNumber: 414,
                                 columnNumber: 11
                             }, this),
                             pods && pods.length > 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7626,22 +7679,22 @@ function DeploymentDetailPage() {
                                 },
                                 children: podsExpanded ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandLess$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 410,
+                                    lineNumber: 423,
                                     columnNumber: 31
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandMore$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 410,
+                                    lineNumber: 423,
                                     columnNumber: 52
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                lineNumber: 405,
+                                lineNumber: 418,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 400,
+                        lineNumber: 413,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$components$2f$GlassPanel$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GlassPanel"], {
@@ -7656,12 +7709,12 @@ function DeploymentDetailPage() {
                             },
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$CircularProgress$2f$CircularProgress$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                lineNumber: 417,
+                                lineNumber: 430,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                            lineNumber: 416,
+                            lineNumber: 429,
                             columnNumber: 13
                         }, this) : pods?.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                             children: [
@@ -7675,28 +7728,28 @@ function DeploymentDetailPage() {
                                                             children: "Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                            lineNumber: 425,
+                                                            lineNumber: 438,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                             children: "Status"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                            lineNumber: 426,
+                                                            lineNumber: 439,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                             children: "Node"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                            lineNumber: 427,
+                                                            lineNumber: 440,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                             children: "IP"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                            lineNumber: 428,
+                                                            lineNumber: 441,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7704,25 +7757,25 @@ function DeploymentDetailPage() {
                                                             children: "Restarts"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                            lineNumber: 429,
+                                                            lineNumber: 442,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                             children: "Age"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                            lineNumber: 430,
+                                                            lineNumber: 443,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                    lineNumber: 424,
+                                                    lineNumber: 437,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                lineNumber: 423,
+                                                lineNumber: 436,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableBody$2f$TableBody$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7736,12 +7789,12 @@ function DeploymentDetailPage() {
                                                                     children: pod.name
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                    lineNumber: 437,
+                                                                    lineNumber: 450,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                lineNumber: 436,
+                                                                lineNumber: 449,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7749,12 +7802,12 @@ function DeploymentDetailPage() {
                                                                     status: pod.status
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                    lineNumber: 442,
+                                                                    lineNumber: 455,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                lineNumber: 441,
+                                                                lineNumber: 454,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7775,24 +7828,24 @@ function DeploymentDetailPage() {
                                                                         children: pod.nodeName
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                        lineNumber: 449,
+                                                                        lineNumber: 462,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                    lineNumber: 445,
+                                                                    lineNumber: 458,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                lineNumber: 444,
+                                                                lineNumber: 457,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                                 children: pod.ip
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                lineNumber: 463,
+                                                                lineNumber: 476,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7800,36 +7853,36 @@ function DeploymentDetailPage() {
                                                                 children: pod.restartCount
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                lineNumber: 464,
+                                                                lineNumber: 477,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TableCell$2f$TableCell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                                 children: pod.age
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                                lineNumber: 465,
+                                                                lineNumber: 478,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, pod.name, true, {
                                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                        lineNumber: 435,
+                                                        lineNumber: 448,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                                lineNumber: 433,
+                                                lineNumber: 446,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                        lineNumber: 422,
+                                        lineNumber: 435,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 421,
+                                    lineNumber: 434,
                                     columnNumber: 15
                                 }, this),
                                 !podsExpanded && pods.length > 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7847,12 +7900,12 @@ function DeploymentDetailPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                        lineNumber: 473,
+                                        lineNumber: 486,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                    lineNumber: 472,
+                                    lineNumber: 485,
                                     columnNumber: 17
                                 }, this)
                             ]
@@ -7865,23 +7918,23 @@ function DeploymentDetailPage() {
                                 children: "No pods found for this deployment"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                                lineNumber: 481,
+                                lineNumber: 494,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                            lineNumber: 480,
+                            lineNumber: 493,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 414,
+                        lineNumber: 427,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 399,
+                lineNumber: 412,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7897,7 +7950,7 @@ function DeploymentDetailPage() {
                         children: "Resource Metrics"
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 489,
+                        lineNumber: 502,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$metrics$2f$resource$2d$usage$2d$chart$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResourceUsageChart"], {
@@ -7905,13 +7958,13 @@ function DeploymentDetailPage() {
                         namespace: deployment.namespace
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 492,
+                        lineNumber: 505,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 488,
+                lineNumber: 501,
                 columnNumber: 7
             }, this),
             topologyData && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -7928,7 +7981,7 @@ function DeploymentDetailPage() {
                         children: "Topology"
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 498,
+                        lineNumber: 511,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$topology$2f$topology$2d$graph$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TopologyGraph"], {
@@ -7936,24 +7989,25 @@ function DeploymentDetailPage() {
                         height: 500
                     }, void 0, false, {
                         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                        lineNumber: 501,
+                        lineNumber: 514,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/deployments/[name]/page.tsx",
-                lineNumber: 497,
+                lineNumber: 510,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/deployments/[name]/page.tsx",
-        lineNumber: 138,
+        lineNumber: 141,
         columnNumber: 5
     }, this);
 }
-_s(DeploymentDetailPage, "/13Cu4K8i5k/RcAjCA7LQ+3XGzE=", false, function() {
+_s(DeploymentDetailPage, "jB43sCryzGxDSHnQnibuomW23Fo=", false, function() {
     return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useParams"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$deployments$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDeployment"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$hooks$2f$use$2d$auto$2d$refresh$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAutoRefresh"],

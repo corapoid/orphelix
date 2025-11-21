@@ -6,6 +6,7 @@ import Collapse from '@mui/material/Collapse'
 import Fade from '@mui/material/Fade'
 import type { SxProps, Theme } from '@mui/material/styles'
 import type { ReactNode } from 'react'
+import { useTheme } from '@orphelix/ui'
 
 interface GlassPanelProps {
   children: ReactNode
@@ -24,28 +25,34 @@ export function GlassPanel({
   onClose,
   animationType = 'fade'
 }: GlassPanelProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
+
   const content = (
     <Paper
-      elevation={0}
+      elevation={isGlass ? 0 : 1}
       sx={{
         p: 2.5,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(30, 30, 46, 0.6)'
-            : 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: '1px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.12)'
-            : 'rgba(209, 213, 219, 0.4)',
-        borderRadius: '12px',
-        boxShadow: (theme) =>
-          theme.palette.mode === 'dark'
-            ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
-            : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         position: 'relative',
+        // Conditional glass effects
+        ...(isGlass && {
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(30, 30, 46, 0.6)'
+              : 'rgba(255, 255, 255, 0.25)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(209, 213, 219, 0.4)',
+          boxShadow: (theme) =>
+            theme.palette.mode === 'dark'
+              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
+              : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+        }),
         ...sx,
       }}
     >

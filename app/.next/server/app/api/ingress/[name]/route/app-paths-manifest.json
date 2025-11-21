@@ -1,3 +1,0 @@
-{
-  "/api/ingress/[name]/route": "app/api/ingress/[name]/route.js"
-}

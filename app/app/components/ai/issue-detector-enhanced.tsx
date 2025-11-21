@@ -349,12 +349,12 @@ Keep it concise and practical. Use the actual pod names, namespaces, and error m
                   <Box sx={{
                     p: 2,
                     bgcolor: 'action.hover',
-                    borderRadius: 1,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     '& p': { mb: 1 },
                     '& pre': {
                       bgcolor: 'background.paper',
                       p: 1.5,
-                      borderRadius: 1,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       overflow: 'auto'
                     },
                     '& code': {
@@ -363,7 +363,7 @@ Keep it concise and practical. Use the actual pod names, namespaces, and error m
                       bgcolor: 'background.paper',
                       px: 0.5,
                       py: 0.25,
-                      borderRadius: 0.5,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     },
                   }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>

@@ -4,12 +4,15 @@ import { Alert, Box, Button, Link, Typography } from '@mui/material'
 import CloudOffIcon from '@mui/icons-material/CloudOff'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
+import { useTheme } from '@orphelix/ui'
 
 interface ClusterConnectionAlertProps {
   minimal?: boolean
 }
 
 export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAlertProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const { data: health, isLoading, refetch } = useClusterHealth()
 
   // Don't show anything while loading
@@ -53,22 +56,24 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
         sx={{
           maxWidth: 700,
           width: '100%',
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.8)'
-              : 'rgba(255, 255, 255, 0.8)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          border: '1px solid',
-          borderColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 100, 100, 0.3)'
-              : 'rgba(211, 47, 47, 0.3)',
-          borderRadius: '12px',
-          boxShadow: (theme) =>
-            theme.palette.mode === 'dark'
-              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
-              : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+          ...(isGlass && {
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(30, 30, 46, 0.8)'
+                : 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid',
+            borderColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 100, 100, 0.3)'
+                : 'rgba(211, 47, 47, 0.3)',
+            boxShadow: (theme) =>
+              theme.palette.mode === 'dark'
+                ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)'
+                : '0 4px 16px 0 rgba(211, 47, 47, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)',
+          }),
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           p: 3,
         }}
       >
@@ -88,7 +93,7 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
           <Box component="ul" sx={{ mt: 1, pl: 2.5, mb: 0, '& li': { mb: 0.5 } }}>
             <li>
               <Typography variant="body2">
-                Check your <code style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>kubeconfig</code> file is properly configured
+                Check your <code>kubeconfig</code> file is properly configured
               </Typography>
             </li>
             <li>
@@ -99,7 +104,7 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
             </li>
             <li>
               <Typography variant="body2">
-                Run <code style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>kubectl version</code> to verify connectivity
+                Run <code>kubectl version</code> to verify connectivity
               </Typography>
             </li>
             <li>
@@ -132,7 +137,7 @@ export function ClusterConnectionAlert({ minimal = false }: ClusterConnectionAle
           sx={{
             px: 2,
             py: 0.75,
-            borderRadius: '8px',
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             textTransform: 'none',
             fontWeight: 600,
             flexShrink: 0,

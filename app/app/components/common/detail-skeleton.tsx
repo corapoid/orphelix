@@ -12,9 +12,9 @@ export function DetailSkeleton() {
       <Box sx={{ mb: 3 }}>
         <Skeleton variant="text" width={200} height={48} />
         <Box display="flex" gap={1} mt={2}>
-          <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 1 }} />
-          <Skeleton variant="rectangular" width={100} height={24} sx={{ borderRadius: 1 }} />
-          <Skeleton variant="rectangular" width={60} height={24} sx={{ borderRadius: 1 }} />
+          <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: (theme) => `${theme.shape.borderRadius}px` }} />
+          <Skeleton variant="rectangular" width={100} height={24} sx={{ borderRadius: (theme) => `${theme.shape.borderRadius}px` }} />
+          <Skeleton variant="rectangular" width={60} height={24} sx={{ borderRadius: (theme) => `${theme.shape.borderRadius}px` }} />
         </Box>
       </Box>
 
@@ -46,7 +46,7 @@ export function DetailSkeleton() {
                     variant="rectangular"
                     width={120}
                     height={32}
-                    sx={{ borderRadius: 2 }}
+                    sx={{ borderRadius: (theme) => `${theme.shape.borderRadius}px` }}
                   />
                 ))}
               </Box>
@@ -57,7 +57,7 @@ export function DetailSkeleton() {
           <Grid size={12}>
             <Paper sx={{ p: 3 }}>
               <Skeleton variant="text" width={150} height={32} sx={{ mb: 2 }} />
-              <Skeleton variant="rectangular" width="100%" height={200} sx={{ borderRadius: 1 }} />
+              <Skeleton variant="rectangular" width="100%" height={200} sx={{ borderRadius: (theme) => `${theme.shape.borderRadius}px` }} />
             </Paper>
           </Grid>
         </Grid>

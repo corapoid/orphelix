@@ -576,7 +576,7 @@ export function YamlEditorModal({
 
             {/* Monaco Editor */}
             {selectedFile && (
-              <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1 }}>
+              <Box sx={{ border: 1, borderColor: 'divider', borderRadius: (theme) => `${theme.shape.borderRadius}px` }}>
                 <Editor
                   height="500px"
                   defaultLanguage="yaml"

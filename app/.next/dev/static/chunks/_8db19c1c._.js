@@ -401,8 +401,8 @@ function buildTheme(preset, mode, compact = false) {
     const isDark = mode === 'dark';
     // Use smaller border radius for classic preset
     const isClassic = !effects.transparency;
-    const cardRadius = isClassic ? __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.sm : compact ? __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.md : __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.lg;
-    const buttonRadius = isClassic ? 6 : compact ? __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.sm : 10;
+    const cardRadius = isClassic ? 10 : compact ? __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.md : __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.lg;
+    const buttonRadius = isClassic ? 10 : compact ? __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.sm : 10;
     const themeOptions = {
         palette: {
             mode,
@@ -505,7 +505,7 @@ function buildTheme(preset, mode, compact = false) {
             }
         },
         shape: {
-            borderRadius: compact ? __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.sm : __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.md
+            borderRadius: cardRadius
         },
         spacing: compact ? 7 : 8,
         components: {
@@ -575,10 +575,10 @@ function buildTheme(preset, mode, compact = false) {
                         borderRadius: cardRadius
                     },
                     elevation1: {
-                        boxShadow: effects.transparency ? 'none' : isDark ? '0 2px 8px rgba(0, 0, 0, 0.3)' : '0 2px 8px rgba(0, 0, 0, 0.06)'
+                        boxShadow: effects.transparency ? 'none' : isDark ? '0 1px 3px rgba(0, 0, 0, 0.2)' : '0 1px 3px rgba(0, 0, 0, 0.04)'
                     },
                     elevation2: {
-                        boxShadow: effects.transparency ? 'none' : isDark ? '0 4px 12px rgba(0, 0, 0, 0.35)' : '0 4px 12px rgba(0, 0, 0, 0.08)'
+                        boxShadow: effects.transparency ? 'none' : isDark ? '0 2px 6px rgba(0, 0, 0, 0.25)' : '0 2px 6px rgba(0, 0, 0, 0.05)'
                     }
                 }
             },
@@ -633,7 +633,7 @@ function buildTheme(preset, mode, compact = false) {
             MuiChip: {
                 styleOverrides: {
                     root: {
-                        borderRadius: compact ? 6 : __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.sm,
+                        borderRadius: isClassic ? 5 : compact ? 6 : __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$theme$2f$design$2d$tokens$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["designTokens"].radius.sm,
                         fontWeight: 600,
                         fontSize: `${0.8125 * scale}rem`,
                         height: compact ? 26 : 32
@@ -825,12 +825,7 @@ function GlassPanel({ children, sx = {}, closeable = false, open = true, onClose
                     fontSize: "small"
                 })
             }),
-            (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                sx: closeable ? {
-                    pr: 4
-                } : undefined,
-                children: children
-            })
+            children
         ]
     });
     if (animationType === 'collapse') {
@@ -868,9 +863,16 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Button/Button.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$styles$2f$useTheme$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__useTheme$3e$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/styles/useTheme.js [app-client] (ecmascript) <export default as useTheme>");
+var _s = __turbopack_context__.k.signature();
+;
 ;
 ;
 function GlassButton({ selected = false, sx, href, target, rel, ...props }) {
+    _s();
+    const theme = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$styles$2f$useTheme$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__useTheme$3e$__["useTheme"])();
+    // @ts-ignore - custom theme property
+    const isGlass = theme.palette.mode && theme.effects?.transparency !== false;
     return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
         ...props,
         ...href && {
@@ -882,18 +884,35 @@ function GlassButton({ selected = false, sx, href, target, rel, ...props }) {
         sx: {
             py: 2,
             px: 4,
-            borderRadius: 3,
-            border: '1px solid',
-            borderColor: 'divider',
-            // Theme provides all glass effects based on preset
-            // Colors and effects come from theme
+            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
+            // Conditional glass effects
+            ...isGlass && {
+                border: '1px solid',
+                borderColor: 'divider',
+                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)'
+            },
+            // Selected state
             ...selected && {
-                borderColor: 'primary.main'
+                borderColor: 'primary.main',
+                backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.1)'
+            },
+            '&:hover': {
+                ...isGlass && {
+                    backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.7)' : 'rgba(255, 255, 255, 0.4)',
+                    borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(209, 213, 219, 0.6)'
+                }
             },
             ...sx
         }
     });
 } //# sourceMappingURL=GlassButton.js.map
+_s(GlassButton, "348zkHuILT1Bk3uHf5iW5JcVxPY=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$styles$2f$useTheme$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__useTheme$3e$__["useTheme"]
+    ];
+});
 _c = GlassButton;
 var _c;
 __turbopack_context__.k.register(_c, "GlassButton");
@@ -1090,15 +1109,6 @@ function ThemeProvider({ children, storageKeyPrefix = 'orphelix', defaultPreset 
     };
     // Determine actual theme to use
     const actualTheme = mode === 'system' ? systemTheme : mode;
-    // Update HTML attribute when theme changes
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "ThemeProvider.useEffect": ()=>{
-            document.documentElement.setAttribute('data-theme', actualTheme);
-            document.documentElement.style.colorScheme = actualTheme;
-        }
-    }["ThemeProvider.useEffect"], [
-        actualTheme
-    ]);
     // Build theme based on visual preset, mode, and compact setting
     const theme = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "ThemeProvider.useMemo[theme]": ()=>{
@@ -1123,6 +1133,25 @@ function ThemeProvider({ children, storageKeyPrefix = 'orphelix', defaultPreset 
         actualTheme,
         compact
     ]);
+    // Update HTML attribute when theme changes
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ThemeProvider.useEffect": ()=>{
+            document.documentElement.setAttribute('data-theme', actualTheme);
+            document.documentElement.style.colorScheme = actualTheme;
+        }
+    }["ThemeProvider.useEffect"], [
+        actualTheme
+    ]);
+    // Update CSS custom property for borderRadius
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ThemeProvider.useEffect": ()=>{
+            if (theme) {
+                document.documentElement.style.setProperty('--orphelix-border-radius', `${theme.shape.borderRadius}px`);
+            }
+        }
+    }["ThemeProvider.useEffect"], [
+        theme
+    ]);
     // Prevent flash by not rendering until mounted
     if (!mounted) {
         return null;
@@ -1146,7 +1175,7 @@ function ThemeProvider({ children, storageKeyPrefix = 'orphelix', defaultPreset 
         })
     });
 } //# sourceMappingURL=ThemeProvider.js.map
-_s2(ThemeProvider, "HAYxTW+RzQ6B35ewNWTgmOs7/4M=");
+_s2(ThemeProvider, "J1VT4QoMqvPQthLio05GvyjyM2E=");
 _c = ThemeProvider;
 var _c;
 __turbopack_context__.k.register(_c, "ThemeProvider");
@@ -1762,9 +1791,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/Divider/Divider.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/core/store.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
+;
 ;
 ;
 ;
@@ -1825,7 +1857,7 @@ const navGroups = [
         label: 'Dashboard',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Dashboard$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-            lineNumber: 75,
+            lineNumber: 76,
             columnNumber: 31
         }, ("TURBOPACK compile-time value", void 0)),
         path: '/',
@@ -1835,7 +1867,7 @@ const navGroups = [
         label: 'Repository Browser',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$GitHub$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-            lineNumber: 76,
+            lineNumber: 77,
             columnNumber: 40
         }, ("TURBOPACK compile-time value", void 0)),
         path: '/repo-browser',
@@ -1848,7 +1880,7 @@ const navGroups = [
                 label: 'Deployments',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$AccountTree$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 80,
+                    lineNumber: 81,
                     columnNumber: 37
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/deployments',
@@ -1858,7 +1890,7 @@ const navGroups = [
                 label: 'StatefulSets',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 81,
+                    lineNumber: 82,
                     columnNumber: 38
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/statefulsets',
@@ -1868,7 +1900,7 @@ const navGroups = [
                 label: 'DaemonSets',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$SettingsSystemDaydream$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 82,
+                    lineNumber: 83,
                     columnNumber: 36
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/daemonsets',
@@ -1878,7 +1910,7 @@ const navGroups = [
                 label: 'Pods',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Widgets$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 83,
+                    lineNumber: 84,
                     columnNumber: 30
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/pods',
@@ -1888,7 +1920,7 @@ const navGroups = [
                 label: 'Jobs',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Work$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 84,
+                    lineNumber: 85,
                     columnNumber: 30
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/jobs',
@@ -1898,7 +1930,7 @@ const navGroups = [
                 label: 'CronJobs',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Schedule$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 85,
+                    lineNumber: 86,
                     columnNumber: 34
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/cronjobs',
@@ -1913,7 +1945,7 @@ const navGroups = [
                 label: 'Services',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Cloud$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 91,
+                    lineNumber: 92,
                     columnNumber: 34
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/services',
@@ -1923,7 +1955,7 @@ const navGroups = [
                 label: 'Ingress',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Http$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 92,
+                    lineNumber: 93,
                     columnNumber: 33
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/ingress',
@@ -1938,7 +1970,7 @@ const navGroups = [
                 label: 'ConfigMaps',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Description$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 98,
+                    lineNumber: 99,
                     columnNumber: 36
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/configmaps',
@@ -1948,7 +1980,7 @@ const navGroups = [
                 label: 'Secrets',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Lock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 99,
+                    lineNumber: 100,
                     columnNumber: 33
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/secrets',
@@ -1958,7 +1990,7 @@ const navGroups = [
                 label: 'Persistent Volumes',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$FolderOpen$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 100,
+                    lineNumber: 101,
                     columnNumber: 44
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/pv',
@@ -1973,7 +2005,7 @@ const navGroups = [
                 label: 'Namespaces',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Folder$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 106,
+                    lineNumber: 107,
                     columnNumber: 36
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/namespaces',
@@ -1983,7 +2015,7 @@ const navGroups = [
                 label: 'Nodes',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Storage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 107,
+                    lineNumber: 108,
                     columnNumber: 31
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/nodes',
@@ -1993,7 +2025,7 @@ const navGroups = [
                 label: 'HPA',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$TrendingUp$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 108,
+                    lineNumber: 109,
                     columnNumber: 29
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/hpa',
@@ -2003,7 +2035,7 @@ const navGroups = [
                 label: 'Events',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$EventNote$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 109,
+                    lineNumber: 110,
                     columnNumber: 32
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/events',
@@ -2013,7 +2045,7 @@ const navGroups = [
                 label: 'Labels',
                 icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Label$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 110,
+                    lineNumber: 111,
                     columnNumber: 32
                 }, ("TURBOPACK compile-time value", void 0)),
                 path: '/labels',
@@ -2027,6 +2059,8 @@ function isNavGroup(item) {
 }
 function Sidebar() {
     _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const mode = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useModeStore"])({
@@ -2114,7 +2148,7 @@ function Sidebar() {
                         selected: isActive,
                         onClick: ()=>handleNavigate(item.path),
                         sx: {
-                            borderRadius: 1.5,
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                             minHeight: 40,
                             justifyContent: 'center',
                             px: 1.5,
@@ -2122,18 +2156,24 @@ function Sidebar() {
                             border: '0.5px solid transparent',
                             '&.Mui-selected': {
                                 background: (theme)=>theme.palette.mode === 'light' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                                backdropFilter: 'blur(20px) saturate(180%)',
-                                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                                ...isGlass && {
+                                    backdropFilter: 'blur(20px) saturate(180%)',
+                                    WebkitBackdropFilter: 'blur(20px) saturate(180%)'
+                                },
                                 borderColor: (theme)=>theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.2)',
-                                boxShadow: (theme)=>theme.palette.mode === 'light' ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)' : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                                ...isGlass && {
+                                    boxShadow: (theme)=>theme.palette.mode === 'light' ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)' : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+                                },
                                 '&:hover': {
                                     background: (theme)=>theme.palette.mode === 'light' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
                                 }
                             },
                             '&:hover': {
                                 bgcolor: (theme)=>theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.08)',
-                                backdropFilter: 'blur(20px)',
-                                WebkitBackdropFilter: 'blur(20px)'
+                                ...isGlass && {
+                                    backdropFilter: 'blur(20px)',
+                                    WebkitBackdropFilter: 'blur(20px)'
+                                }
                             }
                         },
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemIcon$2f$ListItemIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2149,22 +2189,22 @@ function Sidebar() {
                             children: item.icon
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                            lineNumber: 232,
+                            lineNumber: 241,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                        lineNumber: 190,
+                        lineNumber: 193,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 189,
+                    lineNumber: 192,
                     columnNumber: 11
                 }, this)
             }, item.path, false, {
                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                lineNumber: 188,
+                lineNumber: 191,
                 columnNumber: 9
             }, this);
         }
@@ -2179,7 +2219,7 @@ function Sidebar() {
                 selected: isActive,
                 onClick: ()=>handleNavigate(item.path),
                 sx: {
-                    borderRadius: 1.5,
+                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                     pl: isSubItem ? 3.5 : 1.5,
                     pr: 1,
                     py: 0.75,
@@ -2189,10 +2229,14 @@ function Sidebar() {
                     opacity: editMode ? 0.85 : 1,
                     '&.Mui-selected': {
                         background: (theme)=>theme.palette.mode === 'light' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                        backdropFilter: 'blur(20px) saturate(180%)',
-                        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                        ...isGlass && {
+                            backdropFilter: 'blur(20px) saturate(180%)',
+                            WebkitBackdropFilter: 'blur(20px) saturate(180%)'
+                        },
                         borderColor: (theme)=>theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.2)',
-                        boxShadow: (theme)=>theme.palette.mode === 'light' ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)' : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                        ...isGlass && {
+                            boxShadow: (theme)=>theme.palette.mode === 'light' ? '0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)' : '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+                        },
                         '&:hover': {
                             background: (theme)=>theme.palette.mode === 'light' ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%)'
                         },
@@ -2202,8 +2246,10 @@ function Sidebar() {
                     },
                     '&:hover': {
                         bgcolor: (theme)=>theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.08)',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)'
+                        ...isGlass && {
+                            backdropFilter: 'blur(20px)',
+                            WebkitBackdropFilter: 'blur(20px)'
+                        }
                     }
                 },
                 children: [
@@ -2220,7 +2266,7 @@ function Sidebar() {
                         children: item.icon
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                        lineNumber: 306,
+                        lineNumber: 321,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2232,7 +2278,7 @@ function Sidebar() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                        lineNumber: 319,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this),
                     editMode && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2254,7 +2300,7 @@ function Sidebar() {
                             }
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                            lineNumber: 342,
+                            lineNumber: 357,
                             columnNumber: 17
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$PushPinOutlined$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                             sx: {
@@ -2263,23 +2309,23 @@ function Sidebar() {
                             }
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                            lineNumber: 344,
+                            lineNumber: 359,
                             columnNumber: 17
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                        lineNumber: 328,
+                        lineNumber: 343,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                lineNumber: 259,
+                lineNumber: 268,
                 columnNumber: 9
             }, this)
         }, item.path, false, {
             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-            lineNumber: 254,
+            lineNumber: 263,
             columnNumber: 7
         }, this);
     };
@@ -2311,14 +2357,16 @@ function Sidebar() {
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
             sx: {
                 bgcolor: 'background.paper',
-                borderRadius: 3,
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                 height: 'calc(100vh - 32px)',
                 mt: 2,
                 mb: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                backdropFilter: 'blur(60px)',
-                WebkitBackdropFilter: 'blur(60px)',
+                ...isGlass && {
+                    backdropFilter: 'blur(60px)',
+                    WebkitBackdropFilter: 'blur(60px)'
+                },
                 boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)' : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
                 border: (theme)=>theme.palette.mode === 'light' ? '1px solid rgba(209, 213, 219, 0.4)' : '1px solid rgba(255, 255, 255, 0.12)',
                 overflow: 'hidden'
@@ -2351,7 +2399,7 @@ function Sidebar() {
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemButton$2f$ListItemButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             onClick: ()=>toggleGroup(item.label),
                                             sx: {
-                                                borderRadius: 1.5,
+                                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                                 mb: 0.4,
                                                 py: 0.6,
                                                 '&:hover': {
@@ -2370,7 +2418,7 @@ function Sidebar() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                    lineNumber: 430,
+                                                    lineNumber: 447,
                                                     columnNumber: 19
                                                 }, this),
                                                 isExpanded ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandLess$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2380,7 +2428,7 @@ function Sidebar() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                    lineNumber: 441,
+                                                    lineNumber: 458,
                                                     columnNumber: 21
                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandMore$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                     sx: {
@@ -2389,13 +2437,13 @@ function Sidebar() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                    lineNumber: 443,
+                                                    lineNumber: 460,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                            lineNumber: 419,
+                                            lineNumber: 436,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Collapse$2f$Collapse$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2408,18 +2456,18 @@ function Sidebar() {
                                                 children: pinnedItems.map((subItem)=>renderNavItem(subItem, true))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                lineNumber: 447,
+                                                lineNumber: 464,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                            lineNumber: 446,
+                                            lineNumber: 463,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, item.label, true, {
                                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                    lineNumber: 418,
+                                    lineNumber: 435,
                                     columnNumber: 15
                                 }, this);
                             }
@@ -2454,7 +2502,7 @@ function Sidebar() {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemButton$2f$ListItemButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         onClick: ()=>toggleGroup('More'),
                                         sx: {
-                                            borderRadius: 1.5,
+                                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                             mb: 0.4,
                                             py: 0.6,
                                             '&:hover': {
@@ -2473,7 +2521,7 @@ function Sidebar() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                lineNumber: 496,
+                                                lineNumber: 513,
                                                 columnNumber: 19
                                             }, this),
                                             isMoreExpanded ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandLess$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2483,7 +2531,7 @@ function Sidebar() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                lineNumber: 507,
+                                                lineNumber: 524,
                                                 columnNumber: 21
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandMore$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                 sx: {
@@ -2492,13 +2540,13 @@ function Sidebar() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                lineNumber: 509,
+                                                lineNumber: 526,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 485,
+                                        lineNumber: 502,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Collapse$2f$Collapse$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2511,30 +2559,30 @@ function Sidebar() {
                                             children: allUnpinnedItems.map((subItem)=>renderNavItem(subItem, true))
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                            lineNumber: 513,
+                                            lineNumber: 530,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 512,
+                                        lineNumber: 529,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                lineNumber: 484,
+                                lineNumber: 501,
                                 columnNumber: 15
                             }, this);
                         })()
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 400,
+                    lineNumber: 417,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 523,
+                    lineNumber: 540,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2568,7 +2616,7 @@ function Sidebar() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 539,
+                                        lineNumber: 556,
                                         columnNumber: 29
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Edit$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         sx: {
@@ -2576,17 +2624,17 @@ function Sidebar() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 539,
+                                        lineNumber: 556,
                                         columnNumber: 66
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                    lineNumber: 528,
+                                    lineNumber: 545,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                lineNumber: 527,
+                                lineNumber: 544,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tooltip$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2610,17 +2658,17 @@ function Sidebar() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 556,
+                                        lineNumber: 573,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                    lineNumber: 543,
+                                    lineNumber: 560,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                lineNumber: 542,
+                                lineNumber: 559,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tooltip$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2641,23 +2689,23 @@ function Sidebar() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 570,
+                                        lineNumber: 587,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                    lineNumber: 560,
+                                    lineNumber: 577,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                lineNumber: 559,
+                                lineNumber: 576,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                        lineNumber: 526,
+                        lineNumber: 543,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         sx: {
@@ -2677,7 +2725,7 @@ function Sidebar() {
                                 children: "v1.0.0"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                lineNumber: 576,
+                                lineNumber: 593,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2705,7 +2753,7 @@ function Sidebar() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                lineNumber: 600,
+                                                lineNumber: 617,
                                                 columnNumber: 31
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Edit$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                 sx: {
@@ -2713,17 +2761,17 @@ function Sidebar() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                                lineNumber: 600,
+                                                lineNumber: 617,
                                                 columnNumber: 68
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                            lineNumber: 589,
+                                            lineNumber: 606,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 588,
+                                        lineNumber: 605,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2744,12 +2792,12 @@ function Sidebar() {
                                             }
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                            lineNumber: 616,
+                                            lineNumber: 633,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 603,
+                                        lineNumber: 620,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2767,45 +2815,46 @@ function Sidebar() {
                                             }
                                         }, void 0, false, {
                                             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                            lineNumber: 628,
+                                            lineNumber: 645,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                        lineNumber: 618,
+                                        lineNumber: 635,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                                lineNumber: 587,
+                                lineNumber: 604,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                        lineNumber: 575,
+                        lineNumber: 592,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/layout/sidebar.tsx",
-                    lineNumber: 524,
+                    lineNumber: 541,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/app/components/layout/sidebar.tsx",
-            lineNumber: 378,
+            lineNumber: 393,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/app/components/layout/sidebar.tsx",
-        lineNumber: 354,
+        lineNumber: 369,
         columnNumber: 5
     }, this);
 }
-_s(Sidebar, "qEbXhUpICjJcBUEfr3Cucwv83ks=", false, function() {
+_s(Sidebar, "i9NgJs0peqCWRJyKqtW3t6Qanvo=", false, function() {
     return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useModeStore"],
@@ -3038,7 +3087,7 @@ function NamespaceSelector({ onError }) {
                     fontSize: '0.875rem',
                     '&:hover': {
                         bgcolor: 'action.hover',
-                        borderRadius: 1
+                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                     },
                     '& .MuiSelect-select': {
                         py: 0.5,
@@ -3537,7 +3586,7 @@ function RealtimeStatus() {
                         gap: 0.75,
                         px: 1.5,
                         py: 0.5,
-                        borderRadius: 1.5,
+                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                         bgcolor: status === 'connected' ? 'rgba(16, 185, 129, 0.1)' : 'background.default',
                         border: '1px solid',
                         borderColor: status === 'connected' ? 'rgba(16, 185, 129, 0.3)' : 'divider',
@@ -3909,7 +3958,7 @@ function ContextSelectorInline() {
                     fontSize: '0.875rem',
                     '&:hover': {
                         bgcolor: 'action.hover',
-                        borderRadius: 1
+                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                     },
                     '& .MuiSelect-select': {
                         py: 0.5,
@@ -4227,7 +4276,7 @@ function BranchSelectorInline() {
                     fontSize: '0.875rem',
                     '&:hover': {
                         bgcolor: 'action.hover',
-                        borderRadius: 1
+                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`
                     },
                     '& .MuiSelect-select': {
                         py: 0.5,
@@ -4332,6 +4381,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$mat
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Search$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Search.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Clear$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Clear.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/material/esm/IconButton/IconButton.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 'use client';
 ;
 ;
@@ -4340,6 +4393,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$mat
 ;
 ;
 function SearchBar({ value, onChange, placeholder = 'Search...', fullWidth = false }) {
+    _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const handleClear = ()=>{
         onChange('');
     };
@@ -4360,12 +4416,12 @@ function SearchBar({ value, onChange, placeholder = 'Search...', fullWidth = fal
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/search-bar.tsx",
-                        lineNumber: 42,
+                        lineNumber: 46,
                         columnNumber: 15
                     }, void 0)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/common/search-bar.tsx",
-                    lineNumber: 41,
+                    lineNumber: 45,
                     columnNumber: 13
                 }, void 0),
                 endAdornment: value && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$InputAdornment$2f$InputAdornment$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4380,17 +4436,17 @@ function SearchBar({ value, onChange, placeholder = 'Search...', fullWidth = fal
                             }
                         }, void 0, false, {
                             fileName: "[project]/app/app/components/common/search-bar.tsx",
-                            lineNumber: 48,
+                            lineNumber: 52,
                             columnNumber: 17
                         }, void 0)
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/common/search-bar.tsx",
-                        lineNumber: 47,
+                        lineNumber: 51,
                         columnNumber: 15
                     }, void 0)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/common/search-bar.tsx",
-                    lineNumber: 46,
+                    lineNumber: 50,
                     columnNumber: 13
                 }, void 0)
             }
@@ -4399,11 +4455,13 @@ function SearchBar({ value, onChange, placeholder = 'Search...', fullWidth = fal
             minWidth: fullWidth ? undefined : 300,
             '& .MuiOutlinedInput-root': {
                 backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.6)' : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                ...isGlass && {
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)'
+                },
                 border: '1px solid',
                 borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: '12px',
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                 '& fieldset': {
                     border: 'none'
                 },
@@ -4418,10 +4476,15 @@ function SearchBar({ value, onChange, placeholder = 'Search...', fullWidth = fal
         }
     }, void 0, false, {
         fileName: "[project]/app/app/components/common/search-bar.tsx",
-        lineNumber: 32,
+        lineNumber: 36,
         columnNumber: 5
     }, this);
 }
+_s(SearchBar, "c0MZhghFmuZD3dgcE5n4BKV0J3M=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
+    ];
+});
 _c = SearchBar;
 var _c;
 __turbopack_context__.k.register(_c, "SearchBar");
@@ -4470,6 +4533,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navi
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$app$2f$components$2f$theme$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/app/app/components/theme-provider.tsx [app-client] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__useTheme__as__useThemeMode$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript) <export useTheme as useThemeMode>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/core/store.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -4496,8 +4561,11 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function UserMenu() {
     _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { data: session } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$react$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSession"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
@@ -4559,17 +4627,17 @@ function UserMenu() {
                         children: !userImage && userName.charAt(0).toUpperCase()
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 81,
+                        lineNumber: 84,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                    lineNumber: 71,
+                    lineNumber: 74,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                lineNumber: 70,
+                lineNumber: 73,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Menu$2f$Menu$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4588,9 +4656,11 @@ function UserMenu() {
                     mt: 1,
                     '& .MuiPaper-root': {
                         minWidth: 240,
-                        borderRadius: 2,
-                        backdropFilter: 'blur(40px)',
-                        WebkitBackdropFilter: 'blur(40px)'
+                        borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
+                        ...isGlass && {
+                            backdropFilter: 'blur(40px)',
+                            WebkitBackdropFilter: 'blur(40px)'
+                        }
                     }
                 },
                 children: [
@@ -4613,7 +4683,7 @@ function UserMenu() {
                                 children: !userImage && userName.charAt(0).toUpperCase()
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 122,
+                                lineNumber: 127,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4628,7 +4698,7 @@ function UserMenu() {
                                         children: userName
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                        lineNumber: 130,
+                                        lineNumber: 135,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4638,24 +4708,24 @@ function UserMenu() {
                                         children: userEmail
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                        lineNumber: 133,
+                                        lineNumber: 138,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 129,
+                                lineNumber: 134,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 121,
+                        lineNumber: 126,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 139,
+                        lineNumber: 144,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4685,17 +4755,17 @@ function UserMenu() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                        lineNumber: 155,
+                                        lineNumber: 160,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                    lineNumber: 144,
+                                    lineNumber: 149,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 143,
+                                lineNumber: 148,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tooltip$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4716,17 +4786,17 @@ function UserMenu() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                        lineNumber: 170,
+                                        lineNumber: 175,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                    lineNumber: 159,
+                                    lineNumber: 164,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 158,
+                                lineNumber: 163,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tooltip$2f$Tooltip$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4747,28 +4817,28 @@ function UserMenu() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                        lineNumber: 185,
+                                        lineNumber: 190,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                    lineNumber: 174,
+                                    lineNumber: 179,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 173,
+                                lineNumber: 178,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 142,
+                        lineNumber: 147,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 190,
+                        lineNumber: 195,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4779,25 +4849,25 @@ function UserMenu() {
                                     fontSize: "small"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                    lineNumber: 195,
+                                    lineNumber: 200,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 194,
+                                lineNumber: 199,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 children: "Cluster Settings"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 197,
+                                lineNumber: 202,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 193,
+                        lineNumber: 198,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4808,25 +4878,25 @@ function UserMenu() {
                                     fontSize: "small"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                    lineNumber: 201,
+                                    lineNumber: 206,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 200,
+                                lineNumber: 205,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 children: "GitHub Integration"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 203,
+                                lineNumber: 208,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 199,
+                        lineNumber: 204,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4837,25 +4907,25 @@ function UserMenu() {
                                     fontSize: "small"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                    lineNumber: 207,
+                                    lineNumber: 212,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 206,
+                                lineNumber: 211,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 children: "AI Features"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 209,
+                                lineNumber: 214,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 205,
+                        lineNumber: 210,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -4866,76 +4936,73 @@ function UserMenu() {
                                     fontSize: "small"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                    lineNumber: 213,
+                                    lineNumber: 218,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 212,
+                                lineNumber: 217,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 children: "Design"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 215,
+                                lineNumber: 220,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                        lineNumber: 211,
+                        lineNumber: 216,
                         columnNumber: 9
                     }, this),
-                    !isDemo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    !isDemo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                        fileName: "[project]/app/app/components/layout/user-menu.tsx",
+                        lineNumber: 224,
+                        columnNumber: 21
+                    }, this),
+                    !isDemo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                        onClick: handleLogout,
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemIcon$2f$ListItemIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Logout$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                    fontSize: "small"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/app/components/layout/user-menu.tsx",
+                                    lineNumber: 228,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 221,
+                                lineNumber: 227,
                                 columnNumber: 13
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                onClick: handleLogout,
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemIcon$2f$ListItemIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Logout$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                            fontSize: "small"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                            lineNumber: 224,
-                                            columnNumber: 17
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                        lineNumber: 223,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                        children: "Logout"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                        lineNumber: 226,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                children: "Logout"
+                            }, void 0, false, {
                                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                                lineNumber: 222,
+                                lineNumber: 230,
                                 columnNumber: 13
                             }, this)
                         ]
-                    }, void 0, true)
+                    }, void 0, true, {
+                        fileName: "[project]/app/app/components/layout/user-menu.tsx",
+                        lineNumber: 226,
+                        columnNumber: 11
+                    }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/layout/user-menu.tsx",
-                lineNumber: 98,
+                lineNumber: 101,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true);
 }
-_s(UserMenu, "sAak8R5O+Ut6cSIAVFibjHkH7Ow=", false, function() {
+_s(UserMenu, "5uUv6/ZdnabXy5qg+fEJnVpfvsw=", false, function() {
     return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$react$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSession"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
@@ -5616,7 +5683,7 @@ function TopBar() {
                                                 gap: 0.5,
                                                 px: 1.5,
                                                 py: 0.5,
-                                                borderRadius: 1,
+                                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                                 bgcolor: 'warning.main',
                                                 color: 'warning.contrastText',
                                                 cursor: 'pointer',
@@ -6254,7 +6321,7 @@ function WelcomeModal() {
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
-                                borderRadius: '12px',
+                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                 backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
                                 backgroundSize: '150px 150px',
                                 opacity: (theme)=>theme.palette.mode === 'dark' ? 0.4 : 0.3,

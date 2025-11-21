@@ -5,6 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
 import IconButton from '@mui/material/IconButton'
+import { useTheme } from '@orphelix/ui'
 
 interface SearchBarProps {
   value: string
@@ -24,6 +25,9 @@ export function SearchBar({
   placeholder = 'Search...',
   fullWidth = false,
 }: SearchBarProps) {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
+
   const handleClear = () => {
     onChange('')
   }
@@ -58,14 +62,16 @@ export function SearchBar({
             theme.palette.mode === 'dark'
               ? 'rgba(30, 30, 46, 0.6)'
               : 'rgba(255, 255, 255, 0.25)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          ...(isGlass && {
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          }),
           border: '1px solid',
           borderColor: (theme) =>
             theme.palette.mode === 'dark'
               ? 'rgba(255, 255, 255, 0.12)'
               : 'rgba(209, 213, 219, 0.4)',
-          borderRadius: '12px',
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           '& fieldset': {
             border: 'none',
           },

@@ -26,6 +26,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$ico
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Send$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@mui/icons-material/esm/Send.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/lib/core/store.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$diff$2f$libesm$2f$diff$2f$line$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/diff/libesm/diff/line.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/ui/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/ui/dist/providers/ThemeProvider.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -48,8 +50,11 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function ChangesModal({ open, onClose }) {
     _s();
+    const { visualPreset } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const isGlass = visualPreset !== 'classic';
     const { editBasket, removeFromBasket, clearBasket, selectedRepo, selectedBranch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useGitHubStore"])();
     const [isCreatingPR, setIsCreatingPR] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
@@ -136,7 +141,7 @@ function ChangesModal({ open, onClose }) {
                 bgcolor: 'background.paper',
                 border: 1,
                 borderColor: 'divider',
-                borderRadius: 1,
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                 overflow: 'auto',
                 maxHeight: 400
             },
@@ -154,7 +159,7 @@ function ChangesModal({ open, onClose }) {
                             sx: {
                                 bgcolor: (theme)=>theme.palette.mode === 'dark' ? '#3a1a1a' : '#ffeef0',
                                 p: 1,
-                                borderRadius: 1,
+                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                 borderLeft: 3,
                                 borderColor: 'error.main'
                             },
@@ -170,7 +175,7 @@ function ChangesModal({ open, onClose }) {
                                     children: "Before:"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                    lineNumber: 148,
+                                    lineNumber: 151,
                                     columnNumber: 15
                                 }, this),
                                 change.removed.length > 0 ? change.removed.map((line, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -181,7 +186,7 @@ function ChangesModal({ open, onClose }) {
                                         children: line
                                     }, i, false, {
                                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                        lineNumber: 153,
+                                        lineNumber: 156,
                                         columnNumber: 19
                                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                     variant: "caption",
@@ -192,20 +197,20 @@ function ChangesModal({ open, onClose }) {
                                     children: "(empty)"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                    lineNumber: 158,
+                                    lineNumber: 161,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                            lineNumber: 139,
+                            lineNumber: 142,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                             sx: {
                                 bgcolor: (theme)=>theme.palette.mode === 'dark' ? '#1a3a29' : '#e6ffed',
                                 p: 1,
-                                borderRadius: 1,
+                                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                 borderLeft: 3,
                                 borderColor: 'success.main'
                             },
@@ -221,7 +226,7 @@ function ChangesModal({ open, onClose }) {
                                     children: "After:"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                    lineNumber: 174,
+                                    lineNumber: 177,
                                     columnNumber: 15
                                 }, this),
                                 change.added.length > 0 ? change.added.map((line, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -232,7 +237,7 @@ function ChangesModal({ open, onClose }) {
                                         children: line
                                     }, i, false, {
                                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                        lineNumber: 179,
+                                        lineNumber: 182,
                                         columnNumber: 19
                                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                     variant: "caption",
@@ -243,24 +248,24 @@ function ChangesModal({ open, onClose }) {
                                     children: "(empty)"
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                    lineNumber: 184,
+                                    lineNumber: 187,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                            lineNumber: 165,
+                            lineNumber: 168,
                             columnNumber: 13
                         }, this)
                     ]
                 }, index, true, {
                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                    lineNumber: 127,
+                    lineNumber: 130,
                     columnNumber: 11
                 }, this))
         }, void 0, false, {
             fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-            lineNumber: 114,
+            lineNumber: 117,
             columnNumber: 7
         }, this);
     };
@@ -272,20 +277,26 @@ function ChangesModal({ open, onClose }) {
         slotProps: {
             backdrop: {
                 sx: {
-                    backdropFilter: 'blur(8px)',
+                    ...isGlass && {
+                        backdropFilter: 'blur(8px)'
+                    },
                     backgroundColor: 'rgba(0, 0, 0, 0.5)'
                 }
             }
         },
         PaperProps: {
             sx: {
-                borderRadius: 3,
+                borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                 border: '1px solid',
                 backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(30, 30, 46, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                ...isGlass && {
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)'
+                },
                 borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(209, 213, 219, 0.4)',
-                boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)' : '0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)'
+                ...isGlass && {
+                    boxShadow: (theme)=>theme.palette.mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)' : '0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)'
+                }
             }
         },
         children: [
@@ -302,7 +313,7 @@ function ChangesModal({ open, onClose }) {
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                lineNumber: 230,
+                lineNumber: 239,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$DialogContent$2f$DialogContent$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -316,7 +327,7 @@ function ChangesModal({ open, onClose }) {
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                        lineNumber: 235,
+                        lineNumber: 244,
                         columnNumber: 11
                     }, this),
                     edits.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -330,7 +341,7 @@ function ChangesModal({ open, onClose }) {
                                 children: "No saved changes"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                lineNumber: 242,
+                                lineNumber: 251,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -342,23 +353,25 @@ function ChangesModal({ open, onClose }) {
                                 children: "Edit files and save them (⌘S) to prepare a multi-file PR"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                lineNumber: 245,
+                                lineNumber: 254,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                        lineNumber: 241,
+                        lineNumber: 250,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         children: edits.map((edit)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Accordion$2f$Accordion$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 defaultExpanded: edits.length === 1,
                                 sx: {
                                     mb: 1,
-                                    borderRadius: 2,
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                     border: '1px solid',
                                     backgroundColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(50, 50, 70, 0.4)' : 'rgba(255, 255, 255, 0.4)',
-                                    backdropFilter: 'blur(10px)',
+                                    ...isGlass && {
+                                        backdropFilter: 'blur(10px)'
+                                    },
                                     borderColor: (theme)=>theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(209, 213, 219, 0.3)',
                                     '&:before': {
                                         display: 'none'
@@ -368,11 +381,11 @@ function ChangesModal({ open, onClose }) {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$AccordionSummary$2f$AccordionSummary$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         expandIcon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandMore$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                            lineNumber: 274,
+                                            lineNumber: 285,
                                             columnNumber: 31
                                         }, void 0),
                                         sx: {
-                                            borderRadius: 2,
+                                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                             '& .MuiAccordionSummary-content': {
                                                 alignItems: 'center',
                                                 justifyContent: 'space-between'
@@ -393,12 +406,12 @@ function ChangesModal({ open, onClose }) {
                                                     children: edit.filePath
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                                    lineNumber: 284,
+                                                    lineNumber: 295,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                                lineNumber: 283,
+                                                lineNumber: 294,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -414,42 +427,42 @@ function ChangesModal({ open, onClose }) {
                                                     fontSize: "small"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                                    lineNumber: 296,
+                                                    lineNumber: 307,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                                lineNumber: 288,
+                                                lineNumber: 299,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                        lineNumber: 273,
+                                        lineNumber: 284,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$AccordionDetails$2f$AccordionDetails$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         children: renderDiff(edit)
                                     }, void 0, false, {
                                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                        lineNumber: 299,
+                                        lineNumber: 310,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, edit.filePath, true, {
                                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                lineNumber: 252,
+                                lineNumber: 261,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                        lineNumber: 250,
+                        lineNumber: 259,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                lineNumber: 233,
+                lineNumber: 242,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$DialogActions$2f$DialogActions$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -461,13 +474,13 @@ function ChangesModal({ open, onClose }) {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         onClick: onClose,
                         sx: {
-                            borderRadius: 2,
+                            borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                             textTransform: 'none'
                         },
                         children: "Close"
                     }, void 0, false, {
                         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                        lineNumber: 308,
+                        lineNumber: 319,
                         columnNumber: 9
                     }, this),
                     edits.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -478,13 +491,13 @@ function ChangesModal({ open, onClose }) {
                                 onClick: clearBasket,
                                 disabled: isCreatingPR,
                                 sx: {
-                                    borderRadius: 2,
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                     textTransform: 'none'
                                 },
                                 children: "Discard All"
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                lineNumber: 319,
+                                lineNumber: 330,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -495,22 +508,22 @@ function ChangesModal({ open, onClose }) {
                                     size: 16
                                 }, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                    lineNumber: 335,
+                                    lineNumber: 346,
                                     columnNumber: 41
                                 }, void 0) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Send$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                     fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                    lineNumber: 335,
+                                    lineNumber: 346,
                                     columnNumber: 74
                                 }, void 0),
                                 sx: {
-                                    borderRadius: 2,
+                                    borderRadius: (theme)=>`${theme.shape.borderRadius}px`,
                                     textTransform: 'none',
                                     px: 3
                                 },
                                 children: isCreatingPR ? 'Creating PR...' : 'Create Pull Request'
                             }, void 0, false, {
                                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                                lineNumber: 331,
+                                lineNumber: 342,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -518,18 +531,19 @@ function ChangesModal({ open, onClose }) {
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-                lineNumber: 307,
+                lineNumber: 318,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/app/components/repo-browser/changes-modal.tsx",
-        lineNumber: 196,
+        lineNumber: 199,
         columnNumber: 5
     }, this);
 }
-_s(ChangesModal, "aIM3yRGMGT85N8TM7wBq36VunnM=", false, function() {
+_s(ChangesModal, "6PWyhv+jeR+SgnMPHylnXiRejqA=", false, function() {
     return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$ui$2f$dist$2f$providers$2f$ThemeProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
         __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$lib$2f$core$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useGitHubStore"]
     ];
 });

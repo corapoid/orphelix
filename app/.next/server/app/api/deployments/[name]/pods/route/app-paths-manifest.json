@@ -1,3 +1,0 @@
-{
-  "/api/deployments/[name]/pods/route": "app/api/deployments/[name]/pods/route.js"
-}
