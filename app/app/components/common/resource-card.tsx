@@ -46,17 +46,11 @@ export function ResourceCard({
         flexDirection: 'column',
         position: 'relative',
         borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-        // Conditional glass effects - NO backdropFilter, NO gradients for performance!
+        // Use theme colors - automatic transparency for Liquid Glass preset
+        backgroundColor: 'background.paper',
+        border: '1px solid',
+        borderColor: 'divider',
         ...(isGlass && {
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.8)'
-              : 'rgba(255, 255, 255, 0.5)',
-          border: '1px solid',
-          borderColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.12)'
-              : 'rgba(209, 213, 219, 0.5)',
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
               ? '0 2px 8px 0 rgba(0, 0, 0, 0.3)'
