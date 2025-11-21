@@ -1,4 +1,4 @@
-import { Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+import { Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 interface TableSkeletonProps {
   rows?: number
@@ -12,7 +12,7 @@ interface TableSkeletonProps {
  */
 export function TableSkeleton({ rows = 5, columns = 6, showHeader = true }: TableSkeletonProps) {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         {showHeader && (
           <TableHead>
