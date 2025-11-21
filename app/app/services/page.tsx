@@ -1,14 +1,12 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import CloudIcon from '@mui/icons-material/Cloud'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { useState } from 'react'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useServices } from '@/lib/hooks/use-services'
-import { TableOnlyResourceList, TableColumn } from '@/app/components/common/table-only-resource-list'
+import { ResourceListView, TableColumn } from '@/app/components/common/resource-list-view'
 import type { Service, ServiceType } from '@/types/kubernetes'
 
 export default function ServicesPage() {
@@ -67,27 +65,10 @@ export default function ServicesPage() {
       field: 'age',
       label: 'Age',
     },
-    {
-      field: 'actions',
-      label: 'Actions',
-      align: 'right',
-      sortable: false,
-      render: (service) => (
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            navigateTo(`/services/${service.name}`)
-          }}
-        >
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
   ]
 
   return (
-    <TableOnlyResourceList
+    <ResourceListView
       title="Services"
       resourceName="service"
       resourceNamePlural="services"

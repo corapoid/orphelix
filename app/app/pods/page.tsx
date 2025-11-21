@@ -1,9 +1,7 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import ViewInArIcon from '@mui/icons-material/ViewInAr'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
@@ -72,60 +70,43 @@ export default function PodsPage() {
       field: 'age',
       label: 'Age',
     },
-    {
-      field: 'actions',
-      label: 'Actions',
-      align: 'right',
-      sortable: false,
-      render: (pod) => (
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            navigateTo(`/pods/${pod.name}`)
-          }}
-        >
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
   ]
 
   return (
     <ResourceListView
       title="Pods"
-      resourceName="pod"
-      resourceNamePlural="pods"
-      icon={ViewInArIcon}
-      data={pods}
-      isLoading={isLoading}
-      error={error}
-      refetch={refetch}
-      searchPlaceholder="Search pods..."
-      searchFilter={(pod, query) => pod.name.toLowerCase().includes(query.toLowerCase())}
-      filters={[
-        {
-          label: 'Status',
-          value: statusFilter,
-          options: [
-            { label: 'All Statuses', value: '' },
-            { label: 'Running', value: 'Running' },
-            { label: 'Pending', value: 'Pending' },
-            { label: 'Failed', value: 'Failed' },
-            { label: 'Succeeded', value: 'Succeeded' },
-            { label: 'CrashLoopBackOff', value: 'CrashLoopBackOff' },
-          ],
-          onChange: (value) => setStatusFilter(value as PodStatus | ''),
-        },
-      ]}
-      columns={columns}
-      defaultSortField="name"
-      defaultSortOrder="asc"
-      getRowKey={(pod) => pod.name}
-      onRowClick={(pod) => navigateTo(`/pods/${pod.name}`)}
-      renderCard={(pod, onClick) => <PodCard pod={pod} onClick={onClick} />}
-      emptyStateDescription="There are no pods in this namespace yet."
-      showClusterAlert={false}
-    />
+        resourceName="pod"
+        resourceNamePlural="pods"
+        icon={ViewInArIcon}
+        data={pods}
+        isLoading={isLoading}
+        error={error}
+        refetch={refetch}
+        searchPlaceholder="Search pods..."
+        searchFilter={(pod, query) => pod.name.toLowerCase().includes(query.toLowerCase())}
+        filters={[
+          {
+            label: 'Status',
+            value: statusFilter,
+            options: [
+              { label: 'All Statuses', value: '' },
+              { label: 'Running', value: 'Running' },
+              { label: 'Pending', value: 'Pending' },
+              { label: 'Failed', value: 'Failed' },
+              { label: 'Succeeded', value: 'Succeeded' },
+              { label: 'CrashLoopBackOff', value: 'CrashLoopBackOff' },
+            ],
+            onChange: (value) => setStatusFilter(value as PodStatus | ''),
+          },
+        ]}
+        columns={columns}
+        defaultSortField="name"
+        defaultSortOrder="asc"
+        getRowKey={(pod) => pod.name}
+        onRowClick={(pod) => navigateTo(`/pods/${pod.name}`)}
+        renderCard={(pod, onClick) => <PodCard pod={pod} onClick={onClick} />}
+        emptyStateDescription="There are no pods in this namespace yet."
+        showClusterAlert={false}
+      />
   )
 }

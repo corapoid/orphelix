@@ -1,9 +1,7 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import WorkIcon from '@mui/icons-material/Work'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState } from 'react'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useJobs } from '@/lib/hooks/use-jobs'
@@ -57,58 +55,41 @@ export default function JobsPage() {
       field: 'age',
       label: 'Age',
     },
-    {
-      field: 'actions',
-      label: 'Actions',
-      align: 'right',
-      sortable: false,
-      render: (job) => (
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            navigateTo(`/jobs/${job.name}`)
-          }}
-        >
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
   ]
 
   return (
     <ResourceListView
       title="Jobs"
-      resourceName="job"
-      resourceNamePlural="jobs"
-      icon={WorkIcon}
-      data={jobs}
-      isLoading={isLoading}
-      error={error}
-      refetch={refetch}
-      searchPlaceholder="Search jobs..."
-      searchFilter={(job, query) => job.name.toLowerCase().includes(query.toLowerCase())}
-      customFilter={statusFilter ? (job) => job.status === statusFilter : undefined}
-      filters={[
-        {
-          label: 'Status',
-          value: statusFilter,
-          options: [
-            { label: 'All Statuses', value: '' },
-            { label: 'Running', value: 'Running' },
-            { label: 'Succeeded', value: 'Succeeded' },
-            { label: 'Failed', value: 'Failed' },
-          ],
-          onChange: (value) => setStatusFilter(value as JobStatus | ''),
-        },
-      ]}
-      columns={columns}
-      defaultSortField="name"
-      defaultSortOrder="asc"
-      getRowKey={(job) => job.name}
-      onRowClick={(job) => navigateTo(`/jobs/${job.name}`)}
-      renderCard={(job, onClick) => <JobCard job={job} onClick={onClick} />}
-      emptyStateDescription="There are no jobs in this namespace. Create a job to run batch tasks."
-    />
+        resourceName="job"
+        resourceNamePlural="jobs"
+        icon={WorkIcon}
+        data={jobs}
+        isLoading={isLoading}
+        error={error}
+        refetch={refetch}
+        searchPlaceholder="Search jobs..."
+        searchFilter={(job, query) => job.name.toLowerCase().includes(query.toLowerCase())}
+        customFilter={statusFilter ? (job) => job.status === statusFilter : undefined}
+        filters={[
+          {
+            label: 'Status',
+            value: statusFilter,
+            options: [
+              { label: 'All Statuses', value: '' },
+              { label: 'Running', value: 'Running' },
+              { label: 'Succeeded', value: 'Succeeded' },
+              { label: 'Failed', value: 'Failed' },
+            ],
+            onChange: (value) => setStatusFilter(value as JobStatus | ''),
+          },
+        ]}
+        columns={columns}
+        defaultSortField="name"
+        defaultSortOrder="asc"
+        getRowKey={(job) => job.name}
+        onRowClick={(job) => navigateTo(`/jobs/${job.name}`)}
+        renderCard={(job, onClick) => <JobCard job={job} onClick={onClick} />}
+        emptyStateDescription="There are no jobs in this namespace. Create a job to run batch tasks."
+      />
   )
 }

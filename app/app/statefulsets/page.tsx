@@ -1,9 +1,7 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import StorageIcon from '@mui/icons-material/Storage'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
@@ -83,66 +81,49 @@ export default function StatefulSetsPage() {
       field: 'serviceName',
       label: 'Service',
     },
-    {
-      field: 'actions',
-      label: 'Actions',
-      align: 'right',
-      sortable: false,
-      render: (sts) => (
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            navigateTo(`/statefulsets/${sts.name}`)
-          }}
-        >
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
   ]
 
   return (
     <ResourceListView
       title="StatefulSets"
-      resourceName="statefulset"
-      resourceNamePlural="statefulsets"
-      icon={StorageIcon}
-      data={statefulsets}
-      isLoading={isLoading}
-      error={error}
-      refetch={refetch}
-      searchPlaceholder="Search statefulsets..."
-      searchFilter={(sts, query) =>
-        sts.name.toLowerCase().includes(query.toLowerCase())
-      }
-      customFilter={
-        statusFilter
-          ? (sts) => sts.status === statusFilter
-          : undefined
-      }
-      filters={[
-        {
-          label: 'Status',
-          value: statusFilter,
-          options: [
-            { label: 'All Statuses', value: '' },
-            { label: 'Healthy', value: 'Healthy' },
-            { label: 'Degraded', value: 'Degraded' },
-            { label: 'Not Ready', value: 'Not Ready' },
-          ],
-          onChange: (value) => setStatusFilter(value as DeploymentStatus | ''),
-        },
-      ]}
-      columns={columns}
-      defaultSortField="name"
-      defaultSortOrder="asc"
-      getRowKey={(sts) => sts.name}
-      onRowClick={(sts) => navigateTo(`/statefulsets/${sts.name}`)}
-      renderCard={(sts, onClick) => (
-        <StatefulSetCard statefulSet={sts} onClick={onClick} />
-      )}
-      emptyStateDescription="There are no statefulsets in this namespace."
-    />
+        resourceName="statefulset"
+        resourceNamePlural="statefulsets"
+        icon={StorageIcon}
+        data={statefulsets}
+        isLoading={isLoading}
+        error={error}
+        refetch={refetch}
+        searchPlaceholder="Search statefulsets..."
+        searchFilter={(sts, query) =>
+          sts.name.toLowerCase().includes(query.toLowerCase())
+        }
+        customFilter={
+          statusFilter
+            ? (sts) => sts.status === statusFilter
+            : undefined
+        }
+        filters={[
+          {
+            label: 'Status',
+            value: statusFilter,
+            options: [
+              { label: 'All Statuses', value: '' },
+              { label: 'Healthy', value: 'Healthy' },
+              { label: 'Degraded', value: 'Degraded' },
+              { label: 'Not Ready', value: 'Not Ready' },
+            ],
+            onChange: (value) => setStatusFilter(value as DeploymentStatus | ''),
+          },
+        ]}
+        columns={columns}
+        defaultSortField="name"
+        defaultSortOrder="asc"
+        getRowKey={(sts) => sts.name}
+        onRowClick={(sts) => navigateTo(`/statefulsets/${sts.name}`)}
+        renderCard={(sts, onClick) => (
+          <StatefulSetCard statefulSet={sts} onClick={onClick} />
+        )}
+        emptyStateDescription="There are no statefulsets in this namespace."
+      />
   )
 }

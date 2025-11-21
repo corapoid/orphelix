@@ -1,9 +1,7 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import ScheduleIcon from '@mui/icons-material/Schedule'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useCronJobs } from '@/lib/hooks/use-cronjobs'
@@ -59,46 +57,29 @@ export default function CronJobsPage() {
       field: 'age',
       label: 'Age',
     },
-    {
-      field: 'actions',
-      label: 'Actions',
-      align: 'right',
-      sortable: false,
-      render: (cronJob) => (
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            navigateTo(`/cronjobs/${cronJob.name}`)
-          }}
-        >
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
   ]
 
   return (
     <ResourceListView
       title="CronJobs"
-      resourceName="cronjob"
-      resourceNamePlural="cronjobs"
-      icon={ScheduleIcon}
-      data={cronjobs}
-      isLoading={isLoading}
-      error={error}
-      refetch={refetch}
-      searchPlaceholder="Search cronjobs..."
-      searchFilter={(cronJob, query) =>
-        cronJob.name.toLowerCase().includes(query.toLowerCase())
-      }
-      columns={columns}
-      defaultSortField="name"
-      defaultSortOrder="asc"
-      getRowKey={(cronJob) => cronJob.name}
-      onRowClick={(cronJob) => navigateTo(`/cronjobs/${cronJob.name}`)}
-      renderCard={(cronJob, onClick) => <CronJobCard cronJob={cronJob} onClick={onClick} />}
-      emptyStateDescription="There are no cronjobs in this namespace. Create a cronjob to schedule recurring tasks."
-    />
+        resourceName="cronjob"
+        resourceNamePlural="cronjobs"
+        icon={ScheduleIcon}
+        data={cronjobs}
+        isLoading={isLoading}
+        error={error}
+        refetch={refetch}
+        searchPlaceholder="Search cronjobs..."
+        searchFilter={(cronJob, query) =>
+          cronJob.name.toLowerCase().includes(query.toLowerCase())
+        }
+        columns={columns}
+        defaultSortField="name"
+        defaultSortOrder="asc"
+        getRowKey={(cronJob) => cronJob.name}
+        onRowClick={(cronJob) => navigateTo(`/cronjobs/${cronJob.name}`)}
+        renderCard={(cronJob, onClick) => <CronJobCard cronJob={cronJob} onClick={onClick} />}
+        emptyStateDescription="There are no cronjobs in this namespace. Create a cronjob to schedule recurring tasks."
+      />
   )
 }

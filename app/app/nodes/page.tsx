@@ -8,7 +8,7 @@ import { useNodes } from '@/lib/hooks/use-nodes'
 import { usePods } from '@/lib/hooks/use-pods'
 import { useModeStore } from '@/lib/core/store'
 import { StatusBadge } from '@/app/components/common/status-badge'
-import { TableOnlyResourceList } from '@/app/components/common/table-only-resource-list'
+import { ResourceListView } from '@/app/components/common/resource-list-view'
 import type { Node } from '@/types/kubernetes'
 
 // Helper function to parse Kubernetes resource quantities
@@ -83,7 +83,7 @@ export default function NodesPage() {
   }
 
   return (
-    <TableOnlyResourceList<Node>
+    <ResourceListView<Node>
       title="Nodes"
       resourceName="node"
       resourceNamePlural="nodes"

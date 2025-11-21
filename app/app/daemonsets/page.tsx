@@ -1,9 +1,7 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import SettingsSystemDaydreamIcon from '@mui/icons-material/SettingsSystemDaydream'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
@@ -86,66 +84,49 @@ export default function DaemonSetsPage() {
       field: 'age',
       label: 'Age',
     },
-    {
-      field: 'actions',
-      label: 'Actions',
-      align: 'right',
-      sortable: false,
-      render: (ds) => (
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            navigateTo(`/daemonsets/${ds.name}`)
-          }}
-        >
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
   ]
 
   return (
     <ResourceListView
       title="DaemonSets"
-      resourceName="daemonset"
-      resourceNamePlural="daemonsets"
-      icon={SettingsSystemDaydreamIcon}
-      data={daemonsets}
-      isLoading={isLoading}
-      error={error}
-      refetch={refetch}
-      searchPlaceholder="Search daemonsets..."
-      searchFilter={(ds, query) =>
-        ds.name.toLowerCase().includes(query.toLowerCase())
-      }
-      customFilter={
-        statusFilter
-          ? (ds) => ds.status === statusFilter
-          : undefined
-      }
-      filters={[
-        {
-          label: 'Status',
-          value: statusFilter,
-          options: [
-            { label: 'All Statuses', value: '' },
-            { label: 'Healthy', value: 'Healthy' },
-            { label: 'Degraded', value: 'Degraded' },
-            { label: 'Not Ready', value: 'Not Ready' },
-          ],
-          onChange: (value) => setStatusFilter(value as DeploymentStatus | ''),
-        },
-      ]}
-      columns={columns}
-      defaultSortField="name"
-      defaultSortOrder="asc"
-      getRowKey={(ds) => ds.name}
-      onRowClick={(ds) => navigateTo(`/daemonsets/${ds.name}`)}
-      renderCard={(ds, onClick) => (
-        <DaemonSetCard daemonSet={ds} onClick={onClick} />
-      )}
-      emptyStateDescription="There are no daemonsets in this namespace."
-    />
+        resourceName="daemonset"
+        resourceNamePlural="daemonsets"
+        icon={SettingsSystemDaydreamIcon}
+        data={daemonsets}
+        isLoading={isLoading}
+        error={error}
+        refetch={refetch}
+        searchPlaceholder="Search daemonsets..."
+        searchFilter={(ds, query) =>
+          ds.name.toLowerCase().includes(query.toLowerCase())
+        }
+        customFilter={
+          statusFilter
+            ? (ds) => ds.status === statusFilter
+            : undefined
+        }
+        filters={[
+          {
+            label: 'Status',
+            value: statusFilter,
+            options: [
+              { label: 'All Statuses', value: '' },
+              { label: 'Healthy', value: 'Healthy' },
+              { label: 'Degraded', value: 'Degraded' },
+              { label: 'Not Ready', value: 'Not Ready' },
+            ],
+            onChange: (value) => setStatusFilter(value as DeploymentStatus | ''),
+          },
+        ]}
+        columns={columns}
+        defaultSortField="name"
+        defaultSortOrder="asc"
+        getRowKey={(ds) => ds.name}
+        onRowClick={(ds) => navigateTo(`/daemonsets/${ds.name}`)}
+        renderCard={(ds, onClick) => (
+          <DaemonSetCard daemonSet={ds} onClick={onClick} />
+        )}
+        emptyStateDescription="There are no daemonsets in this namespace."
+      />
   )
 }

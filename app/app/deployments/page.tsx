@@ -1,9 +1,7 @@
 'use client'
 
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
@@ -79,66 +77,49 @@ export default function DeploymentsPage() {
       field: 'strategy',
       label: 'Strategy',
     },
-    {
-      field: 'actions',
-      label: 'Actions',
-      align: 'right',
-      sortable: false,
-      render: (deployment) => (
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation()
-            navigateTo(`/deployments/${deployment.name}`)
-          }}
-        >
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
   ]
 
   return (
     <ResourceListView
-      title="Deployments"
-      resourceName="deployment"
-      resourceNamePlural="deployments"
-      icon={RocketLaunchIcon}
-      data={deployments}
-      isLoading={isLoading}
-      error={error}
-      refetch={refetch}
-      searchPlaceholder="Search deployments..."
-      searchFilter={(deployment, query) =>
-        deployment.name.toLowerCase().includes(query.toLowerCase())
-      }
-      customFilter={
-        statusFilter
-          ? (deployment) => deployment.status === statusFilter
-          : undefined
-      }
-      filters={[
-        {
-          label: 'Status',
-          value: statusFilter,
-          options: [
-            { label: 'All Statuses', value: '' },
-            { label: 'Available', value: 'Available' },
-            { label: 'Progressing', value: 'Progressing' },
-            { label: 'Degraded', value: 'Degraded' },
-          ],
-          onChange: (value) => setStatusFilter(value as DeploymentStatus | ''),
-        },
-      ]}
-      columns={columns}
-      defaultSortField="name"
-      defaultSortOrder="asc"
-      getRowKey={(deployment) => deployment.name}
-      onRowClick={(deployment) => navigateTo(`/deployments/${deployment.name}`)}
-      renderCard={(deployment, onClick) => (
-        <DeploymentCard deployment={deployment} onClick={onClick} />
-      )}
-      emptyStateDescription="There are no deployments in this namespace. Deploy your first application to get started."
-    />
+        title="Deployments"
+        resourceName="deployment"
+        resourceNamePlural="deployments"
+        icon={RocketLaunchIcon}
+        data={deployments}
+        isLoading={isLoading}
+        error={error}
+        refetch={refetch}
+        searchPlaceholder="Search deployments..."
+        searchFilter={(deployment, query) =>
+          deployment.name.toLowerCase().includes(query.toLowerCase())
+        }
+        customFilter={
+          statusFilter
+            ? (deployment) => deployment.status === statusFilter
+            : undefined
+        }
+        filters={[
+          {
+            label: 'Status',
+            value: statusFilter,
+            options: [
+              { label: 'All Statuses', value: '' },
+              { label: 'Available', value: 'Available' },
+              { label: 'Progressing', value: 'Progressing' },
+              { label: 'Degraded', value: 'Degraded' },
+            ],
+            onChange: (value) => setStatusFilter(value as DeploymentStatus | ''),
+          },
+        ]}
+        columns={columns}
+        defaultSortField="name"
+        defaultSortOrder="asc"
+        getRowKey={(deployment) => deployment.name}
+        onRowClick={(deployment) => navigateTo(`/deployments/${deployment.name}`)}
+        renderCard={(deployment, onClick) => (
+          <DeploymentCard deployment={deployment} onClick={onClick} />
+        )}
+        emptyStateDescription="There are no deployments in this namespace. Deploy your first application to get started."
+      />
   )
 }
