@@ -157,12 +157,6 @@ export function ThemeProvider({
   // Determine actual theme to use
   const actualTheme = mode === 'system' ? systemTheme : mode
 
-  // Update HTML attribute when theme changes
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', actualTheme)
-    document.documentElement.style.colorScheme = actualTheme
-  }, [actualTheme])
-
   // Build theme based on visual preset, mode, and compact setting
   const theme = useMemo(() => {
     let preset
@@ -182,6 +176,19 @@ export function ThemeProvider({
 
     return buildTheme(preset, actualTheme, compact)
   }, [visualPreset, actualTheme, compact])
+
+  // Update HTML attribute when theme changes
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', actualTheme)
+    document.documentElement.style.colorScheme = actualTheme
+  }, [actualTheme])
+
+  // Update CSS custom property for borderRadius
+  useEffect(() => {
+    if (theme) {
+      document.documentElement.style.setProperty('--orphelix-border-radius', `${theme.shape.borderRadius}px`)
+    }
+  }, [theme])
 
   // Prevent flash by not rendering until mounted
   if (!mounted) {

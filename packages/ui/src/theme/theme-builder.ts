@@ -16,8 +16,8 @@ export function buildTheme(preset: VisualPreset, mode: 'light' | 'dark', compact
 
   // Use smaller border radius for classic preset
   const isClassic = !effects.transparency
-  const cardRadius = isClassic ? designTokens.radius.sm : (compact ? designTokens.radius.md : designTokens.radius.lg)
-  const buttonRadius = isClassic ? 6 : (compact ? designTokens.radius.sm : 10)
+  const cardRadius = isClassic ? 10 : (compact ? designTokens.radius.md : designTokens.radius.lg)
+  const buttonRadius = isClassic ? 10 : (compact ? designTokens.radius.sm : 10)
 
   const themeOptions: ThemeOptions = {
     palette: {
@@ -121,7 +121,7 @@ export function buildTheme(preset: VisualPreset, mode: 'light' | 'dark', compact
       },
     },
     shape: {
-      borderRadius: compact ? designTokens.radius.sm : designTokens.radius.md,
+      borderRadius: cardRadius,
     },
     spacing: compact ? 7 : 8,
     components: {
@@ -204,15 +204,15 @@ export function buildTheme(preset: VisualPreset, mode: 'light' | 'dark', compact
             boxShadow: effects.transparency
               ? 'none'
               : isDark
-              ? '0 2px 8px rgba(0, 0, 0, 0.3)'
-              : '0 2px 8px rgba(0, 0, 0, 0.06)',
+              ? '0 1px 3px rgba(0, 0, 0, 0.2)'
+              : '0 1px 3px rgba(0, 0, 0, 0.04)',
           },
           elevation2: {
             boxShadow: effects.transparency
               ? 'none'
               : isDark
-              ? '0 4px 12px rgba(0, 0, 0, 0.35)'
-              : '0 4px 12px rgba(0, 0, 0, 0.08)',
+              ? '0 2px 6px rgba(0, 0, 0, 0.25)'
+              : '0 2px 6px rgba(0, 0, 0, 0.05)',
           },
         },
       },
@@ -277,7 +277,7 @@ export function buildTheme(preset: VisualPreset, mode: 'light' | 'dark', compact
       MuiChip: {
         styleOverrides: {
           root: {
-            borderRadius: compact ? 6 : designTokens.radius.sm,
+            borderRadius: isClassic ? 5 : (compact ? 6 : designTokens.radius.sm),
             fontWeight: 600,
             fontSize: `${0.8125 * scale}rem`,
             height: compact ? 26 : 32,
