@@ -198,10 +198,10 @@ export const liquidGlassPreset: VisualPreset = {
     error: '#FF3B30',
     info: '#55BEFF',
     background: {
-      default: 'linear-gradient(135deg, #E8EDF5 0%, #F1F2F8 50%, #F8F9FC 100%)',
-      paper: 'rgba(255, 255, 255, 0.6)',
+      default: 'linear-gradient(135deg, #D8E1F0 0%, #E5EAF5 50%, #EDF1F9 100%)',
+      paper: 'rgba(255, 255, 255, 0.5)',
       glass: 'rgba(255, 255, 255, 0.3)',
-      wallpaper: 'linear-gradient(135deg, #E8EDF5 0%, #F1F2F8 50%, #F8F9FC 100%)',
+      wallpaper: 'linear-gradient(135deg, #D8E1F0 0%, #E5EAF5 50%, #EDF1F9 100%)',
     },
     text: {
       primary: 'rgba(28, 28, 30, 0.92)',
@@ -234,10 +234,10 @@ export const liquidGlassPreset: VisualPreset = {
     error: '#FF453A',
     info: '#0A84FF',
     background: {
-      default: 'linear-gradient(135deg, #1A1A24 0%, #1C1C1E 50%, #1E1E26 100%)',
-      paper: 'rgba(28, 28, 30, 0.7)',
-      glass: 'rgba(44, 44, 46, 0.6)',
-      wallpaper: 'linear-gradient(135deg, #1A1A24 0%, #1C1C1E 50%, #1E1E26 100%)',
+      default: 'linear-gradient(135deg, #0F0F18 0%, #15151D 50%, #1A1A22 100%)',
+      paper: 'rgba(28, 28, 30, 0.6)',
+      glass: 'rgba(44, 44, 46, 0.5)',
+      wallpaper: 'linear-gradient(135deg, #0F0F18 0%, #15151D 50%, #1A1A22 100%)',
     },
     text: {
       primary: 'rgba(255, 255, 255, 0.92)',
