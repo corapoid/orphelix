@@ -6,7 +6,6 @@ import { ReactNode, useState, useMemo, createContext, useContext, useEffect } fr
 import { buildTheme } from '../theme/theme-builder.js'
 import {
   classicPreset,
-  glassPreset,
   liquidGlassPreset,
   defaultVisualPreset,
   type VisualPresetName
@@ -56,7 +55,12 @@ function getInitialVisualPreset(storageKey: string): VisualPresetName {
   if (typeof window === 'undefined') return defaultVisualPreset
   try {
     const saved = localStorage.getItem(storageKey)
-    if (saved === 'classic' || saved === 'glass' || saved === 'liquidGlass') {
+    // Migrate old 'glass' preset to 'liquidGlass'
+    if (saved === 'glass') {
+      localStorage.setItem(storageKey, 'liquidGlass')
+      return 'liquidGlass'
+    }
+    if (saved === 'classic' || saved === 'liquidGlass') {
       return saved as VisualPresetName
     }
   } catch {
@@ -159,21 +163,7 @@ export function ThemeProvider({
 
   // Build theme based on visual preset, mode, and compact setting
   const theme = useMemo(() => {
-    let preset
-    switch (visualPreset) {
-      case 'classic':
-        preset = classicPreset
-        break
-      case 'glass':
-        preset = glassPreset
-        break
-      case 'liquidGlass':
-        preset = liquidGlassPreset
-        break
-      default:
-        preset = liquidGlassPreset
-    }
-
+    const preset = visualPreset === 'classic' ? classicPreset : liquidGlassPreset
     return buildTheme(preset, actualTheme, compact)
   }, [visualPreset, actualTheme, compact])
 

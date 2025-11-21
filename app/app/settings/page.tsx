@@ -293,7 +293,7 @@ export default function SettingsPage() {
               Choose your preferred interface style. Each preset changes the overall look and feel.
             </Typography>
             <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <GlassButton
                   onClick={() => setVisualPreset('classic')}
                   fullWidth
@@ -309,23 +309,7 @@ export default function SettingsPage() {
                   </Box>
                 </GlassButton>
               </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <GlassButton
-                  onClick={() => setVisualPreset('glass')}
-                  fullWidth
-                  selected={visualPreset === 'glass'}
-                >
-                  <Box sx={{ textAlign: 'left', flex: 1 }}>
-                    <Typography variant="body1" fontWeight={600} sx={{ mb: 0.5, color: visualPreset === 'glass' ? 'primary.main' : 'inherit' }}>
-                      Glassmorphism
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Transparent with blur effect. Modern and clean.
-                    </Typography>
-                  </Box>
-                </GlassButton>
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <GlassButton
                   onClick={() => setVisualPreset('liquidGlass')}
                   fullWidth
@@ -336,7 +320,7 @@ export default function SettingsPage() {
                       Liquid Glass ✨
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      Premium feel with gradient shine and animations.
+                      Premium feel with transparent backgrounds, gradients, and smooth animations.
                     </Typography>
                   </Box>
                 </GlassButton>

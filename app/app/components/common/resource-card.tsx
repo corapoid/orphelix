@@ -40,30 +40,29 @@ export function ResourceCard({
       sx={{
         p: 2,
         cursor: onClick ? 'pointer' : 'default',
-        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+        transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
+        willChange: 'transform',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
         borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         overflow: 'hidden',
-        // Conditional glass effects
+        // Conditional glass effects - NO backdropFilter for performance!
         ...(isGlass && {
           backgroundColor: (theme) =>
             theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.6)'
-              : 'rgba(255, 255, 255, 0.25)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              ? 'rgba(30, 30, 46, 0.7)'
+              : 'rgba(255, 255, 255, 0.35)',
           border: '1px solid',
           borderColor: (theme) =>
             theme.palette.mode === 'dark'
               ? 'rgba(255, 255, 255, 0.12)'
-              : 'rgba(209, 213, 219, 0.4)',
+              : 'rgba(209, 213, 219, 0.5)',
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
-              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)'
-              : '0 4px 16px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+              ? '0 4px 20px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25)'
+              : '0 4px 20px 0 rgba(31, 38, 135, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
         }),
         // Gradient shine only for liquid glass
         ...(isLiquidGlass && {
@@ -116,9 +115,6 @@ export function ResourceCard({
               theme.palette.mode === 'dark'
                 ? `linear-gradient(135deg, ${resourceColor}25 0%, ${resourceColor}15 100%)`
                 : `linear-gradient(135deg, ${resourceColor}30 0%, ${resourceColor}15 100%)`,
-            ...(isGlass && {
-              backdropFilter: 'blur(10px)',
-            }),
             border: '1px solid',
             borderColor: (theme) =>
               theme.palette.mode === 'dark'

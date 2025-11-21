@@ -1,13 +1,15 @@
 /**
  * Visual Presets for Orphelix UI
  *
- * Three visual styles with progressive enhancement:
+ * Two visual styles:
  * - classic: Traditional Material UI (solid colors, no effects)
- * - glass: Glassmorphism (transparency + blur)
- * - liquidGlass: Premium liquid glass (glass + gradients + animations)
+ * - liquidGlass: Premium liquid glass (transparency + gradients + shine + animations)
+ *
+ * NOTE: blur/backdropFilter is NOT used in cards for performance reasons.
+ * Only main containers use blur effects.
  */
 
-export type VisualPresetName = 'classic' | 'glass' | 'liquidGlass'
+export type VisualPresetName = 'classic' | 'liquidGlass'
 
 export interface VisualPresetEffects {
   transparency: boolean    // Use rgba backgrounds?
@@ -156,97 +158,6 @@ export const classicPreset: VisualPreset = {
 }
 
 /**
- * GLASS PRESET - Glassmorphism
- * Transparency + blur, no shine effects
- * Best for: Modern clean interfaces
- */
-export const glassPreset: VisualPreset = {
-  name: 'Glassmorphism',
-  description: 'Frosted glass effect with subtle transparency',
-  effects: {
-    transparency: true,
-    blur: 24,
-    saturation: 150,
-    gradient: false,         // NO diagonal shine
-    shine: false,
-    insetShadows: false,
-    animations: false,
-  },
-  light: {
-    primary: {
-      main: '#007AFF',
-      light: '#58ADFF',
-      dark: '#0058D7',
-      contrast: '#FFFFFF',
-    },
-    secondary: {
-      main: '#5E5CE6',
-      light: '#8F8CFF',
-      dark: '#3F3AD6',
-      contrast: '#FFFFFF',
-    },
-    accent: {
-      main: 'rgba(255, 255, 255, 0.68)',
-      light: 'rgba(255, 255, 255, 0.85)',
-      dark: 'rgba(255, 255, 255, 0.45)',
-    },
-    success: '#34C759',
-    warning: '#FF9500',
-    error: '#FF3B30',
-    info: '#55BEFF',
-    background: {
-      default: '#F1F2F8',
-      paper: 'rgba(241, 242, 248, 0.88)',
-      glass: 'rgba(255, 255, 255, 0.25)',
-      wallpaper: '#F1F2F8',
-    },
-    text: {
-      primary: 'rgba(28, 28, 30, 0.92)',
-      secondary: 'rgba(60, 60, 67, 0.7)',
-      disabled: 'rgba(60, 60, 67, 0.35)',
-    },
-    divider: 'rgba(60, 60, 67, 0.15)',
-    border: 'rgba(60, 60, 67, 0.12)',
-  },
-  dark: {
-    primary: {
-      main: '#0A84FF',
-      light: '#64D2FF',
-      dark: '#0060DF',
-      contrast: '#FFFFFF',
-    },
-    secondary: {
-      main: '#5E5CE6',
-      light: '#9F8CFF',
-      dark: '#3D3ACF',
-      contrast: '#FFFFFF',
-    },
-    accent: {
-      main: 'rgba(44, 44, 46, 0.75)',
-      light: 'rgba(58, 58, 60, 0.86)',
-      dark: 'rgba(0, 0, 0, 0.68)',
-    },
-    success: '#30D158',
-    warning: '#FF9F0A',
-    error: '#FF453A',
-    info: '#0A84FF',
-    background: {
-      default: '#1C1C1E',
-      paper: 'rgba(28, 28, 30, 0.88)',
-      glass: 'rgba(44, 44, 46, 0.75)',
-      wallpaper: '#1C1C1E',
-    },
-    text: {
-      primary: 'rgba(255, 255, 255, 0.92)',
-      secondary: 'rgba(235, 235, 245, 0.68)',
-      disabled: 'rgba(235, 235, 245, 0.36)',
-    },
-    divider: 'rgba(255, 255, 255, 0.1)',
-    border: 'rgba(255, 255, 255, 0.15)',
-  },
-}
-
-/**
  * LIQUID GLASS PRESET - Premium ⭐ DEFAULT
  * All glassmorphism features PLUS gradients, shine, and animations
  * Best for: Premium polished interfaces
@@ -339,7 +250,6 @@ export const liquidGlassPreset: VisualPreset = {
 
 export const visualPresets: Record<VisualPresetName, VisualPreset> = {
   classic: classicPreset,
-  glass: glassPreset,
   liquidGlass: liquidGlassPreset,
 }
 
