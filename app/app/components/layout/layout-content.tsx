@@ -17,12 +17,18 @@ export function LayoutContent({ children }: LayoutContentProps) {
   const muiTheme = useMuiTheme()
   const { visualPreset, mode: themeMode } = useTheme()
 
+  // Noise texture for grain effect
+  const noiseTexture = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`
+
   // Get wallpaper from theme
   const wallpaper = visualPreset === 'liquidGlass'
     ? (themeMode === 'dark'
         ? muiTheme.palette.background.wallpaper
         : muiTheme.palette.background.wallpaper)
     : undefined
+
+  // Combine wallpaper + noise
+  const backgroundImage = wallpaper ? `${wallpaper}, ${noiseTexture}` : undefined
 
   // Validate welcome completion - if completed but essential data is missing, reset
   useEffect(() => {
@@ -44,11 +50,11 @@ export function LayoutContent({ children }: LayoutContentProps) {
       <Box sx={{
         height: '100vh',
         bgcolor: 'background.default',
-        ...(wallpaper && {
-          backgroundImage: wallpaper,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+        ...(backgroundImage && {
+          backgroundImage: backgroundImage,
+          backgroundSize: 'cover, 200px 200px',
+          backgroundPosition: 'center, 0 0',
+          backgroundRepeat: 'no-repeat, repeat',
         }),
         overflow: 'hidden'
       }}>
@@ -62,11 +68,11 @@ export function LayoutContent({ children }: LayoutContentProps) {
       display: 'flex',
       height: '100vh',
       bgcolor: 'background.default',
-      ...(wallpaper && {
-        backgroundImage: wallpaper,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+      ...(backgroundImage && {
+        backgroundImage: backgroundImage,
+        backgroundSize: 'cover, 200px 200px',
+        backgroundPosition: 'center, 0 0',
+        backgroundRepeat: 'no-repeat, repeat',
       }),
       overflow: 'hidden'
     }}>
