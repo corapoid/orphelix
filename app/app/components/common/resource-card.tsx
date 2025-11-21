@@ -51,8 +51,6 @@ export function ResourceCard({
         border: '1px solid',
         borderColor: 'divider',
         ...(isGlass && {
-          backdropFilter: 'blur(10px) saturate(150%)',
-          WebkitBackdropFilter: 'blur(10px) saturate(150%)',
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
               ? '0 4px 20px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)'
