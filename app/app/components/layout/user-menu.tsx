@@ -23,8 +23,11 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { useRouter, usePathname } from 'next/navigation'
 import { useThemeMode } from '../theme-provider'
 import { useModeStore } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 
 export function UserMenu() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const { data: session } = useSession()
   const router = useRouter()
   const pathname = usePathname()
@@ -111,9 +114,11 @@ export function UserMenu() {
           mt: 1,
           '& .MuiPaper-root': {
             minWidth: 240,
-            borderRadius: 2,
-            backdropFilter: 'blur(40px)',
-            WebkitBackdropFilter: 'blur(40px)',
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+            ...(isGlass && {
+              backdropFilter: 'blur(40px)',
+              WebkitBackdropFilter: 'blur(40px)',
+            }),
           },
         }}
       >
@@ -216,16 +221,14 @@ export function UserMenu() {
         </MenuItem>
 
         {/* Logout - only in real mode */}
+        {!isDemo && <Divider />}
         {!isDemo && (
-          <>
-            <Divider />
-            <MenuItem onClick={handleLogout}>
-              <ListItemIcon>
-                <LogoutIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Logout</ListItemText>
-            </MenuItem>
-          </>
+          <MenuItem onClick={handleLogout}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Logout</ListItemText>
+          </MenuItem>
         )}
       </Menu>
     </>
