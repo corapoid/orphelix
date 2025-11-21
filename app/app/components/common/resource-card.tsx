@@ -40,20 +40,18 @@ export function ResourceCard({
       sx={{
         p: 2,
         cursor: onClick ? 'pointer' : 'default',
-        transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
-        willChange: 'transform',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
         borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-        overflow: 'hidden',
-        // Conditional glass effects - NO backdropFilter for performance!
+        // Conditional glass effects - NO backdropFilter, NO gradients for performance!
         ...(isGlass && {
           backgroundColor: (theme) =>
             theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.7)'
-              : 'rgba(255, 255, 255, 0.35)',
+              ? 'rgba(30, 30, 46, 0.8)'
+              : 'rgba(255, 255, 255, 0.5)',
           border: '1px solid',
           borderColor: (theme) =>
             theme.palette.mode === 'dark'
@@ -61,41 +59,20 @@ export function ResourceCard({
               : 'rgba(209, 213, 219, 0.5)',
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
-              ? '0 4px 20px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25)'
-              : '0 4px 20px 0 rgba(31, 38, 135, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
-        }),
-        // Gradient shine only for liquid glass
-        ...(isLiquidGlass && {
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '100%',
-            background: (theme) =>
-              theme.palette.mode === 'dark'
-                ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%, rgba(0, 0, 0, 0.1) 100%)'
-                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 60%, rgba(0, 0, 0, 0.02) 100%)',
-            pointerEvents: 'none',
-            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-          },
+              ? '0 2px 8px 0 rgba(0, 0, 0, 0.3)'
+              : '0 2px 8px 0 rgba(31, 38, 135, 0.08)',
         }),
         '&:hover': {
-          ...(isGlass && {
+          ...(isGlass && onClick && {
             transform: 'translateY(-2px)',
-            borderColor: (theme) =>
-              theme.palette.mode === 'dark'
-                ? 'rgba(255, 255, 255, 0.2)'
-                : 'rgba(209, 213, 219, 0.7)',
             boxShadow: (theme) =>
               theme.palette.mode === 'dark'
-                ? '0 8px 24px 0 rgba(0, 0, 0, 0.5)'
-                : '0 8px 24px 0 rgba(31, 38, 135, 0.15)',
+                ? '0 4px 12px 0 rgba(0, 0, 0, 0.4)'
+                : '0 4px 12px 0 rgba(31, 38, 135, 0.12)',
           }),
         },
         '&:active': {
-          ...(isGlass && {
+          ...(isGlass && onClick && {
             transform: 'translateY(0px)',
           }),
         },
