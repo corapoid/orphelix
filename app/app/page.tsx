@@ -2,13 +2,13 @@
 
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import { CriticalAlerts } from './components/dashboard/critical-alerts'
 import { ResourceOverviewV2 } from './components/dashboard/resource-overview-v2'
 import { ResourceUtilization } from './components/dashboard/resource-utilization'
 import { RecentEvents } from './components/dashboard/recent-events'
+import { DashboardSkeleton } from './components/dashboard/dashboard-skeleton'
 import { useDashboardSummary, useRecentEvents } from '@/lib/hooks/use-dashboard'
 import { useResourceQuotas } from '@/lib/hooks/use-resourcequotas'
 import { useModeStore } from '@/lib/core/store'
@@ -55,16 +55,16 @@ export default function DashboardPage() {
   // In demo mode, ensure namespace is set
   if (mode === 'demo' && !namespace) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-        <CircularProgress />
+      <Box sx={{ px: 2 }}>
+        <DashboardSkeleton />
       </Box>
     )
   }
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-        <CircularProgress />
+      <Box sx={{ px: 2 }}>
+        <DashboardSkeleton />
       </Box>
     )
   }
