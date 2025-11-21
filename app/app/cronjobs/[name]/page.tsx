@@ -107,7 +107,7 @@ export default function CronJobDetailPage() {
 
   if (error || !cronjob) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="CronJob Details"
           breadcrumbs={[
@@ -125,7 +125,7 @@ export default function CronJobDetailPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

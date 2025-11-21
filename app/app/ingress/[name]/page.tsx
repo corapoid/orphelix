@@ -39,7 +39,7 @@ export default function IngressDetailPage() {
 
   if (error || !ingress) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="Ingress Details"
           breadcrumbs={[
@@ -57,7 +57,7 @@ export default function IngressDetailPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

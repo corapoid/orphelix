@@ -71,7 +71,7 @@ export default function NodeDetailPage() {
 
   if (error || !node) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="Node Details"
           breadcrumbs={[
@@ -89,7 +89,7 @@ export default function NodeDetailPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

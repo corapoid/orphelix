@@ -106,7 +106,7 @@ export default function ConfigMapDetailPage() {
 
   if (error || !configMap) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="ConfigMap Details"
           breadcrumbs={[
@@ -124,7 +124,7 @@ export default function ConfigMapDetailPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={configMap.name}
         metadata={[

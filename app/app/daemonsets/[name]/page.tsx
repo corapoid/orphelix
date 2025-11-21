@@ -28,7 +28,7 @@ export default function DaemonSetDetailPage() {
 
   if (error || !daemonset) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="DaemonSet Details"
           breadcrumbs={[
@@ -46,7 +46,7 @@ export default function DaemonSetDetailPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

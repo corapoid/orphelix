@@ -54,7 +54,7 @@ export default function ServiceDetailPage() {
 
   if (error || !service) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="Service Details"
           breadcrumbs={[
@@ -72,7 +72,7 @@ export default function ServiceDetailPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

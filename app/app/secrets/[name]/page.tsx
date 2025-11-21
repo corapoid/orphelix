@@ -180,7 +180,7 @@ export default function SecretDetailPage({
 
   if (error || !secret) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="Secret Details"
           breadcrumbs={[
@@ -200,7 +200,7 @@ export default function SecretDetailPage({
   const dataCount = Object.keys(secret.data || {}).length
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={secret.name}
         metadata={[

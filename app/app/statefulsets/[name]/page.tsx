@@ -28,7 +28,7 @@ export default function StatefulSetDetailPage() {
 
   if (error || !statefulset) {
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <PageHeader
           title="StatefulSet Details"
           breadcrumbs={[
@@ -46,7 +46,7 @@ export default function StatefulSetDetailPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
