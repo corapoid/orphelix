@@ -20,12 +20,12 @@ export function LayoutContent({ children }: LayoutContentProps) {
   // Film grain texture - very subtle like reference image
   const grainTexture = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.4'/%3E%3C/svg%3E")`
 
-  // Get gradient - warm neutral tones like reference image
+  // Get gradient - based on RGB(30, 29, 35) - warm beige-gray
   const isLiquidGlass = visualPreset === 'liquidGlass'
   const gradient = isLiquidGlass
     ? (themeMode === 'dark'
-        ? 'linear-gradient(135deg, #1A1A1C 0%, #24242A 50%, #2E2E38 100%)'
-        : 'linear-gradient(135deg, #E8E8E8 0%, #DCDCDC 50%, #D0D0D0 100%)')
+        ? 'linear-gradient(135deg, #1E1D23 0%, #28272D 50%, #323137 100%)'
+        : 'linear-gradient(135deg, #EEEAE8 0%, #E4E0DD 50%, #D9D5D2 100%)')
     : undefined
 
   const backgroundImage = gradient ? `${grainTexture}, ${gradient}` : undefined
