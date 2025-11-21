@@ -159,7 +159,8 @@ export const classicPreset: VisualPreset = {
 
 /**
  * LIQUID GLASS PRESET - Premium ⭐ DEFAULT
- * All glassmorphism features PLUS gradients, shine, and animations
+ * Transparent backgrounds with gradients and animations
+ * NO BLUR for performance with many cards!
  * Best for: Premium polished interfaces
  */
 export const liquidGlassPreset: VisualPreset = {
@@ -167,11 +168,11 @@ export const liquidGlassPreset: VisualPreset = {
   description: 'Premium glass effect with depth, shine, and animations',
   effects: {
     transparency: true,
-    blur: 24,
-    saturation: 180,         // HIGHER than glass
+    blur: false,             // ❌ NO BLUR for performance!
+    saturation: 180,
     gradient: true,          // ✅ Diagonal shine!
     shine: true,            // ✅ Extra shine!
-    insetShadows: true,     // ✅ Depth!
+    insetShadows: false,     // ❌ NO inset shadows for performance!
     animations: true,       // ✅ Hover effects!
   },
   light: {
