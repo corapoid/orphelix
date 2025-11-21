@@ -29,7 +29,7 @@ const statuses = [
 
 export default function BadgeDemoPage() {
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ px: 2, py: 4 }}>
       <Typography variant="h3" gutterBottom>
         StatusBadge Variants Comparison
       </Typography>

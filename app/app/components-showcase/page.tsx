@@ -21,7 +21,7 @@ import { PageHeader } from '@/app/components/common/page-header'
 
 export default function ComponentShowcasePage() {
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title="Component Showcase"
         breadcrumbs={[

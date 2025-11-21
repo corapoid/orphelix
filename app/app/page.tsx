@@ -82,7 +82,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       {/* 1. Critical Alerts with AI Explanation */}
       <Box sx={{ mb: 3 }}>
         <CriticalAlerts summary={summary} />

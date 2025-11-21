@@ -28,7 +28,7 @@ export default function TopologyPage() {
   const isLoading = deploymentsLoading || configMapsLoading || secretsLoading
 
   return (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <PageHeader
         title="Cluster Topology"
         metadata={[`Namespace: ${namespace || 'All'}`]}
