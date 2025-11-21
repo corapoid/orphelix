@@ -1,31 +1,20 @@
 'use client'
 
 import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import StorageIcon from '@mui/icons-material/Storage'
 import { useState } from 'react'
 import { usePVs, usePVCs } from '@/lib/hooks/use-pv'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { PageHeader } from '@/app/components/common/page-header'
 import { TableSkeleton } from '@/app/components/common/table-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
-import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
-import { PageHeader } from '@/app/components/common/page-header'
-import { EmptyState } from '@/app/components/common/empty-state'
-import { useSortableTable } from '@/lib/hooks/use-table-sort'
-import { usePageSearch } from '@/lib/contexts/search-context'
+import { ResourceListView, TableColumn } from '@/app/components/common/resource-list-view'
 import { StatusBadge } from '@/app/components/common/status-badge'
 import type { PersistentVolume, PersistentVolumeClaim } from '@/types/kubernetes'
 
 export default function PersistentVolumesPage() {
-  const searchQuery = usePageSearch('Search...')
   const [tab, setTab] = useState(0)
 
   const { data: pvs, isLoading: pvsLoading, error: pvsError, refetch: refetchPVs } = usePVs()
@@ -37,29 +26,86 @@ export default function PersistentVolumesPage() {
     refetchPVCs()
   })
 
-  const filteredPVs = pvs?.filter((pv) =>
-    pv.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || []
-
-  const filteredPVCs = pvcs?.filter((pvc) =>
-    pvc.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || []
-
-  const { sortedData: sortedPVs, sortField: pvSortField, sortOrder: pvSortOrder, handleSort: handlePVSort } = useSortableTable<PersistentVolume>(
-    filteredPVs,
-    'name',
-    'asc'
-  )
-
-  const { sortedData: sortedPVCs, sortField: pvcSortField, sortOrder: pvcSortOrder, handleSort: handlePVCSort } = useSortableTable<PersistentVolumeClaim>(
-    filteredPVCs,
-    'name',
-    'asc'
-  )
-
   const isLoading = tab === 0 ? pvsLoading : pvcsLoading
   const error = tab === 0 ? pvsError : pvcsError
   const refetch = tab === 0 ? refetchPVs : refetchPVCs
+
+  const pvColumns: TableColumn<PersistentVolume>[] = [
+    {
+      field: 'name',
+      label: 'Name',
+    },
+    {
+      field: 'status',
+      label: 'Status',
+      render: (pv) => <StatusBadge status={pv.status} />,
+    },
+    {
+      field: 'capacity',
+      label: 'Capacity',
+    },
+    {
+      field: 'accessModes',
+      label: 'Access Modes',
+      render: (pv) => pv.accessModes.join(', '),
+      sortable: false,
+    },
+    {
+      field: 'reclaimPolicy',
+      label: 'Reclaim Policy',
+    },
+    {
+      field: 'storageClass',
+      label: 'Storage Class',
+    },
+    {
+      field: 'claim',
+      label: 'Claim',
+      render: (pv) => pv.claim || '-',
+    },
+    {
+      field: 'age',
+      label: 'Age',
+    },
+  ]
+
+  const pvcColumns: TableColumn<PersistentVolumeClaim>[] = [
+    {
+      field: 'name',
+      label: 'Name',
+    },
+    {
+      field: 'namespace',
+      label: 'Namespace',
+    },
+    {
+      field: 'status',
+      label: 'Status',
+      render: (pvc) => <StatusBadge status={pvc.status} />,
+    },
+    {
+      field: 'volume',
+      label: 'Volume',
+    },
+    {
+      field: 'capacity',
+      label: 'Capacity',
+    },
+    {
+      field: 'accessModes',
+      label: 'Access Modes',
+      render: (pvc) => pvc.accessModes.join(', '),
+      sortable: false,
+    },
+    {
+      field: 'storageClass',
+      label: 'Storage Class',
+    },
+    {
+      field: 'age',
+      label: 'Age',
+    },
+  ]
 
   if (isLoading) {
     return (
@@ -99,179 +145,47 @@ export default function PersistentVolumesPage() {
       </Box>
 
       {tab === 0 ? (
-        // PersistentVolumes tab
-        !pvs || pvs.length === 0 ? (
-          <EmptyState
-            icon={StorageIcon}
-            title="No PersistentVolumes found"
-            description="There are no PersistentVolumes in the cluster."
-          />
-        ) : filteredPVs.length === 0 ? (
-          <EmptyState
-            icon={StorageIcon}
-            title="No matching PersistentVolumes"
-            description={`No PersistentVolumes match "${searchQuery}". Try adjusting your search.`}
-          />
-        ) : (
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <SortableTableCell
-                    field="name"
-                    label="Name"
-                    sortField={pvSortField}
-                    sortOrder={pvSortOrder}
-                    onSort={handlePVSort}
-                  />
-                  <SortableTableCell
-                    field="status"
-                    label="Status"
-                    sortField={pvSortField}
-                    sortOrder={pvSortOrder}
-                    onSort={handlePVSort}
-                  />
-                  <SortableTableCell
-                    field="capacity"
-                    label="Capacity"
-                    sortField={pvSortField}
-                    sortOrder={pvSortOrder}
-                    onSort={handlePVSort}
-                  />
-                  <TableCell>Access Modes</TableCell>
-                  <SortableTableCell
-                    field="reclaimPolicy"
-                    label="Reclaim Policy"
-                    sortField={pvSortField}
-                    sortOrder={pvSortOrder}
-                    onSort={handlePVSort}
-                  />
-                  <SortableTableCell
-                    field="storageClass"
-                    label="Storage Class"
-                    sortField={pvSortField}
-                    sortOrder={pvSortOrder}
-                    onSort={handlePVSort}
-                  />
-                  <TableCell>Claim</TableCell>
-                  <SortableTableCell
-                    field="age"
-                    label="Age"
-                    sortField={pvSortField}
-                    sortOrder={pvSortOrder}
-                    onSort={handlePVSort}
-                  />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedPVs.map((pv) => (
-                  <TableRow key={pv.name} hover>
-                    <TableCell>{pv.name}</TableCell>
-                    <TableCell>
-                      <StatusBadge status={pv.status} />
-                    </TableCell>
-                    <TableCell>{pv.capacity}</TableCell>
-                    <TableCell>{pv.accessModes.join(', ')}</TableCell>
-                    <TableCell>{pv.reclaimPolicy}</TableCell>
-                    <TableCell>{pv.storageClass}</TableCell>
-                    <TableCell>{pv.claim || '-'}</TableCell>
-                    <TableCell>{pv.age}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )
+        <ResourceListView
+          title=""
+          resourceName="PersistentVolume"
+          resourceNamePlural="PersistentVolumes"
+          icon={StorageIcon}
+          data={pvs}
+          isLoading={pvsLoading}
+          error={pvsError}
+          refetch={refetchPVs}
+          searchPlaceholder="Search..."
+          searchFilter={(pv, query) =>
+            pv.name.toLowerCase().includes(query.toLowerCase())
+          }
+          columns={pvColumns}
+          defaultSortField="name"
+          defaultSortOrder="asc"
+          getRowKey={(pv) => pv.name}
+          emptyStateDescription="There are no PersistentVolumes in the cluster."
+          showClusterAlert={false}
+        />
       ) : (
-        // PersistentVolumeClaims tab
-        !pvcs || pvcs.length === 0 ? (
-          <EmptyState
-            icon={StorageIcon}
-            title="No PersistentVolumeClaims found"
-            description="There are no PersistentVolumeClaims in this namespace."
-          />
-        ) : filteredPVCs.length === 0 ? (
-          <EmptyState
-            icon={StorageIcon}
-            title="No matching PersistentVolumeClaims"
-            description={`No PersistentVolumeClaims match "${searchQuery}". Try adjusting your search.`}
-          />
-        ) : (
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <SortableTableCell
-                    field="name"
-                    label="Name"
-                    sortField={pvcSortField}
-                    sortOrder={pvcSortOrder}
-                    onSort={handlePVCSort}
-                  />
-                  <SortableTableCell
-                    field="namespace"
-                    label="Namespace"
-                    sortField={pvcSortField}
-                    sortOrder={pvcSortOrder}
-                    onSort={handlePVCSort}
-                  />
-                  <SortableTableCell
-                    field="status"
-                    label="Status"
-                    sortField={pvcSortField}
-                    sortOrder={pvcSortOrder}
-                    onSort={handlePVCSort}
-                  />
-                  <SortableTableCell
-                    field="volume"
-                    label="Volume"
-                    sortField={pvcSortField}
-                    sortOrder={pvcSortOrder}
-                    onSort={handlePVCSort}
-                  />
-                  <SortableTableCell
-                    field="capacity"
-                    label="Capacity"
-                    sortField={pvcSortField}
-                    sortOrder={pvcSortOrder}
-                    onSort={handlePVCSort}
-                  />
-                  <TableCell>Access Modes</TableCell>
-                  <SortableTableCell
-                    field="storageClass"
-                    label="Storage Class"
-                    sortField={pvcSortField}
-                    sortOrder={pvcSortOrder}
-                    onSort={handlePVCSort}
-                  />
-                  <SortableTableCell
-                    field="age"
-                    label="Age"
-                    sortField={pvcSortField}
-                    sortOrder={pvcSortOrder}
-                    onSort={handlePVCSort}
-                  />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedPVCs.map((pvc) => (
-                  <TableRow key={pvc.name} hover>
-                    <TableCell>{pvc.name}</TableCell>
-                    <TableCell>{pvc.namespace}</TableCell>
-                    <TableCell>
-                      <StatusBadge status={pvc.status} />
-                    </TableCell>
-                    <TableCell>{pvc.volume}</TableCell>
-                    <TableCell>{pvc.capacity}</TableCell>
-                    <TableCell>{pvc.accessModes.join(', ')}</TableCell>
-                    <TableCell>{pvc.storageClass}</TableCell>
-                    <TableCell>{pvc.age}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )
+        <ResourceListView
+          title=""
+          resourceName="PersistentVolumeClaim"
+          resourceNamePlural="PersistentVolumeClaims"
+          icon={StorageIcon}
+          data={pvcs}
+          isLoading={pvcsLoading}
+          error={pvcsError}
+          refetch={refetchPVCs}
+          searchPlaceholder="Search..."
+          searchFilter={(pvc, query) =>
+            pvc.name.toLowerCase().includes(query.toLowerCase())
+          }
+          columns={pvcColumns}
+          defaultSortField="name"
+          defaultSortOrder="asc"
+          getRowKey={(pvc) => pvc.name}
+          emptyStateDescription="There are no PersistentVolumeClaims in this namespace."
+          showClusterAlert={false}
+        />
       )}
     </Box>
   )

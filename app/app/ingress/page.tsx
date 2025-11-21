@@ -1,210 +1,123 @@
 'use client'
 
-import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import VisibilityIcon from '@mui/icons-material/Visibility'
+import Box from '@mui/material/Box'
 import HttpIcon from '@mui/icons-material/Http'
 import LockIcon from '@mui/icons-material/Lock'
 import { StatusBadge } from '@/app/components/common/status-badge'
-import { useMemo } from 'react'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useIngresses } from '@/lib/hooks/use-ingress'
-import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { TableSkeleton } from '@/app/components/common/table-skeleton'
-import { ErrorState } from '@/app/components/common/error-state'
-import { ClusterConnectionAlert } from '@/app/components/common/cluster-connection-alert'
-import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
-import { PageHeader } from '@/app/components/common/page-header'
-import { EmptyState } from '@/app/components/common/empty-state'
-import { useSortableTable } from '@/lib/hooks/use-table-sort'
-import { usePageSearch } from '@/lib/contexts/search-context'
+import { ResourceListView, TableColumn } from '@/app/components/common/resource-list-view'
 import type { Ingress } from '@/types/kubernetes'
 
 export default function IngressPage() {
   const navigateTo = useNavigateTo()
   const { data: ingresses, isLoading, error, refetch } = useIngresses()
-  const searchQuery = usePageSearch('Search ingress...')
 
-  // Auto-refresh
-  useAutoRefresh(refetch)
-
-  const filteredIngresses = useMemo(() => {
-    if (!ingresses) return []
-
-    let filtered = ingresses
-
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter((ingress) =>
-        ingress.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ingress.hosts.some(host => host.toLowerCase().includes(searchQuery.toLowerCase()))
-      )
-    }
-
-    return filtered
-  }, [ingresses, searchQuery])
-
-  const { sortedData, sortField, sortOrder, handleSort } = useSortableTable<Ingress>(
-    filteredIngresses,
-    'name',
-    'asc'
-  )
-
-  if (isLoading) {
-    return (
-      <Box>
-        <PageHeader title="Ingress" onRefresh={refetch} />
-        <TableSkeleton rows={8} columns={6} />
-      </Box>
-    )
-  }
-
-  if (error) {
-    return (
-      <Box>
-        <PageHeader title="Ingress" onRefresh={refetch} />
-        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load Ingress" />
-      </Box>
-    )
-  }
+  const columns: TableColumn<Ingress>[] = [
+    {
+      field: 'name',
+      label: 'Name',
+      render: (ingress) => (
+        <Typography variant="body2" fontWeight="medium">
+          {ingress.name}
+        </Typography>
+      ),
+    },
+    {
+      field: 'className',
+      label: 'Class',
+      render: (ingress) =>
+        ingress.className ? (
+          <StatusBadge label={ingress.className} size="small" />
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            default
+          </Typography>
+        ),
+    },
+    {
+      field: 'hosts',
+      label: 'Hosts',
+      render: (ingress) => (
+        <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+          {ingress.hosts.slice(0, 2).map((host, idx) => (
+            <StatusBadge
+              key={idx}
+              label={host}
+              size="small"
+            />
+          ))}
+          {ingress.hosts.length > 2 && (
+            <Typography variant="caption" color="text.secondary">
+              +{ingress.hosts.length - 2}
+            </Typography>
+          )}
+          {ingress.hosts.length === 0 && (
+            <Typography variant="body2" color="text.secondary">
+              *
+            </Typography>
+          )}
+        </Box>
+      ),
+      sortable: false,
+    },
+    {
+      field: 'paths',
+      label: 'Paths',
+      render: (ingress) => (
+        <Typography variant="body2" color="text.secondary">
+          {ingress.rules.reduce((sum, rule) => sum + rule.paths.length, 0)} path(s)
+        </Typography>
+      ),
+      sortable: false,
+    },
+    {
+      field: 'tls',
+      label: 'TLS',
+      render: (ingress) =>
+        ingress.tls && ingress.tls.length > 0 ? (
+          <StatusBadge
+            icon={<LockIcon sx={{ fontSize: 14 }} />}
+            label="Secured"
+            size="small"
+            color="success"
+          />
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            None
+          </Typography>
+        ),
+      sortable: false,
+    },
+    {
+      field: 'age',
+      label: 'Age',
+    },
+  ]
 
   return (
-    <Box>
-      <PageHeader
-        title="Ingress"
-        subtitle={`${ingresses?.length || 0} ingress resource${ingresses?.length === 1 ? '' : 's'} in this namespace`}
-        onRefresh={refetch}
-        isRefreshing={isLoading}
-      />
-
-      <ClusterConnectionAlert minimal />
-
-      {!ingresses || ingresses.length === 0 ? (
-        <EmptyState
-          icon={HttpIcon}
-          title="No ingress resources found"
-          description="There are no ingress resources in this namespace. Create an ingress to expose HTTP(S) routes."
-        />
-      ) : filteredIngresses.length === 0 ? (
-        <EmptyState
-          icon={HttpIcon}
-          title="No matching ingress resources"
-          description={`No ingress resources match "${searchQuery}". Try adjusting your search.`}
-        />
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <SortableTableCell
-                  field="name"
-                  label="Name"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-                <TableCell>Class</TableCell>
-                <TableCell>Hosts</TableCell>
-                <TableCell>Paths</TableCell>
-                <TableCell>TLS</TableCell>
-                <SortableTableCell
-                  field="age"
-                  label="Age"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortedData.map((ingress) => (
-                <TableRow
-                  key={ingress.name}
-                  hover
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => navigateTo(`/ingress/${ingress.name}`)}
-                >
-                  <TableCell>
-                    <Typography variant="body2" fontWeight="medium">
-                      {ingress.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    {ingress.className ? (
-                      <StatusBadge label={ingress.className} size="small" />
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        default
-                      </Typography>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                      {ingress.hosts.slice(0, 2).map((host, idx) => (
-                        <StatusBadge
-                          key={idx}
-                          label={host}
-                          size="small"
-                        />
-                      ))}
-                      {ingress.hosts.length > 2 && (
-                        <Typography variant="caption" color="text.secondary">
-                          +{ingress.hosts.length - 2}
-                        </Typography>
-                      )}
-                      {ingress.hosts.length === 0 && (
-                        <Typography variant="body2" color="text.secondary">
-                          *
-                        </Typography>
-                      )}
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" color="text.secondary">
-                      {ingress.rules.reduce((sum, rule) => sum + rule.paths.length, 0)} path(s)
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    {ingress.tls && ingress.tls.length > 0 ? (
-                      <StatusBadge
-                        icon={<LockIcon sx={{ fontSize: 14 }} />}
-                        label="Secured"
-                        size="small"
-                        color="success"
-                      />
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        None
-                      </Typography>
-                    )}
-                  </TableCell>
-                  <TableCell>{ingress.age}</TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        navigateTo(`/ingress/${ingress.name}`)
-                      }}
-                    >
-                      <VisibilityIcon fontSize="small" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </Box>
+    <ResourceListView
+      title="Ingress"
+      resourceName="ingress resource"
+      resourceNamePlural="ingress resources"
+      icon={HttpIcon}
+      data={ingresses}
+      isLoading={isLoading}
+      error={error}
+      refetch={refetch}
+      searchPlaceholder="Search ingress..."
+      searchFilter={(ingress, query) =>
+        ingress.name.toLowerCase().includes(query.toLowerCase()) ||
+        ingress.hosts.some(host => host.toLowerCase().includes(query.toLowerCase()))
+      }
+      columns={columns}
+      defaultSortField="name"
+      defaultSortOrder="asc"
+      getRowKey={(ingress) => ingress.name}
+      onRowClick={(ingress) => navigateTo(`/ingress/${ingress.name}`)}
+      emptyStateDescription="There are no ingress resources in this namespace. Create an ingress to expose HTTP(S) routes."
+      showClusterAlert={true}
+    />
   )
 }

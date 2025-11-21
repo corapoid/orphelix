@@ -1,166 +1,111 @@
 'use client'
 
+import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
+import Chip from '@mui/material/Chip'
 import SettingsIcon from '@mui/icons-material/Settings'
+import ConfigIcon from '@mui/icons-material/Description'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useConfigMaps } from '@/lib/hooks/use-configmaps'
-import { TableSkeleton } from '@/app/components/common/table-skeleton'
-import { ErrorState } from '@/app/components/common/error-state'
-import { SortableTableCell } from '@/app/components/common/sortable-table-cell'
-import { useSortableTable, SortFunction } from '@/lib/hooks/use-table-sort'
-import { PageHeader } from '@/app/components/common/page-header'
-import { EmptyState } from '@/app/components/common/empty-state'
-import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { usePageSearch } from '@/lib/contexts/search-context'
-import { useViewMode } from '@/lib/hooks/use-view-mode'
-import { ViewModeToggle } from '@/app/components/common/view-mode-toggle'
-import { ConfigMapGridView } from '@/app/components/configmaps/configmap-grid-view'
-import { GridSkeleton } from '@/app/components/common/grid-skeleton'
+import { ResourceListView, TableColumn } from '@/app/components/common/resource-list-view'
+import { ResourceCard } from '@/app/components/common/resource-card'
 import type { ConfigMap } from '@/types/kubernetes'
 
 export default function ConfigMapsPage() {
   const navigateTo = useNavigateTo()
-  const searchQuery = usePageSearch('Search ConfigMaps...')
   const { data: configMaps, isLoading, error, refetch } = useConfigMaps()
-  const { viewMode, setViewMode } = useViewMode()
 
-  // Auto-refresh
-  useAutoRefresh(refetch)
+  const columns: TableColumn<ConfigMap>[] = [
+    {
+      field: 'name',
+      label: 'Name',
+      render: (cm) => (
+        <Typography variant="body2" fontWeight="medium">
+          {cm.name}
+        </Typography>
+      ),
+    },
+    {
+      field: 'namespace',
+      label: 'Namespace',
+    },
+    {
+      field: 'keys',
+      label: 'Keys',
+      render: (cm) => Object.keys(cm.data).length,
+      customSortFn: (a, b, order) => {
+        const aVal = Object.keys(a.data).length
+        const bVal = Object.keys(b.data).length
+        return order === 'asc' ? aVal - bVal : bVal - aVal
+      },
+    },
+    {
+      field: 'age',
+      label: 'Age',
+    },
+  ]
 
-  const filteredConfigMaps = configMaps?.filter((cm) =>
-    cm.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || []
+  const renderCard = (cm: ConfigMap, onClick?: () => void) => {
+    const keyCount = Object.keys(cm.data).length
 
-  const { sortedData, sortField, sortOrder, handleSort} = useSortableTable<ConfigMap>(
-    filteredConfigMaps,
-    'name',
-    'asc'
-  )
-
-  // Custom sort for Keys (object size)
-  const sortByKeys: SortFunction<ConfigMap> = (a, b, order) => {
-    const aVal = Object.keys(a.data).length
-    const bVal = Object.keys(b.data).length
-    return order === 'asc' ? aVal - bVal : bVal - aVal
-  }
-
-  if (isLoading) {
     return (
-      <Box>
-        <PageHeader
-          title="ConfigMaps"
-          onRefresh={refetch}
-          isRefreshing={isLoading}
-          actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
-        />
-        {viewMode === 'list' ? (
-          <TableSkeleton rows={8} columns={4} />
-        ) : (
-          <GridSkeleton cards={8} />
-        )}
-      </Box>
-    )
-  }
-
-  if (error) {
-    return (
-      <Box>
-        <PageHeader
-          title="ConfigMaps"
-          onRefresh={refetch}
-          isRefreshing={isLoading}
-          actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
-        />
-        <ErrorState error={error} onRetry={() => refetch()} title="Failed to Load ConfigMaps" />
-      </Box>
+      <ResourceCard
+        name={cm.name}
+        resourceType={cm.namespace}
+        resourceColor="#10B981"
+        icon={ConfigIcon}
+        onClick={onClick}
+        statusBadge={
+          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+            <Chip
+              label={`${keyCount} key${keyCount !== 1 ? 's' : ''}`}
+              size="small"
+              sx={{
+                height: 22,
+                fontSize: '0.75rem',
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(16, 185, 129, 0.15)'
+                    : 'rgba(16, 185, 129, 0.1)',
+                color: '#10B981',
+                border: '1px solid',
+                borderColor: 'rgba(16, 185, 129, 0.3)',
+              }}
+            />
+          </Box>
+        }
+        metrics={
+          <Box>
+            <Typography variant="caption" color="text.secondary">
+              {cm.age}
+            </Typography>
+          </Box>
+        }
+      />
     )
   }
 
   return (
-    <Box>
-      <PageHeader
-        title="ConfigMaps"
-        subtitle={`${configMaps?.length || 0} ConfigMap${configMaps?.length === 1 ? '' : 's'} in this namespace`}
-        onRefresh={refetch}
-        isRefreshing={isLoading}
-        actions={<ViewModeToggle viewMode={viewMode} onChange={setViewMode} />}
-      />
-
-      {!configMaps || configMaps.length === 0 ? (
-        <EmptyState
-          icon={SettingsIcon}
-          title="No ConfigMaps found"
-          description="There are no ConfigMaps in this namespace yet."
-        />
-      ) : filteredConfigMaps.length === 0 ? (
-        <EmptyState
-          icon={SettingsIcon}
-          title="No matching ConfigMaps"
-          description={`No ConfigMaps match your search "${searchQuery}".`}
-        />
-      ) : viewMode === 'grid' ? (
-        <ConfigMapGridView configMaps={sortedData} />
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <SortableTableCell
-                  field="name"
-                  label="Name"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-                <SortableTableCell
-                  field="namespace"
-                  label="Namespace"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-                <SortableTableCell
-                  field="keys"
-                  label="Keys"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                  customSortFn={sortByKeys}
-                />
-                <SortableTableCell
-                  field="age"
-                  label="Age"
-                  sortField={sortField}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortedData.map((cm) => (
-                <TableRow
-                  key={cm.name}
-                  hover
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => navigateTo(`/configmaps/${encodeURIComponent(cm.name)}`)}
-                >
-                  <TableCell>{cm.name}</TableCell>
-                  <TableCell>{cm.namespace}</TableCell>
-                  <TableCell>{Object.keys(cm.data).length}</TableCell>
-                  <TableCell>{cm.age}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </Box>
+    <ResourceListView
+      title="ConfigMaps"
+      resourceName="configmap"
+      resourceNamePlural="configmaps"
+      icon={SettingsIcon}
+      data={configMaps}
+      isLoading={isLoading}
+      error={error}
+      refetch={refetch}
+      searchPlaceholder="Search ConfigMaps..."
+      searchFilter={(cm, query) =>
+        cm.name.toLowerCase().includes(query.toLowerCase())
+      }
+      columns={columns}
+      defaultSortField="name"
+      defaultSortOrder="asc"
+      getRowKey={(cm) => cm.name}
+      onRowClick={(cm) => navigateTo(`/configmaps/${encodeURIComponent(cm.name)}`)}
+      renderCard={renderCard}
+      emptyStateDescription="There are no ConfigMaps in this namespace yet."
+    />
   )
 }
