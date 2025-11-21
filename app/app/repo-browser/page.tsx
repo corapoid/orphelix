@@ -195,6 +195,7 @@ export default function RepoBrowserPage() {
           width: sidebarWidth,
           minWidth: sidebarWidth,
           maxWidth: sidebarWidth,
+          height: '100%',
           position: 'relative',
           flexShrink: 0,
           display: 'flex',

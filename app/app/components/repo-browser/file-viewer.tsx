@@ -237,42 +237,47 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
 
       {/* Editor */}
       <GlassPanel
+        animationType="none"
         sx={{
           flex: 1,
           overflow: 'hidden',
-          pt: 2,
+          p: 0,
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {monacoInstance || !isLoading ? (
-          <Editor
-            height="100%"
-            language={editorLanguage}
-            value={content}
-            theme={theme.palette.mode === 'dark' ? 'vs-dark' : 'vs'}
-            onChange={(value) => setContent(value || '')}
-            onMount={handleEditorMount}
-            options={{
-              minimap: { enabled: false },
-              fontSize: 13,
-              lineNumbers: 'on',
-              scrollBeyondLastLine: false,
-              scrollbar: {
-                vertical: 'visible',
-                horizontal: 'visible',
-                useShadows: false,
-                verticalScrollbarSize: 10,
-                horizontalScrollbarSize: 10,
-              },
-              hideCursorInOverviewRuler: true,
-              overviewRulerLanes: 0,
-              readOnly: isLoading,
-            }}
-          />
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <CircularProgress />
-          </Box>
-        )}
+        <Box sx={{ flex: 1, minHeight: 0 }}>
+          {monacoInstance || !isLoading ? (
+            <Editor
+              height="100%"
+              language={editorLanguage}
+              value={content}
+              theme={theme.palette.mode === 'dark' ? 'vs-dark' : 'vs'}
+              onChange={(value) => setContent(value || '')}
+              onMount={handleEditorMount}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 13,
+                lineNumbers: 'on',
+                scrollBeyondLastLine: false,
+                scrollbar: {
+                  vertical: 'visible',
+                  horizontal: 'visible',
+                  useShadows: false,
+                  verticalScrollbarSize: 10,
+                  horizontalScrollbarSize: 10,
+                },
+                hideCursorInOverviewRuler: true,
+                overviewRulerLanes: 0,
+                readOnly: isLoading,
+              }}
+            />
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <CircularProgress />
+            </Box>
+          )}
+        </Box>
       </GlassPanel>
     </Box>
   )

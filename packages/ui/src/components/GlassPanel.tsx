@@ -62,9 +62,7 @@ export function GlassPanel({
           <CloseIcon fontSize="small" />
         </IconButton>
       )}
-      <Box sx={closeable ? { pr: 4 } : undefined}>
-        {children}
-      </Box>
+      {children}
     </Paper>
   )
 

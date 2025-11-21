@@ -315,10 +315,12 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, sear
 
   return (
     <GlassPanel
+      animationType="none"
       sx={{
         width: '100%',
         height: '100%',
         overflow: 'auto',
+        p: 0,
       }}
     >
       <List dense sx={{ py: 1, px: 1 }}>
