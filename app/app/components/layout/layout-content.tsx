@@ -2,9 +2,11 @@
 
 import { ReactNode, useEffect } from 'react'
 import Box from '@mui/material/Box'
+import { useTheme as useMuiTheme } from '@mui/material/styles'
 import { Sidebar } from './sidebar'
 import { TopBar } from './top-bar'
 import { useModeStore } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 
 interface LayoutContentProps {
   children: ReactNode
@@ -12,6 +14,15 @@ interface LayoutContentProps {
 
 export function LayoutContent({ children }: LayoutContentProps) {
   const { hasCompletedWelcome, mode, selectedContext, selectedNamespace, setHasCompletedWelcome } = useModeStore()
+  const muiTheme = useMuiTheme()
+  const { visualPreset, mode: themeMode } = useTheme()
+
+  // Get wallpaper from theme
+  const wallpaper = visualPreset === 'liquidGlass'
+    ? (themeMode === 'dark'
+        ? muiTheme.palette.background.wallpaper
+        : muiTheme.palette.background.wallpaper)
+    : undefined
 
   // Validate welcome completion - if completed but essential data is missing, reset
   useEffect(() => {
@@ -30,14 +41,35 @@ export function LayoutContent({ children }: LayoutContentProps) {
   // Don't render sidebar and topbar if welcome flow is not completed
   if (!hasCompletedWelcome) {
     return (
-      <Box sx={{ height: '100vh', bgcolor: 'background.default', overflow: 'hidden' }}>
+      <Box sx={{
+        height: '100vh',
+        bgcolor: 'background.default',
+        ...(wallpaper && {
+          backgroundImage: wallpaper,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }),
+        overflow: 'hidden'
+      }}>
         {/* WelcomeModal will be displayed */}
       </Box>
     )
   }
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default', overflow: 'hidden' }}>
+    <Box sx={{
+      display: 'flex',
+      height: '100vh',
+      bgcolor: 'background.default',
+      ...(wallpaper && {
+        backgroundImage: wallpaper,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }),
+      overflow: 'hidden'
+    }}>
       <Sidebar />
       <Box
         component="main"

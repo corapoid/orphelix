@@ -49,7 +49,8 @@ export function buildTheme(preset: VisualPreset, mode: 'light' | 'dark', compact
       background: {
         default: palette.background.default,
         paper: palette.background.paper,
-      },
+        wallpaper: palette.background.wallpaper,
+      } as any,
       text: {
         primary: palette.text.primary,
         secondary: palette.text.secondary,
