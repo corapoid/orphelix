@@ -323,7 +323,7 @@ export function FileTree({ owner, repo, branch, onFileSelect, selectedFile, sear
         p: 0,
       }}
     >
-      <List dense sx={{ py: 1, px: 1 }}>
+      <List dense sx={{ px: 1, py: 1, pt: 2 }}>
         {renderTree(dirContents['/'] || [])}
       </List>
     </GlassPanel>

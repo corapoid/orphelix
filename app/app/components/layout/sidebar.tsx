@@ -381,9 +381,7 @@ export function Sidebar() {
           transition: 'width 0.3s ease-in-out',
           overflowX: 'hidden',
           zIndex: (theme) => theme.zIndex.appBar - 1,
-          pl: 2, // 16px left margin
-          pr: 2, // 16px right margin
-          pt: 0,
+          p: 2, // 16px padding on all sides
         },
         '& .MuiBackdrop-root': {
           display: 'none',
@@ -394,9 +392,7 @@ export function Sidebar() {
         sx={{
           bgcolor: 'background.paper',
           borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-          height: 'calc(100vh - 32px)',
-          mt: 2,
-          mb: 2,
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           ...(isGlass && {

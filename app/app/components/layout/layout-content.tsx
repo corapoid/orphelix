@@ -47,7 +47,7 @@ export function LayoutContent({ children }: LayoutContentProps) {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          pr: 2,
+          p: 2,
         }}
       >
         <Box
@@ -62,7 +62,7 @@ export function LayoutContent({ children }: LayoutContentProps) {
           }}
         >
           <TopBar />
-          <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', p: 3 }}>
+          <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', pt: 2 }}>
             {children}
           </Box>
         </Box>
