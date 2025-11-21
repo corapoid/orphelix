@@ -29,7 +29,7 @@
     backdrop-filter: blur(12px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 8px !important;
+    border-radius: var(--orphelix-border-radius, 8px) !important;
   }
 
   .react-flow__controls-button {
@@ -49,7 +49,7 @@
     backdrop-filter: blur(12px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    border-radius: 8px !important;
+    border-radius: var(--orphelix-border-radius, 8px) !important;
   }
 
   .react-flow__controls-button {
