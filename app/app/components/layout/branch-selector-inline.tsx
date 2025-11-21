@@ -7,7 +7,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
-import Divider from '@mui/material/Divider'
 import { useGitHubStore } from '@/lib/core/store'
 import SvgIcon from '@mui/material/SvgIcon'
 
@@ -69,7 +68,7 @@ export function BranchSelectorInline() {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <GitBranchIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
           Branch:
         </Typography>
         <Box sx={{ py: 0.5, px: 1 }}>
@@ -82,7 +81,7 @@ export function BranchSelectorInline() {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       <GitBranchIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-      <Typography variant="caption" color="text.secondary" fontWeight={600}>
+      <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
         Branch:
       </Typography>
       <Select
@@ -93,13 +92,13 @@ export function BranchSelectorInline() {
         disableUnderline
         autoWidth
         renderValue={(value) => {
-          if (!value) return <Typography variant="body2" color="text.secondary">Select...</Typography>
+          if (!value) return <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
           const truncated = truncateText(value, 40)
 
           if (value !== truncated) {
             return (
               <Tooltip title={value} placement="bottom">
-                <Typography variant="body2" fontWeight={600}>
+                <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
                   {truncated}
                 </Typography>
               </Tooltip>
@@ -107,13 +106,13 @@ export function BranchSelectorInline() {
           }
 
           return (
-            <Typography variant="body2" fontWeight={600}>
+            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
               {value}
             </Typography>
           )
         }}
         sx={{
-          fontSize: '0.875rem',
+          fontSize: '0.75rem',
           '&:hover': {
             bgcolor: 'action.hover',
             borderRadius: (theme) => `${theme.shape.borderRadius}px`,
@@ -124,34 +123,32 @@ export function BranchSelectorInline() {
           },
         }}
       >
-        {branches.map((branch, index) => (
-          <Box key={branch.name}>
-            {index > 0 && <Divider sx={{ my: 0.5 }} />}
-            <MenuItem
-              value={branch.name}
-              sx={{
-                py: 1,
-                px: 2,
+        {branches.map((branch) => (
+          <MenuItem
+            key={branch.name}
+            value={branch.name}
+            sx={{
+              py: 0.5,
+              px: 1.5,
+              minHeight: 'auto',
+              fontSize: '0.75rem',
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+              '&.Mui-selected': {
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
                 '&:hover': {
-                  bgcolor: 'action.hover',
+                  bgcolor: 'primary.dark',
                 },
-                '&.Mui-selected': {
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  '&:hover': {
-                    bgcolor: 'primary.dark',
-                  },
-                },
-              }}
-            >
-              <Box sx={{ width: '100%' }}>
-                <Typography variant="body2" fontWeight={500} noWrap>
-                  {branch.name}
-                  {branch.protected && ' 🔒'}
-                </Typography>
-              </Box>
-            </MenuItem>
-          </Box>
+              },
+            }}
+          >
+            <Box component="span" sx={{ fontWeight: 500 }}>
+              {branch.name}
+              {branch.protected && ' 🔒'}
+            </Box>
+          </MenuItem>
         ))}
       </Select>
     </Box>

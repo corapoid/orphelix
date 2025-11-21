@@ -54,10 +54,10 @@ export function TopBar() {
           <BranchSelectorInline />
         ) : mode === 'demo' ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="caption" color="text.secondary" fontWeight={600}>
+            <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
               Cluster:
             </Typography>
-            <Typography variant="body2" fontWeight={600}>
+            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
               demo-cluster
             </Typography>
           </Box>
@@ -113,10 +113,10 @@ export function TopBar() {
               </Tooltip>
             )}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="caption" color="text.secondary" fontWeight={600}>
+              <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
                 Repository:
               </Typography>
-              <Typography variant="body2" fontWeight={600}>
+              <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
                 {displayRepo.owner}/{displayRepo.repo}
               </Typography>
             </Box>

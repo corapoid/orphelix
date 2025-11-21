@@ -7,7 +7,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
-import Divider from '@mui/material/Divider'
 import { useModeStore, useClusterAliases } from '@/lib/core/store'
 
 interface KubeContext {
@@ -115,10 +114,10 @@ export function ContextSelectorInline() {
     const demoDisplayName = getDisplayName('demo-cluster')
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
           Cluster:
         </Typography>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
           {demoDisplayName}
         </Typography>
       </Box>
@@ -128,7 +127,7 @@ export function ContextSelectorInline() {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
           Cluster:
         </Typography>
         <Box sx={{ py: 0.5, px: 1 }}>
@@ -140,7 +139,7 @@ export function ContextSelectorInline() {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Typography variant="caption" color="text.secondary" fontWeight={600}>
+      <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
         Cluster:
       </Typography>
       <Select
@@ -151,7 +150,7 @@ export function ContextSelectorInline() {
         disableUnderline
         autoWidth
         renderValue={(value) => {
-          if (!value) return <Typography variant="body2" color="text.secondary">Select...</Typography>
+          if (!value) return <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
           const context = contexts.find((c) => c.name === value)
           if (!context) return value
           const displayName = getDisplayName(context.name)
@@ -160,7 +159,7 @@ export function ContextSelectorInline() {
           if (displayName !== truncated) {
             return (
               <Tooltip title={displayName} placement="bottom">
-                <Typography variant="body2" fontWeight={600}>
+                <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
                   {truncated}
                 </Typography>
               </Tooltip>
@@ -168,13 +167,13 @@ export function ContextSelectorInline() {
           }
 
           return (
-            <Typography variant="body2" fontWeight={600}>
+            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
               {displayName}
             </Typography>
           )
         }}
         sx={{
-          fontSize: '0.875rem',
+          fontSize: '0.75rem',
           '&:hover': {
             bgcolor: 'action.hover',
             borderRadius: (theme) => `${theme.shape.borderRadius}px`,
@@ -185,18 +184,19 @@ export function ContextSelectorInline() {
           },
         }}
       >
-        {contexts.map((context, index) => {
+        {contexts.map((context) => {
           const displayName = getDisplayName(context.name)
           const alias = getAlias(context.name)
 
-          return [
-            index > 0 && <Divider key={`divider-${context.name}`} sx={{ my: 0.5 }} />,
+          return (
             <MenuItem
               key={context.name}
               value={context.name}
               sx={{
-                py: 1,
-                px: 2,
+                py: 0.5,
+                px: 1.5,
+                minHeight: 'auto',
+                fontSize: '0.75rem',
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },
@@ -210,17 +210,17 @@ export function ContextSelectorInline() {
               }}
             >
               <Box sx={{ width: '100%' }}>
-                <Typography variant="body2" fontWeight={500} noWrap>
+                <Box component="span" sx={{ fontWeight: 500 }}>
                   {displayName}
-                </Typography>
+                </Box>
                 {alias && (
-                  <Typography variant="caption" color="text.secondary" noWrap sx={{ opacity: 0.7 }}>
-                    {context.cluster}
-                  </Typography>
+                  <Box component="span" sx={{ color: 'text.secondary', opacity: 0.7, ml: 1 }}>
+                    ({context.cluster})
+                  </Box>
                 )}
               </Box>
             </MenuItem>
-          ]
+          )
         })}
       </Select>
     </Box>

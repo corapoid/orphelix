@@ -6,7 +6,6 @@ import MenuItem from '@mui/material/MenuItem'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
 import { useModeStore } from '@/lib/core/store'
 
 interface Namespace {
@@ -62,7 +61,7 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
   if (mode === 'demo') {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
           Namespace:
         </Typography>
         <Select
@@ -73,12 +72,12 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
           autoWidth
           IconComponent={() => null}
           renderValue={() => (
-            <Typography variant="body2" fontWeight={600}>
+            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
               demo
             </Typography>
           )}
           sx={{
-            fontSize: '0.875rem',
+            fontSize: '0.75rem',
             '& .MuiSelect-select': {
               py: 0.5,
               px: 1,
@@ -94,7 +93,7 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="caption" color="text.secondary" fontWeight={600}>
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
           Namespace:
         </Typography>
         <Box sx={{ py: 0.5, px: 1 }}>
@@ -106,7 +105,7 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Typography variant="caption" color="text.secondary" fontWeight={600}>
+      <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
         Namespace:
       </Typography>
       <Select
@@ -117,15 +116,15 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
         disableUnderline
         autoWidth
         renderValue={(value) => {
-          if (!value) return <Typography variant="body2" color="text.secondary">Select...</Typography>
+          if (!value) return <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
           return (
-            <Typography variant="body2" fontWeight={600}>
+            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
               {value}
             </Typography>
           )
         }}
         sx={{
-          fontSize: '0.875rem',
+          fontSize: '0.75rem',
           '&:hover': {
             bgcolor: 'action.hover',
             borderRadius: (theme) => `${theme.shape.borderRadius}px`,
@@ -136,14 +135,15 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
           },
         }}
       >
-        {namespaces.map((namespace, index) => [
-          index > 0 && <Divider key={`divider-${namespace.name}`} sx={{ my: 0.5 }} />,
+        {namespaces.map((namespace) => (
           <MenuItem
             key={namespace.name}
             value={namespace.name}
             sx={{
-              py: 1,
-              px: 2,
+              py: 0.5,
+              px: 1.5,
+              minHeight: 'auto',
+              fontSize: '0.75rem',
               '&:hover': {
                 bgcolor: 'action.hover',
               },
@@ -156,11 +156,9 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
               },
             }}
           >
-            <Typography variant="body2" fontWeight={500}>
-              {namespace.name}
-            </Typography>
+            {namespace.name}
           </MenuItem>
-        ])}
+        ))}
       </Select>
     </Box>
   )
