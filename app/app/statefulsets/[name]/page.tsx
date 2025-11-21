@@ -13,8 +13,11 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@orphelix/ui'
 import { useStatefulSet } from '@/lib/hooks/use-statefulsets'
+import { useTheme } from '@orphelix/ui'
 
 export default function StatefulSetDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
   const { data: statefulset, isLoading, error, refetch } = useStatefulSet(name)
@@ -65,7 +68,7 @@ export default function StatefulSetDetailPage() {
         </Typography>
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color={isGlass ? "text.secondary" : "text.primary"}>
               Service Name
             </Typography>
             <Typography variant="body1" fontWeight="medium">
@@ -73,7 +76,7 @@ export default function StatefulSetDetailPage() {
             </Typography>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color={isGlass ? "text.secondary" : "text.primary"}>
               Replicas
             </Typography>
             <Typography variant="body1" fontWeight="medium">
@@ -81,7 +84,7 @@ export default function StatefulSetDetailPage() {
             </Typography>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color={isGlass ? "text.secondary" : "text.primary"}>
               Current
             </Typography>
             <Typography variant="body1" fontWeight="medium">
@@ -89,7 +92,7 @@ export default function StatefulSetDetailPage() {
             </Typography>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color={isGlass ? "text.secondary" : "text.primary"}>
               Updated
             </Typography>
             <Typography variant="body1" fontWeight="medium">
@@ -97,7 +100,7 @@ export default function StatefulSetDetailPage() {
             </Typography>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color={isGlass ? "text.secondary" : "text.primary"}>
               Update Strategy
             </Typography>
             <Typography variant="body1" fontWeight="medium">
@@ -105,7 +108,7 @@ export default function StatefulSetDetailPage() {
             </Typography>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color={isGlass ? "text.secondary" : "text.primary"}>
               Pod Management Policy
             </Typography>
             <Typography variant="body1" fontWeight="medium">
@@ -129,7 +132,7 @@ export default function StatefulSetDetailPage() {
                   px: 2,
                   py: 1,
                   bgcolor: 'action.hover',
-                  borderRadius: 1,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 }}
               >
                 <Typography variant="body2" fontWeight="medium">
@@ -151,25 +154,27 @@ export default function StatefulSetDetailPage() {
             {Object.entries(statefulset.labels).map(([key, value]) => (
               <Paper
                 key={key}
-                elevation={0}
+                elevation={isGlass ? 0 : 1}
                 sx={{
                   px: 2,
                   py: 1,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                   display: 'flex',
                   alignItems: 'center',
                   gap: 1,
+                  ...(isGlass && {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.6)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(209, 213, 219, 0.4)',
+                  }),
                 }}
               >
                 <Typography variant="caption" color="text.secondary" fontWeight={600}>
@@ -198,30 +203,34 @@ export default function StatefulSetDetailPage() {
                 style={{ textDecoration: 'none' }}
               >
                 <Paper
-                  elevation={0}
+                  elevation={isGlass ? 0 : 1}
                   sx={{
                     p: 2.5,
                     minWidth: 200,
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(30, 30, 46, 0.6)'
-                        : 'rgba(255, 255, 255, 0.25)',
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                    border: '1px solid',
-                    borderColor: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(255, 255, 255, 0.12)'
-                        : 'rgba(209, 213, 219, 0.4)',
-                    borderRadius: 3,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     transition: 'all 0.2s',
                     cursor: 'pointer',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
+                    ...(isGlass && {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(30, 30, 46, 0.6)'
+                          : 'rgba(255, 255, 255, 0.25)',
+                      backdropFilter: 'blur(24px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                      border: '1px solid',
                       borderColor: (theme) =>
                         theme.palette.mode === 'dark'
-                          ? 'rgba(59, 130, 246, 0.5)'
-                          : 'rgba(59, 130, 246, 0.4)',
+                          ? 'rgba(255, 255, 255, 0.12)'
+                          : 'rgba(209, 213, 219, 0.4)',
+                    }),
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      ...(isGlass && {
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(59, 130, 246, 0.5)'
+                            : 'rgba(59, 130, 246, 0.4)',
+                      }),
                     },
                   }}
                 >
@@ -244,30 +253,34 @@ export default function StatefulSetDetailPage() {
                 style={{ textDecoration: 'none' }}
               >
                 <Paper
-                  elevation={0}
+                  elevation={isGlass ? 0 : 1}
                   sx={{
                     p: 2.5,
                     minWidth: 200,
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(30, 30, 46, 0.6)'
-                        : 'rgba(255, 255, 255, 0.25)',
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                    border: '1px solid',
-                    borderColor: (theme) =>
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(255, 255, 255, 0.12)'
-                        : 'rgba(209, 213, 219, 0.4)',
-                    borderRadius: 3,
+                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                     transition: 'all 0.2s',
                     cursor: 'pointer',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
+                    ...(isGlass && {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(30, 30, 46, 0.6)'
+                          : 'rgba(255, 255, 255, 0.25)',
+                      backdropFilter: 'blur(24px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                      border: '1px solid',
                       borderColor: (theme) =>
                         theme.palette.mode === 'dark'
-                          ? 'rgba(234, 179, 8, 0.5)'
-                          : 'rgba(234, 179, 8, 0.4)',
+                          ? 'rgba(255, 255, 255, 0.12)'
+                          : 'rgba(209, 213, 219, 0.4)',
+                    }),
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      ...(isGlass && {
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(234, 179, 8, 0.5)'
+                            : 'rgba(234, 179, 8, 0.4)',
+                      }),
                     },
                   }}
                 >

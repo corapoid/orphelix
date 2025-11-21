@@ -19,8 +19,11 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@orphelix/ui'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { useTheme } from '@orphelix/ui'
 
 export default function IngressDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
 
@@ -92,7 +95,7 @@ export default function IngressDetailPage() {
               <GlassPanel>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Ingress Class:
                     </Typography>
                     {ingress.className ? (
@@ -105,7 +108,7 @@ export default function IngressDetailPage() {
                   </Box>
 
                   <Box>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"} sx={{ mb: 1 }}>
                       Hosts:
                     </Typography>
                     {ingress.hosts.length > 0 ? (
@@ -128,7 +131,7 @@ export default function IngressDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Age:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium">
@@ -152,7 +155,7 @@ export default function IngressDetailPage() {
                   {ingress.tls?.map((tlsConfig, idx) => (
                     <Box key={idx} sx={{ mb: idx < (ingress.tls?.length || 0) - 1 ? 2 : 0 }}>
                       <Box sx={{ mb: 1 }}>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"} sx={{ mb: 1 }}>
                           Hosts:
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -168,7 +171,7 @@ export default function IngressDetailPage() {
                       </Box>
                       {tlsConfig.secretName && (
                         <Box>
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                             Secret:
                           </Typography>
                           <Typography variant="body2" fontWeight="medium" sx={{ fontFamily: 'monospace', mt: 0.5 }}>
@@ -192,24 +195,26 @@ export default function IngressDetailPage() {
             {ingress.rules.map((rule, ruleIdx) => (
               <Paper
                 key={ruleIdx}
-                elevation={0}
+                elevation={isGlass ? 0 : 1}
                 sx={{
                   mb: ruleIdx < ingress.rules.length - 1 ? 2 : 0,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: '12px',
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                  ...(isGlass && {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.6)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(209, 213, 219, 0.4)',
+                  }),
                 }}
               >
-                <Box sx={{ px: 3, py: 1.5, bgcolor: 'action.hover', borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }}>
+                <Box sx={{ px: 3, py: 1.5, bgcolor: 'action.hover', borderTopLeftRadius: (theme) => `${theme.shape.borderRadius}px`, borderTopRightRadius: (theme) => `${theme.shape.borderRadius}px` }}>
                   <Typography variant="subtitle2" fontWeight="bold">
                     {rule.host || 'All hosts (*)'}
                   </Typography>
@@ -255,21 +260,23 @@ export default function IngressDetailPage() {
 
             {ingress.rules.length === 0 && (
               <Paper
-                elevation={0}
+                elevation={isGlass ? 0 : 1}
                 sx={{
                   p: 3,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                  ...(isGlass && {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.6)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(209, 213, 219, 0.4)',
+                  }),
                 }}
               >
                 <Typography variant="body2" color="text.secondary">
@@ -289,25 +296,27 @@ export default function IngressDetailPage() {
                 {Object.entries(ingress.labels).map(([key, value]) => (
                   <Paper
                     key={key}
-                    elevation={0}
+                    elevation={isGlass ? 0 : 1}
                     sx={{
                       px: 2,
                       py: 1,
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(30, 30, 46, 0.6)'
-                          : 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(24px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                      border: '1px solid',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255, 255, 255, 0.12)'
-                          : 'rgba(209, 213, 219, 0.4)',
-                      borderRadius: 3,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
+                      ...(isGlass && {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(30, 30, 46, 0.6)'
+                            : 'rgba(255, 255, 255, 0.25)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(255, 255, 255, 0.12)'
+                            : 'rgba(209, 213, 219, 0.4)',
+                      }),
                     }}
                   >
                     <Typography variant="caption" color="text.secondary" fontWeight={600}>

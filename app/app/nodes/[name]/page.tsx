@@ -19,6 +19,7 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@orphelix/ui'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { useTheme } from '@orphelix/ui'
 
 // Helper function to parse Kubernetes resource quantities
 function parseQuantity(value: string): number {
@@ -52,6 +53,8 @@ function calculatePercentage(allocatable: string, capacity: string): number {
 }
 
 export default function NodeDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
 
@@ -115,7 +118,7 @@ export default function NodeDetailPage() {
             <GlassPanel>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                     CPU:
                   </Typography>
                   <Typography variant="body2" fontWeight="medium">
@@ -123,7 +126,7 @@ export default function NodeDetailPage() {
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                     Memory:
                   </Typography>
                   <Typography variant="body2" fontWeight="medium">
@@ -131,7 +134,7 @@ export default function NodeDetailPage() {
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                     Pods:
                   </Typography>
                   <Typography variant="body2" fontWeight="medium">

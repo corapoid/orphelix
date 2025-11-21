@@ -37,8 +37,11 @@ import { RestartDeploymentDialog } from '@/app/components/deployments/restart-de
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { GlassPanel } from '@orphelix/ui'
+import { useTheme } from '@orphelix/ui'
 
 export default function DeploymentDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
   const [restarting, setRestarting] = useState(false)
@@ -210,7 +213,7 @@ export default function DeploymentDetailPage() {
         <GlassPanel sx={{ p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                 Strategy:
               </Typography>
               <Typography variant="body2" fontWeight="medium">
@@ -218,7 +221,7 @@ export default function DeploymentDetailPage() {
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                 Desired Replicas:
               </Typography>
               <Typography variant="body2" fontWeight="medium">
@@ -226,7 +229,7 @@ export default function DeploymentDetailPage() {
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                 Ready Replicas:
               </Typography>
               <Typography variant="body2" fontWeight="medium">
@@ -234,7 +237,7 @@ export default function DeploymentDetailPage() {
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                 Available Replicas:
               </Typography>
               <Typography variant="body2" fontWeight="medium">
@@ -242,7 +245,7 @@ export default function DeploymentDetailPage() {
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                 Unavailable Replicas:
               </Typography>
               <Typography variant="body2" fontWeight="medium">
@@ -262,25 +265,27 @@ export default function DeploymentDetailPage() {
           {Object.entries(deployment.labels).map(([key, value]) => (
             <Paper
               key={key}
-              elevation={0}
+              elevation={isGlass ? 0 : 1}
               sx={{
                 px: 2,
                 py: 1,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(30, 30, 46, 0.6)'
-                    : 'rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid',
-                borderColor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : 'rgba(209, 213, 219, 0.4)',
-                borderRadius: 3,
+                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
+                ...(isGlass && {
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(30, 30, 46, 0.6)'
+                      : 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '1px solid',
+                  borderColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(209, 213, 219, 0.4)',
+                }),
               }}
             >
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
@@ -307,30 +312,34 @@ export default function DeploymentDetailPage() {
               style={{ textDecoration: 'none' }}
             >
               <Paper
-                elevation={0}
+                elevation={isGlass ? 0 : 1}
                 sx={{
                   p: 2.5,
                   minWidth: 200,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                   transition: 'all 0.2s',
                   cursor: 'pointer',
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
+                  ...(isGlass && {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.6)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
                     borderColor: (theme) =>
                       theme.palette.mode === 'dark'
-                        ? 'rgba(59, 130, 246, 0.5)'
-                        : 'rgba(59, 130, 246, 0.4)',
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(209, 213, 219, 0.4)',
+                  }),
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    ...(isGlass && {
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(59, 130, 246, 0.5)'
+                          : 'rgba(59, 130, 246, 0.4)',
+                    }),
                   },
                 }}
               >
@@ -353,30 +362,34 @@ export default function DeploymentDetailPage() {
               style={{ textDecoration: 'none' }}
             >
               <Paper
-                elevation={0}
+                elevation={isGlass ? 0 : 1}
                 sx={{
                   p: 2.5,
                   minWidth: 200,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                   transition: 'all 0.2s',
                   cursor: 'pointer',
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
+                  ...(isGlass && {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.6)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
                     borderColor: (theme) =>
                       theme.palette.mode === 'dark'
-                        ? 'rgba(234, 179, 8, 0.5)'
-                        : 'rgba(234, 179, 8, 0.4)',
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(209, 213, 219, 0.4)',
+                  }),
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    ...(isGlass && {
+                      borderColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(234, 179, 8, 0.5)'
+                          : 'rgba(234, 179, 8, 0.4)',
+                    }),
                   },
                 }}
               >

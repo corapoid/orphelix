@@ -20,6 +20,7 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@orphelix/ui'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
+import { useTheme } from '@orphelix/ui'
 
 // Helper function to convert cron schedule to human-readable description
 function getScheduleDescription(schedule: string): string {
@@ -71,6 +72,8 @@ function getScheduleDescription(schedule: string): string {
 }
 
 export default function CronJobDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
   const router = useRouter()
@@ -157,7 +160,7 @@ export default function CronJobDetailPage() {
               <GlassPanel>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Schedule:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium" sx={{ fontFamily: 'monospace' }}>
@@ -166,7 +169,7 @@ export default function CronJobDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Description:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium" color="primary.main">
@@ -175,7 +178,7 @@ export default function CronJobDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Suspend:
                     </Typography>
                     <Chip
@@ -187,7 +190,7 @@ export default function CronJobDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Active Jobs:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium" color="info.main">
@@ -196,7 +199,7 @@ export default function CronJobDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Age:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium">
@@ -215,7 +218,7 @@ export default function CronJobDetailPage() {
               <GlassPanel>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Last Schedule Time:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium">
@@ -224,7 +227,7 @@ export default function CronJobDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Last Successful Time:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium" color="success.main">
@@ -233,7 +236,7 @@ export default function CronJobDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Total Jobs Created:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium">
@@ -256,20 +259,22 @@ export default function CronJobDetailPage() {
               </Typography>
 
               <Paper
-                elevation={0}
+                elevation={isGlass ? 0 : 1}
                 sx={{
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.6)'
-                      : 'rgba(255, 255, 255, 0.25)',
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '1px solid',
-                  borderColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(209, 213, 219, 0.4)',
-                  borderRadius: 3,
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                  ...(isGlass && {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(30, 30, 46, 0.6)'
+                        : 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                    border: '1px solid',
+                    borderColor: (theme) =>
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(209, 213, 219, 0.4)',
+                  }),
                 }}
               >
                 <TableContainer>
@@ -339,25 +344,27 @@ export default function CronJobDetailPage() {
                 {Object.entries(cronjob.labels).map(([key, value]) => (
                   <Paper
                     key={key}
-                    elevation={0}
+                    elevation={isGlass ? 0 : 1}
                     sx={{
                       px: 2,
                       py: 1,
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(30, 30, 46, 0.6)'
-                          : 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(24px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                      border: '1px solid',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255, 255, 255, 0.12)'
-                          : 'rgba(209, 213, 219, 0.4)',
-                      borderRadius: 3,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
+                      ...(isGlass && {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(30, 30, 46, 0.6)'
+                            : 'rgba(255, 255, 255, 0.25)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(255, 255, 255, 0.12)'
+                            : 'rgba(209, 213, 219, 0.4)',
+                      }),
                     }}
                   >
                     <Typography variant="caption" color="text.secondary" fontWeight={600}>

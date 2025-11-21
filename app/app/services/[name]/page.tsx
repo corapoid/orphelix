@@ -19,8 +19,11 @@ import { PageHeader } from '@/app/components/common/page-header'
 import { GlassPanel } from '@orphelix/ui'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { ServiceType } from '@/types/kubernetes'
+import { useTheme } from '@orphelix/ui'
 
 export default function ServiceDetailPage() {
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const params = useParams()
   const name = params.name as string
 
@@ -103,7 +106,7 @@ export default function ServiceDetailPage() {
               <GlassPanel>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Type:
                     </Typography>
                     <Chip
@@ -114,7 +117,7 @@ export default function ServiceDetailPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Cluster IP:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium" sx={{ fontFamily: 'monospace' }}>
@@ -124,7 +127,7 @@ export default function ServiceDetailPage() {
 
                   {service.externalIPs && service.externalIPs.length > 0 && (
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"} sx={{ mb: 1 }}>
                         External IPs:
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -141,7 +144,7 @@ export default function ServiceDetailPage() {
                   )}
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
                       Age:
                     </Typography>
                     <Typography variant="body2" fontWeight="medium">
@@ -242,25 +245,27 @@ export default function ServiceDetailPage() {
                 {Object.entries(service.labels).map(([key, value]) => (
                   <Paper
                     key={key}
-                    elevation={0}
+                    elevation={isGlass ? 0 : 1}
                     sx={{
                       px: 2,
                       py: 1,
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(30, 30, 46, 0.6)'
-                          : 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(24px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                      border: '1px solid',
-                      borderColor: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255, 255, 255, 0.12)'
-                          : 'rgba(209, 213, 219, 0.4)',
-                      borderRadius: 3,
+                      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
+                      ...(isGlass && {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(30, 30, 46, 0.6)'
+                            : 'rgba(255, 255, 255, 0.25)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: '1px solid',
+                        borderColor: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(255, 255, 255, 0.12)'
+                            : 'rgba(209, 213, 219, 0.4)',
+                      }),
                     }}
                   >
                     <Typography variant="caption" color="text.secondary" fontWeight={600}>
