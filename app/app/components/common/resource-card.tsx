@@ -51,10 +51,29 @@ export function ResourceCard({
         border: '1px solid',
         borderColor: 'divider',
         ...(isGlass && {
+          backdropFilter: 'blur(10px) saturate(150%)',
+          WebkitBackdropFilter: 'blur(10px) saturate(150%)',
           boxShadow: (theme) =>
             theme.palette.mode === 'dark'
-              ? '0 2px 8px 0 rgba(0, 0, 0, 0.3)'
-              : '0 2px 8px 0 rgba(31, 38, 135, 0.08)',
+              ? '0 4px 20px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)'
+              : '0 4px 20px 0 rgba(31, 38, 135, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)',
+        }),
+        // Gradient shine overlay for liquid glass only
+        ...(isLiquidGlass && {
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '40%',
+            background: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%)'
+                : 'linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, transparent 100%)',
+            pointerEvents: 'none',
+            borderRadius: (theme) => `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+          },
         }),
         '&:hover': {
           ...(isGlass && onClick && {
