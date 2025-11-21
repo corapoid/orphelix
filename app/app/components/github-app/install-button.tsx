@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useEffect, Suspense } from 'react'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -9,19 +9,14 @@ import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useTheme } from '@orphelix/ui'
+import { useGitHubApp } from '@/lib/hooks/use-github-app'
 
 function GitHubAppInstallButtonContent() {
   const { visualPreset } = useTheme()
   const isGlass = visualPreset !== 'classic'
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [installations, setInstallations] = useState<any[]>([])
+  const { isAuthenticated, isLoading, installations, refetch } = useGitHubApp()
   const searchParams = useSearchParams()
   const router = useRouter()
-
-  useEffect(() => {
-    checkAuthStatus()
-  }, [])
 
   useEffect(() => {
     // Handle callback messages
@@ -30,41 +25,20 @@ function GitHubAppInstallButtonContent() {
 
     if (status === 'installed') {
       // Refresh installations
-      checkAuthStatus()
+      refetch()
       // Clear query params
       router.replace('/settings')
     }
 
     if (status === 'connected') {
-      checkAuthStatus()
+      refetch()
       router.replace('/settings')
     }
 
     if (error) {
       console.error('GitHub App error:', error)
     }
-  }, [searchParams])
-
-  const checkAuthStatus = async () => {
-    setIsLoading(true)
-    try {
-      const response = await fetch('/api/github-app/installations')
-      if (response.ok) {
-        const data = await response.json()
-        setInstallations(data)
-        setIsAuthenticated(true)
-      } else {
-        setIsAuthenticated(false)
-        setInstallations([])
-      }
-    } catch (error) {
-      console.error('Failed to check auth status:', error)
-      setIsAuthenticated(false)
-      setInstallations([])
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  }, [searchParams, refetch, router])
 
   const handleInstall = () => {
     const clientId = process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID
@@ -78,8 +52,7 @@ function GitHubAppInstallButtonContent() {
   const handleLogout = async () => {
     try {
       await fetch('/api/github-app/logout', { method: 'POST' })
-      setIsAuthenticated(false)
-      setInstallations([])
+      refetch()
     } catch (error) {
       console.error('Logout failed:', error)
     }

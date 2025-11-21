@@ -18,6 +18,7 @@ import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { useRouter } from 'next/navigation'
 import { GlassPanel } from '@orphelix/ui'
 import { PageHeader } from '@/app/components/common/page-header'
+import { useGitHubApp } from '@/lib/hooks/use-github-app'
 
 interface Repository {
   full_name: string
@@ -34,14 +35,16 @@ export function RepoSelector() {
   const { setSelectedRepo } = useGitHubStore()
   const mode = useModeStore((state) => state.mode)
   const router = useRouter()
+  const { isAuthenticated, isLoading: authLoading } = useGitHubApp()
   const [loading, setLoading] = useState(false)
   const [repositories, setRepositories] = useState<Repository[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [hasCheckedAuth, setHasCheckedAuth] = useState(false)
 
   useEffect(() => {
-    loadRepositories()
-  }, [])
+    if (isAuthenticated) {
+      loadRepositories()
+    }
+  }, [isAuthenticated])
 
   const loadRepositories = async () => {
     setLoading(true)
@@ -52,7 +55,6 @@ export function RepoSelector() {
 
       if (response.status === 401) {
         // Not authenticated - don't show error, just show install button
-        setHasCheckedAuth(true)
         setRepositories([])
         setLoading(false)
         return
@@ -64,11 +66,9 @@ export function RepoSelector() {
 
       const data = await response.json()
       setRepositories(data.repositories || [])
-      setHasCheckedAuth(true)
     } catch (err) {
       console.error('Failed to load repositories:', err)
       setError(err instanceof Error ? err.message : 'Failed to load repositories')
-      setHasCheckedAuth(true)
     } finally {
       setLoading(false)
     }
@@ -104,7 +104,7 @@ export function RepoSelector() {
     })
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <Box
         sx={{
@@ -118,14 +118,14 @@ export function RepoSelector() {
       >
         <CircularProgress size={48} />
         <Typography variant="body2" color="text.secondary">
-          Loading repositories...
+          {authLoading ? 'Checking GitHub App...' : 'Loading repositories...'}
         </Typography>
       </Box>
     )
   }
 
   // Show install prompt if not authenticated or no repos
-  if (hasCheckedAuth && repositories.length === 0 && !error) {
+  if (!authLoading && repositories.length === 0 && !error) {
     return (
       <Box
         sx={{
