@@ -84,26 +84,20 @@ export function ResourceCard({
         }),
         '&:hover': {
           ...(isGlass && {
-            transform: 'translateY(-2px) scale(1.01)',
+            transform: 'translateY(-2px)',
             borderColor: (theme) =>
               theme.palette.mode === 'dark'
-                ? 'rgba(255, 255, 255, 0.18)'
-                : 'rgba(209, 213, 219, 0.6)',
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'dark'
-                ? 'rgba(50, 50, 70, 0.7)'
-                : 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(28px) saturate(200%)',
-            WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+                ? 'rgba(255, 255, 255, 0.2)'
+                : 'rgba(209, 213, 219, 0.7)',
             boxShadow: (theme) =>
               theme.palette.mode === 'dark'
-                ? '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 2px 2px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.3)'
-                : '0 8px 32px 0 rgba(31, 38, 135, 0.12), inset 0 2px 2px 0 rgba(255, 255, 255, 1), inset 0 -2px 2px 0 rgba(0, 0, 0, 0.08)',
+                ? '0 8px 24px 0 rgba(0, 0, 0, 0.5)'
+                : '0 8px 24px 0 rgba(31, 38, 135, 0.15)',
           }),
         },
         '&:active': {
           ...(isGlass && {
-            transform: 'translateY(0px) scale(0.98)',
+            transform: 'translateY(0px)',
           }),
         },
       }}

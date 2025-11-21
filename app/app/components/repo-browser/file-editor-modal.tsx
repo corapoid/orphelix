@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import Editor from '@monaco-editor/react'
 import { useGitHubStore } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 
 interface FileEditorModalProps {
   open: boolean
@@ -21,6 +22,8 @@ interface FileEditorModalProps {
 
 export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorModalProps) {
   const { selectedRepo } = useGitHubStore()
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
 
   const [yamlContent, setYamlContent] = useState('')
   const [originalContent, setOriginalContent] = useState('')
@@ -158,7 +161,14 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
               </Alert>
             )}
 
-            <Box sx={{ height: 600, border: 1, borderColor: 'divider', borderRadius: (theme) => `${theme.shape.borderRadius}px` }}>
+            <Box sx={{
+              height: 600,
+              border: 1,
+              borderColor: 'divider',
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+              bgcolor: isGlass ? 'rgba(255, 255, 255, 0.05)' : 'background.paper',
+              backdropFilter: isGlass ? 'blur(10px)' : 'none',
+            }}>
               <Editor
                 height="100%"
                 language={editorLanguage}
