@@ -17,8 +17,8 @@ export function LayoutContent({ children }: LayoutContentProps) {
   const muiTheme = useMuiTheme()
   const { visualPreset, mode: themeMode } = useTheme()
 
-  // Noise texture for grain effect (very strong grain - 20% opacity)
-  const noiseTexture = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E")`
+  // Noise texture for grain effect (fine grain, subtle)
+  const noiseTexture = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E")`
 
   // Get gradient and combine with noise
   const isLiquidGlass = visualPreset === 'liquidGlass'
