@@ -17,15 +17,15 @@ export function LayoutContent({ children }: LayoutContentProps) {
   const muiTheme = useMuiTheme()
   const { visualPreset, mode: themeMode } = useTheme()
 
-  // Film grain texture (from ibelick.com technique)
-  const grainTexture = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E")`
+  // Film grain texture - very subtle like reference image
+  const grainTexture = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.4'/%3E%3C/svg%3E")`
 
-  // Get gradient
+  // Get gradient - warm neutral tones like reference image
   const isLiquidGlass = visualPreset === 'liquidGlass'
   const gradient = isLiquidGlass
     ? (themeMode === 'dark'
-        ? 'linear-gradient(135deg, #0F0F18 0%, #15151D 50%, #1A1A22 100%)'
-        : 'linear-gradient(135deg, #D8E1F0 0%, #E5EAF5 50%, #EDF1F9 100%)')
+        ? 'linear-gradient(135deg, #1A1A1C 0%, #24242A 50%, #2E2E38 100%)'
+        : 'linear-gradient(135deg, #E8E8E8 0%, #DCDCDC 50%, #D0D0D0 100%)')
     : undefined
 
   const backgroundImage = gradient ? `${grainTexture}, ${gradient}` : undefined
@@ -55,7 +55,6 @@ export function LayoutContent({ children }: LayoutContentProps) {
           backgroundSize: '182px, cover',
           backgroundPosition: '0 0, center',
           backgroundRepeat: 'repeat, no-repeat',
-          opacity: 0.88,
         }),
         overflow: 'hidden'
       }}>
@@ -74,7 +73,6 @@ export function LayoutContent({ children }: LayoutContentProps) {
         backgroundSize: '182px, cover',
         backgroundPosition: '0 0, center',
         backgroundRepeat: 'repeat, no-repeat',
-        opacity: 0.88,
       }),
       overflow: 'hidden'
     }}>
