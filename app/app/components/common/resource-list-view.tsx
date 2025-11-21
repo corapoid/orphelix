@@ -7,7 +7,6 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
@@ -74,11 +73,11 @@ export interface ResourceListViewProps<T> {
   columns: TableColumn<T>[]
   defaultSortField: keyof T | string
   defaultSortOrder?: 'asc' | 'desc'
-  getRowKey: (item: T) => string
+  getRowKey: (item: T, index?: number) => string
   onRowClick?: (item: T) => void
 
-  // Grid view
-  renderCard: (item: T, onClick?: () => void) => ReactNode
+  // Grid view (optional - if not provided, only table view will be available)
+  renderCard?: (item: T, onClick?: () => void) => ReactNode
 
   // Optional
   showClusterAlert?: boolean
@@ -110,6 +109,10 @@ export function ResourceListView<T>({
   const { viewMode, setViewMode } = useViewMode()
   const searchQuery = usePageSearch(searchPlaceholder)
 
+  // Only use viewMode if renderCard is provided
+  const hasGridView = !!renderCard
+  const currentViewMode = hasGridView ? viewMode : 'list'
+
   // Auto-refresh
   useAutoRefresh(refetch)
 
@@ -140,24 +143,24 @@ export function ResourceListView<T>({
 
   if (isLoading) {
     return (
-      <Box>
+      <>
         <PageHeader title={title} onRefresh={refetch} />
         <TableSkeleton rows={8} columns={columns.length} />
-      </Box>
+      </>
     )
   }
 
   if (error) {
     return (
-      <Box>
+      <>
         <PageHeader title={title} onRefresh={refetch} />
         <ErrorState error={error} onRetry={refetch} title={`Failed to Load ${title}`} />
-      </Box>
+      </>
     )
   }
 
   return (
-    <Box>
+    <>
       <PageHeader
         title={title}
         subtitle={`${data?.length || 0} ${data?.length === 1 ? resourceName : resourceNamePlural} in this namespace`}
@@ -183,48 +186,50 @@ export function ResourceListView<T>({
               </FormControl>
             ))}
 
-            {/* View mode toggle */}
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 0.5,
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-                p: 0.5,
-              }}
-            >
-              <Tooltip title="List view">
-                <IconButton
-                  size="small"
-                  onClick={() => setViewMode('list')}
-                  sx={{
-                    bgcolor: viewMode === 'list' ? 'primary.main' : 'transparent',
-                    color: viewMode === 'list' ? 'white' : 'text.secondary',
-                    '&:hover': {
-                      bgcolor: viewMode === 'list' ? 'primary.dark' : 'action.hover',
-                    },
-                  }}
-                >
-                  <ViewListIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Grid view">
-                <IconButton
-                  size="small"
-                  onClick={() => setViewMode('grid')}
-                  sx={{
-                    bgcolor: viewMode === 'grid' ? 'primary.main' : 'transparent',
-                    color: viewMode === 'grid' ? 'white' : 'text.secondary',
-                    '&:hover': {
-                      bgcolor: viewMode === 'grid' ? 'primary.dark' : 'action.hover',
-                    },
-                  }}
-                >
-                  <ViewModuleIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </Box>
+            {/* View mode toggle - only show if grid view is available */}
+            {hasGridView && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 0.5,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                  p: 0.5,
+                }}
+              >
+                <Tooltip title="List view">
+                  <IconButton
+                    size="small"
+                    onClick={() => setViewMode('list')}
+                    sx={{
+                      bgcolor: viewMode === 'list' ? 'primary.main' : 'transparent',
+                      color: viewMode === 'list' ? 'white' : 'text.secondary',
+                      '&:hover': {
+                        bgcolor: viewMode === 'list' ? 'primary.dark' : 'action.hover',
+                      },
+                    }}
+                  >
+                    <ViewListIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Grid view">
+                  <IconButton
+                    size="small"
+                    onClick={() => setViewMode('grid')}
+                    sx={{
+                      bgcolor: viewMode === 'grid' ? 'primary.main' : 'transparent',
+                      color: viewMode === 'grid' ? 'white' : 'text.secondary',
+                      '&:hover': {
+                        bgcolor: viewMode === 'grid' ? 'primary.dark' : 'action.hover',
+                      },
+                    }}
+                  >
+                    <ViewModuleIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
           </Box>
         }
       />
@@ -246,7 +251,7 @@ export function ResourceListView<T>({
           title={`No matching ${resourceNamePlural}`}
           description={`No ${resourceNamePlural} match your search or filters.`}
         />
-      ) : viewMode === 'grid' ? (
+      ) : currentViewMode === 'grid' && renderCard ? (
         <Box
           sx={{
             display: 'grid',
@@ -254,14 +259,14 @@ export function ResourceListView<T>({
             gap: 2,
           }}
         >
-          {sortedData.map((item) => (
-            <Box key={getRowKey(item)}>
+          {sortedData.map((item, index) => (
+            <Box key={getRowKey(item, index)}>
               {renderCard(item, onRowClick ? () => onRowClick(item) : undefined)}
             </Box>
           ))}
         </Box>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
@@ -285,9 +290,9 @@ export function ResourceListView<T>({
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedData.map((item) => (
+              {sortedData.map((item, index) => (
                 <TableRow
-                  key={getRowKey(item)}
+                  key={getRowKey(item, index)}
                   hover
                   sx={{ cursor: onRowClick ? 'pointer' : 'default' }}
                   onClick={onRowClick ? () => onRowClick(item) : undefined}
@@ -305,6 +310,6 @@ export function ResourceListView<T>({
           </Table>
         </TableContainer>
       )}
-    </Box>
+    </>
   )
 }
