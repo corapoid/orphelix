@@ -17,10 +17,10 @@ export function LayoutContent({ children }: LayoutContentProps) {
   const muiTheme = useMuiTheme()
   const { visualPreset, mode: themeMode } = useTheme()
 
-  // Simple film grain texture
-  const grainTexture = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='g'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3CfeColorMatrix values='0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`
+  // Film grain texture (from ibelick.com technique)
+  const grainTexture = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E")`
 
-  // Get gradient and combine with grain
+  // Get gradient
   const isLiquidGlass = visualPreset === 'liquidGlass'
   const gradient = isLiquidGlass
     ? (themeMode === 'dark'
@@ -52,9 +52,10 @@ export function LayoutContent({ children }: LayoutContentProps) {
         bgcolor: 'background.default',
         ...(backgroundImage && {
           backgroundImage: backgroundImage,
-          backgroundSize: 'cover, 200px 200px',
-          backgroundPosition: 'center, 0 0',
-          backgroundRepeat: 'no-repeat, repeat',
+          backgroundSize: '182px, cover',
+          backgroundPosition: '0 0, center',
+          backgroundRepeat: 'repeat, no-repeat',
+          opacity: 0.88,
         }),
         overflow: 'hidden'
       }}>
@@ -70,9 +71,10 @@ export function LayoutContent({ children }: LayoutContentProps) {
       bgcolor: 'background.default',
       ...(backgroundImage && {
         backgroundImage: backgroundImage,
-        backgroundSize: 'cover, 200px 200px',
-        backgroundPosition: 'center, 0 0',
-        backgroundRepeat: 'no-repeat, repeat',
+        backgroundSize: '182px, cover',
+        backgroundPosition: '0 0, center',
+        backgroundRepeat: 'repeat, no-repeat',
+        opacity: 0.88,
       }),
       overflow: 'hidden'
     }}>
