@@ -120,10 +120,7 @@ export function StatusBadge({ status, label, color, size = 'small', sx, ...props
         borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         backgroundColor: (theme) => theme.palette.mode === 'dark' ? colors.bgDark : colors.bg,
         color: (theme) => theme.palette.mode === 'dark' ? colors.textDark : colors.text,
-        ...(isGlass && {
-          backdropFilter: 'blur(12px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(12px) saturate(180%)',
-        }),
+        // NO backdropFilter for performance (used in many cards)
         border: '1px solid',
         borderColor: (theme) =>
           theme.palette.mode === 'dark'
