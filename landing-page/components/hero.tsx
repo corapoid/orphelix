@@ -134,7 +134,7 @@ export default function Hero() {
                 fontSize: '0.9rem',
               }}
             >
-              Open Source • MPL-2.0 License
+              Source-available • BUSL-1.1 (Apache-2.0 on 2030-01-01)
             </Typography>
           </Box>
         </Box>

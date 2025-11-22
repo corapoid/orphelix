@@ -1,7 +1,7 @@
 # Orphelix
 
 [![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/yourusername/kubevista)
-[![License](https://img.shields.io/badge/license-MPL--2.0-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-BUSL--1.1-orange.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.0-black.svg)](https://nextjs.org/)
@@ -103,7 +103,7 @@ Note: Mintlify may have dependency issues. Documentation is fully readable as ma
 
 ### 📋 Project Information
 - **[Changelog](CHANGELOG.md)** - Complete version history and updates
-- **[License](LICENSE)** - Mozilla Public License 2.0 details
+- **[License](LICENSE)** - Business Source License 1.1 details
 
 ## 🔒 Security
 
@@ -131,13 +131,12 @@ A: Yes! Set up GitHub integration (see [docs/github-setup.md](docs/github-setup.
 
 ## 📄 License
 
-This project is licensed under the **Mozilla Public License 2.0** (MPL-2.0).
+This project is distributed under the **Business Source License 1.1 (BUSL-1.1)**.
 
 **Key Points:**
-- ✅ **Attribution Required** - Modified versions must credit the original project
-- ✅ **File-level Copyleft** - Modified files must remain open source under MPL-2.0
-- ✅ **Commercial Use Allowed** - Can be used in commercial projects
-- ✅ **Patent Protection** - Grants patent rights and protects against patent claims
-- ✅ **Compatible with Proprietary Code** - Can be combined with closed-source software
+- ✅ Free for demos, evaluations, and internal/non-production use without charge
+- ⚠️ Production deployments or hosted offerings require a commercial agreement before the Change Date
+- 🔁 **Change Date:** 2030-01-01 — the code automatically switches to **Apache License 2.0** on this date
+- 📘 **Additional Use Grant:** none — there are no exceptions for production use before 2030-01-01
 
-See the [LICENSE](LICENSE) file for full details.
+See the [LICENSE](LICENSE) file for the full legal text and contact information.

@@ -182,7 +182,7 @@ export default function Footer() {
                   '&:hover': { color: 'text.primary' },
                 }}
               >
-                MPL-2.0 License
+                BUSL-1.1 License (Apache-2.0 on 2030-01-01)
               </Link>
               <Link
                 href="https://github.com/dmakowski-rasp/kubevista/blob/main/README.md"
@@ -235,7 +235,7 @@ export default function Footer() {
               color: 'text.disabled',
             }}
           >
-            © {new Date().getFullYear()} Orphelix. Open source under MPL-2.0.
+            © {new Date().getFullYear()} Orphelix. Source-available under BUSL-1.1 (Apache-2.0 on 2030-01-01).
           </Typography>
 
           <Typography

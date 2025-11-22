@@ -133,4 +133,4 @@ docker run -p 3001:3001 orphelix-landing
 
 ## License
 
-Same as main project (MPL-2.0)
+Same as main project (Business Source License 1.1 with Apache-2.0 change license on 2030-01-01)
