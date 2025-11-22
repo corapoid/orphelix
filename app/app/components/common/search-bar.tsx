@@ -5,7 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
 import IconButton from '@mui/material/IconButton'
-import { useTheme } from '@orphelix/ui'
+import { useGlassSurface } from '@/lib/ui/use-glass-surface'
 
 interface SearchBarProps {
   value: string
@@ -25,8 +25,7 @@ export function SearchBar({
   placeholder = 'Search...',
   fullWidth = false,
 }: SearchBarProps) {
-  const { visualPreset } = useTheme()
-  const isGlass = visualPreset !== 'classic'
+  const glassInputSurface = useGlassSurface()
 
   const handleClear = () => {
     onChange('')
@@ -55,41 +54,29 @@ export function SearchBar({
           ),
         },
       }}
-      sx={{
+      sx={(theme) => ({
         minWidth: fullWidth ? undefined : 300,
         '& .MuiOutlinedInput-root': {
-          backgroundColor: (theme) =>
+          ...glassInputSurface,
+          boxShadow:
             theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.6)'
-              : 'rgba(255, 255, 255, 0.25)',
-          ...(isGlass && {
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          }),
-          border: '1px solid',
-          borderColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.12)'
-              : 'rgba(209, 213, 219, 0.4)',
-          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+              ? '0 4px 16px rgba(0, 0, 0, 0.35)'
+              : '0 8px 24px rgba(15, 23, 42, 0.12)',
+          borderRadius: `${theme.shape.borderRadius}px`,
           '& fieldset': {
-            border: 'none',
+            borderWidth: '1px',
+            borderColor: 'transparent',
           },
-          '&:hover': {
-            borderColor: (theme) =>
-              theme.palette.mode === 'dark'
-                ? 'rgba(255, 255, 255, 0.2)'
-                : 'rgba(209, 213, 219, 0.6)',
+          '&:hover fieldset': {
+            borderWidth: '1px',
+            borderColor: 'transparent',
           },
-          '&.Mui-focused': {
-            borderColor: 'primary.main',
-            boxShadow: (theme) =>
-              theme.palette.mode === 'dark'
-                ? '0 0 0 2px rgba(59, 130, 246, 0.2)'
-                : '0 0 0 2px rgba(59, 130, 246, 0.1)',
+          '&.Mui-focused fieldset': {
+            borderWidth: '1px',
+            borderColor: theme.palette.primary.main,
           },
         },
-      }}
+      })}
     />
   )
 }

@@ -2,12 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
-import Select from '@mui/material/Select'
+import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
-import { useGitHubStore } from '@/lib/core/store'
+import TextField from '@mui/material/TextField'
+import ButtonBase from '@mui/material/ButtonBase'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import CheckIcon from '@mui/icons-material/Check'
+import AddIcon from '@mui/icons-material/Add'
+import { useGitHubStore, useModeStore } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 import SvgIcon from '@mui/material/SvgIcon'
 
 // Git Branch SVG Icon (Font Awesome)
@@ -26,8 +32,13 @@ interface Branch {
 
 export function BranchSelectorInline() {
   const { selectedRepo, selectedBranch, setSelectedBranch } = useGitHubStore()
+  const { mode } = useModeStore()
+  const { visualPreset } = useTheme()
   const [branches, setBranches] = useState<Branch[]>([])
   const [loading, setLoading] = useState(false)
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null)
+  const menuOpen = Boolean(menuAnchor)
+  const isGlass = visualPreset !== 'classic'
 
   const truncateText = (text: string, maxLength: number = 25) => {
     if (text.length <= maxLength) return text
@@ -40,8 +51,25 @@ export function BranchSelectorInline() {
     }
   }, [selectedRepo])
 
+  // Update branches list when selectedBranch changes in demo mode
+  useEffect(() => {
+    if (mode === 'demo' && selectedBranch && !branches.find(b => b.name === selectedBranch)) {
+      setBranches(prev => [...prev, { name: selectedBranch, protected: false }])
+    }
+  }, [selectedBranch, mode, branches])
+
   const fetchBranches = async () => {
     if (!selectedRepo) return
+
+    // In demo mode, use mock branches
+    if (mode === 'demo') {
+      setBranches([
+        { name: 'main', protected: true },
+        { name: 'develop', protected: false },
+        { name: 'feature/demo', protected: false },
+      ])
+      return
+    }
 
     setLoading(true)
     try {
@@ -58,6 +86,11 @@ export function BranchSelectorInline() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleChange = (branchName: string) => {
+    setSelectedBranch(branchName)
+    setMenuAnchor(null)
   }
 
   if (!selectedRepo) {
@@ -79,78 +112,228 @@ export function BranchSelectorInline() {
   }
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <GitBranchIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-      <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-        Branch:
-      </Typography>
-      <Select
-        value={selectedBranch}
-        onChange={(e) => setSelectedBranch(e.target.value)}
-        displayEmpty
-        variant="standard"
-        disableUnderline
-        autoWidth
-        renderValue={(value) => {
-          if (!value) return <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
-          const truncated = truncateText(value, 40)
-
-          if (value !== truncated) {
-            return (
-              <Tooltip title={value} placement="bottom">
-                <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-                  {truncated}
-                </Typography>
-              </Tooltip>
-            )
-          }
-
-          return (
-            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-              {value}
-            </Typography>
-          )
-        }}
-        sx={{
-          fontSize: '0.75rem',
-          '&:hover': {
-            bgcolor: 'action.hover',
+    <>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, width: '100%' }}>
+        <GitBranchIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+          Branch:
+        </Typography>
+        <ButtonBase
+          disableRipple
+          onClick={(event) => setMenuAnchor(event.currentTarget)}
+          sx={{
+            pl: 1,
+            pr: 0,
+            py: 0.4,
             borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-          },
-          '& .MuiSelect-select': {
-            py: 0.5,
-            px: 1,
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0,
+            width: '100%',
+            justifyContent: 'space-between',
+          }}
+        >
+          {selectedBranch ? (
+            (() => {
+              const truncated = truncateText(selectedBranch, 34)
+              if (truncated !== selectedBranch) {
+                return (
+                  <Typography fontWeight={600} sx={{ fontSize: '0.75rem', color: 'text.primary' }} title={selectedBranch}>
+                    {truncated}
+                  </Typography>
+                )
+              }
+              return (
+                <Typography fontWeight={600} sx={{ fontSize: '0.75rem', color: 'text.primary' }}>
+                  {selectedBranch}
+                </Typography>
+              )
+            })()
+          ) : (
+            <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
+          )}
+          <Box sx={{ flexGrow: 1 }} />
+          <KeyboardArrowDownIcon sx={{ fontSize: 18, ml: 0.25 }} />
+        </ButtonBase>
+      </Box>
+      <Menu
+        anchorEl={menuAnchor}
+        open={menuOpen}
+        onClose={() => setMenuAnchor(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        sx={{
+          mt: 1,
+          '& .MuiPaper-root': {
+            minWidth: 200,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+            ...(isGlass && {
+              backdropFilter: 'blur(36px)',
+              WebkitBackdropFilter: 'blur(36px)',
+            }),
           },
         }}
       >
         {branches.map((branch) => (
           <MenuItem
             key={branch.name}
-            value={branch.name}
+            onClick={() => handleChange(branch.name)}
+            selected={selectedBranch === branch.name}
+            sx={{ py: 0.75, gap: 1 }}
+          >
+            {selectedBranch === branch.name ? <CheckIcon sx={{ fontSize: 18 }} /> : <Box sx={{ width: 18 }} />}
+            <Typography fontWeight={600} sx={{ fontSize: '0.8rem' }}>
+              {branch.name}
+              {branch.protected && ' 🔒'}
+            </Typography>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  )
+}
+
+// Separate component for "Create Branch" button
+interface CreateBranchButtonProps {
+  onIsCreatingChange?: (isCreating: boolean) => void
+}
+
+export function CreateBranchButton({ onIsCreatingChange }: CreateBranchButtonProps = {}) {
+  const { selectedRepo, selectedBranch, setSelectedBranch } = useGitHubStore()
+  const { mode } = useModeStore()
+  const [isCreating, setIsCreating] = useState(false)
+  const [newBranchName, setNewBranchName] = useState('')
+  const [creating, setCreating] = useState(false)
+
+  // Notify parent when isCreating changes
+  useEffect(() => {
+    onIsCreatingChange?.(isCreating)
+  }, [isCreating, onIsCreatingChange])
+
+  const handleCreateBranch = async () => {
+    if (!newBranchName.trim() || !selectedRepo) return
+
+    // In demo mode, just switch to the new branch name without API call
+    if (mode === 'demo') {
+      setSelectedBranch(newBranchName.trim())
+      setIsCreating(false)
+      setNewBranchName('')
+      return
+    }
+
+    setCreating(true)
+    try {
+      const response = await fetch('/api/github/branches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          owner: selectedRepo.owner,
+          repo: selectedRepo.repo,
+          baseBranch: selectedBranch,
+          newBranch: newBranchName.trim(),
+        }),
+      })
+
+      if (response.ok) {
+        // Switch to new branch
+        setSelectedBranch(newBranchName.trim())
+        // Close inline input
+        setIsCreating(false)
+        setNewBranchName('')
+      }
+    } catch (error) {
+      console.error('Failed to create branch:', error)
+    } finally {
+      setCreating(false)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && newBranchName.trim()) {
+      handleCreateBranch()
+    } else if (e.key === 'Escape') {
+      setIsCreating(false)
+      setNewBranchName('')
+    }
+  }
+
+  if (!selectedRepo) {
+    return null
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 0.5,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: isCreating ? 200 : 20,
+          transition: 'width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          overflow: 'hidden',
+        }}
+      >
+        {isCreating ? (
+          <TextField
+            fullWidth
+            autoFocus
+            size="small"
+            placeholder="New branch name..."
+            value={newBranchName}
+            onChange={(e) => setNewBranchName(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={() => {
+              if (!newBranchName.trim()) {
+                setIsCreating(false)
+              }
+            }}
+            disabled={creating}
             sx={{
-              py: 0.5,
-              px: 1.5,
-              minHeight: 'auto',
-              fontSize: '0.75rem',
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-              '&.Mui-selected': {
-                bgcolor: 'primary.main',
-                color: 'primary.contrastText',
-                '&:hover': {
-                  bgcolor: 'primary.dark',
+              '& .MuiOutlinedInput-root': {
+                fontSize: '0.75rem',
+                py: 0,
+                backgroundColor: 'transparent',
+                '& input': {
+                  py: 0.5,
+                  px: 1,
+                },
+                '& fieldset': {
+                  border: 'none',
                 },
               },
             }}
-          >
-            <Box component="span" sx={{ fontWeight: 500 }}>
-              {branch.name}
-              {branch.protected && ' 🔒'}
+          />
+        ) : (
+          <Tooltip title="Create new branch">
+            <Box
+              onClick={() => setIsCreating(true)}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: 'text.secondary',
+                transition: 'color 0.2s ease-in-out',
+                width: 20,
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              <AddIcon sx={{ fontSize: 20 }} />
             </Box>
-          </MenuItem>
-        ))}
-      </Select>
+          </Tooltip>
+        )}
+      </Box>
+      {creating && <CircularProgress size={16} />}
     </Box>
   )
 }

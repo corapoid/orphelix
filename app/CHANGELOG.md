@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Repository Browser - Inline Branch Creation**: New animated branch creation feature
+  - Inline branch creation with expandable text field animation
+  - Smooth Dribbble-inspired animation (cubic-bezier easing with bounce effect)
+  - Branch selector converted from Select to Menu component (matching namespace/context selector style)
+  - Mock branches support in demo mode (main, develop, feature/demo)
+  - Dynamic branch list updates when new branches are created
+  - Search bar auto-hides with opacity animation when creating branches
+  - Minimalist border design (1px solid, transparent by default, primary color on focus)
+  - Glass surface styling with transparent backgrounds for text inputs
+  - Unified 39px height for all header elements (islands, search, branch selector)
+  - Branch creation via API in real mode, instant local update in demo mode
+
 - **NextAuth v5 with Server-Side Route Protection**: Complete security overhaul
   - NextAuth.js v5 (beta.30) with GitHub OAuth provider
   - Server-side proxy.ts (Next.js 16 convention) for route protection

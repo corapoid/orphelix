@@ -1,75 +1,152 @@
 'use client'
 
-import { useState, lazy, Suspense } from 'react'
+import { useState, lazy, Suspense, type ReactNode } from 'react'
 
 const ChangesModal = lazy(() => import('@/app/components/repo-browser/changes-modal').then(m => ({ default: m.ChangesModal })))
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import type { SxProps, Theme } from '@mui/material/styles'
 import { NamespaceSelector } from './namespace-selector'
 import { RealtimeStatus } from './realtime-status'
 import { ContextSelectorInline } from './context-selector-inline'
-import { BranchSelectorInline } from './branch-selector-inline'
+import { BranchSelectorInline, CreateBranchButton } from './branch-selector-inline'
 import { SearchBar } from '../common/search-bar'
 import { UserMenu } from './user-menu'
-import { useGitHubStore, useModeStore } from '@/lib/core/store'
+import { useGitHubStore } from '@/lib/core/store'
 import { mockGitHubRepo } from '@/lib/mocks/github-data'
 import { usePathname } from 'next/navigation'
 import { useSearch } from '@/lib/contexts/search-context'
+import { useGlassSurface } from '@/lib/ui/use-glass-surface'
 
 export function TopBar() {
   const { selectedRepo, editBasket } = useGitHubStore()
-  const mode = useModeStore((state) => state.mode)
   const pathname = usePathname()
 
   // Use mock repo in demo mode
   const displayRepo = pathname === '/demo/repo-browser' ? mockGitHubRepo : selectedRepo
   const { searchQuery, setSearchQuery, searchPlaceholder } = useSearch()
   const [changesModalOpen, setChangesModalOpen] = useState(false)
+  const [isBranchCreating, setIsBranchCreating] = useState(false)
   const editedFilesCount = editBasket.size
+  const isRepoPage = pathname === '/repo-browser' || pathname === '/demo/repo-browser'
+  const hideSearch = pathname === '/' || pathname === '/demo' || pathname === '/settings' || pathname === '/demo/settings'
+  const islandSurface = useGlassSurface()
+
+  type IslandOptions = {
+    flex?: string | number
+    minWidth?: string | number
+    sx?: SxProps<Theme>
+  }
+
+  const CONTROL_HEIGHT = 39
+
+  const renderIsland = (content: ReactNode, options: IslandOptions = {}) => (
+    <Box
+      sx={(theme) => ({
+        ...(typeof islandSurface === 'function' ? islandSurface(theme) : islandSurface),
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+        px: 1,
+        py: 0.6,
+        borderWidth: '0.5px',
+        borderRadius: `${theme.shape.borderRadius}px`,
+        flex: options.flex ?? '0 0 auto',
+        minWidth: options.minWidth,
+        minHeight: CONTROL_HEIGHT,
+        height: CONTROL_HEIGHT,
+        ...(typeof options.sx === 'function' ? options.sx(theme) : options.sx),
+      })}
+    >
+      {content}
+    </Box>
+  )
+
+  const leftControl = isRepoPage && displayRepo
+    ? (
+        <>
+          {renderIsland(<BranchSelectorInline />)}
+          {renderIsland(
+            <CreateBranchButton onIsCreatingChange={setIsBranchCreating} />,
+            {
+              minWidth: 'auto',
+              sx: {
+                px: 1.75,
+                transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                borderWidth: '1px',
+                borderStyle: 'solid',
+                borderColor: isBranchCreating ? 'primary.main' : 'transparent',
+                ...(isBranchCreating && {
+                  px: 1,
+                }),
+              }
+            }
+          )}
+        </>
+      )
+    : renderIsland(<ContextSelectorInline />, { minWidth: 200 })
+
+  const gridTemplateColumns = hideSearch
+    ? {
+        xs: '1fr',
+        md: 'auto auto',
+        lg: 'auto auto',
+      }
+    : {
+        xs: '1fr',
+        md: 'auto minmax(240px, 1fr) auto',
+        lg: 'auto minmax(320px, 45%) auto',
+      }
 
   return (
     <>
       <Box
         sx={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: gridTemplateColumns,
           alignItems: 'center',
-          justifyContent: 'space-between',
+          columnGap: 1.5,
+          rowGap: 1,
           px: 2,
           py: 1,
-          minHeight: 56,
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          bgcolor: 'transparent',
           position: 'sticky',
           top: 0,
           zIndex: 10,
-          gap: 3,
+          width: '100%',
         }}
       >
-      {/* Left side - Cluster/Branch selector */}
-      <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
-        {(pathname === '/repo-browser' || pathname === '/demo/repo-browser') ? (
-          <BranchSelectorInline />
-        ) : mode === 'demo' ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-              Cluster:
-            </Typography>
-            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-              demo-cluster
-            </Typography>
-          </Box>
-        ) : (
-          <ContextSelectorInline />
-        )}
-      </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'stretch',
+            gap: 1,
+            gridColumn: { xs: '1 / -1', md: 'auto' },
+            minHeight: CONTROL_HEIGHT,
+            height: CONTROL_HEIGHT,
+          }}
+        >
+          {leftControl}
+        </Box>
 
-      {/* Center - Search with context (hidden on dashboard) */}
-      {pathname !== '/' && pathname !== '/demo' && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, justifyContent: 'center', maxWidth: 600 }}>
-          <Box sx={{ flex: 1 }}>
+        {!hideSearch && (
+          <Box
+            sx={{
+              gridColumn: 'auto',
+              minHeight: CONTROL_HEIGHT,
+              height: CONTROL_HEIGHT,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              maxWidth: { xs: '100%', md: '50vw' },
+              justifySelf: { xs: 'stretch', md: 'center' },
+              opacity: isBranchCreating ? 0 : 1,
+              transition: 'opacity 0.2s ease-in-out',
+              pointerEvents: isBranchCreating ? 'none' : 'auto',
+            }}
+          >
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
@@ -77,64 +154,83 @@ export function TopBar() {
               fullWidth
             />
           </Box>
-        </Box>
-      )}
+        )}
 
-      {/* Right side - Namespace/Repo, Status, and Settings */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
-        {(pathname === '/repo-browser' || pathname === '/demo/repo-browser') && displayRepo ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {editedFilesCount > 0 && (
-              <Tooltip title={`${editedFilesCount} file${editedFilesCount > 1 ? 's' : ''} modified - Click to review`}>
-                <Box
-                  onClick={() => setChangesModalOpen(true)}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.5,
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-                    bgcolor: 'warning.main',
-                    color: 'warning.contrastText',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    '&:hover': {
-                      bgcolor: 'warning.dark',
-                      transform: 'scale(1.05)',
-                    },
-                  }}
-                >
-                  <EditNoteIcon sx={{ fontSize: 18 }} />
-                  <Typography variant="body2" fontWeight={600}>
-                    {editedFilesCount}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.25,
+            justifyContent: { xs: 'flex-start', md: 'flex-end' },
+            gridColumn: { xs: '1 / -1', md: 'auto' },
+            minHeight: CONTROL_HEIGHT,
+            height: CONTROL_HEIGHT,
+            justifySelf: { xs: 'stretch', md: hideSearch ? 'end' : 'auto' },
+            width: '100%',
+          }}
+        >
+          {isRepoPage && displayRepo ? (
+            <>
+              {editedFilesCount > 0 && renderIsland(
+                <Tooltip title={`${editedFilesCount} file${editedFilesCount > 1 ? 's' : ''} modified - Click to review`}>
+                  <Box
+                    onClick={() => setChangesModalOpen(true)}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.5,
+                      cursor: 'pointer',
+                      color: 'warning.main',
+                      transition: 'color 0.2s ease-in-out',
+                      '&:hover': {
+                        color: 'warning.dark',
+                      },
+                    }}
+                  >
+                    <EditNoteIcon sx={{ fontSize: 18 }} />
+                    <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+                      {editedFilesCount}
+                    </Typography>
+                  </Box>
+                </Tooltip>,
+                {
+                  minWidth: 'auto',
+                  sx: { px: 1.5 }
+                }
+              )}
+              {renderIsland(
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+                    Repo:
+                  </Typography>
+                  <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+                    {displayRepo.owner}/{displayRepo.repo}
                   </Typography>
                 </Box>
-              </Tooltip>
-            )}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-                Repository:
-              </Typography>
-              <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-                {displayRepo.owner}/{displayRepo.repo}
-              </Typography>
-            </Box>
-          </Box>
-        ) : (
-          <NamespaceSelector />
-        )}
-        <RealtimeStatus />
-        <UserMenu />
+              )}
+            </>
+          ) : (
+            renderIsland(
+              <>
+                <NamespaceSelector />
+                <RealtimeStatus />
+              </>,
+              {
+                minWidth: 0,
+                sx: { justifyContent: 'space-between', gap: 1.5, flexWrap: 'wrap' },
+              }
+            )
+          )}
+          <UserMenu />
+        </Box>
       </Box>
-    </Box>
 
-    {/* Changes Modal */}
-    {changesModalOpen && (
-      <Suspense fallback={null}>
-        <ChangesModal open={changesModalOpen} onClose={() => setChangesModalOpen(false)} />
-      </Suspense>
-    )}
+      {/* Changes Modal */}
+      {changesModalOpen && (
+        <Suspense fallback={null}>
+          <ChangesModal open={changesModalOpen} onClose={() => setChangesModalOpen(false)} />
+        </Suspense>
+      )}
     </>
   )
 }
