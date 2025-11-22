@@ -49,7 +49,7 @@ export function TopBar() {
         display: 'flex',
         alignItems: 'center',
         gap: 1,
-        px: 1,
+        px: 1.5,
         py: 0.6,
         borderWidth: '0.5px',
         borderRadius: `${theme.shape.borderRadius}px`,
@@ -86,7 +86,7 @@ export function TopBar() {
           )}
         </>
       )
-    : renderIsland(<ContextSelectorInline />, { minWidth: 200 })
+    : renderIsland(<ContextSelectorInline />)
 
   const gridTemplateColumns = hideSearch
     ? {

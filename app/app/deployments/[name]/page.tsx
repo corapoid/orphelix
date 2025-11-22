@@ -158,12 +158,14 @@ export default function DeploymentDetailPage() {
         actions={
           <Box sx={{ display: 'flex', gap: 2 }}>
             <GlassButton
+              size="small"
               startIcon={<EditIcon />}
               onClick={() => setEditorOpen(true)}
             >
               Edit YAML
             </GlassButton>
             <GlassButton
+              size="small"
               startIcon={<RestartAltIcon />}
               onClick={handleRestartClick}
               disabled={restarting}
@@ -213,42 +215,42 @@ export default function DeploymentDetailPage() {
         <GlassPanel sx={{ p: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 Strategy:
               </Typography>
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 {deployment.strategy}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 Desired Replicas:
               </Typography>
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 {deployment.replicas.desired}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 Ready Replicas:
               </Typography>
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 {deployment.replicas.ready}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 Available Replicas:
               </Typography>
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 {deployment.replicas.available}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 Unavailable Replicas:
               </Typography>
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                 {deployment.replicas.unavailable}
               </Typography>
             </Box>
@@ -291,9 +293,9 @@ export default function DeploymentDetailPage() {
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
                 {key}:
               </Typography>
-              <Typography variant="body2" fontWeight={500}>
-                {value}
-              </Typography>
+                <Typography variant="body2" fontWeight={500} sx={{ fontSize: '0.8rem' }}>
+                  {value}
+                </Typography>
             </Paper>
           ))}
         </Box>
@@ -349,7 +351,7 @@ export default function DeploymentDetailPage() {
                   </Typography>
                   <OpenInNewIcon fontSize="small" sx={{ color: 'info.main', opacity: 0.6 }} />
                 </Box>
-                <Typography variant="body1" fontWeight={500}>
+                <Typography variant="body2" fontWeight={500} sx={{ fontSize: '0.8rem' }}>
                   {cm}
                 </Typography>
               </Paper>
@@ -399,7 +401,7 @@ export default function DeploymentDetailPage() {
                   </Typography>
                   <OpenInNewIcon fontSize="small" sx={{ color: 'warning.main', opacity: 0.6 }} />
                 </Box>
-                <Typography variant="body1" fontWeight={500}>
+                <Typography variant="body2" fontWeight={500} sx={{ fontSize: '0.8rem' }}>
                   {secret}
                 </Typography>
               </Paper>
@@ -447,9 +449,19 @@ export default function DeploymentDetailPage() {
                     {(podsExpanded ? pods : pods.slice(0, 3)).map((pod) => (
                       <TableRow key={pod.name} hover>
                         <TableCell>
-                          <Typography variant="body2" fontWeight="medium">
-                            {pod.name}
-                          </Typography>
+                          <Link href={`/pods/${encodeURIComponent(pod.name)}`} style={{ textDecoration: 'none' }}>
+                            <Typography
+                              variant="body2"
+                              fontWeight="medium"
+                              sx={{
+                                color: 'primary.main',
+                                '&:hover': { textDecoration: 'underline' },
+                                cursor: 'pointer',
+                              }}
+                            >
+                              {pod.name}
+                            </Typography>
+                          </Link>
                         </TableCell>
                         <TableCell>
                           <StatusBadge status={pod.status} />

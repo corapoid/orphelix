@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import type { ButtonProps } from '@mui/material/Button'
 import type { AnchorHTMLAttributes } from 'react'
-import { useTheme as useMuiTheme } from '@mui/material/styles'
+import { alpha, useTheme as useMuiTheme } from '@mui/material/styles'
 
 export interface GlassButtonProps extends Omit<ButtonProps, 'href'> {
   selected?: boolean
@@ -19,27 +19,33 @@ export interface GlassButtonProps extends Omit<ButtonProps, 'href'> {
  *
  * Automatically detects the visual preset from theme and applies appropriate styles.
  */
-export function GlassButton({ selected = false, sx, href, target, rel, ...props }: GlassButtonProps) {
+export function GlassButton({ selected = false, sx, href, target, rel, size, ...props }: GlassButtonProps) {
   const theme = useMuiTheme()
   // @ts-ignore - custom theme property
   const isGlass = theme.palette.mode && theme.effects?.transparency !== false
+  const surfaceColor = theme.palette.background?.paper ?? theme.palette.background.default
+  const hoverColor = alpha(surfaceColor, theme.palette.mode === 'dark' ? 0.9 : 0.95)
+
+  // Size-based padding
+  const sizeStyles = size === 'small'
+    ? { py: 0.6, px: 1.75, fontSize: '0.8125rem' }
+    : size === 'large'
+    ? { py: 2.5, px: 5 }
+    : { py: 2, px: 4 }
 
   return (
     <Button
       {...props}
+      size={size}
       {...(href && { href, component: 'a' as const, target, rel })}
       sx={{
-        py: 2,
-        px: 4,
+        ...sizeStyles,
         borderRadius: (theme) => `${theme.shape.borderRadius}px`,
         // Conditional glass effects
         ...(isGlass && {
           border: '1px solid',
           borderColor: 'divider',
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'rgba(30, 30, 46, 0.6)'
-              : 'rgba(255, 255, 255, 0.25)',
+          backgroundColor: surfaceColor,
           backdropFilter: 'blur(24px) saturate(180%)',
           WebkitBackdropFilter: 'blur(24px) saturate(180%)',
         }),
@@ -53,10 +59,7 @@ export function GlassButton({ selected = false, sx, href, target, rel, ...props 
         }),
         '&:hover': {
           ...(isGlass && {
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'dark'
-                ? 'rgba(50, 50, 70, 0.7)'
-                : 'rgba(255, 255, 255, 0.4)',
+            backgroundColor: hoverColor,
             borderColor: (theme) =>
               theme.palette.mode === 'dark'
                 ? 'rgba(255, 255, 255, 0.18)'

@@ -53,10 +53,18 @@ export function BranchSelectorInline() {
 
   // Update branches list when selectedBranch changes in demo mode
   useEffect(() => {
-    if (mode === 'demo' && selectedBranch && !branches.find(b => b.name === selectedBranch)) {
-      setBranches(prev => [...prev, { name: selectedBranch, protected: false }])
+    if (mode === 'demo' && selectedBranch && branches.length > 0) {
+      setBranches(prev => {
+        // Check if branch already exists
+        if (prev.find(b => b.name === selectedBranch)) {
+          return prev
+        }
+        // Add new branch (only if branches list is already initialized)
+        return [...prev, { name: selectedBranch, protected: false }]
+      })
     }
-  }, [selectedBranch, mode, branches])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBranch, mode])
 
   const fetchBranches = async () => {
     if (!selectedRepo) return

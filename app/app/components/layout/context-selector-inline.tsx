@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
-import Select from '@mui/material/Select'
+import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
+import ButtonBase from '@mui/material/ButtonBase'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import CheckIcon from '@mui/icons-material/Check'
 import { useModeStore, useClusterAliases } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 
 interface KubeContext {
   name: string
@@ -22,6 +26,10 @@ export function ContextSelectorInline() {
   const { getAlias } = useClusterAliases()
   const [contexts, setContexts] = useState<KubeContext[]>([])
   const [loading, setLoading] = useState(false)
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null)
+  const menuOpen = Boolean(menuAnchor)
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
 
   const getDisplayName = (contextName: string) => {
     const alias = getAlias(contextName)
@@ -108,6 +116,7 @@ export function ContextSelectorInline() {
         setNamespace(context.namespace)
       }
     }
+    setMenuAnchor(null)
   }
 
   if (mode === 'demo') {
@@ -137,92 +146,102 @@ export function ContextSelectorInline() {
     )
   }
 
+  const hasMultipleContexts = contexts.length > 1
+
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-        Cluster:
-      </Typography>
-      <Select
-        value={selectedContext?.name || ''}
-        onChange={(e) => handleContextChange(e.target.value)}
-        displayEmpty
-        variant="standard"
-        disableUnderline
-        autoWidth
-        renderValue={(value) => {
-          if (!value) return <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
-          const context = contexts.find((c) => c.name === value)
-          if (!context) return value
-          const displayName = getDisplayName(context.name)
-          const truncated = truncateText(displayName, 40)
-
-          if (displayName !== truncated) {
-            return (
-              <Tooltip title={displayName} placement="bottom">
-                <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-                  {truncated}
-                </Typography>
-              </Tooltip>
-            )
-          }
-
-          return (
-            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-              {displayName}
-            </Typography>
-          )
-        }}
+    <>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+          Cluster:
+        </Typography>
+        {hasMultipleContexts ? (
+          <ButtonBase
+            disableRipple
+            onClick={(event) => setMenuAnchor(event.currentTarget)}
+            sx={{
+              px: 1,
+              py: 0.4,
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+            }}
+          >
+            {selectedContext ? (
+              (() => {
+                const context = contexts.find((c) => c.name === selectedContext.name)
+                const displayName = context ? getDisplayName(context.name) : selectedContext.name
+                const truncated = truncateText(displayName, 34)
+                if (displayName !== truncated) {
+                  return (
+                    <Tooltip title={displayName} placement="bottom">
+                      <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+                        {truncated}
+                      </Typography>
+                    </Tooltip>
+                  )
+                }
+                return (
+                  <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+                    {displayName}
+                  </Typography>
+                )
+              })()
+            ) : (
+              <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
+            )}
+            <KeyboardArrowDownIcon sx={{ fontSize: 18 }} />
+          </ButtonBase>
+        ) : (
+          <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+            {selectedContext ? getDisplayName(selectedContext.name) : 'N/A'}
+          </Typography>
+        )}
+      </Box>
+      <Menu
+        anchorEl={menuAnchor}
+        open={menuOpen}
+        onClose={() => setMenuAnchor(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         sx={{
-          fontSize: '0.75rem',
-          '&:hover': {
-            bgcolor: 'action.hover',
+          mt: 1,
+          '& .MuiPaper-root': {
+            minWidth: 240,
             borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-          },
-          '& .MuiSelect-select': {
-            py: 0.5,
-            px: 1,
+            ...(isGlass && {
+              backdropFilter: 'blur(36px)',
+              WebkitBackdropFilter: 'blur(36px)',
+            }),
           },
         }}
       >
         {contexts.map((context) => {
-          const displayName = getDisplayName(context.name)
           const alias = getAlias(context.name)
-
+          const primaryLabel = alias || context.name
+          const secondaryLabel = context.cluster
+          const selected = selectedContext?.name === context.name
           return (
             <MenuItem
               key={context.name}
-              value={context.name}
-              sx={{
-                py: 0.5,
-                px: 1.5,
-                minHeight: 'auto',
-                fontSize: '0.75rem',
-                '&:hover': {
-                  bgcolor: 'action.hover',
-                },
-                '&.Mui-selected': {
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  '&:hover': {
-                    bgcolor: 'primary.dark',
-                  },
-                },
-              }}
+              onClick={() => handleContextChange(context.name)}
+              selected={selected}
+              sx={{ py: 0.75, gap: 1 }}
             >
+              {selected ? <CheckIcon sx={{ fontSize: 18 }} /> : <Box sx={{ width: 18 }} />}
               <Box sx={{ width: '100%' }}>
-                <Box component="span" sx={{ fontWeight: 500 }}>
-                  {displayName}
-                </Box>
-                {alias && (
-                  <Box component="span" sx={{ color: 'text.secondary', opacity: 0.7, ml: 1 }}>
-                    ({context.cluster})
-                  </Box>
-                )}
+                <Typography fontWeight={600} sx={{ fontSize: '0.8rem' }} noWrap>
+                  {primaryLabel}
+                </Typography>
+                <Typography variant="caption" color="text.secondary" noWrap>
+                  {secondaryLabel}
+                </Typography>
               </Box>
             </MenuItem>
           )
         })}
-      </Select>
-    </Box>
+      </Menu>
+    </>
   )
 }
