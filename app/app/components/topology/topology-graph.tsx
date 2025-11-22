@@ -18,6 +18,7 @@ import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Dialog from '@mui/material/Dialog'
+import { useTheme } from '@mui/material/styles'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit'
 import { useRouter } from 'next/navigation'
@@ -34,6 +35,7 @@ const nodeTypes = {
 }
 
 function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
+  const muiTheme = useTheme()
   const router = useRouter()
   const reactFlowRef = useRef<HTMLDivElement>(null)
   const { fitView } = useReactFlow()
@@ -152,6 +154,9 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
     [router]
   )
 
+  const backgroundColor = muiTheme.palette.background?.default || (muiTheme.palette.mode === 'dark' ? '#0F1014' : '#F7F7FA')
+  const backgroundImage = (muiTheme.palette.background as any)?.wallpaper
+
   const graphContent = (
     <Box
       ref={reactFlowRef}
@@ -226,7 +231,22 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
 
   if (fullscreen) {
     return (
-      <Dialog open={fullscreen} onClose={toggleFullscreen} maxWidth={false} fullScreen>
+      <Dialog
+        open={fullscreen}
+        onClose={toggleFullscreen}
+        maxWidth={false}
+        fullScreen
+        PaperProps={{
+          sx: {
+            backgroundColor,
+            ...(backgroundImage && {
+              backgroundImage,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }),
+          },
+        }}
+      >
         {graphContent}
       </Dialog>
     )

@@ -22,8 +22,7 @@ interface FileEditorModalProps {
 
 export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorModalProps) {
   const { selectedRepo } = useGitHubStore()
-  const { visualPreset } = useTheme()
-  const isGlass = visualPreset !== 'classic'
+  const { actualTheme } = useTheme()
 
   const [yamlContent, setYamlContent] = useState('')
   const [originalContent, setOriginalContent] = useState('')
@@ -166,21 +165,22 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
               border: 1,
               borderColor: 'divider',
               borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-              bgcolor: isGlass ? 'rgba(255, 255, 255, 0.05)' : 'background.paper',
-              backdropFilter: isGlass ? 'blur(10px)' : 'none',
+              overflow: 'hidden',
             }}>
               <Editor
                 height="100%"
                 language={editorLanguage}
                 value={yamlContent}
                 onChange={(value) => setYamlContent(value || '')}
-                theme="vs-dark"
+                theme={actualTheme === 'dark' ? 'vs-dark' : 'light'}
                 options={{
                   minimap: { enabled: false },
                   fontSize: 13,
                   lineNumbers: 'on',
                   scrollBeyondLastLine: false,
                   readOnly: !!prCreated,
+                  fontFamily: 'JetBrains Mono, Fira Code, Consolas, Monaco, monospace',
+                  fontLigatures: true,
                 }}
               />
             </Box>

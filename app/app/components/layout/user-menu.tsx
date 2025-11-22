@@ -20,7 +20,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useThemeMode } from '../theme-provider'
 import { useModeStore } from '@/lib/core/store'
 import { useTheme } from '@orphelix/ui'
@@ -30,7 +30,6 @@ export function UserMenu() {
   const isGlass = visualPreset !== 'classic'
   const { data: session } = useSession()
   const router = useRouter()
-  const pathname = usePathname()
   const mode = useModeStore((state) => state.mode)
   const { mode: themeMode, setThemeMode } = useThemeMode()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -66,7 +65,9 @@ export function UserMenu() {
   const isDemo = mode === 'demo'
   const userName = isDemo ? 'Demo User' : (session?.user?.name || 'User')
   const userEmail = isDemo ? 'demo@orphelix.com' : (session?.user?.email || 'GitHub User')
-  const userImage = isDemo ? undefined : session?.user?.image
+  const userImage = isDemo
+    ? 'https://api.dicebear.com/7.x/avataaars/svg?seed=Demo&backgroundColor=b6e3f4&eyes=default&mouth=smile'
+    : session?.user?.image
 
   return (
     <>
@@ -76,25 +77,43 @@ export function UserMenu() {
           size="small"
           sx={{
             transition: 'all 0.2s ease-in-out',
+            backgroundColor: 'transparent !important',
             '&:hover': {
               transform: 'scale(1.1)',
+              backgroundColor: 'transparent',
+              '& .user-avatar-shadow': {
+                boxShadow: (theme) =>
+                  theme.palette.mode === 'dark'
+                    ? '0 12px 30px rgba(0, 0, 0, 0.6)'
+                    : '0 12px 34px rgba(15, 23, 42, 0.28)',
+              },
             },
           }}
         >
-          <Avatar
-            src={userImage || undefined}
-            alt={userName}
+          <Box
+            className="user-avatar-shadow"
             sx={{
-              width: 32,
-              height: 32,
-              border: (theme) =>
-                pathname === '/settings' || pathname === '/demo/settings'
-                  ? `2px solid ${theme.palette.primary.main}`
-                  : '2px solid transparent',
+              borderRadius: '50%',
+              boxShadow: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? '0 10px 28px rgba(0, 0, 0, 0.55)'
+                  : '0 10px 28px rgba(15, 23, 42, 0.22)',
+              transition: 'box-shadow 0.2s ease-in-out',
             }}
           >
-            {!userImage && userName.charAt(0).toUpperCase()}
-          </Avatar>
+            <Avatar
+              src={userImage || undefined}
+              alt={userName}
+              sx={{
+                width: 32,
+                height: 32,
+                border: 'none',
+                backgroundColor: 'transparent !important',
+              }}
+            >
+              {!userImage && userName.charAt(0).toUpperCase()}
+            </Avatar>
+          </Box>
         </IconButton>
       </Tooltip>
 

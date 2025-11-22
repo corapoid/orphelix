@@ -5,7 +5,6 @@ import ErrorIcon from '@mui/icons-material/Error'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import type { DeploymentStatus, PodStatus, NodeStatus } from '@/types/kubernetes'
-import { useTheme } from '@orphelix/ui'
 
 type Status = DeploymentStatus | PodStatus | NodeStatus | string
 
@@ -91,9 +90,6 @@ const getColors = (colorType: 'success' | 'error' | 'warning' | 'info' | 'defaul
  * - Use with `label` and `color` props for custom colored chips
  */
 export function StatusBadge({ status, label, color, size = 'small', sx, ...props }: StatusBadgeProps) {
-  const { visualPreset } = useTheme()
-  const isGlass = visualPreset !== 'classic'
-
   // Determine color and label
   let finalColor = color || 'default'
   let finalLabel = label || status || ''

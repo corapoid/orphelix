@@ -5,14 +5,14 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
-import Fab from '@mui/material/Fab'
-import Tooltip from '@mui/material/Tooltip'
-import AddIcon from '@mui/icons-material/Add'
+// import Fab from '@mui/material/Fab'
+// import Tooltip from '@mui/material/Tooltip'
+// import AddIcon from '@mui/icons-material/Add'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FileTree } from '@/app/components/repo-browser/file-tree'
 import { FileViewer } from '@/app/components/repo-browser/file-viewer'
-import { AddAppModal } from '@/app/components/repo-browser/add-app-modal'
+// import { AddAppModal } from '@/app/components/repo-browser/add-app-modal'
 import { RepoSelector } from '@/app/components/repo-browser/repo-selector'
 import { usePageSearch } from '@/lib/contexts/search-context'
 import { mockGitHubRepo } from '@/lib/mocks/github-data'
@@ -23,7 +23,7 @@ export default function RepoBrowserPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
-  const [addAppModalOpen, setAddAppModalOpen] = useState(false)
+  // const [addAppModalOpen, setAddAppModalOpen] = useState(false)
 
   const [sidebarWidth, setSidebarWidth] = useState(300)
   const [isResizing, setIsResizing] = useState(false)
@@ -278,8 +278,8 @@ export default function RepoBrowserPage() {
           )}
         </Box>
 
-        {/* Add App FAB Button */}
-        <Tooltip title="Add new application" placement="left">
+        {/* Hidden temporarily - Add App FAB Button */}
+        {/* <Tooltip title="Add new application" placement="left">
           <Fab
             color="primary"
             onClick={() => setAddAppModalOpen(true)}
@@ -292,13 +292,13 @@ export default function RepoBrowserPage() {
           >
             <AddIcon />
           </Fab>
-        </Tooltip>
+        </Tooltip> */}
 
-        {/* Add App Modal */}
-        <AddAppModal
+        {/* Hidden temporarily - Add App Modal */}
+        {/* <AddAppModal
           open={addAppModalOpen}
           onClose={() => setAddAppModalOpen(false)}
-        />
+        /> */}
       </Box>
     )
 }

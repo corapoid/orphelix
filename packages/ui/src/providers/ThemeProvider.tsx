@@ -44,6 +44,12 @@ function getInitialThemeMode(storageKey: string): ThemeMode {
     if (saved === 'light' || saved === 'dark' || saved === 'system') {
       return saved as ThemeMode
     }
+    const legacy = localStorage.getItem('theme-mode')
+    if (legacy === 'light' || legacy === 'dark' || legacy === 'system') {
+      localStorage.setItem(storageKey, legacy)
+      localStorage.removeItem('theme-mode')
+      return legacy as ThemeMode
+    }
   } catch {
     // localStorage not available
   }

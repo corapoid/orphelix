@@ -164,15 +164,15 @@ export default function PodDetailPage() {
           <GlassPanel sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '110px' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+                <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                   Container:
                 </Typography>
-                <Typography variant="body2" fontWeight="medium">
+                <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                   {pod.containers.length > 0 ? pod.containers[0].name : 'N/A'}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+                <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                   Node:
                 </Typography>
                 <Link
@@ -181,8 +181,9 @@ export default function PodDetailPage() {
                 >
                   <Typography
                     variant="body2"
-                    fontWeight="medium"
                     sx={{
+                      fontSize: '0.8rem',
+                      fontWeight: 500,
                       color: 'primary.main',
                       '&:hover': {
                         textDecoration: 'underline',
@@ -195,10 +196,10 @@ export default function PodDetailPage() {
                 </Link>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" color={isGlass ? "text.secondary" : "text.primary"}>
+                <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                   IP Address:
                 </Typography>
-                <Typography variant="body2" fontWeight="medium">
+                <Typography variant="body2" color="text.primary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                   {pod.ip}
                 </Typography>
               </Box>
@@ -290,7 +291,7 @@ export default function PodDetailPage() {
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
                 {key}:
               </Typography>
-              <Typography variant="body2" fontWeight={500}>
+              <Typography variant="body2" fontWeight={500} sx={{ fontSize: '0.8rem' }}>
                 {value}
               </Typography>
             </Paper>
@@ -349,7 +350,7 @@ export default function PodDetailPage() {
                   </Typography>
                   <OpenInNewIcon fontSize="small" sx={{ color: 'info.main', opacity: 0.6 }} />
                 </Box>
-                <Typography variant="body1" fontWeight={500}>
+                <Typography variant="body2" fontWeight={500} sx={{ fontSize: '0.8rem' }}>
                   {cm}
                 </Typography>
               </Paper>
@@ -399,7 +400,7 @@ export default function PodDetailPage() {
                   </Typography>
                   <OpenInNewIcon fontSize="small" sx={{ color: 'warning.main', opacity: 0.6 }} />
                 </Box>
-                <Typography variant="body1" fontWeight={500}>
+                <Typography variant="body2" fontWeight={500} sx={{ fontSize: '0.8rem' }}>
                   {secret}
                 </Typography>
               </Paper>

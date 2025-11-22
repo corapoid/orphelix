@@ -65,8 +65,8 @@ function TopologyNodeComponent({ data, selected }: any) {
 
       <Box
         sx={{
-          minWidth: 180,
-          maxWidth: 220,
+          minWidth: 220,
+          maxWidth: 280,
           borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           overflow: 'hidden',
           position: 'relative',
@@ -76,7 +76,7 @@ function TopologyNodeComponent({ data, selected }: any) {
             backgroundColor: 'background.paper',
             border: '1px solid',
             borderColor: 'divider',
-            boxShadow: (theme) => theme.customShadows?.elevation1?.boxShadow || '0 1px 3px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
           }),
           // Glass mode - glassmorphism effects
           ...(isGlass && {
@@ -193,23 +193,18 @@ function TopologyNodeComponent({ data, selected }: any) {
             <StatusIcon sx={{ fontSize: 16, color: statusColor, flexShrink: 0 }} />
           </Box>
 
-          {data.details && Object.keys(data.details).length > 0 && (
+          {data.details && data.details.restarts !== undefined && (
             <Box sx={{ mt: 1, pt: 1, borderTop: '1px solid', borderColor: 'divider' }}>
-              {Object.entries(data.details).map(([key, value]) => (
-                <Typography
-                  key={key}
-                  variant="caption"
-                  display="block"
-                  color="text.secondary"
-                  sx={{
-                    fontSize: '0.7rem',
-                    lineHeight: 1.4,
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {key}: {String(value)}
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ fontSize: '0.7rem', lineHeight: 1.4 }}
+              >
+                Restarts:{' '}
+                <Typography component="span" color="text.primary" fontWeight={600} sx={{ fontSize: '0.7rem' }}>
+                  {data.details.restarts}
                 </Typography>
-              ))}
+              </Typography>
             </Box>
           )}
         </Box>

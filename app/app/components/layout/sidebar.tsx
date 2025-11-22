@@ -43,7 +43,8 @@ import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import Divider from '@mui/material/Divider'
 import { useModeStore, useSidebarPins } from '@/lib/core/store'
-import { useTheme } from '@orphelix/ui'
+import { designTokens, useTheme } from '@orphelix/ui'
+import { useGlassSurface } from '@/lib/ui/use-glass-surface'
 
 const DRAWER_WIDTH = 240
 const DRAWER_WIDTH_COLLAPSED = 64
@@ -365,6 +366,8 @@ export function Sidebar() {
     )
   }
 
+  const sidebarSurface = useGlassSurface(designTokens.blur.heavy)
+
   return (
     <Drawer
       variant="permanent"
@@ -390,23 +393,11 @@ export function Sidebar() {
     >
       <Box
         sx={{
-          bgcolor: 'background.paper',
+          ...sidebarSurface,
           borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          ...(isGlass && {
-            backdropFilter: 'blur(60px)',
-            WebkitBackdropFilter: 'blur(60px)',
-          }),
-          boxShadow: (theme) =>
-            theme.palette.mode === 'dark'
-              ? '0 4px 16px 0 rgba(0, 0, 0, 0.3)'
-              : '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
-          border: (theme) =>
-            theme.palette.mode === 'light'
-              ? '1px solid rgba(209, 213, 219, 0.4)'
-              : '1px solid rgba(255, 255, 255, 0.12)',
           overflow: 'hidden',
         }}
       >

@@ -5,59 +5,46 @@
 
 /* React Flow Controls - Dark mode fix */
 .react-flow__controls {
+  border-radius: var(--orphelix-border-radius, 10px) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
   box-shadow: none !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
 }
 
 .react-flow__controls-button {
   background-color: transparent !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: inherit !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.react-flow__controls-button:last-child {
-  border-bottom: none !important;
+.react-flow__controls-button + .react-flow__controls-button {
+  border-top: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: rgba(15, 23, 42, 0.05) !important;
 }
 
 .react-flow__controls-button svg {
   fill: currentColor !important;
 }
 
-/* Dark theme specific */
-@media (prefers-color-scheme: dark) {
-  .react-flow__controls {
-    background-color: rgba(30, 30, 46, 0.6) !important;
-    backdrop-filter: blur(12px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: var(--orphelix-border-radius, 8px) !important;
-  }
-
-  .react-flow__controls-button {
-    background-color: transparent !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-  }
-
-  .react-flow__controls-button:hover {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-  }
+html[data-theme='dark'] .react-flow__controls {
+  background-color: rgba(12, 14, 20, 0.68) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
 }
 
-/* Light theme specific */
-@media (prefers-color-scheme: light) {
-  .react-flow__controls {
-    background-color: rgba(255, 255, 255, 0.25) !important;
-    backdrop-filter: blur(12px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    border-radius: var(--orphelix-border-radius, 8px) !important;
-  }
+html[data-theme='dark'] .react-flow__controls-button + .react-flow__controls-button {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
 
-  .react-flow__controls-button {
-    background-color: transparent !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
-  }
-
-  .react-flow__controls-button:hover {
-    background-color: rgba(0, 0, 0, 0.03) !important;
-  }
+html[data-theme='dark'] .react-flow__controls-button:hover {
+  background-color: rgba(255, 255, 255, 0.04) !important;
 }

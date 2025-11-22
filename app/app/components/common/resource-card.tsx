@@ -1,9 +1,12 @@
+'use client'
+
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import { ReactNode } from 'react'
 import type { SvgIconComponent } from '@mui/icons-material'
 import { useTheme } from '@orphelix/ui'
+import { useGlassSurface } from '@/lib/ui/use-glass-surface'
 
 interface ResourceCardProps {
   name: string
@@ -32,6 +35,7 @@ export function ResourceCard({
   const { visualPreset } = useTheme()
   const isGlass = visualPreset !== 'classic'
   const isLiquidGlass = visualPreset === 'liquidGlass'
+  const glassSurface = useGlassSurface()
 
   return (
     <Paper
@@ -46,16 +50,7 @@ export function ResourceCard({
         flexDirection: 'column',
         position: 'relative',
         borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-        // Use theme colors - automatic transparency for Liquid Glass preset
-        backgroundColor: 'background.paper',
-        border: '1px solid',
-        borderColor: 'divider',
-        ...(isGlass && {
-          boxShadow: (theme) =>
-            theme.palette.mode === 'dark'
-              ? '0 4px 20px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)'
-              : '0 4px 20px 0 rgba(31, 38, 135, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)',
-        }),
+        ...glassSurface,
         // Gradient shine overlay for liquid glass only
         ...(isLiquidGlass && {
           '&::before': {

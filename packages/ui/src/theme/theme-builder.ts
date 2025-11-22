@@ -404,7 +404,7 @@ export function getGlassmorphismStyles(
   if (!effects.transparency) {
     // Classic preset - solid colors
     return {
-      background: palette.background.paper,
+      backgroundColor: palette.background.paper,
       border: `1px solid ${palette.divider}`,
       boxShadow: isDark
         ? '0 4px 16px rgba(0, 0, 0, 0.3)'
@@ -414,7 +414,7 @@ export function getGlassmorphismStyles(
 
   // Glass or Liquid Glass presets
   return {
-    background: palette.background.glass,
+    backgroundColor: palette.background.glass,
     backdropFilter: effects.blur ? `blur(${blur}px) saturate(${effects.saturation}%)` : 'none',
     WebkitBackdropFilter: effects.blur ? `blur(${blur}px) saturate(${effects.saturation}%)` : 'none',
     border: `1px solid ${palette.border}`,

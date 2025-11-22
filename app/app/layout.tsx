@@ -18,7 +18,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('theme-mode') || 'system';
+                  var theme = localStorage.getItem('orphelix-theme-mode');
+                  if (!theme) {
+                    var legacy = localStorage.getItem('theme-mode');
+                    if (legacy) {
+                      localStorage.setItem('orphelix-theme-mode', legacy);
+                      localStorage.removeItem('theme-mode');
+                      theme = legacy;
+                    } else {
+                      theme = 'system';
+                    }
+                  }
                   var actualTheme = theme;
                   if (theme === 'system') {
                     actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';

@@ -1,12 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Select from '@mui/material/Select'
+import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import ButtonBase from '@mui/material/ButtonBase'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import CheckIcon from '@mui/icons-material/Check'
 import { useModeStore } from '@/lib/core/store'
+import { useTheme } from '@orphelix/ui'
 
 interface Namespace {
   name: string
@@ -22,6 +26,10 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
   const { mode, selectedNamespace, setNamespace } = useModeStore()
   const [namespaces, setNamespaces] = useState<Namespace[]>([])
   const [loading, setLoading] = useState(false)
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null)
+  const menuOpen = Boolean(menuAnchor)
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
 
   useEffect(() => {
     if (mode === 'real') {
@@ -54,8 +62,14 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
     }
   }
 
+  const truncateText = (text: string, maxLength: number = 25) => {
+    if (text.length <= maxLength) return text
+    return text.substring(0, maxLength - 3) + '...'
+  }
+
   const handleChange = (namespaceName: string) => {
     setNamespace(namespaceName)
+    setMenuAnchor(null)
   }
 
   if (mode === 'demo') {
@@ -64,28 +78,9 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
         <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
           Namespace:
         </Typography>
-        <Select
-          value="demo"
-          disabled
-          variant="standard"
-          disableUnderline
-          autoWidth
-          IconComponent={() => null}
-          renderValue={() => (
-            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-              demo
-            </Typography>
-          )}
-          sx={{
-            fontSize: '0.75rem',
-            '& .MuiSelect-select': {
-              py: 0.5,
-              px: 1,
-            },
-          }}
-        >
-          <MenuItem value="demo">demo</MenuItem>
-        </Select>
+        <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+          demo
+        </Typography>
       </Box>
     )
   }
@@ -104,62 +99,82 @@ export function NamespaceSelector({ onError }: NamespaceSelectorProps) {
   }
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-        Namespace:
-      </Typography>
-      <Select
-        value={selectedNamespace || ''}
-        onChange={(e) => handleChange(e.target.value)}
-        displayEmpty
-        variant="standard"
-        disableUnderline
-        autoWidth
-        renderValue={(value) => {
-          if (!value) return <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
-          return (
-            <Typography fontWeight={600} sx={{ fontSize: '0.75rem' }}>
-              {value}
-            </Typography>
-          )
-        }}
-        sx={{
-          fontSize: '0.75rem',
-          '&:hover': {
-            bgcolor: 'action.hover',
+    <>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, width: '100%' }}>
+        <Typography color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem' }}>
+          Namespace:
+        </Typography>
+        <ButtonBase
+          disableRipple
+          onClick={(event) => setMenuAnchor(event.currentTarget)}
+          sx={{
+            pl: 1,
+            pr: 0,
+            py: 0.4,
             borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-          },
-          '& .MuiSelect-select': {
-            py: 0.5,
-            px: 1,
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0,
+            width: '100%',
+            justifyContent: 'space-between',
+          }}
+        >
+          {selectedNamespace ? (
+            (() => {
+              const truncated = truncateText(selectedNamespace, 34)
+              if (truncated !== selectedNamespace) {
+                return (
+                  <Typography fontWeight={600} sx={{ fontSize: '0.75rem', color: 'text.primary' }} title={selectedNamespace}>
+                    {truncated}
+                  </Typography>
+                )
+              }
+              return (
+                <Typography fontWeight={600} sx={{ fontSize: '0.75rem', color: 'text.primary' }}>
+                  {selectedNamespace}
+                </Typography>
+              )
+            })()
+          ) : (
+            <Typography color="text.secondary" sx={{ fontSize: '0.75rem' }}>Select...</Typography>
+          )}
+          <Box sx={{ flexGrow: 1 }} />
+          <KeyboardArrowDownIcon sx={{ fontSize: 18, ml: 0.25 }} />
+        </ButtonBase>
+      </Box>
+      <Menu
+        anchorEl={menuAnchor}
+        open={menuOpen}
+        onClose={() => setMenuAnchor(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        sx={{
+          mt: 1,
+          '& .MuiPaper-root': {
+            minWidth: 200,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+            ...(isGlass && {
+              backdropFilter: 'blur(36px)',
+              WebkitBackdropFilter: 'blur(36px)',
+            }),
           },
         }}
       >
         {namespaces.map((namespace) => (
           <MenuItem
             key={namespace.name}
-            value={namespace.name}
-            sx={{
-              py: 0.5,
-              px: 1.5,
-              minHeight: 'auto',
-              fontSize: '0.75rem',
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-              '&.Mui-selected': {
-                bgcolor: 'primary.main',
-                color: 'primary.contrastText',
-                '&:hover': {
-                  bgcolor: 'primary.dark',
-                },
-              },
-            }}
+            onClick={() => handleChange(namespace.name)}
+            selected={selectedNamespace === namespace.name}
+            sx={{ py: 0.75, gap: 1 }}
           >
-            {namespace.name}
+            {selectedNamespace === namespace.name ? <CheckIcon sx={{ fontSize: 18 }} /> : <Box sx={{ width: 18 }} />}
+            <Typography fontWeight={600} sx={{ fontSize: '0.8rem' }}>
+              {namespace.name}
+            </Typography>
           </MenuItem>
         ))}
-      </Select>
-    </Box>
+      </Menu>
+    </>
   )
 }

@@ -20,6 +20,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 import { GlassPanel, GlassButton } from '@orphelix/ui'
 import { useModeStore } from '@/lib/core/store'
 import { useThemeMode } from '@/app/components/theme-provider'
+import { welcomeBackground } from '@/lib/ui/backgrounds'
 
 interface KubeContext {
   name: string
@@ -265,8 +266,8 @@ export function WelcomeModal() {
         zIndex: 9999,
         background: (theme) =>
           theme.palette.mode === 'dark'
-            ? 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.2), transparent 50%), radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.2), transparent 50%), linear-gradient(180deg, rgb(10, 10, 20) 0%, rgb(15, 15, 25) 100%)'
-            : 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.12), transparent 50%), radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.12), transparent 50%), linear-gradient(180deg, rgb(250, 250, 255) 0%, rgb(240, 242, 250) 100%)',
+            ? welcomeBackground.gradient.dark
+            : welcomeBackground.gradient.light,
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -274,8 +275,11 @@ export function WelcomeModal() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`,
-          opacity: (theme) => theme.palette.mode === 'dark' ? 0.3 : 0.2,
+          backgroundImage: welcomeBackground.noise.image,
+          opacity: (theme) =>
+            theme.palette.mode === 'dark'
+              ? welcomeBackground.noise.opacity.dark
+              : welcomeBackground.noise.opacity.light,
           pointerEvents: 'none',
         },
       }}

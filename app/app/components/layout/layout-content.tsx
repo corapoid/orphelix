@@ -2,11 +2,12 @@
 
 import { ReactNode, useEffect } from 'react'
 import Box from '@mui/material/Box'
-import { useTheme as useMuiTheme } from '@mui/material/styles'
+import { usePathname } from 'next/navigation'
 import { Sidebar } from './sidebar'
 import { TopBar } from './top-bar'
 import { useModeStore } from '@/lib/core/store'
 import { useTheme } from '@orphelix/ui'
+import { welcomeBackground } from '@/lib/ui/backgrounds'
 
 interface LayoutContentProps {
   children: ReactNode
@@ -14,21 +15,47 @@ interface LayoutContentProps {
 
 export function LayoutContent({ children }: LayoutContentProps) {
   const { hasCompletedWelcome, mode, selectedContext, selectedNamespace, setHasCompletedWelcome } = useModeStore()
-  const muiTheme = useMuiTheme()
   const { visualPreset, mode: themeMode } = useTheme()
+  const pathname = usePathname()
+  const isDashboardPage = pathname === '/' || pathname === '/demo'
 
-  // Film grain texture - very subtle like reference image
-  const grainTexture = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.4'/%3E%3C/svg%3E")`
-
-  // Get gradient - based on RGB(30, 29, 35) - warm beige-gray
   const isLiquidGlass = visualPreset === 'liquidGlass'
   const gradient = isLiquidGlass
     ? (themeMode === 'dark'
-        ? 'linear-gradient(135deg, #1E1D23 0%, #28272D 50%, #323137 100%)'
-        : 'linear-gradient(135deg, #EEEAE8 0%, #E4E0DD 50%, #D9D5D2 100%)')
+        ? welcomeBackground.gradient.dark
+        : welcomeBackground.gradient.light)
     : undefined
 
-  const backgroundImage = gradient ? `${grainTexture}, ${gradient}` : undefined
+  const backgroundBase = {
+    ...(gradient
+      ? {
+          backgroundImage: gradient,
+          backgroundAttachment: 'fixed',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }
+      : {
+          bgcolor: 'background.default',
+        }),
+  }
+
+  const renderGrainOverlay = isLiquidGlass ? (
+    <Box
+      aria-hidden
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        backgroundImage: welcomeBackground.noise.image,
+        opacity: themeMode === 'dark'
+          ? welcomeBackground.noise.opacity.dark
+          : welcomeBackground.noise.opacity.light,
+        mixBlendMode: 'overlay',
+        zIndex: 0,
+      }}
+    />
+  ) : null
 
   // Validate welcome completion - if completed but essential data is missing, reset
   useEffect(() => {
@@ -47,64 +74,62 @@ export function LayoutContent({ children }: LayoutContentProps) {
   // Don't render sidebar and topbar if welcome flow is not completed
   if (!hasCompletedWelcome) {
     return (
-      <Box sx={{
-        height: '100vh',
-        bgcolor: 'background.default',
-        ...(backgroundImage && {
-          backgroundImage: backgroundImage,
-          backgroundSize: '182px, cover',
-          backgroundPosition: '0 0, center',
-          backgroundRepeat: 'repeat, no-repeat',
-        }),
-        overflow: 'hidden'
-      }}>
-        {/* WelcomeModal will be displayed */}
-      </Box>
+      <>
+        {renderGrainOverlay}
+        <Box sx={{
+          height: '100vh',
+          overflow: 'hidden',
+          position: 'relative',
+          zIndex: 1,
+          ...backgroundBase,
+        }}>
+          {/* WelcomeModal will be displayed */}
+        </Box>
+      </>
     )
   }
 
   return (
-    <Box sx={{
-      display: 'flex',
-      height: '100vh',
-      bgcolor: 'background.default',
-      ...(backgroundImage && {
-        backgroundImage: backgroundImage,
-        backgroundSize: '182px, cover',
-        backgroundPosition: '0 0, center',
-        backgroundRepeat: 'repeat, no-repeat',
-      }),
-      overflow: 'hidden'
-    }}>
-      <Sidebar />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          minWidth: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          p: 2,
-        }}
-      >
+    <>
+      {renderGrainOverlay}
+      <Box sx={{
+        display: 'flex',
+        height: '100vh',
+        overflow: 'hidden',
+        position: 'relative',
+        zIndex: 1,
+        ...backgroundBase,
+      }}>
+        <Sidebar />
         <Box
+          component="main"
           sx={{
-            flex: 1,
+            flexGrow: 1,
             minWidth: 0,
-            minHeight: 0,
             display: 'flex',
             flexDirection: 'column',
-            borderTopRightRadius: 3,
-            overflow: 'hidden',
+            height: '100%',
+            p: 2,
           }}
         >
-          <TopBar />
-          <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', pt: 2 }}>
-            {children}
+          <Box
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              borderTopRightRadius: 3,
+              overflow: 'hidden',
+            }}
+          >
+            <TopBar />
+            <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', pt: 2, px: isDashboardPage ? 0 : 2 }}>
+              {children}
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   )
 }

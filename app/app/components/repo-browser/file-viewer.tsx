@@ -117,25 +117,27 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
     }
   }, [content, editBasket, filePath])
 
-  const handleEditorMount = (editorRef: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
-    setMonacoInstance(monaco)
-    setEditorInstance(editorRef)
-
+  const handleEditorBeforeMount = (monaco: typeof import('monaco-editor')) => {
     monaco.editor.defineTheme('kubevista-theme', {
       base: theme.palette.mode === 'dark' ? 'vs-dark' : 'vs',
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': theme.palette.mode === 'dark' ? '#1a1b26' : '#f5f5f5',
+        'editor.background': '#00000000', // Transparent - let parent background show through
         'editor.foreground': theme.palette.mode === 'dark' ? '#e0e0e0' : '#1e1e1e',
         'editorLineNumber.foreground': theme.palette.mode === 'dark' ? '#858585' : '#999999',
         'editorCursor.foreground': theme.palette.primary.main.startsWith('#') ? theme.palette.primary.main : '#007acc',
         'editor.selectionBackground': theme.palette.mode === 'dark' ? '#264f78' : '#c8ddff',
-        'editor.lineHighlightBackground': theme.palette.mode === 'dark' ? '#2a2d2e' : '#eeeeee',
-        'editorIndentGuide.background': theme.palette.mode === 'dark' ? '#404040' : '#e0e0e0',
-        'editorIndentGuide.activeBackground': theme.palette.mode === 'dark' ? '#707070' : '#b0b0b0',
+        'editor.lineHighlightBackground': theme.palette.mode === 'dark' ? '#2a2d2e15' : '#eeeeee40',
+        'editorIndentGuide.background': theme.palette.mode === 'dark' ? '#40404050' : '#e0e0e050',
+        'editorIndentGuide.activeBackground': theme.palette.mode === 'dark' ? '#70707080' : '#b0b0b080',
       },
     })
+  }
+
+  const handleEditorMount = (editorRef: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
+    setMonacoInstance(monaco)
+    setEditorInstance(editorRef)
     monaco.editor.setTheme('kubevista-theme')
   }
 
@@ -158,14 +160,14 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
       inherit: true,
       rules: [],
       colors: {
-        'editor.background': theme.palette.mode === 'dark' ? '#1a1b26' : '#f5f5f5',
+        'editor.background': '#00000000', // Transparent - let parent background show through
         'editor.foreground': theme.palette.mode === 'dark' ? '#e0e0e0' : '#1e1e1e',
         'editorLineNumber.foreground': theme.palette.mode === 'dark' ? '#858585' : '#999999',
         'editorCursor.foreground': theme.palette.primary.main.startsWith('#') ? theme.palette.primary.main : '#007acc',
         'editor.selectionBackground': theme.palette.mode === 'dark' ? '#264f78' : '#c8ddff',
-        'editor.lineHighlightBackground': theme.palette.mode === 'dark' ? '#2a2d2e' : '#eeeeee',
-        'editorIndentGuide.background': theme.palette.mode === 'dark' ? '#404040' : '#e0e0e0',
-        'editorIndentGuide.activeBackground': theme.palette.mode === 'dark' ? '#707070' : '#b0b0b0',
+        'editor.lineHighlightBackground': theme.palette.mode === 'dark' ? '#2a2d2e15' : '#eeeeee40',
+        'editorIndentGuide.background': theme.palette.mode === 'dark' ? '#40404050' : '#e0e0e050',
+        'editorIndentGuide.activeBackground': theme.palette.mode === 'dark' ? '#70707080' : '#b0b0b080',
       },
     })
     monacoInstance.editor.setTheme('kubevista-theme')
@@ -252,7 +254,8 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
               height="100%"
               language={editorLanguage}
               value={content}
-              theme={theme.palette.mode === 'dark' ? 'vs-dark' : 'vs'}
+              theme="kubevista-theme"
+              beforeMount={handleEditorBeforeMount}
               onChange={(value) => setContent(value || '')}
               onMount={handleEditorMount}
               options={{
