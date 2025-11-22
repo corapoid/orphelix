@@ -12,6 +12,7 @@
     "dev:app": "cd app && npm run dev",
     "dev:landing": "cd landing-page && npm run dev",
     "build:app": "cd app && npm run build",
-    "build:landing": "cd landing-page && npm run build"
+    "build:landing": "cd landing-page && npm run build",
+    "screenshots": "tsx scripts/generate-screenshots.ts"
   }
 }

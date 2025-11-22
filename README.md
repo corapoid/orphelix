@@ -10,6 +10,8 @@
 
 **Orphelix** is a comprehensive web dashboard for monitoring and managing Kubernetes resources. The application offers a demo mode with realistic test data, live updates via Server-Sent Events, pod management, topology visualization, and GitHub integration for GitOps workflows.
 
+![Orphelix Dashboard](docs/screenshots/dashboard.png)
+
 ## ✨ Features
 
 ### Core Functionality
@@ -27,7 +29,6 @@
 - **Smart File Matching** - AI-powered automatic file matching using cluster YAML comparison
 - **Kustomization Support** - Detect and edit Kustomize base & overlays with tab navigation
 - **Pull Request Workflow** - Create and merge PRs directly from the dashboard
-- **Flux GitOps** - Support for GitRepository, Kustomization, and HelmRelease resources
 
 ### User Experience
 - **Dark/Light Theme** - Toggle between themes with preference persistence
@@ -37,70 +38,8 @@
 
 ## 📋 Requirements
 
-- **Node.js** 20 or higher
 - **kubectl** configured with cluster access (for real mode)
-- (Optional) **GitHub OAuth App** or **GitHub App** for YAML editor and PR workflow
-
-## 📁 Project Structure
-
-Orphelix uses a clean monorepo structure with shared UI components:
-
-```
-kubevista/
-├── app/              # Main Kubernetes dashboard application
-├── landing-page/     # Marketing landing page
-├── packages/
-│   └── ui/          # Shared UI library (@orphelix/ui)
-├── docs/            # Documentation
-└── README.md
-```
-
-### Shared UI Library
-
-The `@orphelix/ui` package provides:
-- **3 Visual Presets**: Classic, Glassmorphism, Liquid Glass
-- **Theme Management**: Light/dark mode with system preference support
-- **Auto-Adaptive Components**: Components automatically style based on selected preset
-- **Design Tokens**: Centralized design values for consistency
-
-See [packages/ui/README.md](packages/ui/README.md) for details.
-
-## 🚀 Quick Start
-
-### Main Application
-
-```bash
-# 1. Clone repository
-git clone <repository-url>
-cd kubevista/app
-
-# 2. Install dependencies
-npm install
-
-# 3. Run development server
-npm run dev
-
-# 4. Open browser
-# Navigate to http://localhost:3000
-```
-
-The application starts in **demo mode** by default. Click the "DEMO MODE" badge to connect to a real cluster.
-
-### Landing Page
-
-```bash
-cd landing-page
-npm install
-npm run dev
-# Opens on http://localhost:3001
-```
-
-### Production Build
-
-```bash
-npm run build
-npm start
-```
+- (Optional) **GitHub App** for YAML editor and PR workflow
 
 ## 📖 Documentation
 
@@ -168,15 +107,10 @@ Note: Mintlify may have dependency issues. Documentation is fully readable as ma
 
 ## 🔒 Security
 
-- ✅ **Server-side route protection** - NextAuth v5 with middleware that executes before rendering
-- ✅ **Cannot bypass validation** - Routes protected on server, not client-side JavaScript
-- ✅ **Cookie-based authentication** - HTTP cookies for server-accessible session state
-- ✅ **GitHub OAuth** - Secure authentication via NextAuth v5
 - ✅ **Local credentials** - Uses kubeconfig from local system
 - ✅ **No data storage** - All data fetched on demand from cluster
 - ✅ **Secrets masked** - Secret values never displayed in UI
 - ✅ **Read-only by default** - Most operations are read-only (except pod restart)
-- ✅ **HTTP-only cookies** - GitHub App tokens stored securely
 
 ## 💬 Support
 
@@ -207,12 +141,3 @@ This project is licensed under the **Mozilla Public License 2.0** (MPL-2.0).
 - ✅ **Compatible with Proprietary Code** - Can be combined with closed-source software
 
 See the [LICENSE](LICENSE) file for full details.
-
----
-
-<div align="center">
-  <p>Made with ❤️ for the Kubernetes community</p>
-  <p>
-    <a href="#kubevista">Back to top ↑</a>
-  </p>
-</div>
