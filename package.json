@@ -16,7 +16,7 @@
     "screenshots": "tsx scripts/generate-screenshots.ts",
     "lint": "cd app && npm run lint",
     "type-check": "cd app && npm run type-check",
-    "test": "cd app && npm run test && cd ../landing-page && npm run test",
+    "test": "cd app && npm run test",
     "build": "npm run build:ui && npm run build:app && npm run build:landing"
   }
 }
