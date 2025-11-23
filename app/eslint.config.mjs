@@ -35,9 +35,6 @@ export default [
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': ['warn', { allow: ['warn', 'error', 'debug', 'log'] }],
-      // Disable react-hooks rules - they require eslint-plugin-react-hooks config
-      'react-hooks/rules-of-hooks': 'off',
-      'react-hooks/exhaustive-deps': 'off',
     },
   },
   // Relaxed rules for test files

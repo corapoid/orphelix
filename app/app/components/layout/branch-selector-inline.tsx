@@ -63,7 +63,6 @@ export function BranchSelectorInline() {
         return [...prev, { name: selectedBranch, protected: false }]
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBranch, mode])
 
   const fetchBranches = async () => {
