@@ -16,8 +16,8 @@ const reasons = [
   },
   {
     icon: <LockOpen sx={{ fontSize: 48 }} />,
-    title: 'Source-Available',
-    description: 'BUSL-1.1 today and automatically Apache-2.0 on 2030-01-01. Inspect the code, test internally, and plan for full open source availability.',
+    title: 'Open Source',
+    description: 'Apache-2.0 today with full production rights. Inspect the code, customize it, and deploy without licensing hurdles.',
   },
   {
     icon: <Lightbulb sx={{ fontSize: 48 }} />,
@@ -151,7 +151,7 @@ export default function WhyOrphelix() {
           {[
             { value: '233', label: 'Tests Passing' },
             { value: '100%', label: 'TypeScript' },
-            { value: 'BUSL-1.1', label: 'Source-Available' },
+            { value: 'Apache-2.0', label: 'Open Source' },
           ].map((stat, index) => (
             <Box
               key={index}

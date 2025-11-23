@@ -17,6 +17,12 @@
     "lint": "cd app && npm run lint",
     "type-check": "cd app && npm run type-check",
     "test": "cd app && npm run test",
-    "build": "npm run build:ui && npm run build:app && npm run build:landing"
+    "build": "npm run build:ui && npm run build:app && npm run build:landing",
+    "tauri:dev": "cd app && npm run tauri:dev",
+    "tauri:build": "cd app && npm run tauri:build"
+  },
+  "devDependencies": {
+    "@tauri-apps/api": "^2.9.0",
+    "@tauri-apps/cli": "^2.9.4"
   }
 }

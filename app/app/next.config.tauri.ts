@@ -1,12 +1,18 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  output: 'export',
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  typedRoutes: true,
   transpilePackages: ['@orphelix/ui'],
-  output: process.env.TAURI_BUILD ? 'standalone' : undefined,
+  images: {
+    unoptimized: true,
+  },
+  // Disable features that don't work with static export
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 }
 
 export default nextConfig

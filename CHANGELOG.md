@@ -117,7 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **License**: Switched to Business Source License 1.1 (Change Date 2030-01-01 -> Apache-2.0)
+- **License**: Switched from Business Source License 1.1 to Apache License 2.0 (fully open source)
 - **Security Architecture**: Complete shift to server-side validation
   - Moved from client-side localStorage validation to server-side cookies
   - Route protection now executes before any page rendering
