@@ -13,6 +13,10 @@
     "dev:landing": "cd landing-page && npm run dev",
     "build:app": "cd app && npm run build",
     "build:landing": "cd landing-page && npm run build",
-    "screenshots": "tsx scripts/generate-screenshots.ts"
+    "screenshots": "tsx scripts/generate-screenshots.ts",
+    "lint": "npm run lint --workspaces --if-present",
+    "type-check": "npm run type-check --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build:ui && npm run build:app && npm run build:landing"
   }
 }
