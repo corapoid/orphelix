@@ -2,13 +2,18 @@
   "name": "orphelix",
   "version": "1.1.0",
   "description": "Modern, full-featured Kubernetes dashboard with real-time updates and GitOps integration",
+  "author": "Dariusz Makowski <corapoid@gmail.com>",
   "license": "SEE LICENSE IN LICENSE",
   "private": true,
+  "bin": {
+    "orphelix": "./orphelix-cli.js"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "build:tauri": "TAURI_BUILD=1 next build",
+    "build:standalone": "npm run build && node -e \"const fs=require('fs');const path=require('path');const src=path.join(__dirname,'public');const dest=path.join(__dirname,'.next/standalone/public');if(fs.existsSync(src)){fs.cpSync(src,dest,{recursive:true})};const staticSrc=path.join(__dirname,'.next/static');const staticDest=path.join(__dirname,'.next/standalone/.next/static');if(fs.existsSync(staticSrc)){fs.cpSync(staticSrc,staticDest,{recursive:true})}\"",
     "start": "next start",
+    "orphelix": "node orphelix-cli.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
@@ -17,10 +22,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "tauri": "tauri",
-    "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.65",
@@ -35,8 +37,10 @@
     "@octokit/rest": "^22.0.1",
     "@orphelix/ui": "*",
     "@tanstack/react-query": "^5.90.10",
+    "@types/better-sqlite3": "^7.6.13",
     "@xyflow/react": "^12.9.3",
     "ai": "^5.0.93",
+    "better-sqlite3": "^12.4.6",
     "date-fns": "^4.1.0",
     "diff": "^8.0.2",
     "html-to-image": "^1.11.13",
@@ -44,6 +48,8 @@
     "monaco-editor": "^0.54.0",
     "next": "^16.0.3",
     "next-auth": "^5.0.0-beta.30",
+    "node-notifier": "^10.0.1",
+    "pm2": "^6.0.13",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
@@ -53,7 +59,6 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.56.0",
-    "typescript-eslint": "^8.0.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
@@ -70,6 +75,7 @@
     "prettier": "^3.6.2",
     "tsx": "^4.20.6",
     "typescript": "^5.7.2",
+    "typescript-eslint": "^8.0.0",
     "vitest": "^4.0.10"
   },
   "engines": {
