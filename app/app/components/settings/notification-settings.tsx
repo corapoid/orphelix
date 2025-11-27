@@ -20,7 +20,6 @@ export function NotificationSettings() {
   const isGlass = visualPreset !== 'classic'
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [permissionState, setPermissionState] = useState<NotificationPermission>('default')
 
   // Load current notification settings
   useEffect(() => {
@@ -39,24 +38,9 @@ export function NotificationSettings() {
     }
 
     loadSettings()
-
-    // Check browser notification permission
-    if ('Notification' in window) {
-      setPermissionState(Notification.permission)
-    }
   }, [])
 
   const handleToggle = async (checked: boolean) => {
-    // Request browser permission if not already granted
-    if (checked && 'Notification' in window && Notification.permission === 'default') {
-      const permission = await Notification.requestPermission()
-      setPermissionState(permission)
-
-      if (permission !== 'granted') {
-        return // Don't enable if permission denied
-      }
-    }
-
     try {
       const response = await fetch('/api/notifications', {
         method: 'POST',
@@ -66,21 +50,11 @@ export function NotificationSettings() {
 
       if (response.ok) {
         setNotificationsEnabled(checked)
-
-        // Send a test notification when enabled
-        if (checked && 'Notification' in window && Notification.permission === 'granted') {
-          new Notification('Orphelix - Notifications Enabled', {
-            body: 'You will now receive desktop notifications for critical issues.',
-            icon: '/icon.png',
-          })
-        }
       }
     } catch (error) {
       console.error('Failed to update notification settings:', error)
     }
   }
-
-  const showPermissionWarning = notificationsEnabled && permissionState !== 'granted'
 
   return (
     <Paper
@@ -111,12 +85,10 @@ export function NotificationSettings() {
         Receive desktop notifications when critical issues are detected in your cluster. Notifications are based on the resources you&apos;ve enabled in Critical Issues Monitoring above.
       </Typography>
 
-      {showPermissionWarning && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
-          Browser notification permission is {permissionState === 'denied' ? 'denied' : 'not granted'}.
-          Please enable notifications in your browser settings to receive alerts.
-        </Alert>
-      )}
+      <Alert severity="info" sx={{ mb: 2 }}>
+        Desktop notifications are sent by the Orphelix background worker (PM2).
+        No browser permission required - notifications will appear as system alerts.
+      </Alert>
 
       <FormControlLabel
         control={
