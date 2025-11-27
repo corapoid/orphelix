@@ -1,0 +1,151 @@
+---
+title: 'orphelix restore'
+description: 'Restore database from backup'
+---
+
+# orphelix restore
+
+Restore Orphelix database from a backup file.
+
+## Usage
+
+```bash
+orphelix restore [backup-path]
+```
+
+## List Available Backups
+
+Run without arguments to see available backups:
+
+```bash
+$ orphelix restore
+
+📦 Available backups:
+
+1. orphelix-backup-2025-11-26-103045.db
+   Created: 11/26/2025, 10:30:45 AM
+   Size: 2.43 MB
+
+2. orphelix-backup-2025-11-25-150000.db
+   Created: 11/25/2025, 3:00:00 PM
+   Size: 2.38 MB
+
+3. orphelix-backup-2025-11-24-090000.db
+   Created: 11/24/2025, 9:00:00 AM
+   Size: 2.35 MB
+
+💡 Use: orphelix restore <path-to-backup>
+```
+
+## Restore from Backup
+
+```bash
+$ orphelix restore ~/orphelix-backups/orphelix-backup-2025-11-26-103045.db
+
+🔄 Restoring from backup...
+
+   Backup: ~/orphelix-backups/orphelix-backup-2025-11-26-103045.db
+   Size: 2.43 MB
+   Created: 11/26/2025, 10:30:45 AM
+
+⚠️  This will overwrite your current database!
+
+   Continue? [y/N]: y
+
+💾 Creating safety backup of current database...
+✅ Safety backup: ~/orphelix-backups/orphelix-backup-pre-restore-20251126.db
+
+🔄 Restoring database...
+✅ Database restored successfully!
+
+   Restart Orphelix to apply changes: orphelix restart
+```
+
+## Safety Features
+
+<Warning>
+Before restoring, the current database is automatically backed up as a safety measure.
+</Warning>
+
+Safety backup naming:
+```
+orphelix-backup-pre-restore-{timestamp}.db
+```
+
+## Confirmation Prompt
+
+You must confirm the restore operation by typing `y` or `yes`.
+
+Cancel by typing `n` or `N`:
+
+```bash
+Continue? [y/N]: n
+⏭️  Restore cancelled
+```
+
+## After Restore
+
+**Restart the application** to load restored settings:
+
+```bash
+orphelix restart
+```
+
+Changes take effect after restart.
+
+## What Gets Restored
+
+All database tables are restored:
+
+- User settings and preferences
+- GitHub integration configuration
+- Cluster aliases
+- Critical issues monitoring config
+- Sidebar customization
+- Historical metrics (if applicable)
+
+## Troubleshooting
+
+### Backup File Not Found
+
+```bash
+Error: Backup file not found: /path/to/backup.db
+```
+
+Check the path and ensure file exists:
+
+```bash
+ls ~/orphelix-backups/
+```
+
+### Corrupted Backup
+
+```bash
+Error: Backup file is corrupted or invalid
+```
+
+Try an older backup or contact support.
+
+### Permission Denied
+
+```bash
+Error: Permission denied
+```
+
+Ensure you have read permissions:
+
+```bash
+chmod 644 ~/orphelix-backups/orphelix-backup-*.db
+```
+
+## Related Commands
+
+- [backup](/cli/commands/backup) - Create new backup
+- [export-config](/cli/commands/export-config) - Export as JSON
+- [restart](/cli/commands/restart) - Restart application
+
+## See Also
+
+<Card title="Backup Command" icon="floppy-disk" href="/cli/commands/backup">
+  Create database backups
+</Card>

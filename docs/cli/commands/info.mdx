@@ -1,0 +1,98 @@
+---
+title: 'orphelix info'
+description: 'Show detailed application information'
+---
+
+# orphelix info
+
+Display detailed information about the running Orphelix application.
+
+## Usage
+
+```bash
+orphelix info [options]
+```
+
+## Options
+
+| Option | Alias | Description | Default |
+|--------|-------|-------------|---------|
+| `--name` | `-n` | Instance name | `orphelix` |
+
+## Example Output
+
+```bash
+$ orphelix info
+
+📊 Orphelix Information
+
+Application:
+  Name:         orphelix
+  Version:      1.2.3
+  Status:       online
+  PID:          12345
+  Uptime:       2 hours 15 minutes
+
+Resources:
+  Memory:       85.2 MB
+  CPU:          0.2%
+
+Network:
+  Port:         3000
+  URLs:         http://orphelix.local:3000
+                http://localhost:3000
+
+Database:
+  Location:     /path/to/orphelix.db
+  Size:         2.4 MB
+  Tables:       8
+
+Workers:
+  Notifications: online (PID: 12346)
+
+Environment:
+  Node.js:      v24.1.0
+  Platform:     darwin (macOS)
+  Cluster:      minikube
+
+Last Restart:   2025-11-26 10:30:45
+Restart Count:  0
+```
+
+## Information Displayed
+
+### Application
+- Instance name
+- Current version
+- Running status
+- Process ID (PID)
+- Total uptime
+
+### Resources
+- Current memory usage
+- CPU utilization percentage
+
+### Network
+- Configured port
+- Access URLs (local and custom hostname)
+
+### Database
+- SQLite database path
+- File size
+- Number of tables
+
+### Workers
+- Background workers status
+- Worker PIDs
+
+### Environment
+- Node.js version
+- Operating system
+- Connected Kubernetes cluster context
+
+## Related Commands
+
+- [status](/cli/commands/status) - Quick status check
+- [list](/cli/commands/list) - All instances overview
+- [version](/cli/commands/version) - Version info only
+- [doctor](/cli/commands/doctor) - Health diagnostics

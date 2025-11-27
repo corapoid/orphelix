@@ -1,0 +1,296 @@
+---
+title: 'orphelix start'
+description: 'Start Orphelix in background mode'
+---
+
+# orphelix start
+
+Start Orphelix Kubernetes Dashboard in background mode using pm2.
+
+## Usage
+
+```bash
+orphelix start [options]
+```
+
+## Options
+
+| Option | Alias | Description | Default |
+|--------|-------|-------------|---------|
+| `--port` | `-p` | Port number | `3000` or `$ORPHELIX_PORT` |
+| `--name` | `-n` | Instance name | `orphelix` |
+
+## Examples
+
+### Basic Start
+
+```bash
+orphelix start
+```
+
+Starts on default port (3000) with default name.
+
+### Custom Port
+
+```bash
+orphelix start --port 8080
+# or
+orphelix start -p 8080
+```
+
+Access at: `http://orphelix.local:8080`
+
+### Named Instance
+
+```bash
+orphelix start --name prod --port 3000
+orphelix start --name staging --port 3001
+orphelix start --name dev --port 3002
+```
+
+Run multiple instances for different clusters. See [Multi-Instance Guide](/cli/multi-instance).
+
+## First Run Behavior
+
+On first run, `orphelix start` automatically:
+
+1. **Checks dependencies** - Verifies Node.js version and kubectl
+2. **Installs packages** - Runs `npm install` if `node_modules` missing
+3. **Builds application** - Runs `npm run build:standalone` if build missing
+4. **Initializes database** - Creates `orphelix.db` SQLite database
+5. **Configures hostname** - Prompts to set up `orphelix.local` (requires sudo)
+6. **Starts pm2 process** - Runs main app + notification worker
+
+Subsequent runs skip steps 2-4 unless files are missing.
+
+## What Gets Started
+
+The start command launches **two pm2 processes**:
+
+### 1. Main Application
+- **Name:** `orphelix` (or custom name)
+- **Process:** Next.js standalone server
+- **Port:** 3000 (or custom)
+- **Purpose:** Web UI and API
+
+### 2. Notification Worker
+- **Name:** `orphelix-notifications` (or `{name}-notifications`)
+- **Process:** Background worker
+- **Purpose:** Desktop notifications for critical issues
+
+## Output
+
+Successful start shows:
+
+```bash
+$ orphelix start
+
+📦 Checking dependencies...
+✅ Dependencies installed
+✅ Standalone build exists
+💾 Initializing database...
+✅ Database ready
+
+🚀 Starting Orphelix...
+✅ Orphelix is running!
+📍 Open in browser: http://orphelix.local:3000
+📍 Or: http://localhost:3000
+
+🔔 Notification worker started
+
+📊 View logs: orphelix logs
+🛑 Stop: orphelix stop
+```
+
+## Environment Variables
+
+### ORPHELIX_PORT
+
+Set default port via environment variable:
+
+```bash
+export ORPHELIX_PORT=8080
+orphelix start  # Uses port 8080
+```
+
+Command flag `--port` overrides environment variable:
+
+```bash
+export ORPHELIX_PORT=8080
+orphelix start --port 9000  # Uses port 9000
+```
+
+## Hostname Configuration
+
+On first run, you'll be prompted:
+
+```
+🌐 Configure custom hostname orphelix.local?
+   This requires sudo to modify /etc/hosts
+
+   Configure now? [Y/n]:
+```
+
+- **Yes (Y):** Adds entry to `/etc/hosts`, enables `http://orphelix.local:3000`
+- **No (n):** Skip configuration, use `http://localhost:3000` only
+
+You can configure manually later by editing `/etc/hosts`:
+
+```bash
+sudo nano /etc/hosts
+```
+
+Add line:
+```
+127.0.0.1 orphelix.local
+```
+
+## Database Initialization
+
+Creates SQLite database at `./orphelix.db` with:
+
+- User settings (theme, mode, preferences)
+- GitHub integration settings
+- Cluster aliases
+- Critical issues monitoring config
+- Sidebar pins
+- Notification preferences
+
+See [Database Schema](/developer/database-schema) for details.
+
+## Process Management
+
+After starting, the application runs as a **daemon** via pm2:
+
+- ✅ Runs in background (no need to keep terminal open)
+- ✅ Auto-restart on crash
+- ✅ Logs managed by pm2
+- ✅ Survives terminal close
+
+To view running processes:
+
+```bash
+orphelix status
+# or
+orphelix list
+```
+
+## Error Handling
+
+### Port Already in Use
+
+```bash
+Error: Port 3000 is already in use
+```
+
+**Solution:** Use different port or kill existing process
+
+```bash
+orphelix start --port 8080
+# or
+lsof -ti:3000 | xargs kill
+```
+
+### kubectl Not Found
+
+```bash
+Error: kubectl not found in PATH
+```
+
+**Solution:** Install kubectl
+
+```bash
+# macOS
+brew install kubectl
+
+# Linux
+sudo apt-get install kubectl
+```
+
+### Node Version Too Old
+
+```bash
+Error: Node.js version 20.0.0 detected. Required: >= 24.0.0
+```
+
+**Solution:** Upgrade Node.js
+
+```bash
+nvm install 24
+nvm use 24
+```
+
+### Already Running
+
+```bash
+Error: Process 'orphelix' already exists
+```
+
+**Solution:** Stop first or use different name
+
+```bash
+orphelix stop
+orphelix start
+
+# or start with different name
+orphelix start --name orphelix-2
+```
+
+## Post-Start Actions
+
+After starting successfully:
+
+### 1. Open in Browser
+
+```bash
+orphelix open
+# or
+orphelix open --port 8080  # if using custom port
+```
+
+### 2. View Logs
+
+```bash
+orphelix logs
+# Press Ctrl+C to exit (app keeps running)
+```
+
+### 3. Check Status
+
+```bash
+orphelix status
+```
+
+### 4. Enable Auto-Startup (Optional)
+
+To start automatically on system boot:
+
+```bash
+orphelix startup
+```
+
+## Related Commands
+
+- [stop](/cli/commands/stop) - Stop the application
+- [restart](/cli/commands/restart) - Restart the application
+- [status](/cli/commands/status) - Check if running
+- [logs](/cli/commands/logs) - View logs
+- [list](/cli/commands/list) - List all instances
+- [startup](/cli/commands/startup) - Enable auto-startup
+
+## See Also
+
+<CardGroup cols={2}>
+  <Card title="Multi-Instance" icon="layer-group" href="/cli/multi-instance">
+    Run multiple instances for different clusters
+  </Card>
+  <Card title="Auto-Startup" icon="rocket" href="/cli/commands/startup">
+    Start automatically on system boot
+  </Card>
+  <Card title="Troubleshooting" icon="wrench" href="/cli/troubleshooting">
+    Common issues and solutions
+  </Card>
+  <Card title="Configuration" icon="gear" href="/user/configuration/settings">
+    Configure application settings
+  </Card>
+</CardGroup>

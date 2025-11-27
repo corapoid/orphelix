@@ -1,0 +1,161 @@
+---
+title: 'CLI Overview'
+description: 'Command-line interface for managing Orphelix Kubernetes Dashboard'
+---
+
+# Orphelix CLI
+
+The Orphelix CLI provides a convenient way to manage your Kubernetes dashboard as a background service using pm2. It handles installation, configuration, and lifecycle management with simple commands.
+
+## Key Features
+
+- 🚀 **One-Command Setup** - Auto-installs dependencies, builds, and configures on first run
+- 🔄 **Background Execution** - Runs as a daemon via pm2, no need to keep terminal open
+- 🌐 **Custom Hostname** - Configures `orphelix.local` for easier access
+- 💾 **SQLite Database** - Persistent storage for settings and preferences
+- 🔔 **Desktop Notifications** - Get alerts for critical Kubernetes issues
+- 📦 **Multi-Instance Support** - Run multiple instances for different clusters
+- 🔄 **Auto-Update** - Update to latest version from GitHub with automatic backup
+- 💾 **Backup & Restore** - Easy database backup and restore functionality
+- 🚀 **Auto-Startup** - Optional system boot auto-start
+
+## Quick Start
+
+```bash
+# Install globally via npm
+npm install -g orphelix
+
+# Start Orphelix (first run will auto-install and configure)
+orphelix start
+
+# Open in browser
+orphelix open
+
+# View logs
+orphelix logs
+
+# Stop the application
+orphelix stop
+```
+
+## First Run Setup
+
+On first run, `orphelix start` will automatically:
+
+1. ✅ Check and install npm dependencies
+2. ✅ Build standalone Next.js application
+3. ✅ Configure `orphelix.local` hostname (requires sudo)
+4. ✅ Initialize SQLite database
+5. ✅ Start application in background via pm2
+6. ✅ Start notification worker for desktop alerts
+
+You'll be prompted once for sudo password to configure `/etc/hosts`.
+
+## Access URLs
+
+After starting, access Orphelix at:
+
+- **Custom hostname:** `http://orphelix.local:3000`
+- **Standard localhost:** `http://localhost:3000`
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│              Orphelix CLI (orphelix)                │
+│                                                      │
+│  Commands: start, stop, restart, logs, status, etc. │
+└─────────────────────┬───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│                  PM2 Process Manager                 │
+│                                                      │
+│  ┌──────────────────┐    ┌───────────────────────┐ │
+│  │  orphelix        │    │ orphelix-notifications│ │
+│  │  (main app)      │    │ (worker)              │ │
+│  │  Port: 3000      │    │                       │ │
+│  └──────────────────┘    └───────────────────────┘ │
+└─────────────────────┬───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│               orphelix.db (SQLite)                   │
+│                                                      │
+│  - User settings                                     │
+│  - GitHub configuration                              │
+│  - Cluster aliases                                   │
+│  - Notification preferences                          │
+└──────────────────────────────────────────────────────┘
+```
+
+## Command Categories
+
+### Process Management
+Start, stop, restart, and monitor the application
+
+- [start](/cli/commands/start) - Start Orphelix in background
+- [stop](/cli/commands/stop) - Stop Orphelix
+- [restart](/cli/commands/restart) - Restart Orphelix
+- [status](/cli/commands/status) - Check if running
+- [logs](/cli/commands/logs) - View real-time logs
+- [list](/cli/commands/list) - List all running instances
+- [delete](/cli/commands/delete) - Remove from pm2
+
+### Information
+Get information about the application
+
+- [version](/cli/commands/version) - Show version and check for updates
+- [info](/cli/commands/info) - Show detailed application info
+- [doctor](/cli/commands/doctor) - Run health checks
+
+### Backup & Configuration
+Manage data and settings
+
+- [backup](/cli/commands/backup) - Create database backup
+- [restore](/cli/commands/restore) - Restore from backup
+- [export-config](/cli/commands/export-config) - Export configuration as JSON
+- [import-config](/cli/commands/import-config) - Import configuration from JSON
+
+### Development
+Tools for developers
+
+- [dev](/cli/commands/dev) - Start in development mode
+- [debug](/cli/commands/debug) - Start with debugger
+- [test](/cli/commands/test) - Run tests
+- [clean](/cli/commands/clean) - Clean caches and logs
+
+### Maintenance
+System maintenance and updates
+
+- [update](/cli/commands/update) - Update to latest version
+- [startup](/cli/commands/startup) - Enable auto-startup on boot
+- [unstartup](/cli/commands/unstartup) - Disable auto-startup
+
+## Global Options
+
+These options work with multiple commands:
+
+- `--port, -p` - Specify custom port (default: 3000)
+- `--name, -n` - Instance name for multi-instance support
+
+## Environment Variables
+
+- `ORPHELIX_PORT` - Set default port (can be overridden with `--port`)
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/cli/installation">
+    Install Orphelix CLI globally
+  </Card>
+  <Card title="Commands" icon="terminal" href="/cli/commands/start">
+    Explore all available commands
+  </Card>
+  <Card title="Multi-Instance" icon="layer-group" href="/cli/multi-instance">
+    Run multiple instances for different clusters
+  </Card>
+  <Card title="Troubleshooting" icon="wrench" href="/cli/troubleshooting">
+    Common issues and solutions
+  </Card>
+</CardGroup>

@@ -1,0 +1,68 @@
+---
+title: 'orphelix stop'
+description: 'Stop Orphelix application'
+---
+
+# orphelix stop
+
+Stop the running Orphelix application and notification worker.
+
+## Usage
+
+```bash
+orphelix stop [options]
+```
+
+## Options
+
+| Option | Alias | Description | Default |
+|--------|-------|-------------|---------|
+| `--name` | `-n` | Instance name to stop | `orphelix` |
+
+## Examples
+
+### Stop Default Instance
+
+```bash
+orphelix stop
+```
+
+Stops both:
+- `orphelix` (main application)
+- `orphelix-notifications` (notification worker)
+
+### Stop Named Instance
+
+```bash
+orphelix stop --name prod
+```
+
+Stops:
+- `orphelix-prod`
+- `orphelix-prod-notifications`
+
+## What Happens
+
+1. Sends stop signal to pm2 process
+2. Gracefully shuts down Next.js server
+3. Stops notification worker
+4. Process remains in pm2 list (status: `stopped`)
+
+## Output
+
+```bash
+$ orphelix stop
+
+🛑 Stopping Orphelix...
+[PM2] Applying action stopProcessId on app [orphelix](ids: [ 0 ])
+[PM2] [orphelix](0) ✓
+🔔 Notification worker stopped
+✅ Orphelix stopped
+```
+
+## Related Commands
+
+- [start](/cli/commands/start) - Start the application
+- [restart](/cli/commands/restart) - Restart the application
+- [delete](/cli/commands/delete) - Remove from pm2
+- [status](/cli/commands/status) - Check status

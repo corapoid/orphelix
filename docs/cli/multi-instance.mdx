@@ -1,0 +1,328 @@
+---
+title: 'Multi-Instance Setup'
+description: 'Run multiple Orphelix instances for different Kubernetes clusters'
+---
+
+# Multi-Instance Setup
+
+Run multiple Orphelix instances simultaneously to monitor different Kubernetes clusters.
+
+## Use Cases
+
+- **Multiple environments** - Production, staging, development
+- **Multiple clusters** - Different regions or teams
+- **Testing** - Test new features without affecting production
+- **Demo mode + Real cluster** - Show demos while monitoring real workloads
+
+## Quick Start
+
+### Start Multiple Instances
+
+```bash
+# Production cluster on port 3000
+orphelix start --name prod --port 3000
+
+# Staging cluster on port 3001
+orphelix start --name staging --port 3001
+
+# Development cluster on port 3002
+orphelix start --name dev --port 3002
+```
+
+### List All Instances
+
+```bash
+orphelix list
+```
+
+Output:
+```
+📋 Orphelix Instances
+
+🟢 orphelix-prod
+   Status:   online
+   Port:     3000
+   Uptime:   2 hours
+
+🟢 orphelix-staging
+   Status:   online
+   Port:     3001
+   Uptime:   1 hour
+
+🟢 orphelix-dev
+   Status:   online
+   Port:     3002
+   Uptime:   30 minutes
+```
+
+## Instance Naming
+
+When using `--name`, Orphelix automatically prefixes with `orphelix-`:
+
+```bash
+orphelix start --name prod
+# Creates process: orphelix-prod
+# Notification worker: orphelix-prod-notifications
+```
+
+## Managing Named Instances
+
+### Start
+
+```bash
+orphelix start --name prod --port 3000
+```
+
+### Stop
+
+```bash
+orphelix stop --name prod
+```
+
+### Restart
+
+```bash
+orphelix restart --name prod
+```
+
+### View Logs
+
+```bash
+orphelix logs --name prod
+```
+
+### Check Status
+
+```bash
+orphelix status --name prod
+```
+
+### Delete
+
+```bash
+orphelix delete --name prod
+```
+
+## Port Configuration
+
+Each instance needs a unique port:
+
+```bash
+orphelix start --name prod -p 3000
+orphelix start --name staging -p 3001
+orphelix start --name dev -p 3002
+```
+
+## Access URLs
+
+Each instance is accessible at:
+
+- `http://orphelix.local:PORT`
+- `http://localhost:PORT`
+
+Example:
+- Production: `http://orphelix.local:3000`
+- Staging: `http://orphelix.local:3001`
+- Development: `http://orphelix.local:3002`
+
+## Database Isolation
+
+<Info>
+Each instance uses the **same** database file by default. To isolate data, run instances from different directories.
+</Info>
+
+### Shared Database (Default)
+
+All instances share settings:
+
+```bash
+# All use: /path/to/orphelix/orphelix.db
+orphelix start --name prod
+orphelix start --name staging
+```
+
+Changes in one instance affect others (theme, GitHub config, etc.)
+
+### Isolated Databases
+
+Create separate directories:
+
+```bash
+# Production directory
+mkdir ~/orphelix-prod
+cd ~/orphelix-prod
+orphelix start --name prod --port 3000
+
+# Staging directory
+mkdir ~/orphelix-staging
+cd ~/orphelix-staging
+orphelix start --name staging --port 3001
+```
+
+Each directory has its own `orphelix.db`.
+
+## Kubernetes Context Switching
+
+Each instance connects to the **current kubectl context** when started.
+
+### Workflow
+
+```bash
+# Switch to production cluster
+kubectl config use-context prod-cluster
+orphelix start --name prod --port 3000
+
+# Switch to staging cluster
+kubectl config use-context staging-cluster
+orphelix start --name staging --port 3001
+```
+
+<Tip>
+Once started, each instance maintains its connection to the original cluster, even if you switch contexts.
+</Tip>
+
+## Auto-Startup
+
+Enable auto-startup for all instances:
+
+```bash
+# Start all instances
+orphelix start --name prod --port 3000
+orphelix start --name staging --port 3001
+
+# Save for auto-startup
+orphelix startup
+```
+
+All running instances will start on system boot.
+
+## Resource Usage
+
+Monitor resource usage across instances:
+
+```bash
+$ orphelix list
+
+🟢 orphelix-prod
+   Memory:   85 MB
+   CPU:      0.2%
+
+🟢 orphelix-staging
+   Memory:   82 MB
+   CPU:      0.1%
+
+🟢 orphelix-dev
+   Memory:   79 MB
+   CPU:      0.1%
+
+Total: ~246 MB RAM
+```
+
+## Example Setups
+
+### Scenario 1: Separate Environments
+
+```bash
+# Production (real cluster)
+kubectl config use-context prod-cluster
+orphelix start --name prod --port 3000
+
+# Staging (real cluster)
+kubectl config use-context staging-cluster
+orphelix start --name staging --port 3001
+
+# Demo (demo mode)
+orphelix start --name demo --port 3002
+# Set to demo mode in UI settings
+```
+
+### Scenario 2: Different Teams
+
+```bash
+# Team Alpha cluster
+kubectl config use-context team-alpha
+orphelix start --name alpha --port 3000
+
+# Team Beta cluster
+kubectl config use-context team-beta
+orphelix start --name beta --port 3001
+```
+
+### Scenario 3: Regional Clusters
+
+```bash
+# US East
+kubectl config use-context us-east-1
+orphelix start --name us-east --port 3000
+
+# EU West
+kubectl config use-context eu-west-1
+orphelix start --name eu-west --port 3001
+
+# Asia Pacific
+kubectl config use-context ap-south-1
+orphelix start --name asia --port 3002
+```
+
+## Best Practices
+
+1. **Use descriptive names** - `prod`, `staging`, `dev`, not `instance1`, `instance2`
+2. **Consistent ports** - Document which port is for which environment
+3. **Separate databases** - Use different directories for complete isolation
+4. **Monitor resources** - Check `orphelix list` regularly for memory/CPU usage
+5. **Auto-startup** - Configure for critical instances only
+
+## Troubleshooting
+
+### Port Already in Use
+
+```bash
+Error: Port 3000 is already in use
+```
+
+**Solution:** Use different port
+
+```bash
+orphelix start --name prod --port 3001
+```
+
+### Instance Name Conflict
+
+```bash
+Error: Process 'orphelix-prod' already exists
+```
+
+**Solution:** Stop existing instance first
+
+```bash
+orphelix stop --name prod
+orphelix start --name prod
+```
+
+### Wrong Cluster
+
+If instance connects to wrong cluster:
+
+```bash
+# Stop instance
+orphelix stop --name prod
+
+# Switch context
+kubectl config use-context correct-cluster
+
+# Restart instance
+orphelix start --name prod
+```
+
+## Related Commands
+
+- [start](/cli/commands/start) - Start instance
+- [list](/cli/commands/list) - List all instances
+- [stop](/cli/commands/stop) - Stop instance
+- [delete](/cli/commands/delete) - Remove instance
+
+## See Also
+
+<Card title="CLI Overview" icon="terminal" href="/cli/overview">
+  Learn more about Orphelix CLI
+</Card>

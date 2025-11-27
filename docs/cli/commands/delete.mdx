@@ -1,0 +1,83 @@
+---
+title: 'orphelix delete'
+description: 'Remove Orphelix from pm2'
+---
+
+# orphelix delete
+
+Remove Orphelix application from pm2 process manager. This completely removes the process from pm2's list.
+
+## Usage
+
+```bash
+orphelix delete [options]
+```
+
+## Options
+
+| Option | Alias | Description | Default |
+|--------|-------|-------------|---------|
+| `--name` | `-n` | Instance name | `orphelix` |
+
+## Examples
+
+### Delete Default Instance
+
+```bash
+orphelix delete
+```
+
+Removes:
+- `orphelix` (main app)
+- `orphelix-notifications` (worker)
+
+### Delete Named Instance
+
+```bash
+orphelix delete --name prod
+```
+
+## Warning
+
+<Warning>
+This command removes the process from pm2 but does **not** delete:
+- Database file (`orphelix.db`)
+- Application files
+- Backups
+
+To completely uninstall, see [Uninstallation](/cli/installation#uninstallation).
+</Warning>
+
+## What Happens
+
+1. Stops the running process
+2. Removes from pm2 process list
+3. Cleans up pm2 logs for this process
+4. Removes notification worker
+
+## Output
+
+```bash
+$ orphelix delete
+
+🗑️  Removing Orphelix from pm2...
+[PM2] Applying action deleteProcessId on app [orphelix](ids: [ 0 ])
+[PM2] [orphelix](0) ✓
+✅ Orphelix removed from pm2
+```
+
+## Restart After Delete
+
+To start again, simply run:
+
+```bash
+orphelix start
+```
+
+This creates a fresh pm2 process (database and settings persist).
+
+## Related Commands
+
+- [stop](/cli/commands/stop) - Stop without removing
+- [start](/cli/commands/start) - Start new instance
+- [list](/cli/commands/list) - View all instances

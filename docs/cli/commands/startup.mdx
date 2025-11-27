@@ -1,0 +1,173 @@
+---
+title: 'orphelix startup'
+description: 'Enable auto-startup on system boot'
+---
+
+# orphelix startup
+
+Configure Orphelix to start automatically when your system boots.
+
+## Usage
+
+```bash
+orphelix startup
+```
+
+## Example Output
+
+```bash
+$ orphelix startup
+
+🚀 Configuring auto-startup on system boot...
+
+Generating pm2 startup script (may require sudo password)...
+[sudo] Password for user: 
+
+[PM2] Init System found: launchd
+[PM2] Platform: darwin
+[PM2] Writing init configuration...
+[PM2] Making script booting at startup...
+[PM2] -darwin- Using the command:
+      sudo su -c "env PATH=$PATH:/usr/local/bin pm2 startup launchd -u user --hp /Users/user"
+
+[PM2] Done.
+
+💾 Saving current pm2 process list...
+[PM2] Saving current process list...
+[PM2] Successfully saved in /Users/user/.pm2/dump.pm2
+
+✅ Auto-startup configured!
+   Orphelix will now start automatically on system boot
+
+💡 To disable: orphelix unstartup
+```
+
+## How It Works
+
+The startup command:
+
+1. **Detects init system** - Identifies your OS init system (launchd on macOS, systemd on Linux)
+2. **Generates startup script** - Creates system service script
+3. **Installs service** - Registers service with OS (requires sudo)
+4. **Saves process list** - Saves current pm2 processes to restore on boot
+5. **Enables service** - Enables automatic start
+
+## What Gets Started
+
+All currently running Orphelix instances and workers:
+
+- Main application (`orphelix`)
+- Notification worker (`orphelix-notifications`)
+- Named instances (if using multi-instance setup)
+
+## Sudo Requirement
+
+<Warning>
+This command requires **sudo** once to install the system service. Your password will be prompted.
+</Warning>
+
+## Platform Support
+
+| Platform | Init System | Status |
+|----------|-------------|--------|
+| **macOS** | launchd | ✅ Supported |
+| **Linux (Ubuntu/Debian)** | systemd | ✅ Supported |
+| **Linux (CentOS/RHEL)** | systemd | ✅ Supported |
+| **Windows** | - | ❌ Not supported |
+
+## Verify Auto-Startup
+
+After configuring, restart your computer to test:
+
+```bash
+# Restart system
+sudo reboot
+
+# After reboot, check status
+orphelix status
+```
+
+Should show `online` without manual start.
+
+## Disable Auto-Startup
+
+To disable auto-startup:
+
+```bash
+orphelix unstartup
+```
+
+See [unstartup command](/cli/commands/unstartup) for details.
+
+## Troubleshooting
+
+### Permission Denied
+
+```bash
+Error: EACCES: permission denied
+```
+
+**Solution:** Ensure you enter sudo password when prompted.
+
+### Service Not Starting on Boot
+
+Check pm2 startup configuration:
+
+```bash
+pm2 startup
+```
+
+Verify saved process list:
+
+```bash
+pm2 list
+```
+
+### Multiple Users
+
+If running Orphelix as different users, configure startup for each user:
+
+```bash
+# As user1
+orphelix startup
+
+# As user2
+sudo su - user2
+orphelix startup
+```
+
+## Manual Configuration
+
+If automatic setup fails, configure manually:
+
+### macOS (launchd)
+
+```bash
+pm2 startup launchd
+pm2 save
+```
+
+### Linux (systemd)
+
+```bash
+pm2 startup systemd
+pm2 save
+sudo systemctl enable pm2-$USER
+```
+
+## Related Commands
+
+- [unstartup](/cli/commands/unstartup) - Disable auto-startup
+- [start](/cli/commands/start) - Manual start
+- [status](/cli/commands/status) - Check if running
+
+## See Also
+
+<CardGroup cols={2}>
+  <Card title="Unstartup" icon="power-off" href="/cli/commands/unstartup">
+    Disable auto-startup
+  </Card>
+  <Card title="PM2 Documentation" icon="book" href="https://pm2.keymetrics.io/docs/usage/startup/">
+    Learn more about pm2 startup
+  </Card>
+</CardGroup>

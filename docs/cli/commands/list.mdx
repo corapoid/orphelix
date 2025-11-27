@@ -1,0 +1,65 @@
+---
+title: 'orphelix list'
+description: 'List all running Orphelix instances'
+---
+
+# orphelix list
+
+List all running Orphelix instances with detailed information.
+
+## Usage
+
+```bash
+orphelix list
+```
+
+## Example Output
+
+```bash
+$ orphelix list
+
+📋 Orphelix Instances
+
+🟢 orphelix
+   Status:   online
+   PID:      12345
+   Uptime:   45 minutes
+   Memory:   85 MB
+   CPU:      0.2%
+   Port:     3000
+   Restarts: 0
+
+🟢 orphelix-prod
+   Status:   online
+   PID:      12346
+   Uptime:   2 hours
+   Memory:   92 MB
+   CPU:      0.3%
+   Port:     3001
+   Restarts: 0
+
+💡 Manage instances:
+   orphelix stop --name <instance>
+   orphelix restart --name <instance>
+   orphelix logs --name <instance>
+```
+
+## Use Cases
+
+- Monitor multiple cluster connections
+- Check resource usage across instances
+- Verify which ports are in use
+- Track uptime and restart counts
+
+## Related Commands
+
+- [start](/cli/commands/start) - Start new instance
+- [stop](/cli/commands/stop) - Stop specific instance
+- [status](/cli/commands/status) - Quick status check
+- [info](/cli/commands/info) - Detailed single instance info
+
+## See Also
+
+<Card title="Multi-Instance Guide" icon="layer-group" href="/cli/multi-instance">
+  Learn how to run multiple Orphelix instances
+</Card>

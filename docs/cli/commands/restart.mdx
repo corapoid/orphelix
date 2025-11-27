@@ -1,0 +1,34 @@
+---
+title: 'orphelix restart'
+description: 'Restart Orphelix application'
+---
+
+# orphelix restart
+
+Restart the Orphelix application without stopping pm2.
+
+## Usage
+
+```bash
+orphelix restart [options]
+```
+
+## Options
+
+| Option | Alias | Description |
+|--------|-------|-------------|
+| `--port` | `-p` | Custom port |
+| `--name` | `-n` | Instance name |
+
+## Example
+
+```bash
+orphelix restart
+orphelix restart --port 8080
+orphelix restart --name prod
+```
+
+## Related Commands
+
+- [start](/cli/commands/start)
+- [stop](/cli/commands/stop)

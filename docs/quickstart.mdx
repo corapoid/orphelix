@@ -8,7 +8,7 @@ description: 'Get started with Orphelix in under 5 minutes'
 Before you begin, make sure you have:
 
 <AccordionGroup>
-  <Accordion icon="node-js" title="Node.js 20 or higher">
+  <Accordion icon="node-js" title="Node.js 24 or higher">
     Download from [nodejs.org](https://nodejs.org)
   </Accordion>
   <Accordion icon="terminal" title="kubectl (optional)">
@@ -18,32 +18,77 @@ Before you begin, make sure you have:
 
 ## Installation
 
-<Steps>
-  <Step title="Clone the repository">
-    ```bash
-    git clone <repository-url>
-    cd kubevista
-    ```
-  </Step>
+<Tabs>
+  <Tab title="CLI (Recommended)">
+    **Easiest way to run Orphelix - one command to install and start!**
 
-  <Step title="Install dependencies">
-    ```bash
-    npm install
-    ```
-  </Step>
+    <Steps>
+      <Step title="Install globally via npm">
+        ```bash
+        npm install -g orphelix
+        ```
+      </Step>
 
-  <Step title="Start the development server">
-    ```bash
-    npm run dev
-    ```
-  </Step>
+      <Step title="Start Orphelix">
+        ```bash
+        orphelix start
+        ```
 
-  <Step title="Open in browser">
-    Navigate to [http://localhost:3000](http://localhost:3000)
+        First run automatically:
+        - Installs dependencies
+        - Builds application
+        - Configures custom hostname
+        - Initializes database
+        - Starts in background
+      </Step>
 
-    The application starts in **Demo Mode** with realistic test data.
-  </Step>
-</Steps>
+      <Step title="Open in browser">
+        ```bash
+        orphelix open
+        ```
+
+        Or visit: [http://orphelix.local:3000](http://orphelix.local:3000)
+      </Step>
+    </Steps>
+
+    <Note>
+      Orphelix runs as a background service using pm2. No need to keep terminal open!
+    </Note>
+
+    See [CLI Guide](/cli/overview) for all commands.
+  </Tab>
+
+  <Tab title="Development Mode">
+    **For development and testing:**
+
+    <Steps>
+      <Step title="Clone the repository">
+        ```bash
+        git clone <repository-url>
+        cd orphelix
+        ```
+      </Step>
+
+      <Step title="Install dependencies">
+        ```bash
+        npm install
+        ```
+      </Step>
+
+      <Step title="Start the development server">
+        ```bash
+        npm run dev
+        ```
+      </Step>
+
+      <Step title="Open in browser">
+        Navigate to [http://localhost:3000](http://localhost:3000)
+
+        The application starts in **Demo Mode** with realistic test data.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
 ## Exploring Demo Mode
 
@@ -100,46 +145,57 @@ Demo Mode lets you explore all features without connecting to a real cluster:
 
 <CardGroup cols={2}>
   <Card
+    title="CLI Guide"
+    icon="terminal"
+    href="/cli/overview"
+  >
+    Learn all CLI commands and features
+  </Card>
+  <Card
     title="User Guide"
     icon="book"
-    href="/user-guide/dashboard"
+    href="/user/dashboard"
   >
     Learn how to use all features in detail
   </Card>
   <Card
     title="GitHub Integration"
     icon="github"
-    href="/github/overview"
+    href="/user/github/overview"
   >
     Set up GitOps workflow with YAML editor and PR creation
   </Card>
   <Card
     title="Configuration"
     icon="gear"
-    href="/configuration/cluster-connection"
+    href="/user/configuration/cluster-connection"
   >
     Configure cluster connections, namespaces, and settings
   </Card>
-  <Card
-    title="API Reference"
-    icon="code"
-    href="/api-reference/introduction"
-  >
-    Explore the REST API for custom integrations
-  </Card>
 </CardGroup>
 
-## Production Deployment
+## CLI Management
 
-For production use, build and run the optimized version:
+Orphelix CLI provides powerful commands for managing your dashboard:
 
 ```bash
-npm run build
-npm start
+# View status
+orphelix status
+
+# View logs
+orphelix logs
+
+# Restart application
+orphelix restart
+
+# Create backup
+orphelix backup
+
+# Enable auto-startup on boot
+orphelix startup
+
+# Run health checks
+orphelix doctor
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000)
-
-<Tip>
-  For containerized deployment, see [Docker Deployment](/configuration/cluster-connection#docker-deployment)
-</Tip>
+See [CLI Commands](/cli/commands/start) for complete reference.

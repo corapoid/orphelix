@@ -1,0 +1,86 @@
+---
+title: 'orphelix unstartup'
+description: 'Disable auto-startup on system boot'
+---
+
+# orphelix unstartup
+
+Disable automatic startup of Orphelix on system boot.
+
+## Usage
+
+```bash
+orphelix unstartup
+```
+
+## Example Output
+
+```bash
+$ orphelix unstartup
+
+🛑 Removing auto-startup configuration...
+
+[PM2] Removing init script...
+[PM2] Init script removed successfully
+
+✅ Auto-startup disabled!
+   Orphelix will no longer start automatically on system boot
+
+💡 To re-enable: orphelix startup
+```
+
+## What Happens
+
+1. Removes system service registration
+2. Disables auto-start on boot
+3. Orphelix must be started manually with `orphelix start`
+
+<Info>
+This does **not** stop currently running instances. Use `orphelix stop` to stop running processes.
+</Info>
+
+## When to Use
+
+Disable auto-startup when:
+
+- Testing different configurations
+- Temporarily stopping monitoring
+- Moving to manual start workflow
+- Troubleshooting startup issues
+
+## Verification
+
+After disabling, restart your system to verify:
+
+```bash
+# Restart system
+sudo reboot
+
+# After reboot, check status
+orphelix status
+# Should show: "Process 'orphelix' not found"
+
+# Start manually if needed
+orphelix start
+```
+
+## Re-enable Auto-Startup
+
+To enable auto-startup again:
+
+```bash
+orphelix start  # Start the instance first
+orphelix startup
+```
+
+## Related Commands
+
+- [startup](/cli/commands/startup) - Enable auto-startup
+- [stop](/cli/commands/stop) - Stop running instance
+- [start](/cli/commands/start) - Manually start instance
+
+## See Also
+
+<Card title="Startup Command" icon="rocket" href="/cli/commands/startup">
+  Enable auto-startup on boot
+</Card>

@@ -1,0 +1,60 @@
+---
+title: 'orphelix logs'
+description: 'View real-time application logs'
+---
+
+# orphelix logs
+
+View real-time logs from Orphelix application. Uses pm2 logs under the hood.
+
+## Usage
+
+```bash
+orphelix logs [options]
+```
+
+## Options
+
+| Option | Alias | Description | Default |
+|--------|-------|-------------|---------|
+| `--name` | `-n` | Instance name | `orphelix` |
+
+## Examples
+
+### View Default Instance Logs
+
+```bash
+orphelix logs
+```
+
+Shows combined stdout and stderr in real-time.
+
+### View Specific Instance Logs
+
+```bash
+orphelix logs --name prod
+```
+
+### Exit Logs
+
+Press **Ctrl+C** to exit. The application continues running in background.
+
+## Output Format
+
+```bash
+$ orphelix logs
+
+[TAILING] Tailing last 15 lines for [orphelix] process
+orphelix-0  | ▲ Next.js 16.0.0
+orphelix-0  | - Local:        http://localhost:3000
+orphelix-0  | ✓ Ready in 1.2s
+orphelix-0  | GET /api/dashboard 200 in 234ms
+
+[Press Ctrl+C to exit]
+```
+
+## Related Commands
+
+- [status](/cli/commands/status) - Check if running
+- [info](/cli/commands/info) - Detailed application info
+- [clean](/cli/commands/clean) - Clean logs and caches

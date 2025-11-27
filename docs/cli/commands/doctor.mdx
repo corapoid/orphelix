@@ -1,0 +1,122 @@
+---
+title: 'orphelix doctor'
+description: 'Run health checks and diagnostics'
+---
+
+# orphelix doctor
+
+Run comprehensive health checks to diagnose issues with Orphelix installation.
+
+## Usage
+
+```bash
+orphelix doctor
+```
+
+## Example Output
+
+### All Checks Pass
+
+```bash
+$ orphelix doctor
+
+🏥 Running health checks...
+
+✅ Node.js version: v24.1.0 (required: >= 24.0.0)
+✅ kubectl installed and accessible
+✅ Kubernetes cluster reachable (context: minikube)
+✅ Dependencies installed (node_modules exists)
+✅ Standalone build exists
+✅ Database accessible (orphelix.db)
+✅ Port 3000 available
+✅ pm2 process manager available
+
+🎉 All checks passed! Orphelix is healthy.
+```
+
+### Issues Detected
+
+```bash
+$ orphelix doctor
+
+🏥 Running health checks...
+
+✅ Node.js version: v24.1.0
+❌ kubectl not found in PATH
+⚠️  Kubernetes cluster not reachable
+✅ Dependencies installed
+✅ Database accessible
+❌ Port 3000 already in use (PID: 54321)
+✅ pm2 available
+
+❌ Found 2 errors and 1 warning
+
+Errors:
+  1. kubectl is not installed
+     Fix: brew install kubectl (macOS) or see https://kubernetes.io/docs/tasks/tools/
+
+  2. Port 3000 is in use by another process
+     Fix: orphelix start --port 8080
+        or kill process: lsof -ti:3000 | xargs kill
+
+Warnings:
+  1. Kubernetes cluster not reachable
+     This may be expected if cluster is offline
+```
+
+## Health Checks Performed
+
+### System Requirements
+- **Node.js version** - Checks for >= 24.0.0
+- **kubectl** - Verifies kubectl is installed and in PATH
+- **pm2** - Checks pm2 process manager availability
+
+### Dependencies
+- **node_modules** - Verifies npm packages are installed
+- **Standalone build** - Checks if Next.js build exists
+
+### Kubernetes
+- **Cluster connection** - Tests kubectl connection to cluster
+- **Current context** - Shows active kubectl context
+- **API server** - Verifies API server is reachable
+
+### Application
+- **Database** - Checks orphelix.db exists and is readable
+- **Port availability** - Tests if configured port is free
+- **Process status** - Verifies pm2 process health
+
+### Workers
+- **Notification worker** - Checks background worker status
+
+## Exit Codes
+
+- `0` - All checks passed
+- `1` - One or more checks failed
+
+## When to Run Doctor
+
+Run `orphelix doctor` when:
+
+- Installation completes but app won't start
+- Experiencing connection issues
+- After system updates or changes
+- Before reporting bugs
+- Troubleshooting performance issues
+
+## Automated Fixes
+
+<Info>
+Future versions may include `orphelix doctor --fix` to automatically resolve common issues.
+</Info>
+
+## Related Commands
+
+- [info](/cli/commands/info) - Application information
+- [status](/cli/commands/status) - Quick status check
+- [version](/cli/commands/version) - Version info
+
+## See Also
+
+<Card title="Troubleshooting Guide" icon="wrench" href="/cli/troubleshooting">
+  Common issues and solutions
+</Card>

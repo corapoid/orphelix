@@ -1,0 +1,183 @@
+---
+title: 'orphelix update'
+description: 'Update to latest version from GitHub'
+---
+
+# orphelix update
+
+Update Orphelix to the latest version from GitHub with automatic backup.
+
+## Usage
+
+```bash
+orphelix update
+```
+
+## Interactive Update Process
+
+```bash
+$ orphelix update
+
+🔍 Checking for updates...
+
+📦 New version available: v1.3.0 (current: v1.2.3)
+
+Release Notes:
+  - Added resource optimization recommendations
+  - Improved metrics collection
+  - Fixed notification worker crash
+  - Enhanced UI performance
+
+View full changelog: https://github.com/yourusername/orphelix/releases/tag/v1.3.0
+
+   Update now? [y/N]: y
+
+💾 Creating backup before update...
+✅ Backup created: ~/orphelix-backups/orphelix-backup-2025-11-26-103045.db
+
+📥 Downloading update...
+[████████████████████] 100%
+
+✅ Update complete!
+   Version: v1.2.3 → v1.3.0
+
+   Restart Orphelix with: orphelix restart
+```
+
+## Automatic Backup
+
+<Info>
+Before updating, a full database backup is automatically created. If the update fails, you can restore from this backup.
+</Info>
+
+## Update Source
+
+Updates are fetched from GitHub releases:
+```
+https://github.com/yourusername/orphelix/releases/latest
+```
+
+## Version Checking
+
+The update command:
+
+1. Queries GitHub API for latest release
+2. Compares with current version (from package.json)
+3. Shows release notes if update available
+4. Prompts for confirmation
+5. Creates automatic backup
+6. Downloads and installs update
+7. Preserves all settings and data
+
+## No Update Available
+
+```bash
+$ orphelix update
+
+🔍 Checking for updates...
+
+✅ You are already running the latest version (v1.3.0)
+```
+
+## Skipping Update
+
+Press `N` or `Ctrl+C` to cancel:
+
+```bash
+Update now? [y/N]: n
+⏭️  Update cancelled
+```
+
+## After Update
+
+**Restart the application** to use the new version:
+
+```bash
+orphelix restart
+```
+
+## Rollback
+
+If the update causes issues, restore from the automatic backup:
+
+```bash
+# Find the pre-update backup
+orphelix restore ~/orphelix-backups/orphelix-backup-2025-11-26-103045.db
+
+# Reinstall previous version
+npm install -g orphelix@1.2.3
+
+# Restart
+orphelix restart
+```
+
+## Update Frequency
+
+Check for updates:
+
+- Automatically when running `orphelix version`
+- Manually with `orphelix update`
+- Weekly via GitHub notifications (if watching the repository)
+
+## Pre-release Updates
+
+<Warning>
+The update command installs stable releases only. Pre-release versions must be installed manually via npm.
+</Warning>
+
+To install pre-release:
+
+```bash
+npm install -g orphelix@next
+```
+
+## Troubleshooting
+
+### Network Error
+
+```bash
+Error: Failed to fetch updates from GitHub
+```
+
+Check internet connection and try again.
+
+### Permission Denied
+
+```bash
+Error: EACCES: permission denied
+```
+
+Update npm permissions or use:
+
+```bash
+sudo npm install -g orphelix
+```
+
+(Not recommended - fix npm permissions instead)
+
+### Update Failed
+
+If update fails:
+
+1. Restore from automatic backup
+2. Check logs: `orphelix logs`
+3. Run diagnostics: `orphelix doctor`
+4. Report issue on GitHub
+
+## Related Commands
+
+- [version](/cli/commands/version) - Check current version
+- [backup](/cli/commands/backup) - Manual backup
+- [restore](/cli/commands/restore) - Restore from backup
+- [restart](/cli/commands/restart) - Restart application
+
+## See Also
+
+<CardGroup cols={2}>
+  <Card title="Changelog" icon="list" href="https://github.com/yourusername/orphelix/blob/main/CHANGELOG.md">
+    View all version history
+  </Card>
+  <Card title="Releases" icon="tag" href="https://github.com/yourusername/orphelix/releases">
+    Browse GitHub releases
+  </Card>
+</CardGroup>

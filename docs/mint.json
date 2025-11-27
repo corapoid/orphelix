@@ -31,8 +31,16 @@
       "url": "user"
     },
     {
+      "name": "CLI",
+      "url": "cli"
+    },
+    {
       "name": "Developer",
       "url": "developer"
+    },
+    {
+      "name": "Roadmap",
+      "url": "roadmap"
     }
   ],
   "anchors": [
@@ -86,6 +94,56 @@
         "user/configuration/namespaces",
         "user/configuration/settings",
         "user/configuration/demo-mode"
+      ]
+    },
+    {
+      "group": "CLI Guide",
+      "pages": [
+        "cli/overview",
+        "cli/installation",
+        "cli/multi-instance",
+        "cli/troubleshooting"
+      ]
+    },
+    {
+      "group": "Process Management",
+      "pages": [
+        "cli/commands/start",
+        "cli/commands/stop",
+        "cli/commands/restart",
+        "cli/commands/status",
+        "cli/commands/logs",
+        "cli/commands/list",
+        "cli/commands/delete"
+      ]
+    },
+    {
+      "group": "Information",
+      "pages": [
+        "cli/commands/version",
+        "cli/commands/info",
+        "cli/commands/doctor"
+      ]
+    },
+    {
+      "group": "Backup & Configuration",
+      "pages": [
+        "cli/commands/backup",
+        "cli/commands/restore"
+      ]
+    },
+    {
+      "group": "Maintenance",
+      "pages": [
+        "cli/commands/update",
+        "cli/commands/startup",
+        "cli/commands/unstartup"
+      ]
+    },
+    {
+      "group": "Roadmap",
+      "pages": [
+        "roadmap/resource-optimization"
       ]
     },
     {

@@ -1,0 +1,92 @@
+---
+title: 'orphelix backup'
+description: 'Create database backup'
+---
+
+# orphelix backup
+
+Create a timestamped backup of the Orphelix SQLite database.
+
+## Usage
+
+```bash
+orphelix backup
+```
+
+## Example Output
+
+```bash
+$ orphelix backup
+
+💾 Creating database backup...
+
+✅ Backup created successfully!
+   Location: /Users/username/orphelix-backups/orphelix-backup-2025-11-26-103045.db
+   Size: 2.43 MB
+
+💡 Restore with: orphelix restore /Users/username/orphelix-backups/orphelix-backup-2025-11-26-103045.db
+```
+
+## Backup Location
+
+Backups are stored in:
+```
+~/orphelix-backups/
+├── orphelix-backup-2025-11-26-103045.db
+├── orphelix-backup-2025-11-25-150000.db
+├── orphelix-backup-2025-11-24-090000.db
+└── ...
+```
+
+## Filename Format
+
+```
+orphelix-backup-{YYYY}-{MM}-{DD}-{HHMMSS}.db
+```
+
+Example: `orphelix-backup-2025-11-26-103045.db`
+
+## What Gets Backed Up
+
+The backup includes all SQLite database tables:
+
+- **user_settings** - Theme, mode, preferences
+- **github_settings** - GitHub integration config
+- **github_pending_prs** - Pending pull requests
+- **github_edit_basket** - Pending file edits
+- **cluster_aliases** - Custom cluster names
+- **critical_issues_settings** - Monitoring preferences
+- **sidebar_pins** - Navigation customization
+- **resource_metrics_history** - Historical metrics (if feature enabled)
+
+## Automatic Backups
+
+Backups are automatically created:
+
+- Before running `orphelix update`
+- When explicitly requested via this command
+
+## Manual Backup
+
+You can also manually copy the database:
+
+```bash
+cp orphelix.db ~/my-backups/orphelix-$(date +%Y%m%d).db
+```
+
+## Related Commands
+
+- [restore](/cli/commands/restore) - Restore from backup
+- [export-config](/cli/commands/export-config) - Export as JSON
+- [import-config](/cli/commands/import-config) - Import JSON config
+
+## See Also
+
+<CardGroup cols={2}>
+  <Card title="Restore" icon="rotate-left" href="/cli/commands/restore">
+    Restore from backup
+  </Card>
+  <Card title="Export Config" icon="file-export" href="/cli/commands/export-config">
+    Export configuration as JSON
+  </Card>
+</CardGroup>

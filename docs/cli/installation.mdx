@@ -1,0 +1,272 @@
+---
+title: 'Installation'
+description: 'Install and configure Orphelix CLI'
+---
+
+# Installation
+
+## Prerequisites
+
+Before installing Orphelix CLI, ensure you have:
+
+- **Node.js** >= 24.0.0 ([Download](https://nodejs.org/))
+- **kubectl** installed and configured ([Install Guide](https://kubernetes.io/docs/tasks/tools/))
+- **npm** or **yarn** package manager
+- **macOS** or **Linux** operating system
+
+## Install via npm
+
+Install Orphelix CLI globally using npm:
+
+```bash
+npm install -g orphelix
+```
+
+This will make the `orphelix` command available system-wide.
+
+## Verify Installation
+
+Check that the installation was successful:
+
+```bash
+orphelix --version
+```
+
+You should see output like:
+```
+Orphelix v1.0.0
+```
+
+## First Run
+
+Start Orphelix for the first time:
+
+```bash
+orphelix start
+```
+
+### What Happens on First Run?
+
+The CLI will automatically:
+
+1. **Check Dependencies**
+   ```
+   📦 Checking dependencies...
+   ✅ Node.js version: v24.1.0
+   ✅ kubectl installed
+   ```
+
+2. **Install npm Packages** (if needed)
+   ```
+   📦 Installing dependencies...
+   [npm install output]
+   ✅ Dependencies installed
+   ```
+
+3. **Build Standalone App** (if needed)
+   ```
+   🔨 Building standalone application...
+   [build output]
+   ✅ Build complete
+   ```
+
+4. **Configure Hostname** (interactive)
+   ```
+   🌐 Configure custom hostname orphelix.local?
+      This requires sudo to modify /etc/hosts
+
+      Configure now? [Y/n]: y
+
+   [sudo] Password for user:
+   ✅ Hostname configured
+   ```
+
+5. **Initialize Database**
+   ```
+   💾 Initializing database...
+   ✅ Database initialized at ./orphelix.db
+   ```
+
+6. **Start Application**
+   ```
+   🚀 Starting Orphelix...
+   ✅ Orphelix is running!
+   📍 Open in browser: http://orphelix.local:3000
+   📍 Or: http://localhost:3000
+
+   🔔 Notification worker started
+
+   📊 View logs: orphelix logs
+   🛑 Stop: orphelix stop
+   ```
+
+## Configuration Options
+
+### Custom Port
+
+Run on a different port:
+
+```bash
+# Via command flag
+orphelix start --port 8080
+
+# Via environment variable
+export ORPHELIX_PORT=8080
+orphelix start
+```
+
+### Skip Hostname Configuration
+
+If you don't want to configure `orphelix.local`, answer "No" when prompted:
+
+```
+Configure custom hostname orphelix.local? [Y/n]: n
+⏭️  Skipped hostname configuration
+```
+
+You can still access via `http://localhost:3000`
+
+## Verify Everything is Working
+
+After installation, check the status:
+
+```bash
+orphelix status
+```
+
+Expected output:
+```
+┌────────────┬────┬──────┬────────┬─────┬─────────┐
+│ name       │ id │ mode │ status │ cpu │ memory  │
+├────────────┼────┼──────┼────────┼─────┼─────────┤
+│ orphelix   │ 0  │ fork │ online │ 0%  │ 85.2 MB │
+└────────────┴────┴──────┴────────┴─────┴─────────┘
+```
+
+Open in browser:
+
+```bash
+orphelix open
+```
+
+## Directory Structure
+
+After installation, Orphelix creates:
+
+```
+/path/to/orphelix/
+├── orphelix.db              # SQLite database
+├── orphelix.db-shm          # Database shared memory
+├── orphelix.db-wal          # Database write-ahead log
+├── .next/standalone/        # Built application
+├── logs/                    # Application logs
+└── node_modules/            # Dependencies
+```
+
+Backups are stored in:
+```
+~/orphelix-backups/
+├── orphelix-backup-2025-11-26-100000.db
+├── orphelix-backup-2025-11-25-150000.db
+└── ...
+```
+
+## Troubleshooting Installation
+
+### "Node version too old"
+
+Upgrade to Node.js 24 or higher:
+
+```bash
+# Using nvm
+nvm install 24
+nvm use 24
+
+# Or download from nodejs.org
+```
+
+### "kubectl not found"
+
+Install kubectl:
+
+```bash
+# macOS
+brew install kubectl
+
+# Linux (Ubuntu/Debian)
+sudo apt-get install kubectl
+
+# Or follow official guide
+# https://kubernetes.io/docs/tasks/tools/
+```
+
+### "Permission denied" during npm install
+
+Run with sudo (not recommended) or fix npm permissions:
+
+```bash
+# Fix npm permissions (recommended)
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+# Then install without sudo
+npm install -g orphelix
+```
+
+### "Port 3000 already in use"
+
+Use a different port:
+
+```bash
+orphelix start --port 8080
+```
+
+Or kill the process using port 3000:
+
+```bash
+lsof -ti:3000 | xargs kill
+```
+
+### Database initialization failed
+
+Remove the database and restart:
+
+```bash
+orphelix stop
+rm orphelix.db*
+orphelix start
+```
+
+## Uninstallation
+
+To completely remove Orphelix:
+
+```bash
+# Stop and remove from pm2
+orphelix delete
+
+# Uninstall globally
+npm uninstall -g orphelix
+
+# Remove data (optional)
+rm -rf ~/orphelix-backups
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Start Command" icon="play" href="/cli/commands/start">
+    Learn about the start command
+  </Card>
+  <Card title="Configuration" icon="gear" href="/user/configuration/settings">
+    Configure Orphelix settings
+  </Card>
+  <Card title="Auto-Startup" icon="rocket" href="/cli/commands/startup">
+    Enable auto-startup on boot
+  </Card>
+  <Card title="Troubleshooting" icon="life-ring" href="/cli/troubleshooting">
+    Common issues and solutions
+  </Card>
+</CardGroup>

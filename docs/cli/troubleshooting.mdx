@@ -1,0 +1,494 @@
+---
+title: 'Troubleshooting'
+description: 'Common issues and solutions for Orphelix CLI'
+---
+
+# Troubleshooting
+
+Common issues and their solutions when using Orphelix CLI.
+
+## Installation Issues
+
+### Node.js Version Too Old
+
+**Error:**
+```
+Error: Node.js version 20.0.0 detected. Required: >= 24.0.0
+```
+
+**Solution:**
+Upgrade Node.js to version 24 or higher:
+
+```bash
+# Using nvm (recommended)
+nvm install 24
+nvm use 24
+
+# Verify version
+node --version
+```
+
+### kubectl Not Found
+
+**Error:**
+```
+Error: kubectl not found in PATH
+```
+
+**Solution:**
+Install kubectl:
+
+```bash
+# macOS
+brew install kubectl
+
+# Linux (Ubuntu/Debian)
+sudo apt-get update
+sudo apt-get install -y kubectl
+
+# Verify installation
+kubectl version --client
+```
+
+### npm Permission Denied
+
+**Error:**
+```
+Error: EACCES: permission denied
+```
+
+**Solution:**
+Fix npm permissions (don't use sudo):
+
+```bash
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+# Now install without sudo
+npm install -g orphelix
+```
+
+---
+
+## Startup Issues
+
+### Port Already in Use
+
+**Error:**
+```
+Error: Port 3000 is already in use
+```
+
+**Solution 1:** Use different port
+```bash
+orphelix start --port 8080
+```
+
+**Solution 2:** Kill process using the port
+```bash
+# Find process
+lsof -ti:3000
+
+# Kill process
+lsof -ti:3000 | xargs kill
+
+# Start orphelix
+orphelix start
+```
+
+### Process Already Exists
+
+**Error:**
+```
+Error: Process 'orphelix' already exists
+```
+
+**Solution:**
+Stop existing process first:
+
+```bash
+orphelix stop
+orphelix start
+
+# Or delete and start fresh
+orphelix delete
+orphelix start
+```
+
+### Database Initialization Failed
+
+**Error:**
+```
+Error: Failed to initialize database
+```
+
+**Solution:**
+Remove corrupted database and restart:
+
+```bash
+orphelix stop
+rm orphelix.db orphelix.db-shm orphelix.db-wal
+orphelix start
+```
+
+<Warning>
+This will reset all settings to defaults.
+</Warning>
+
+### Dependencies Missing
+
+**Error:**
+```
+Error: Cannot find module 'next'
+```
+
+**Solution:**
+Install dependencies manually:
+
+```bash
+cd /path/to/orphelix/app
+npm install
+orphelix start
+```
+
+---
+
+## Connection Issues
+
+### Kubernetes Cluster Not Reachable
+
+**Error:**
+```
+Error: Unable to connect to cluster
+```
+
+**Solution:**
+Verify kubectl connection:
+
+```bash
+# Check current context
+kubectl config current-context
+
+# Test connection
+kubectl cluster-info
+
+# If cluster is down, start it
+minikube start  # or your cluster startup command
+```
+
+### Wrong Cluster Context
+
+**Problem:** Orphelix connects to wrong cluster
+
+**Solution:**
+Switch context before starting:
+
+```bash
+# List contexts
+kubectl config get-contexts
+
+# Switch context
+kubectl config use-context correct-cluster
+
+# Stop and restart orphelix
+orphelix restart
+```
+
+### Metrics Server Not Available
+
+**Error:**
+```
+Error: metrics-server not installed
+```
+
+**Solution:**
+Install metrics-server in your cluster:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+---
+
+## Runtime Issues
+
+### Application Crashed
+
+**Symptom:** Status shows `errored`
+
+```bash
+$ orphelix status
+Status: errored ❌
+```
+
+**Solution:**
+Check logs for errors:
+
+```bash
+# View logs
+orphelix logs
+
+# Restart application
+orphelix restart
+
+# If issue persists, run diagnostics
+orphelix doctor
+```
+
+### High Memory Usage
+
+**Symptom:** Orphelix using too much RAM
+
+```bash
+$ orphelix info
+Memory: 500 MB
+```
+
+**Solution:**
+Restart the application:
+
+```bash
+orphelix restart
+```
+
+If issue persists, check for:
+- Large number of resources in cluster
+- Memory leaks (report as bug)
+
+### Notifications Not Working
+
+**Problem:** Desktop notifications not appearing
+
+**Solution:**
+
+1. Check notification worker status:
+```bash
+orphelix list
+# Should show orphelix-notifications as online
+```
+
+2. Verify notifications enabled in settings:
+- Open Orphelix UI
+- Go to Settings → Cluster Configuration
+- Enable "Desktop Notifications"
+
+3. Grant browser permissions:
+- Click "Allow" when browser prompts for notification permission
+
+4. Restart notification worker:
+```bash
+orphelix restart
+```
+
+---
+
+## Database Issues
+
+### Database Locked
+
+**Error:**
+```
+Error: database is locked
+```
+
+**Solution:**
+Close all Orphelix instances:
+
+```bash
+orphelix stop
+# Wait 5 seconds
+orphelix start
+```
+
+### Database Corrupted
+
+**Error:**
+```
+Error: database disk image is malformed
+```
+
+**Solution:**
+Restore from backup:
+
+```bash
+# List backups
+orphelix restore
+
+# Restore latest backup
+orphelix restore ~/orphelix-backups/orphelix-backup-YYYY-MM-DD-HHMMSS.db
+
+# If no backups, reset database
+orphelix stop
+rm orphelix.db*
+orphelix start
+```
+
+---
+
+## Update Issues
+
+### Update Failed
+
+**Error:**
+```
+Error: Failed to download update
+```
+
+**Solution:**
+
+1. Check internet connection
+2. Try again:
+```bash
+orphelix update
+```
+
+3. If still failing, update manually:
+```bash
+npm install -g orphelix@latest
+orphelix restart
+```
+
+### Version Mismatch After Update
+
+**Problem:** UI shows old version after update
+
+**Solution:**
+Clear browser cache and hard reload:
+
+- **Chrome/Edge:** Ctrl+Shift+R (Cmd+Shift+R on macOS)
+- **Firefox:** Ctrl+F5 (Cmd+Shift+R on macOS)
+- **Safari:** Cmd+Option+R
+
+---
+
+## Performance Issues
+
+### Slow Dashboard Loading
+
+**Symptoms:**
+- Dashboard takes >10 seconds to load
+- High CPU usage
+
+**Solution:**
+
+1. Check cluster size:
+```bash
+kubectl get nodes
+kubectl get pods --all-namespaces | wc -l
+```
+
+2. For large clusters (>500 pods), consider:
+   - Filtering by namespace
+   - Using demo mode for testing
+   - Increasing hardware resources
+
+3. Clear caches:
+```bash
+orphelix clean
+orphelix restart
+```
+
+### Logs Growing Too Large
+
+**Problem:** pm2 logs consuming disk space
+
+**Solution:**
+Clear logs:
+
+```bash
+# Clear all pm2 logs
+pm2 flush
+
+# Or use clean command
+orphelix clean
+```
+
+---
+
+## Common Error Messages
+
+### "EADDRINUSE"
+
+**Full Error:**
+```
+Error: listen EADDRINUSE: address already in use :::3000
+```
+
+**Meaning:** Port is already in use by another process
+
+**Fix:** [See Port Already in Use](#port-already-in-use)
+
+### "EACCES"
+
+**Full Error:**
+```
+Error: EACCES: permission denied
+```
+
+**Meaning:** Insufficient permissions
+
+**Fix:**
+- For npm: [Fix npm permissions](#npm-permission-denied)
+- For /etc/hosts: Answer "yes" when prompted for sudo
+- For files: Check file permissions with `ls -la`
+
+### "MODULE_NOT_FOUND"
+
+**Full Error:**
+```
+Error: Cannot find module 'X'
+```
+
+**Meaning:** Missing npm dependencies
+
+**Fix:**
+```bash
+cd /path/to/orphelix/app
+npm install
+orphelix restart
+```
+
+---
+
+## Getting Help
+
+If your issue isn't covered here:
+
+1. **Run diagnostics:**
+```bash
+orphelix doctor
+```
+
+2. **Check logs:**
+```bash
+orphelix logs
+```
+
+3. **Search existing issues:**
+[GitHub Issues](https://github.com/yourusername/orphelix/issues)
+
+4. **Report a bug:**
+Include:
+- Output of `orphelix doctor`
+- Output of `orphelix version`
+- Relevant log excerpts
+- Steps to reproduce
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Doctor Command" icon="stethoscope" href="/cli/commands/doctor">
+    Run health diagnostics
+  </Card>
+  <Card title="Installation" icon="download" href="/cli/installation">
+    Fresh installation guide
+  </Card>
+  <Card title="GitHub Issues" icon="bug" href="https://github.com/yourusername/orphelix/issues">
+    Report bugs and request features
+  </Card>
+  <Card title="CLI Overview" icon="terminal" href="/cli/overview">
+    Back to CLI documentation
+  </Card>
+</CardGroup>

@@ -1,0 +1,45 @@
+---
+title: 'orphelix status'
+description: 'Check application status'
+---
+
+# orphelix status
+
+Display the current status of Orphelix application.
+
+## Usage
+
+```bash
+orphelix status [options]
+```
+
+## Options
+
+| Option | Alias | Description | Default |
+|--------|-------|-------------|---------|
+| `--name` | `-n` | Instance name | `orphelix` |
+
+## Example Output
+
+```bash
+$ orphelix status
+
+┌────────────┬────┬──────┬────────┬─────┬─────────┐
+│ name       │ id │ mode │ status │ cpu │ memory  │
+├────────────┼────┼──────┼────────┼─────┼─────────┤
+│ orphelix   │ 0  │ fork │ online │ 0%  │ 85.2 MB │
+└────────────┴────┴──────┴────────┴─────┴─────────┘
+```
+
+## Status Values
+
+- **online** - Running normally
+- **stopped** - Stopped via `orphelix stop`
+- **errored** - Crashed or error state
+- **launching** - Starting up
+
+## Related Commands
+
+- [info](/cli/commands/info) - Detailed information
+- [list](/cli/commands/list) - List all instances
+- [logs](/cli/commands/logs) - View logs
