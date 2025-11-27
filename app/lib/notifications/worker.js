@@ -236,6 +236,16 @@ async function start() {
     checkCriticalIssues().catch(console.error)
   }, 30000)
 
+  // Demo mode: send initial notification after 10 seconds
+  setTimeout(() => {
+    const { notificationsEnabled, mode } = getSettings()
+
+    if (notificationsEnabled && mode === 'demo') {
+      console.log('📬 Sending initial demo notification...')
+      sendDemoNotification()
+    }
+  }, 10000) // 10 seconds
+
   // Demo mode: send example notification every 5 minutes
   setInterval(() => {
     const { notificationsEnabled, mode } = getSettings()
