@@ -59,8 +59,23 @@ function getSettings() {
 
 async function fetchCriticalIssues() {
   try {
-    // Fetch from the local API
-    const response = await fetch('http://localhost:3000/api/dashboard')
+    // Get selected namespace from database
+    if (!fs.existsSync(DB_PATH)) {
+      return null
+    }
+
+    const db = new Database(DB_PATH, { readonly: true })
+    let namespace = 'default'
+
+    try {
+      const userSettings = db.prepare('SELECT selected_namespace FROM user_settings WHERE id = 1').get()
+      namespace = userSettings?.selected_namespace || 'default'
+    } finally {
+      db.close()
+    }
+
+    // Fetch from the local API with namespace parameter
+    const response = await fetch(`http://localhost:3000/api/dashboard/summary?namespace=${namespace}`)
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`)
     }
@@ -69,16 +84,16 @@ async function fetchCriticalIssues() {
 
     return {
       pods: {
-        failing: data.pods?.filter(p => p.status === 'Failed' || p.status === 'CrashLoopBackOff').length || 0
+        failing: (data.pods?.failed || 0) + (data.pods?.pending || 0)
       },
       nodes: {
-        notReady: data.nodes?.filter(n => !n.ready).length || 0
+        notReady: data.nodes?.notReady || 0
       },
       deployments: {
-        degraded: data.deployments?.filter(d => d.availableReplicas < d.desiredReplicas).length || 0
+        degraded: data.deployments?.degraded || 0
       },
       pv: {
-        unbound: data.persistentVolumes?.filter(pv => pv.status !== 'Bound').length || 0
+        unbound: (data.pv?.total || 0) - (data.pv?.bound || 0)
       }
     }
   } catch (error) {
