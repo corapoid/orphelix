@@ -12,6 +12,7 @@ interface ModeStore {
   autoRefreshEnabled: boolean
   autoRefreshInterval: number // seconds
   hasCompletedWelcome: boolean // Flag to track if user has completed initial setup
+  initialized: boolean
   setMode: (mode: AppMode) => void
   setContext: (context: KubernetesContext | null) => void
   setNamespace: (namespace: string) => void
@@ -21,7 +22,32 @@ interface ModeStore {
   setAutoRefreshEnabled: (enabled: boolean) => void
   setAutoRefreshInterval: (interval: number) => void
   setHasCompletedWelcome: (completed: boolean) => void
+  initialize: (data: Partial<ModeStore>) => void
   reset: () => void
+  syncToServer: () => Promise<void>
+}
+
+// Helper to sync state to server
+async function syncStateToServer(state: Partial<ModeStore>) {
+  try {
+    await fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: state.mode,
+        selectedContext: state.selectedContext,
+        selectedNamespace: state.selectedNamespace,
+        clusterConnected: state.clusterConnected,
+        connectionError: state.connectionError,
+        realtimeEnabled: state.realtimeEnabled,
+        autoRefreshEnabled: state.autoRefreshEnabled,
+        autoRefreshInterval: state.autoRefreshInterval,
+        hasCompletedWelcome: state.hasCompletedWelcome,
+      }),
+    })
+  } catch (error) {
+    console.error('Failed to sync settings to server:', error)
+  }
 }
 
 interface GitHubRepo {
@@ -55,30 +81,62 @@ interface GitHubStore {
 
 /**
  * Global store for application mode (demo vs real)
- * Persisted to localStorage
+ * Synced with SQLite database via API
  */
-export const useModeStore = create<ModeStore>()(
-  persist(
-    (set) => ({
-      mode: 'demo', // Default to demo mode (user must choose real or stay in demo)
-      selectedContext: null,
-      selectedNamespace: '',
-      clusterConnected: false,
-      connectionError: null,
-      realtimeEnabled: false,
-      autoRefreshEnabled: false,
-      autoRefreshInterval: 30, // 30 seconds default
-      hasCompletedWelcome: false, // User hasn't completed welcome flow
-      setMode: (mode) => set({ mode }),
-      setContext: (context) => set({ selectedContext: context }),
-      setNamespace: (namespace) => set({ selectedNamespace: namespace }),
-      setClusterConnected: (connected) => set({ clusterConnected: connected }),
-      setConnectionError: (error) => set({ connectionError: error }),
-      setRealtimeEnabled: (enabled) => set({ realtimeEnabled: enabled }),
-      setAutoRefreshEnabled: (enabled) => set({ autoRefreshEnabled: enabled }),
-      setAutoRefreshInterval: (interval) => set({ autoRefreshInterval: interval }),
-      setHasCompletedWelcome: (completed) => set({ hasCompletedWelcome: completed }),
-      reset: () => set({
+export const useModeStore = create<ModeStore>()((set, get) => ({
+  mode: 'demo',
+  selectedContext: null,
+  selectedNamespace: '',
+  clusterConnected: false,
+  connectionError: null,
+  realtimeEnabled: false,
+  autoRefreshEnabled: false,
+  autoRefreshInterval: 30,
+  hasCompletedWelcome: false,
+  initialized: false,
+  setMode: (mode) => {
+    set({ mode })
+    syncStateToServer(get())
+  },
+  setContext: (context) => {
+    set({ selectedContext: context })
+    syncStateToServer(get())
+  },
+  setNamespace: (namespace) => {
+    set({ selectedNamespace: namespace })
+    syncStateToServer(get())
+  },
+  setClusterConnected: (connected) => {
+    set({ clusterConnected: connected })
+    syncStateToServer(get())
+  },
+  setConnectionError: (error) => {
+    set({ connectionError: error })
+    syncStateToServer(get())
+  },
+  setRealtimeEnabled: (enabled) => {
+    set({ realtimeEnabled: enabled })
+    syncStateToServer(get())
+  },
+  setAutoRefreshEnabled: (enabled) => {
+    set({ autoRefreshEnabled: enabled })
+    syncStateToServer(get())
+  },
+  setAutoRefreshInterval: (interval) => {
+    set({ autoRefreshInterval: interval })
+    syncStateToServer(get())
+  },
+  setHasCompletedWelcome: (completed) => {
+    set({ hasCompletedWelcome: completed })
+    syncStateToServer(get())
+  },
+  initialize: (data) => {
+    set({ ...data, initialized: true })
+  },
+  reset: async () => {
+    try {
+      await fetch('/api/settings', { method: 'DELETE' })
+      set({
         mode: 'demo',
         selectedContext: null,
         selectedNamespace: '',
@@ -88,13 +146,13 @@ export const useModeStore = create<ModeStore>()(
         autoRefreshEnabled: false,
         autoRefreshInterval: 30,
         hasCompletedWelcome: false,
-      }),
-    }),
-    {
-      name: 'orphelix-mode',
+      })
+    } catch (error) {
+      console.error('Failed to reset settings:', error)
     }
-  )
-)
+  },
+  syncToServer: () => syncStateToServer(get()),
+}))
 
 /**
  * Global store for GitHub integration
