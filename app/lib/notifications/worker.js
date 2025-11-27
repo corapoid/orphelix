@@ -36,21 +36,22 @@ function saveState(state) {
 
 function getSettings() {
   if (!fs.existsSync(DB_PATH)) {
-    return { notificationsEnabled: false, enabledResources: new Set() }
+    return { notificationsEnabled: false, enabledResources: new Set(), mode: 'demo' }
   }
 
   const db = new Database(DB_PATH, { readonly: true })
 
   try {
-    // Get notifications enabled setting
-    const userSettings = db.prepare('SELECT notifications_enabled FROM user_settings WHERE id = 1').get()
+    // Get notifications enabled setting and mode
+    const userSettings = db.prepare('SELECT notifications_enabled, mode FROM user_settings WHERE id = 1').get()
     const notificationsEnabled = Boolean(userSettings?.notifications_enabled)
+    const mode = userSettings?.mode || 'demo'
 
     // Get enabled resource types
     const resources = db.prepare('SELECT resource_type FROM critical_issues_settings WHERE enabled = 1').all()
     const enabledResources = new Set(resources.map(r => r.resource_type))
 
-    return { notificationsEnabled, enabledResources }
+    return { notificationsEnabled, enabledResources, mode }
   } finally {
     db.close()
   }
@@ -165,7 +166,7 @@ function checkAndNotify(currentState, enabledResources) {
 }
 
 async function checkCriticalIssues() {
-  const { notificationsEnabled, enabledResources } = getSettings()
+  const { notificationsEnabled, enabledResources, mode } = getSettings()
 
   if (!notificationsEnabled) {
     return // Notifications disabled
@@ -189,6 +190,37 @@ async function checkCriticalIssues() {
   saveState(currentState)
 }
 
+// Demo notification for users to see how notifications work
+function sendDemoNotification() {
+  const demoExamples = [
+    {
+      title: 'Pod Failures Detected',
+      message: '2 new pod(s) in failed state. Total: 3',
+      type: 'critical'
+    },
+    {
+      title: 'Deployment Issues',
+      message: '1 deployment degraded. Check your cluster status.',
+      type: 'warning'
+    },
+    {
+      title: 'Node Issues Detected',
+      message: '1 node not ready. Total: 1',
+      type: 'critical'
+    },
+    {
+      title: 'Volume Issues',
+      message: '1 persistent volume unbound. Total: 1',
+      type: 'warning'
+    }
+  ]
+
+  // Pick a random demo notification
+  const demo = demoExamples[Math.floor(Math.random() * demoExamples.length)]
+  sendNotification(demo.title, demo.message, demo.type)
+  console.log(`📬 Demo notification sent: ${demo.title}`)
+}
+
 // Main loop
 async function start() {
   console.log('🔔 Notification worker started')
@@ -203,6 +235,17 @@ async function start() {
   setInterval(() => {
     checkCriticalIssues().catch(console.error)
   }, 30000)
+
+  // Demo mode: send example notification every 5 minutes
+  setInterval(() => {
+    const { notificationsEnabled, mode } = getSettings()
+
+    if (notificationsEnabled && mode === 'demo') {
+      sendDemoNotification()
+    }
+  }, 5 * 60 * 1000) // 5 minutes
+
+  console.log('   Demo notifications enabled (every 5 minutes in demo mode)')
 }
 
 // Handle graceful shutdown
