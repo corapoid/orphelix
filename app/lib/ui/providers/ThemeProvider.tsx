@@ -3,13 +3,13 @@
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ReactNode, useState, useMemo, createContext, useContext, useEffect } from 'react'
-import { buildTheme } from '../theme/theme-builder.js'
+import { buildTheme } from '../theme/theme-builder'
 import {
   classicPreset,
   liquidGlassPreset,
   defaultVisualPreset,
   type VisualPresetName
-} from '../theme/visual-presets.js'
+} from '../theme/visual-presets'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 

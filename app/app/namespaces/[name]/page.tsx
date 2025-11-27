@@ -18,7 +18,7 @@ import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import { QuotaUsageCard } from '@/app/components/namespace/quota-usage-card'
 import { useModeStore } from '@/lib/core/store'
 import { useEffect } from 'react'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 export default function NamespaceDetailPage() {
   const { visualPreset } = useTheme()

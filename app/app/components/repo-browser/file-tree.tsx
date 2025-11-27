@@ -18,7 +18,7 @@ import ImageIcon from '@mui/icons-material/Image'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
-import { GlassPanel } from '@orphelix/ui'
+import { GlassPanel } from '@/lib/ui'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
 
 interface TreeItem {

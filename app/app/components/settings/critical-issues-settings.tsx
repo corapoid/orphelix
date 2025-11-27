@@ -7,7 +7,7 @@ import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import { useCriticalIssuesSettings, type CriticalIssueResourceType } from '@/lib/core/store'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 const RESOURCE_OPTIONS: Array<{
   key: CriticalIssueResourceType

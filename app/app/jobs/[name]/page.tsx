@@ -17,9 +17,9 @@ import { StatusBadge } from '@/app/components/common/status-badge'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
-import { GlassPanel } from '@orphelix/ui'
+import { GlassPanel } from '@/lib/ui'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 export default function JobDetailPage() {
   const { visualPreset } = useTheme()

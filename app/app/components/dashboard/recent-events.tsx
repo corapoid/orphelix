@@ -10,7 +10,7 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import { GlassPanel } from '@orphelix/ui'
+import { GlassPanel } from '@/lib/ui'
 import { formatAge } from '@/lib/core/utils'
 import type { Event } from '@/types/kubernetes'
 

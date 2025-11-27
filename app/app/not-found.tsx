@@ -2,7 +2,7 @@
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { GlassButton } from '@orphelix/ui'
+import { GlassButton } from '@/lib/ui'
 import { useRouter } from 'next/navigation'
 import HomeIcon from '@mui/icons-material/Home'
 

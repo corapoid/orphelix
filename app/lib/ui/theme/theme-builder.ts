@@ -1,6 +1,6 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material/styles'
-import type { VisualPreset } from './visual-presets.js'
-import { designTokens } from './design-tokens.js'
+import type { VisualPreset } from './visual-presets'
+import { designTokens } from './design-tokens'
 
 /**
  * Build MUI theme from visual preset

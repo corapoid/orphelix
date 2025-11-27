@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   typedRoutes: true,
-  transpilePackages: ['@orphelix/ui'],
+  transpilePackages: ['@/lib/ui'],
   output: 'standalone',
 }
 

@@ -31,7 +31,7 @@ import Tab from '@mui/material/Tab'
 import Snackbar from '@mui/material/Snackbar'
 import Editor from '@monaco-editor/react'
 import { useTheme } from '@mui/material/styles'
-import { useTheme as useOrphelixTheme } from '@orphelix/ui'
+import { useTheme as useOrphelixTheme } from '@/lib/ui'
 import type { RepoStructure } from '@/lib/github/repo-analyzer'
 import {
   type AppTemplate,
@@ -41,7 +41,7 @@ import {
   validateDockerImage,
 } from '@/lib/github/template-generator'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
-import { GlassButton } from '@orphelix/ui'
+import { GlassButton } from '@/lib/ui'
 
 interface AddAppModalProps {
   open: boolean

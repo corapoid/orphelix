@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { StatusBadge } from '@/app/components/common/status-badge'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface LogLine {
   line: number

@@ -11,7 +11,7 @@ import Alert from '@mui/material/Alert'
 import SendIcon from '@mui/icons-material/Send'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
 import PersonIcon from '@mui/icons-material/Person'
-import { GlassPanel } from '@orphelix/ui'
+import { GlassPanel } from '@/lib/ui'
 import type { TroubleshootingContext } from '@/lib/ai/context-collector'
 import ReactMarkdown from 'react-markdown'
 

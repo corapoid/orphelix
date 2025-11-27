@@ -24,7 +24,7 @@ import { AISettings } from '@/app/components/settings/ai-settings'
 import { ClusterAliases } from '@/app/components/settings/cluster-aliases'
 import { CriticalIssuesSettings } from '@/app/components/settings/critical-issues-settings'
 import { NotificationSettings } from '@/app/components/settings/notification-settings'
-import { GlassButton } from '@orphelix/ui'
+import { GlassButton } from '@/lib/ui'
 
 function GitHubIntegrationTab() {
   const { data: installations } = useQuery({

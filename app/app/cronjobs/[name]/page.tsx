@@ -18,9 +18,9 @@ import { StatusBadge } from '@/app/components/common/status-badge'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
-import { GlassPanel } from '@orphelix/ui'
+import { GlassPanel } from '@/lib/ui'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 // Helper function to convert cron schedule to human-readable description
 function getScheduleDescription(schedule: string): string {

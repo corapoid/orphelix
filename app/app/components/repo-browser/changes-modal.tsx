@@ -19,7 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import SendIcon from '@mui/icons-material/Send'
 import { useGitHubStore, type FileEdit } from '@/lib/core/store'
 import { diffLines, Change } from 'diff'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface ChangesModalProps {
   open: boolean

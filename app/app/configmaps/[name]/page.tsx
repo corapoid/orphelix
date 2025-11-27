@@ -19,7 +19,7 @@ import { ErrorState } from '@/app/components/common/error-state'
 import { YamlEditorModal } from '@/app/components/yaml-editor/yaml-editor-modal'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 const MAX_PREVIEW_LINES = 10
 

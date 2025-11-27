@@ -8,7 +8,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 import { useGitHubApp } from '@/lib/hooks/use-github-app'
 
 function GitHubAppInstallButtonContent() {

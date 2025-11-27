@@ -16,7 +16,7 @@ import PublicIcon from '@mui/icons-material/Public'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { useRouter } from 'next/navigation'
-import { GlassPanel } from '@orphelix/ui'
+import { GlassPanel } from '@/lib/ui'
 import { PageHeader } from '@/app/components/common/page-header'
 import { useGitHubApp } from '@/lib/hooks/use-github-app'
 

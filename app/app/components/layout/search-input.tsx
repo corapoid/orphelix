@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
 import { useSearch } from '@/lib/contexts/search-context'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 export function SearchInput() {
   const { visualPreset } = useTheme()

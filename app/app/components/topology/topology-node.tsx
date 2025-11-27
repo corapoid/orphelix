@@ -13,7 +13,7 @@ import WarningIcon from '@mui/icons-material/Warning'
 import ErrorIcon from '@mui/icons-material/Error'
 import HelpIcon from '@mui/icons-material/Help'
 import type { ResourceStatus, ResourceType } from '@/types/topology'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 const resourceIcons: Record<ResourceType, React.ComponentType<{ sx?: Record<string, unknown> }>> = {
   Deployment: LayersIcon,

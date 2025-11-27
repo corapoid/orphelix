@@ -23,7 +23,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { useRouter } from 'next/navigation'
 import { useThemeMode } from '../theme-provider'
 import { useModeStore } from '@/lib/core/store'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 export function UserMenu() {
   const { visualPreset } = useTheme()

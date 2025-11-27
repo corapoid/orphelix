@@ -43,7 +43,7 @@ import { useRouter } from 'next/navigation'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import Divider from '@mui/material/Divider'
 import { useModeStore, useSidebarPins } from '@/lib/core/store'
-import { designTokens, useTheme } from '@orphelix/ui'
+import { designTokens, useTheme } from '@/lib/ui'
 import { useGlassSurface } from '@/lib/ui/use-glass-surface'
 
 const DRAWER_WIDTH = 240

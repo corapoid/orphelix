@@ -4,7 +4,7 @@ import { Alert, Box, Button, Link, Typography } from '@mui/material'
 import CloudOffIcon from '@mui/icons-material/CloudOff'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useClusterHealth } from '@/lib/hooks/use-cluster-health'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface ClusterConnectionAlertProps {
   minimal?: boolean

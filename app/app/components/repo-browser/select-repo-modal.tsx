@@ -21,7 +21,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import LockIcon from '@mui/icons-material/Lock'
 import PublicIcon from '@mui/icons-material/Public'
 import { useGitHubStore } from '@/lib/core/store'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface SelectRepoModalProps {
   open: boolean

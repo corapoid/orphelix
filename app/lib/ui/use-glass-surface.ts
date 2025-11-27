@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { designTokens, getGlassmorphismStyles, visualPresets, useTheme } from '@orphelix/ui'
+import { designTokens, getGlassmorphismStyles, visualPresets, useTheme } from '@/lib/ui'
 
 /**
  * Returns a memoized SX snippet representing the current preset's glass surface.

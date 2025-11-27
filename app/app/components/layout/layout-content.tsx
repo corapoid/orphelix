@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Sidebar } from './sidebar'
 import { TopBar } from './top-bar'
 import { useModeStore } from '@/lib/core/store'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 import { welcomeBackground } from '@/lib/ui/backgrounds'
 
 interface LayoutContentProps {

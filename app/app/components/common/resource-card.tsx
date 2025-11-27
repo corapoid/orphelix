@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import { ReactNode } from 'react'
 import type { SvgIconComponent } from '@mui/icons-material'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 import { useGlassSurface } from '@/lib/ui/use-glass-surface'
 
 interface ResourceCardProps {

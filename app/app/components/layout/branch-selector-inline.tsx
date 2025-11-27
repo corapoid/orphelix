@@ -13,7 +13,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import CheckIcon from '@mui/icons-material/Check'
 import AddIcon from '@mui/icons-material/Add'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 import SvgIcon from '@mui/material/SvgIcon'
 
 // Git Branch SVG Icon (Font Awesome)

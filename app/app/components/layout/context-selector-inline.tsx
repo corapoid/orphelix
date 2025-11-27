@@ -11,7 +11,7 @@ import ButtonBase from '@mui/material/ButtonBase'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import CheckIcon from '@mui/icons-material/Check'
 import { useModeStore, useClusterAliases } from '@/lib/core/store'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface KubeContext {
   name: string

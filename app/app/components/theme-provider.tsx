@@ -1,10 +1,10 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { ThemeProvider as OrphelixThemeProvider } from '@orphelix/ui'
+import { ThemeProvider as OrphelixThemeProvider } from '@/lib/ui'
 
 /**
- * App Theme Provider - Wrapper around @orphelix/ui ThemeProvider
+ * App Theme Provider - Wrapper around @/lib/ui ThemeProvider
  *
  * Uses the new unified theme system with visual presets:
  * - liquidGlass (default): Full effects with blur, gradient shine, animations
@@ -22,5 +22,5 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   )
 }
 
-// Re-export the hook from @orphelix/ui for backward compatibility
-export { useTheme, useTheme as useThemeMode } from '@orphelix/ui'
+// Re-export the hook from @/lib/ui for backward compatibility
+export { useTheme, useTheme as useThemeMode } from '@/lib/ui'

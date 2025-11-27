@@ -15,7 +15,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import CodeIcon from '@mui/icons-material/Code'
 import { AI_FEATURES } from '@/lib/config/ai-features'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 const LOCAL_STORAGE_KEY = 'kubevista_openai_key'
 

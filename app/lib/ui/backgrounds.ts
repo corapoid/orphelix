@@ -1,4 +1,4 @@
-import { designTokens } from '@orphelix/ui'
+import { designTokens } from '@/lib/ui'
 
 export const welcomeBackground = {
   gradient: designTokens.gradients.welcomePurple,

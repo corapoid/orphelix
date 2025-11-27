@@ -11,7 +11,7 @@ import type { editor } from 'monaco-editor'
 import SaveIcon from '@mui/icons-material/Save'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
-import { GlassButton, GlassPanel } from '@orphelix/ui'
+import { GlassButton, GlassPanel } from '@/lib/ui'
 
 interface FileViewerProps {
   owner: string

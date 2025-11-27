@@ -23,7 +23,7 @@ import { useDeployments } from '@/lib/hooks/use-deployments'
 import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useSidebarPins, useModeStore, useCriticalIssuesSettings } from '@/lib/core/store'
 import { collectFailingPodsContext } from '@/lib/ai/context-collector'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface CriticalAlertsProps {
   summary: DashboardSummary

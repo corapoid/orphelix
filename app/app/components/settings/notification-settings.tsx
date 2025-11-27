@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import Alert from '@mui/material/Alert'
 import { useState, useEffect } from 'react'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface NotificationStatus {
   enabled: boolean

@@ -6,7 +6,7 @@ import Collapse from '@mui/material/Collapse'
 import Fade from '@mui/material/Fade'
 import type { SxProps, Theme } from '@mui/material/styles'
 import type { ReactNode } from 'react'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 interface GlassPanelProps {
   children: ReactNode

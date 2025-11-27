@@ -16,10 +16,10 @@ import { useService } from '@/lib/hooks/use-services'
 import { DetailSkeleton } from '@/app/components/common/detail-skeleton'
 import { ErrorState } from '@/app/components/common/error-state'
 import { PageHeader } from '@/app/components/common/page-header'
-import { GlassPanel } from '@orphelix/ui'
+import { GlassPanel } from '@/lib/ui'
 import { useAutoRefresh } from '@/lib/hooks/use-auto-refresh'
 import type { ServiceType } from '@/types/kubernetes'
-import { useTheme } from '@orphelix/ui'
+import { useTheme } from '@/lib/ui'
 
 export default function ServiceDetailPage() {
   const { visualPreset } = useTheme()
