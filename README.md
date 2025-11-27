@@ -38,8 +38,82 @@
 
 ## 📋 Requirements
 
+- **Node.js** >= 24.0.0
 - **kubectl** configured with cluster access (for real mode)
 - (Optional) **GitHub App** for YAML editor and PR workflow
+
+## 🚀 Quick Start
+
+### Running the Application
+
+**Option 1: Production Mode (Recommended for daily use)**
+
+```bash
+# 🚀 ONE COMMAND SETUP - Auto-installs, builds, and configures everything!
+cd app
+npm run orphelix start
+
+# That's it! First run will:
+# 1. Install dependencies (if needed)
+# 2. Build standalone app (if needed)
+# 3. Configure orphelix.local hostname (requires sudo password)
+# 4. Initialize SQLite database
+# 5. Start application in background
+
+# Open in browser
+npm run orphelix open
+# Or manually navigate to: http://orphelix.local:3000
+# Or: http://localhost:3000
+
+# Other commands:
+npm run orphelix stop       # Stop the application
+npm run orphelix restart    # Restart the application
+npm run orphelix logs       # View real-time logs
+npm run orphelix status     # Check status
+npm run orphelix help       # Show all commands
+
+# Custom port:
+npm run orphelix start -- --port 8080
+npm run orphelix open -- --port 8080
+```
+
+**Option 2: Development Mode**
+
+```bash
+cd app
+npm run dev
+# Open http://localhost:3000
+```
+
+### Global CLI Installation (Optional)
+
+To use `orphelix` command from anywhere:
+
+```bash
+cd app
+npm link
+```
+
+Now you can use commands globally (auto-install on first run):
+```bash
+orphelix start                  # Auto-installs & starts!
+orphelix start --port 8080      # Custom port
+orphelix stop
+orphelix logs
+orphelix open --port 8080       # Open with custom port
+```
+
+### Features of Production Mode
+
+✅ **Zero configuration** - Auto-installs dependencies and builds on first run
+✅ **Custom hostname** - Automatically configures `orphelix.local` (requires sudo once)
+✅ **Runs in background** - Close terminal, application keeps running
+✅ **Fast startup** - Optimized standalone build
+✅ **Auto-restart** - Automatically restarts on crashes
+✅ **Log management** - Logs stored in `app/logs/`
+✅ **Low resource usage** - Production-optimized build
+✅ **Custom port** - Use `--port` flag or `ORPHELIX_PORT` env variable
+✅ **Persistent storage** - SQLite database for settings (auto-created on first run)
 
 ## 📖 Documentation
 
@@ -108,9 +182,24 @@ Note: Mintlify may have dependency issues. Documentation is fully readable as ma
 ## 🔒 Security
 
 - ✅ **Local credentials** - Uses kubeconfig from local system
-- ✅ **No data storage** - All data fetched on demand from cluster
+- ✅ **Local storage** - SQLite database stores only user preferences (theme, settings, aliases)
+- ✅ **No cluster data stored** - All Kubernetes data fetched on demand from cluster
 - ✅ **Secrets masked** - Secret values never displayed in UI
 - ✅ **Read-only by default** - Most operations are read-only (except pod restart)
+
+## 💾 Data Storage
+
+Orphelix uses a local SQLite database (`app/orphelix.db`) to persist:
+- User preferences (theme, visual preset, compact mode)
+- Application settings (auto-refresh, realtime updates)
+- Cluster aliases (friendly names for contexts)
+- GitHub integration settings (selected repo, pending PRs)
+- Sidebar customization (pinned items)
+- Critical issues monitoring preferences
+
+**Database location:** `app/orphelix.db`
+**Automatic migration:** On first run, existing localStorage settings are automatically migrated to SQLite
+**Backup:** Simply copy `app/orphelix.db` to backup your settings
 
 ## 💬 Support
 

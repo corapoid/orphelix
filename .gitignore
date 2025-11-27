@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+**/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -90,3 +91,21 @@ pnpm-lock.yaml.bak*
 playwright-report/
 test-results/
 coverage/
+
+# Desktop build artifacts (Tauri, Electron)
+**/src-tauri/target/
+**/src-tauri/gen/
+**/src-tauri/resources/standalone/
+**/src-tauri/resources/.next/
+**/src-tauri/binaries/
+**/electron/
+**/dist/
+
+# pm2 logs
+**/logs/
+.pm2/
+
+# SQLite database
+**/orphelix.db
+**/orphelix.db-shm
+**/orphelix.db-wal

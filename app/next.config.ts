@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   compress: true,
   typedRoutes: true,
   transpilePackages: ['@orphelix/ui'],
-  output: process.env.TAURI_BUILD ? 'standalone' : undefined,
+  output: 'standalone',
 }
 
 export default nextConfig
