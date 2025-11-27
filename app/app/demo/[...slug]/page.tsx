@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 
 // Import all possible list pages
 // Detail pages are now handled by their own [name] folders
-const pages: Record<string, any> = {
+const pages: Record<string, () => Promise<{ default: React.ComponentType }>> = {
   'ingress': () => import('../../ingress/page'),
   'configmaps': () => import('../../configmaps/page'),
   'secrets': () => import('../../secrets/page'),

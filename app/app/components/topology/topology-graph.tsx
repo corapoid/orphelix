@@ -155,7 +155,7 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
   )
 
   const backgroundColor = muiTheme.palette.background?.default || (muiTheme.palette.mode === 'dark' ? '#0F1014' : '#F7F7FA')
-  const backgroundImage = (muiTheme.palette.background as any)?.wallpaper
+  const backgroundImage = (muiTheme.palette.background as unknown as Record<string, unknown> & { wallpaper?: string })?.wallpaper
 
   const graphContent = (
     <Box
@@ -184,7 +184,7 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
         onNodeClick={onNodeClick}
         onNodeMouseEnter={onNodeMouseEnter}
         onNodeMouseLeave={onNodeMouseLeave}
-        nodeTypes={nodeTypes as any}
+        nodeTypes={nodeTypes}
         fitView
         attributionPosition="bottom-left"
         minZoom={0.2}

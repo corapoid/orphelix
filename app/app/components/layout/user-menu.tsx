@@ -51,6 +51,7 @@ export function UserMenu() {
     handleClose()
     // Prefix path with /demo if in demo mode
     const finalPath = mode === 'demo' ? `/demo${path}` : path
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     router.push(finalPath as any)
   }
 

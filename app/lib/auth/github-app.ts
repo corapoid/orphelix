@@ -108,7 +108,7 @@ export class GitHubAppAuth {
   }
 
   // Get user's installations (which orgs/accounts have the app installed)
-  async getUserInstallations(userToken: string): Promise<any[]> {
+  async getUserInstallations(userToken: string) {
     if (!this.app) {
       throw new Error('GitHub App not configured')
     }

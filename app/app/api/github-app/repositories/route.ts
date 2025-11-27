@@ -27,7 +27,7 @@ export async function GET() {
         })
 
         allRepositories.push(
-          ...data.repositories.map((repo: any) => ({
+          ...data.repositories.map((repo) => ({
             id: repo.id,
             name: repo.name,
             full_name: repo.full_name,

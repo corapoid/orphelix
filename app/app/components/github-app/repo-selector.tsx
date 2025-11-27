@@ -25,9 +25,26 @@ export function GitHubAppRepoSelector() {
     },
   })
 
+  interface Installation {
+    id: number
+    account: { login: string }
+    repositories: Array<{ id: number; name: string; full_name: string; owner: string; default_branch: string; private: boolean }>
+  }
+
+  interface RepoWithInstallation {
+    id: number
+    name: string
+    full_name: string
+    owner: string
+    default_branch: string
+    private: boolean
+    installationId: number
+    accountLogin: string
+  }
+
   // Flatten all repositories from all installations
-  const allRepositories = installations?.flatMap((inst: any) =>
-    inst.repositories.map((repo: any) => ({
+  const allRepositories = installations?.flatMap((inst: Installation) =>
+    inst.repositories.map((repo) => ({
       ...repo,
       installationId: inst.id,
       accountLogin: inst.account.login,
@@ -35,7 +52,7 @@ export function GitHubAppRepoSelector() {
   ) || []
 
   const handleChange = (fullName: string) => {
-    const repo = allRepositories.find((r: any) => r.full_name === fullName)
+    const repo = allRepositories.find((r: RepoWithInstallation) => r.full_name === fullName)
     if (repo) {
       setSelectedRepo({
         owner: repo.owner,
@@ -80,7 +97,7 @@ export function GitHubAppRepoSelector() {
           onChange={(e) => handleChange(e.target.value)}
           label="Select Repository"
         >
-          {installations.map((installation: any) => [
+          {installations.map((installation: Installation) => [
             // Group header
             <MenuItem disabled key={`header-${installation.id}`}>
               <Typography variant="caption" color="text.secondary" fontWeight="bold">
@@ -88,7 +105,7 @@ export function GitHubAppRepoSelector() {
               </Typography>
             </MenuItem>,
             // Repositories under this installation
-            ...installation.repositories.map((repo: any) => (
+            ...installation.repositories.map((repo) => (
               <MenuItem key={repo.full_name} value={repo.full_name}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 2 }}>
                   {repo.name}

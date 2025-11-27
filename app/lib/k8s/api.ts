@@ -12,6 +12,7 @@ import type {
   StatefulSet,
   DaemonSet,
   Pod,
+  Probe,
   Node,
   ConfigMap,
   Secret,
@@ -638,13 +639,56 @@ export async function fetchPods(namespace: string, contextName?: string, labelSe
   })
 }
 
+interface ProbeConfig {
+  initialDelaySeconds?: number
+  periodSeconds?: number
+  timeoutSeconds?: number
+  successThreshold?: number
+  failureThreshold?: number
+  type?: 'httpGet' | 'tcpSocket' | 'exec' | 'grpc'
+  httpGet?: {
+    path: string
+    port: number | string
+    scheme?: string
+  }
+  tcpSocket?: {
+    port: number | string
+  }
+  exec?: {
+    command: string[]
+  }
+}
+
+interface K8sProbe {
+  initialDelaySeconds?: number
+  periodSeconds?: number
+  timeoutSeconds?: number
+  successThreshold?: number
+  failureThreshold?: number
+  httpGet?: {
+    path?: string
+    port?: number | string
+    scheme?: string
+  }
+  tcpSocket?: {
+    port?: number | string
+  }
+  exec?: {
+    command?: string[]
+  }
+  grpc?: {
+    port?: number
+    service?: string
+  }
+}
+
 /**
  * Helper: Parse probe configuration
  */
-function parseProbe(probe: any): any {
+function parseProbe(probe: K8sProbe | undefined): ProbeConfig | undefined {
   if (!probe) return undefined
 
-  const result: any = {
+  const result: ProbeConfig = {
     initialDelaySeconds: probe.initialDelaySeconds,
     periodSeconds: probe.periodSeconds,
     timeoutSeconds: probe.timeoutSeconds,
@@ -656,13 +700,13 @@ function parseProbe(probe: any): any {
     result.type = 'httpGet'
     result.httpGet = {
       path: probe.httpGet.path || '/',
-      port: probe.httpGet.port,
+      port: probe.httpGet.port as string | number,
       scheme: probe.httpGet.scheme || 'HTTP',
     }
   } else if (probe.tcpSocket) {
     result.type = 'tcpSocket'
     result.tcpSocket = {
-      port: probe.tcpSocket.port,
+      port: probe.tcpSocket.port as string | number,
     }
   } else if (probe.exec) {
     result.type = 'exec'
@@ -703,9 +747,9 @@ export async function fetchPod(name: string, namespace: string, contextName?: st
         image: spec.image || '',
         ready: containerStatuses.find((cs) => cs.name === spec.name)?.ready || false,
         restartCount: containerStatuses.find((cs) => cs.name === spec.name)?.restartCount || 0,
-        livenessProbe: parseProbe(spec.livenessProbe),
-        readinessProbe: parseProbe(spec.readinessProbe),
-        startupProbe: parseProbe(spec.startupProbe),
+        livenessProbe: parseProbe(spec.livenessProbe) as Probe | undefined,
+        readinessProbe: parseProbe(spec.readinessProbe) as Probe | undefined,
+        startupProbe: parseProbe(spec.startupProbe) as Probe | undefined,
       })),
       containerStatuses: containerStatuses.map((cs) => ({
         name: cs.name,
@@ -923,9 +967,10 @@ export async function fetchNodePods(nodeName: string, namespace?: string, contex
         secrets: extractSecretNamesFromPod(pod),
       }
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Silently handle 403 (permission denied) - just return empty array
-    if (error?.code !== 403) {
+    const errorCode = (error as { code?: number })?.code
+    if (errorCode !== 403) {
       console.error(`[K8s] Failed to fetch pods for node ${nodeName}:`, error)
     }
     return []
@@ -1187,9 +1232,10 @@ export async function fetchResourceEvents(
       firstTimestamp: event.firstTimestamp?.toString() || '',
       lastTimestamp: event.lastTimestamp?.toString() || '',
     }))
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Silently handle 403 (permission denied) - just return empty array
-    if (error?.code !== 403) {
+    const errorCode = (error as { code?: number })?.code
+    if (errorCode !== 403) {
       console.error(`[API] Failed to fetch Node events:`, error)
     }
     return []
@@ -1511,11 +1557,20 @@ export async function fetchJob(name: string, namespace: string, contextName?: st
     const active = job.status?.active || 0
     const status = determineJobStatus(job)
 
-    const conditions: JobCondition[] = (job.status?.conditions || []).map((c: any) => ({
+    interface K8sJobCondition {
+      type?: string
+      status?: string
+      lastProbeTime?: Date | string
+      lastTransitionTime?: Date | string
+      reason?: string
+      message?: string
+    }
+
+    const conditions: JobCondition[] = (job.status?.conditions || []).map((c: K8sJobCondition) => ({
       type: c.type || '',
       status: c.status || '',
-      lastProbeTime: c.lastProbeTime?.toISOString(),
-      lastTransitionTime: c.lastTransitionTime?.toISOString(),
+      lastProbeTime: c.lastProbeTime instanceof Date ? c.lastProbeTime.toISOString() : c.lastProbeTime,
+      lastTransitionTime: c.lastTransitionTime instanceof Date ? c.lastTransitionTime.toISOString() : c.lastTransitionTime,
       reason: c.reason,
       message: c.message,
     }))
@@ -1671,10 +1726,11 @@ export async function fetchResourceQuotas(namespace: string, contextName?: strin
       used: quota.status?.used || {},
       labels: quota.metadata?.labels || {},
     }))
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Silently return empty array for 403 (permission denied)
     // This is expected for users with namespace-scoped permissions
-    if (error?.statusCode === 403 || error?.code === 403) {
+    const errorObj = error as { statusCode?: number; code?: number }
+    if (errorObj?.statusCode === 403 || errorObj?.code === 403) {
       return []
     }
     // Re-throw other errors to be handled by the API route
@@ -1736,10 +1792,11 @@ export async function fetchLimitRanges(namespace: string, contextName?: string):
         labels: lr.metadata?.labels || {},
       }
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Silently return empty array for 403 (permission denied)
     // This is expected for users with namespace-scoped permissions
-    if (error?.statusCode === 403 || error?.code === 403) {
+    const errorObj = error as { statusCode?: number; code?: number }
+    if (errorObj?.statusCode === 403 || errorObj?.code === 403) {
       return []
     }
     // Re-throw other errors to be handled by the API route

@@ -232,10 +232,10 @@ export class GitHubClient {
         merged: true,
         message: data.message,
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         merged: false,
-        message: error.message || 'Failed to merge PR',
+        message: error instanceof Error ? error.message : 'Failed to merge PR',
       }
     }
   }

@@ -295,7 +295,7 @@ export default function CronJobDetailPage() {
                         <TableRow
                           key={job.name}
                           hover
-                          onClick={() => router.push(jobPath as any)}
+                          onClick={() => router.push(jobPath as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
                           sx={{
                             cursor: 'pointer',
                             '&:hover': { bgcolor: 'action.hover' },

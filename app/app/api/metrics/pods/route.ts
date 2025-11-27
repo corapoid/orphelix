@@ -128,7 +128,11 @@ export async function GET(request: NextRequest) {
         const memory = parts[2]
 
         // Find pod details
-        const pod = podsData.items.find((p: any) => p.metadata.name === podName)
+        interface K8sPodItem {
+          metadata: { name: string }
+          spec: { containers: Array<{ name: string }> }
+        }
+        const pod = podsData.items.find((p: K8sPodItem) => p.metadata.name === podName)
 
         if (pod) {
           for (const container of pod.spec.containers) {

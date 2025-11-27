@@ -197,7 +197,7 @@ export default function JobDetailPage() {
                       <TableRow
                         key={pod.name}
                         hover
-                        onClick={() => router.push(podPath as any)}
+                        onClick={() => router.push(podPath as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
                         sx={{
                           cursor: 'pointer',
                           '&:hover': { bgcolor: 'action.hover' },

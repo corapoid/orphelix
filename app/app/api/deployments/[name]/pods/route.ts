@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
 import { getCoreApi } from '@/lib/k8s/client'
-import type { Pod } from '@/types/kubernetes'
+import type { Pod, PodStatus } from '@/types/kubernetes'
+import type { V1Pod } from '@kubernetes/client-node'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,9 +28,9 @@ export async function GET(
 
     // Filter pods that belong to this deployment
     const deploymentPods = (podsResponse.items || [])
-      .filter((pod: any) => {
+      .filter((pod: V1Pod) => {
         // Check owner references for ReplicaSet owned by this deployment
-        const hasMatchingOwner = pod.metadata?.ownerReferences?.some((ref: any) => {
+        const hasMatchingOwner = pod.metadata?.ownerReferences?.some((ref) => {
           return ref.kind === 'ReplicaSet' && ref.name.startsWith(name + '-')
         })
 
@@ -39,29 +40,29 @@ export async function GET(
 
         return hasMatchingOwner || hasMatchingLabel
       })
-      .map((pod: any): Pod => {
+      .map((pod: V1Pod): Pod => {
         const containers = pod.spec?.containers || []
         const containerStatuses = pod.status?.containerStatuses || []
 
         return {
           name: pod.metadata?.name || '',
           namespace: pod.metadata?.namespace || '',
-          status: (pod.status?.phase as any) || 'Unknown',
-          restartCount: containerStatuses.reduce((sum: number, c: any) => sum + (c.restartCount || 0), 0),
-          age: pod.metadata?.creationTimestamp || '',
+          status: (pod.status?.phase as PodStatus) || 'Unknown',
+          restartCount: containerStatuses.reduce((sum, c) => sum + (c.restartCount || 0), 0),
+          age: pod.metadata?.creationTimestamp?.toISOString() || '',
           nodeName: pod.spec?.nodeName || 'N/A',
           ip: pod.status?.podIP || 'N/A',
-          containers: containers.map((c: any, idx: number) => ({
-            name: c.name,
+          containers: containers.map((c, idx) => ({
+            name: c.name || '',
             image: c.image || '',
             ready: containerStatuses[idx]?.ready || false,
             restartCount: containerStatuses[idx]?.restartCount || 0,
           })),
           labels: pod.metadata?.labels || {},
-          ownerReferences: pod.metadata?.ownerReferences?.map((ref: any) => ({
-            kind: ref.kind,
-            name: ref.name,
-            uid: ref.uid,
+          ownerReferences: pod.metadata?.ownerReferences?.map((ref) => ({
+            kind: ref.kind || '',
+            name: ref.name || '',
+            uid: ref.uid || '',
           })) || [],
           configMaps: [],
           secrets: [],

@@ -25,14 +25,18 @@ export async function GET() {
             installation_id: installation.id,
           })
 
+          const account = installation.account
+          const accountLogin = account && 'login' in account ? account.login : account?.name || ''
+          const accountType = account && 'type' in account ? account.type : 'Organization'
+
           return {
             id: installation.id,
             account: {
-              login: installation.account?.login,
-              avatar_url: installation.account?.avatar_url,
-              type: installation.account?.type,
+              login: accountLogin,
+              avatar_url: account?.avatar_url,
+              type: accountType,
             },
-            repositories: data.repositories.map((repo: any) => ({
+            repositories: data.repositories.map((repo) => ({
               id: repo.id,
               name: repo.name,
               full_name: repo.full_name,

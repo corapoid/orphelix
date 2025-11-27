@@ -22,6 +22,7 @@ export function useNavigateTo() {
       ? `/demo${path}`
       : path
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     router.push(finalPath as any)
   }
 

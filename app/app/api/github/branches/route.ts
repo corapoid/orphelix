@@ -50,10 +50,10 @@ export async function POST(request: NextRequest) {
     await github.createBranch(owner, repo, baseBranch, newBranch)
 
     return NextResponse.json({ success: true, branch: newBranch })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to create branch:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to create branch' },
+      { error: error instanceof Error ? error.message : 'Failed to create branch' },
       { status: 500 }
     )
   }

@@ -17,6 +17,12 @@ export default [
       '*.config.js',
       '*.config.mjs',
       '*.config.ts',
+      // CLI and worker files (Node.js)
+      'orphelix-cli.js',
+      'lib/cli/**/*.js',
+      'lib/notifications/**/*.js',
+      'lib/db/migrate-*.js',
+      'scripts/**/*.js',
     ],
   },
   // TypeScript recommended config

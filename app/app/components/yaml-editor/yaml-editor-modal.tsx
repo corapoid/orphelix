@@ -103,8 +103,13 @@ export function YamlEditorModal({
           const baseResourceName = resourceName.replace(/-(main|dev|prod|staging|test)$/, '')
           const resourceWords = baseResourceName.toLowerCase().split(/[-_]/)
 
+          interface FileItem {
+            path: string
+            name: string
+          }
+
           // Filter to only relevant files (max 50 most likely matches)
-          let relevantFiles = files.filter((f: any) => {
+          let relevantFiles = files.filter((f: FileItem) => {
             const path = f.path.toLowerCase()
             const name = baseResourceName.toLowerCase()
 
@@ -137,7 +142,7 @@ export function YamlEditorModal({
               resourceName,
               namespace,
               resourceType,
-              files: filesToMatch.map((f: any) => ({ path: f.path, name: f.name })),
+              files: filesToMatch.map((f: FileItem) => ({ path: f.path, name: f.name })),
               apiKey: openaiKey,
             }),
           })
@@ -145,8 +150,13 @@ export function YamlEditorModal({
           // Fallback: simple pattern matching (no content fetching for speed)
           const baseResourceName = resourceName.replace(/-(main|dev|prod|staging|test)$/, '')
 
+          interface FileItem {
+            path: string
+            name: string
+          }
+
           // Quick pattern matching without fetching file contents
-          const matchedFile = files.find((f: any) => {
+          const matchedFile = files.find((f: FileItem) => {
             const path = f.path.toLowerCase()
             const name = baseResourceName.toLowerCase()
             const fullName = resourceName.toLowerCase()
@@ -565,7 +575,7 @@ export function YamlEditorModal({
                 onChange={(e) => loadFile(e.target.value)}
                 label="Select YAML File"
               >
-                {files?.map((file: any) => (
+                {files?.map((file: { path: string; name: string }) => (
                   <MenuItem key={file.path} value={file.path}>
                     {file.path}
                   </MenuItem>

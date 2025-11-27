@@ -301,7 +301,7 @@ export function ResourceListView<T>({
                     <TableCell key={String(column.field)} align={column.align || 'left'}>
                       {column.render
                         ? column.render(item)
-                        : String((item as any)[column.field] ?? '')}
+                        : String((item as Record<string, unknown>)[column.field as string] ?? '')}
                     </TableCell>
                   ))}
                 </TableRow>

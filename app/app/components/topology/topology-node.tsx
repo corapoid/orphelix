@@ -15,7 +15,7 @@ import HelpIcon from '@mui/icons-material/Help'
 import type { ResourceStatus, ResourceType } from '@/types/topology'
 import { useTheme } from '@orphelix/ui'
 
-const resourceIcons: Record<ResourceType, any> = {
+const resourceIcons: Record<ResourceType, React.ComponentType<{ sx?: Record<string, unknown> }>> = {
   Deployment: LayersIcon,
   Pod: ViewInArIcon,
   Service: CloudIcon,
@@ -49,7 +49,19 @@ const statusIcons = {
   unknown: HelpIcon,
 }
 
-function TopologyNodeComponent({ data, selected }: any) {
+interface TopologyNodeProps {
+  data: {
+    resourceType: ResourceType
+    status: ResourceStatus
+    label: string
+    details?: {
+      restarts?: number
+    }
+  }
+  selected?: boolean
+}
+
+function TopologyNodeComponent({ data, selected }: TopologyNodeProps) {
   const { visualPreset } = useTheme()
   const isGlass = visualPreset !== 'classic'
   const Icon = resourceIcons[data.resourceType as ResourceType]

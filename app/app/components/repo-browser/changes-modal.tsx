@@ -74,8 +74,8 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
 
       // Show success message
       alert(`Pull Request #${data.number} created successfully!\n${data.url}`)
-    } catch (err: any) {
-      setError(err.message || 'Failed to create PR')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to create PR')
     } finally {
       setIsCreatingPR(false)
     }

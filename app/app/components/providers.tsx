@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { ThemeProvider } from './theme-provider'
 import { SearchProvider } from '@/lib/contexts/search-context'
 import { useModeStore } from '@/lib/core/store'
+import { useInitializeStores, migrateLocalStorageToDatabase } from '@/lib/db/client-sync'
 
 function ModeSync() {
   const pathname = usePathname()
@@ -22,6 +23,18 @@ function ModeSync() {
       setMode('real')
     }
   }, [pathname, setMode])
+
+  return null
+}
+
+function DatabaseSync() {
+  // Initialize stores from database
+  useInitializeStores()
+
+  useEffect(() => {
+    // One-time migration from localStorage to database
+    migrateLocalStorageToDatabase()
+  }, [])
 
   return null
 }
@@ -44,6 +57,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <SearchProvider>
+            <DatabaseSync />
             <ModeSync />
             {children}
           </SearchProvider>

@@ -1071,8 +1071,10 @@ export function generateMockPodMetrics(deploymentName: string, namespace: string
       name: `${deploymentName}-abc123-xyz`,
       namespace,
       labels: { app: deploymentName },
+      metadata: { name: `${deploymentName}-abc123-xyz` },
+      spec: { containers: [] },
     }
-    pods.push(genericPod as any)
+    pods.push(genericPod as unknown as Pod)
   }
 
   const metrics = pods.flatMap(pod => {

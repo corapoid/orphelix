@@ -125,7 +125,8 @@ export function IssueDetector({ events = [], metrics }: IssueDetectorProps) {
             startIcon={<SmartToyIcon />}
             onClick={(e) => {
               e.stopPropagation()
-              router.push('/troubleshooting' as any)
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              router.push('/settings?tab=2' as any)
             }}
           >
             Ask AI

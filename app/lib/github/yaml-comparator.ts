@@ -7,13 +7,30 @@
 
 import yaml from 'js-yaml'
 
+interface K8sObject {
+  kind?: string
+  metadata?: {
+    name?: string
+    namespace?: string
+    labels?: Record<string, string>
+    uid?: string
+    resourceVersion?: string
+    generation?: number
+    creationTimestamp?: string
+    managedFields?: unknown
+    selfLink?: string
+  }
+  spec?: Record<string, unknown>
+  status?: unknown
+}
+
 /**
  * Compare two YAML strings and return similarity score (0-100)
  */
 export function compareYaml(clusterYaml: string, repoYaml: string): number {
   try {
-    const clusterObj = yaml.load(clusterYaml) as any
-    const repoObj = yaml.load(repoYaml) as any
+    const clusterObj = yaml.load(clusterYaml) as K8sObject
+    const repoObj = yaml.load(repoYaml) as K8sObject
 
     if (!clusterObj || !repoObj) return 0
 
@@ -68,7 +85,7 @@ export function compareYaml(clusterYaml: string, repoYaml: string): number {
 /**
  * Remove cluster-specific fields from K8s object
  */
-function cleanK8sObject(obj: any): any {
+function cleanK8sObject(obj: K8sObject): K8sObject {
   if (!obj) return obj
 
   const cleaned = JSON.parse(JSON.stringify(obj))
@@ -91,7 +108,7 @@ function cleanK8sObject(obj: any): any {
 /**
  * Compare two maps/objects and return similarity (0-1)
  */
-function compareMaps(map1: any, map2: any): number {
+function compareMaps(map1: Record<string, unknown> | undefined, map2: Record<string, unknown> | undefined): number {
   if (!map1 && !map2) return 1
   if (!map1 || !map2) return 0
 
@@ -116,7 +133,7 @@ function compareMaps(map1: any, map2: any): number {
 /**
  * Compare two objects deeply on specific fields
  */
-function compareObjects(obj1: any, obj2: any, fields: string[]): number {
+function compareObjects(obj1: Record<string, unknown> | undefined, obj2: Record<string, unknown> | undefined, fields: string[]): number {
   if (!obj1 && !obj2) return 1
   if (!obj1 || !obj2) return 0
 
@@ -131,8 +148,8 @@ function compareObjects(obj1: any, obj2: any, fields: string[]): number {
         totalScore += 1
       } else {
         // Partial match for nested objects
-        if (typeof obj1[field] === 'object' && typeof obj2[field] === 'object') {
-          totalScore += compareMaps(obj1[field], obj2[field]) * 0.5
+        if (typeof obj1[field] === 'object' && typeof obj2[field] === 'object' && obj1[field] !== null && obj2[field] !== null) {
+          totalScore += compareMaps(obj1[field] as Record<string, unknown>, obj2[field] as Record<string, unknown>) * 0.5
         }
       }
     }

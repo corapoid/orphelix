@@ -30,11 +30,11 @@ export async function GET() {
       },
       { status: 500 }
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Cluster connection test failed:', error)
 
     // Check if it's a permission error (this shouldn't happen with kubectl version)
-    const errorMessage = error.message || ''
+    const errorMessage = error instanceof Error ? error.message : ''
     const isPermissionError = errorMessage.includes('Forbidden') || errorMessage.includes('forbidden')
 
     return NextResponse.json(

@@ -46,14 +46,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Filter out base/ files if there are environment-specific files available
-    const envFiles = files.filter((f: any) => !f.path.startsWith('base/'))
+    const envFiles = files.filter((f: { path: string; name: string }) => !f.path.startsWith('base/'))
 
     // Use only environment files if available, otherwise include base files
     const filesToSearch = envFiles.length > 0 ? envFiles : files
 
     // Prepare file list for AI (already pre-filtered in frontend, max 30 files)
     // This reduces tokens and improves response time
-    const fileList = filesToSearch.map((f: any) => f.path).join('\n')
+    const fileList = filesToSearch.map((f: { path: string; name: string }) => f.path).join('\n')
 
     const prompt = `You are a Kubernetes GitOps expert. Your task is to find which YAML files in a Git repository might define a specific deployed Kubernetes resource.
 
@@ -142,11 +142,12 @@ If no good matches exist, return:
         duration,
       })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[AI Matcher] Error:', error)
 
     // Check if it's an API key error
-    if (error?.statusCode === 401 || error?.message?.includes('API key') || error?.message?.includes('Incorrect API key')) {
+    const errorObj = error as { statusCode?: number; message?: string }
+    if (errorObj?.statusCode === 401 || errorObj?.message?.includes('API key') || errorObj?.message?.includes('Incorrect API key')) {
       return NextResponse.json(
         { error: 'Invalid or expired OpenAI API key. Please check your API key in Settings > AI Features.' },
         { status: 401 }

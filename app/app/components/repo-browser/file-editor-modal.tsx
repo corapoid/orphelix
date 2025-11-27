@@ -54,8 +54,8 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
         setYamlContent(data.content)
         setOriginalContent(data.content)
         setFileSha(data.sha)
-      } catch (err: any) {
-        setError(err.message || 'Failed to load file')
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to load file')
       } finally {
         setIsLoading(false)
       }
@@ -97,8 +97,8 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
 
       const data = await response.json()
       setPrCreated({ number: data.number, url: data.url })
-    } catch (err: any) {
-      setError(err.message || 'Failed to create PR')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to create PR')
     } finally {
       setIsCreatingPR(false)
     }
@@ -128,8 +128,8 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
 
       // Close modal
       onClose()
-    } catch (err: any) {
-      setError(err.message || 'Failed to merge PR')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to merge PR')
     } finally {
       setIsMergingPR(false)
     }
