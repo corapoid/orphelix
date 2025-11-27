@@ -54,9 +54,9 @@ export const designTokens = {
     },
     // Welcome modal background
     welcomePurple: {
-      light: 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.12), transparent 50%), ' +
-             'radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.12), transparent 50%), ' +
-             'linear-gradient(180deg, rgb(250, 250, 255) 0%, rgb(240, 242, 250) 100%)',
+      light: 'radial-gradient(ellipse at top, rgba(230, 235, 250, 0.08), transparent 50%), ' +
+             'radial-gradient(ellipse at bottom, rgba(240, 235, 250, 0.08), transparent 50%), ' +
+             'linear-gradient(180deg, rgb(252, 252, 255) 0%, rgb(248, 250, 254) 100%)',
       dark: 'radial-gradient(ellipse at top, rgba(102, 126, 234, 0.2), transparent 50%), ' +
             'radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.2), transparent 50%), ' +
             'linear-gradient(180deg, rgb(10, 10, 20) 0%, rgb(15, 15, 25) 100%)',
