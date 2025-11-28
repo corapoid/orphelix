@@ -1,0 +1,235 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  ai-review:
+    name: AI Code Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better context
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd app
+          npm ci
+
+      - name: Run automated checks
+        id: checks
+        run: |
+          cd app
+
+          echo "## Automated Checks" >> $GITHUB_STEP_SUMMARY
+
+          # Lint
+          echo "### ESLint" >> $GITHUB_STEP_SUMMARY
+          if npm run lint; then
+            echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+            echo "lint_status=✅" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed" >> $GITHUB_STEP_SUMMARY
+            echo "lint_status=❌" >> $GITHUB_OUTPUT
+          fi
+
+          # Type check
+          echo "### TypeScript" >> $GITHUB_STEP_SUMMARY
+          if npm run type-check; then
+            echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+            echo "typecheck_status=✅" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed" >> $GITHUB_STEP_SUMMARY
+            echo "typecheck_status=❌" >> $GITHUB_OUTPUT
+          fi
+
+          # Tests
+          echo "### Tests" >> $GITHUB_STEP_SUMMARY
+          if npm run test; then
+            echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+            echo "test_status=✅" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed" >> $GITHUB_STEP_SUMMARY
+            echo "test_status=❌" >> $GITHUB_OUTPUT
+          fi
+
+          # Build
+          echo "### Build" >> $GITHUB_STEP_SUMMARY
+          if npm run build; then
+            echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+            echo "build_status=✅" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed" >> $GITHUB_STEP_SUMMARY
+            echo "build_status=❌" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          # Get list of changed TypeScript/JavaScript files
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.(ts|tsx|js|jsx)$' || echo "")
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Count changes
+          ADDITIONS=$(git diff --numstat origin/${{ github.base_ref }}...HEAD | awk '{sum+=$1} END {print sum}')
+          DELETIONS=$(git diff --numstat origin/${{ github.base_ref }}...HEAD | awk '{sum+=$2} END {print sum}')
+          echo "additions=$ADDITIONS" >> $GITHUB_OUTPUT
+          echo "deletions=$DELETIONS" >> $GITHUB_OUTPUT
+
+      - name: Analyze code patterns
+        id: analyze
+        run: |
+          cd app
+
+          echo "## Code Analysis" >> $GITHUB_STEP_SUMMARY
+
+          # Check for common issues
+          ISSUES_FOUND=0
+
+          # 1. Check for 'any' types
+          ANY_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD | grep -c ': any' || echo "0")
+          if [ "$ANY_COUNT" -gt 0 ]; then
+            echo "⚠️ Found $ANY_COUNT uses of 'any' type" >> $GITHUB_STEP_SUMMARY
+            ISSUES_FOUND=$((ISSUES_FOUND + 1))
+          fi
+
+          # 2. Check for console.log
+          CONSOLE_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD | grep -c 'console\.log' || echo "0")
+          if [ "$CONSOLE_COUNT" -gt 0 ]; then
+            echo "⚠️ Found $CONSOLE_COUNT console.log statements" >> $GITHUB_STEP_SUMMARY
+            ISSUES_FOUND=$((ISSUES_FOUND + 1))
+          fi
+
+          # 3. Check for K8s client in client components
+          K8S_CLIENT_ISSUE=$(git diff origin/${{ github.base_ref }}...HEAD | grep -B5 "'use client'" | grep -c "from '@/lib/k8s" || echo "0")
+          if [ "$K8S_CLIENT_ISSUE" -gt 0 ]; then
+            echo "🔴 **CRITICAL**: K8s client potentially used in client component" >> $GITHUB_STEP_SUMMARY
+            ISSUES_FOUND=$((ISSUES_FOUND + 1))
+          fi
+
+          # 4. Check for missing error handling
+          FETCH_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD | grep -c 'await fetch(' || echo "0")
+          TRY_CATCH_COUNT=$(git diff origin/${{ github.base_ref }}...HEAD | grep -c 'try {' || echo "0")
+          if [ "$FETCH_COUNT" -gt "$TRY_CATCH_COUNT" ]; then
+            echo "⚠️ Potential missing error handling (more fetch calls than try-catch blocks)" >> $GITHUB_STEP_SUMMARY
+            ISSUES_FOUND=$((ISSUES_FOUND + 1))
+          fi
+
+          echo "issues_found=$ISSUES_FOUND" >> $GITHUB_OUTPUT
+
+          if [ "$ISSUES_FOUND" -eq 0 ]; then
+            echo "✅ No common issues detected" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Generate AI review summary
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            const checksStatus = {
+              lint: '${{ steps.checks.outputs.lint_status }}',
+              typecheck: '${{ steps.checks.outputs.typecheck_status }}',
+              test: '${{ steps.checks.outputs.test_status }}',
+              build: '${{ steps.checks.outputs.build_status }}'
+            };
+
+            const changedFiles = `${{ steps.changed-files.outputs.files }}`.split('\n').filter(f => f);
+            const additions = '${{ steps.changed-files.outputs.additions }}';
+            const deletions = '${{ steps.changed-files.outputs.deletions }}';
+            const issuesFound = '${{ steps.analyze.outputs.issues_found }}';
+
+            let comment = `## 🤖 AI Code Review\n\n`;
+            comment += `**PR:** ${pr.title}\n`;
+            comment += `**Changes:** +${additions} -${deletions} lines\n`;
+            comment += `**Files changed:** ${changedFiles.length}\n\n`;
+
+            comment += `### Automated Checks\n\n`;
+            comment += `| Check | Status |\n`;
+            comment += `|-------|--------|\n`;
+            comment += `| ESLint | ${checksStatus.lint} |\n`;
+            comment += `| TypeScript | ${checksStatus.typecheck} |\n`;
+            comment += `| Tests | ${checksStatus.test} |\n`;
+            comment += `| Build | ${checksStatus.build} |\n\n`;
+
+            if (issuesFound > 0) {
+              comment += `### ⚠️ Issues Detected: ${issuesFound}\n\n`;
+              comment += `See "Code Analysis" section in the workflow summary for details.\n\n`;
+            }
+
+            comment += `### 📝 Review Checklist\n\n`;
+            comment += `Review the following manually:\n\n`;
+            comment += `- [ ] Architecture follows established patterns\n`;
+            comment += `- [ ] K8s client only used in API routes\n`;
+            comment += `- [ ] Demo mode supported in hooks\n`;
+            comment += `- [ ] Error handling present\n`;
+            comment += `- [ ] Tests included and passing\n`;
+            comment += `- [ ] No security issues (secrets, auth)\n`;
+            comment += `- [ ] CHANGELOG.md updated\n`;
+            comment += `- [ ] Documentation updated (if needed)\n\n`;
+
+            comment += `### 🚀 Next Steps\n\n`;
+
+            const allPassed = Object.values(checksStatus).every(s => s === '✅');
+
+            if (allPassed && issuesFound === 0) {
+              comment += `✅ All automated checks passed! Ready for human review.\n\n`;
+            } else {
+              comment += `⚠️ Some checks failed or issues were detected. Please address before merging.\n\n`;
+            }
+
+            comment += `### 🤖 AI-Assisted Review\n\n`;
+            comment += `For detailed AI review, use the code-reviewer agent:\n\n`;
+            comment += `\`\`\`\n`;
+            comment += `/code-review PR#${context.issue.number}\n`;
+            comment += `\`\`\`\n\n`;
+            comment += `Or manually:\n\n`;
+            comment += `\`\`\`\n`;
+            comment += `Review PR #${context.issue.number}:\n`;
+            comment += `- Check architecture patterns\n`;
+            comment += `- Verify TypeScript safety\n`;
+            comment += `- Check error handling\n`;
+            comment += `- Review security\n`;
+            comment += `- Verify tests\n`;
+            comment += `\n`;
+            comment += `Provide prioritized feedback (Required/Recommended/Optional)\n`;
+            comment += `\`\`\`\n\n`;
+
+            comment += `---\n`;
+            comment += `*Generated by Orphelix AI Code Review*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+
+      - name: Check for blockers
+        if: steps.checks.outputs.build_status == '❌' || steps.checks.outputs.test_status == '❌'
+        run: |
+          echo "::error::Critical checks failed. Build or tests are failing."
+          exit 1

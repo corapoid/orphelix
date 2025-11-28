@@ -1,0 +1,91 @@
+name: 📚 Documentation
+description: Report missing, incorrect, or unclear documentation
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve the documentation!
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation needs improvement?
+      options:
+        - User Guide (docs/user/)
+        - Developer Docs (docs/developer/)
+        - API Documentation (docs/developer/api/)
+        - README.md
+        - TECHNICAL.md
+        - AI_CONTEXT.md
+        - CONTRIBUTING_AI.md
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue
+      description: What's wrong or missing?
+      placeholder: |
+        The services documentation doesn't explain how to filter by namespace...
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Location
+      description: Where is this documentation (or where should it be)?
+      placeholder: docs/user/services.mdx, line 45
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: How should this be improved?
+      placeholder: |
+        Add a section "Filtering by Namespace" with:
+        1. Screenshot of namespace selector
+        2. Explanation of how filtering works
+        3. Example use case
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context or examples
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🤖 For AI Documentation
+
+        Use the **documentation-maintainer agent** to update docs:
+
+        ```
+        Update documentation for [feature/topic]:
+
+        **Location:** [copy from above]
+        **Issue:** [copy from above]
+        **Suggested improvement:** [copy from above]
+
+        Requirements:
+        1. Follow Mintlify format (if docs/user/ or docs/developer/)
+        2. Include code examples
+        3. Add screenshots if applicable
+        4. Update navigation in docs/mint.json
+        5. Cross-link related documentation
+        6. Test all code examples
+
+        Documentation standards:
+        - Clear and concise writing
+        - Active voice, present tense
+        - Step-by-step instructions
+        - Expected outputs for examples
+        - Troubleshooting section
+        ```

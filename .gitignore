@@ -79,8 +79,8 @@ Thumbs.db
 kubeconfig
 *.kubeconfig
 
-# Claude Code (local settings)
-.claude/
+# Claude Code (local settings - keeping agents and commands in repo)
+# .claude/
 
 # npm/yarn/pnpm backup lockfiles
 package-lock.json.bak*

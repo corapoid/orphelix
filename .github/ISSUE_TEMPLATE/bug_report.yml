@@ -1,0 +1,129 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! This information will help us fix it quickly.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: When I click on a pod, the logs fail to load...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '/pods'
+        2. Click on 'my-pod'
+        3. Scroll to logs section
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: Pod logs should load and display correctly
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: Logs fail to load, showing error "Failed to fetch logs"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      description: Which mode were you using?
+      options:
+        - Demo Mode
+        - Real Mode (connected to cluster)
+        - Both
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Information about your environment
+      value: |
+        - OS: [e.g. macOS 14.1, Windows 11, Ubuntu 22.04]
+        - Browser: [e.g. Chrome 120, Firefox 121, Safari 17]
+        - Node.js version: [e.g. 20.10.0]
+        - Orphelix version: [e.g. 0.1.0]
+        - Kubernetes version: [e.g. 1.28.3] (if real mode)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant logs from browser console or server
+      placeholder: |
+        Browser console logs:
+        Error: Failed to fetch logs from /api/pods/my-pod/logs
+
+        Server logs (npm run orphelix logs):
+        [API] Error fetching logs: Unauthorized
+      render: shell
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🤖 For AI Debugging
+
+        Use the **bug-fixer agent** to analyze and fix this issue:
+
+        ```
+        /fix-bug #[issue-number]
+        ```
+
+        Or manually with prompt:
+
+        ```
+        Analyze and fix the following bug:
+
+        **Description:** [copy from above]
+        **Steps to reproduce:** [copy from above]
+        **Expected:** [copy from above]
+        **Actual:** [copy from above]
+        **Logs:** [copy from above]
+
+        1. Identify root cause
+        2. Implement fix
+        3. Add regression test
+        4. Update CHANGELOG.md
+        ```

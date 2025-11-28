@@ -84,26 +84,22 @@
 
 ## 🚀 Quick Start
 
-### Running the Application
+### Install and running the application
 
 ```bash
-# 🚀 ONE COMMAND SETUP - Auto-installs, builds, and configures everything!
 cd app
 npm run orphelix start
+```
 
-# That's it! First run will:
-# 1. Install dependencies (if needed)
-# 2. Build standalone app (if needed)
-# 3. Configure orphelix.local hostname (requires sudo password)
-# 4. Initialize SQLite database
-# 5. Start application in background
+### Open in browser
 
-# Open in browser
+```bash
 npm run orphelix open
-# Or manually navigate to: http://orphelix.local:3000
-# Or: http://localhost:3000
+```
 
-# Other commands:
+### Other commands
+
+```bash
 npm run orphelix stop       # Stop the application
 npm run orphelix status     # Check status
 npm run orphelix help       # Show all commands

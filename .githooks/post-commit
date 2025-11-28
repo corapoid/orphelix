@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Post-commit hook
+# Runs after successful commit (optional tasks)
+
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo ""
+echo -e "${GREEN}✅ Commit successful!${NC}"
+
+# Get commit info
+COMMIT_HASH=$(git rev-parse --short HEAD)
+COMMIT_MSG=$(git log -1 --pretty=%B)
+
+echo -e "${BLUE}Commit: $COMMIT_HASH${NC}"
+echo "Message: $COMMIT_MSG"
+
+# Check if CHANGELOG.md was updated
+CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+
+if ! echo "$CHANGED_FILES" | grep -q "CHANGELOG.md"; then
+    # Check if this is a feat or fix commit
+    if echo "$COMMIT_MSG" | grep -Eq "^(feat|fix)"; then
+        echo ""
+        echo -e "${YELLOW}💡 Reminder: Update CHANGELOG.md for this change${NC}"
+        echo "   Run: /update-changelog"
+    fi
+fi
+
+# Optional: Auto-update CHANGELOG (commented out by default)
+# echo ""
+# echo "🤖 Auto-updating CHANGELOG.md..."
+# /update-changelog
+
+# Check if tests were modified
+if echo "$CHANGED_FILES" | grep -Eq "__tests__|tests/e2e"; then
+    echo ""
+    echo -e "${GREEN}✅ Tests updated${NC}"
+fi
+
+# Statistics
+echo ""
+echo "Repository statistics:"
+COMMIT_COUNT=$(git rev-list --count HEAD)
+echo "  Total commits: $COMMIT_COUNT"
+
+FILE_COUNT=$(git ls-files | wc -l | xargs)
+echo "  Tracked files: $FILE_COUNT"
+
+echo ""

@@ -1,0 +1,124 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please provide as much detail as possible.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: As a DevOps engineer, I need to view Kubernetes Ingress resources...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this feature to work?
+      placeholder: |
+        Add a new "Ingress" page that shows:
+        - List of all ingress resources
+        - Host names and paths
+        - Backend services
+        - TLS configuration
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions?
+      placeholder: I considered using kubectl directly, but...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would improve workflow
+        - High - Critical for my use case
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe your specific use case
+      placeholder: |
+        I manage 50+ microservices with complex ingress routing.
+        Currently I have to use kubectl to check ingress configuration,
+        which is time-consuming...
+
+  - type: checkboxes
+    id: willing-to-contribute
+    attributes:
+      label: Would you like to contribute?
+      description: Are you willing to help implement this feature?
+      options:
+        - label: I can help implement this feature
+        - label: I can help test this feature
+        - label: I can help write documentation
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, mockups, or examples
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🤖 For AI Implementation
+
+        Use the **feature-implementer agent** to implement this feature:
+
+        ```
+        /add-k8s-resource <resource-name>
+        ```
+
+        Or manually with custom prompt:
+
+        ```
+        Implement the following feature:
+
+        **Problem:** [copy from above]
+        **Solution:** [copy from above]
+        **Priority:** [copy from above]
+
+        Requirements:
+        1. Follow established patterns (API route → Hook → Component)
+        2. Support both demo and real mode
+        3. Include comprehensive tests (>80% coverage)
+        4. Update documentation (CHANGELOG.md, user docs)
+        5. Ensure TypeScript strict mode compliance
+
+        Implementation steps:
+        1. Create TypeScript types in types/kubernetes.ts
+        2. Implement K8s API functions in lib/k8s/api.ts
+        3. Create API route in app/api/<resource>/route.ts
+        4. Create mock data in lib/mocks/data.ts
+        5. Create TanStack Query hook in lib/hooks/use-<resource>.ts
+        6. Create React component in app/components/<resource>/
+        7. Create page in app/<resource>/page.tsx
+        8. Write unit tests in __tests__/
+        9. Write E2E test in tests/e2e/
+        10. Update CHANGELOG.md
+
+        Verify:
+        - npm run lint:fix
+        - npm run type-check
+        - npm run test
+        - npm run build
+        ```
