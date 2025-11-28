@@ -2,6 +2,10 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/core/store'
 import { createLogger } from '@/lib/logging/logger'
+import {
+  SSE_MAX_RECONNECT_ATTEMPTS,
+  SSE_RECONNECT_DELAY_MS,
+} from '@/lib/config/constants'
 
 const logger = createLogger({ module: 'use-realtime' })
 
@@ -39,9 +43,6 @@ export function useRealtimeUpdates() {
   const eventSourceRef = useRef<EventSource | null>(null)
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const reconnectAttemptsRef = useRef(0)
-
-  const maxReconnectAttempts = 5
-  const reconnectDelay = 3000
 
   /**
    * Close existing connection
@@ -140,12 +141,12 @@ export function useRealtimeUpdates() {
         eventSource.close()
 
         // Attempt reconnection
-        if (reconnectAttemptsRef.current < maxReconnectAttempts) {
+        if (reconnectAttemptsRef.current < SSE_MAX_RECONNECT_ATTEMPTS) {
           reconnectAttemptsRef.current++
           logger.warn(
             {
               attempt: reconnectAttemptsRef.current,
-              maxAttempts: maxReconnectAttempts,
+              maxAttempts: SSE_MAX_RECONNECT_ATTEMPTS,
               namespace,
               context: selectedContext?.name
             },
@@ -154,7 +155,7 @@ export function useRealtimeUpdates() {
 
           reconnectTimeoutRef.current = setTimeout(() => {
             connect()
-          }, reconnectDelay)
+          }, SSE_RECONNECT_DELAY_MS)
         } else {
           setError('Max reconnection attempts reached')
           setStatus('disconnected')

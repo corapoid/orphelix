@@ -15,6 +15,7 @@ import SmartToyIcon from '@mui/icons-material/SmartToy'
 import WarningIcon from '@mui/icons-material/Warning'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useRouter } from 'next/navigation'
+import { useApiKeyExists } from '@/lib/hooks/use-api-key'
 
 interface IssueDetectorProps {
   events?: Event[]
@@ -33,20 +34,9 @@ export function IssueDetector({ events = [], metrics }: IssueDetectorProps) {
   const router = useRouter()
   const [issues, setIssues] = useState<DetectedIssue[]>([])
   const [expanded, setExpanded] = useState(true)
-  const [hasApiKey, setHasApiKey] = useState(false)
 
-  useEffect(() => {
-    const apiKey = localStorage.getItem('orphelix_openai_key')
-    setHasApiKey(!!apiKey)
-
-    const handleKeyUpdate = () => {
-      const key = localStorage.getItem('orphelix_openai_key')
-      setHasApiKey(!!key)
-    }
-
-    window.addEventListener('openai-key-updated', handleKeyUpdate)
-    return () => window.removeEventListener('openai-key-updated', handleKeyUpdate)
-  }, [])
+  // Check if API key exists in encrypted storage
+  const { exists: hasApiKey } = useApiKeyExists('openai')
 
   useEffect(() => {
     const detectedIssues: DetectedIssue[] = []

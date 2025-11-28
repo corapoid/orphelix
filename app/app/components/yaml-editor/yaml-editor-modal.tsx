@@ -19,6 +19,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import Editor from '@monaco-editor/react'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { useRouter } from 'next/navigation'
+import { useApiKeyExists } from '@/lib/hooks/use-api-key'
 
 interface YamlEditorModalProps {
   open: boolean
@@ -51,6 +52,9 @@ export function YamlEditorModal({
   const [matchInfo, setMatchInfo] = useState<{ method: string; confidence?: number; reasoning?: string } | null>(null)
   const [matchedFiles, setMatchedFiles] = useState<Array<{ file: string; confidence: number; environment: string; reasoning: string }>>([])
   const [showFileSelector, setShowFileSelector] = useState(false)
+
+  // Check if OpenAI API key exists
+  const { exists: hasOpenAIKey } = useApiKeyExists('openai')
 
   // Check authentication status (both OAuth and GitHub App)
   const { data: authStatus } = useQuery({
@@ -93,12 +97,9 @@ export function YamlEditorModal({
       setMatchInfo(null)
 
       try {
-        // Check if AI is available (OpenAI key configured)
-        const openaiKey = localStorage.getItem('orphelix_openai_key')
-
         let response: Response
 
-        if (openaiKey) {
+        if (hasOpenAIKey) {
           // Smart filtering before AI matching for better performance
           const baseResourceName = resourceName.replace(/-(main|dev|prod|staging|test)$/, '')
           const resourceWords = baseResourceName.toLowerCase().split(/[-_]/)
