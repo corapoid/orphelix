@@ -39,7 +39,7 @@ const logLevel = (process.env.LOG_LEVEL || (isDevelopment ? 'debug' : 'info')) a
 /**
  * Create base Pino logger instance
  */
-function createLogger(): PinoLogger {
+function createBaseLogger(): PinoLogger {
   // In test environment, create a silent logger
   if (isTest) {
     return pino({ level: 'silent' })
@@ -76,7 +76,7 @@ function createLogger(): PinoLogger {
 /**
  * Base logger instance
  */
-export const baseLogger = createLogger()
+export const baseLogger = createBaseLogger()
 
 /**
  * Logger class with convenience methods
@@ -125,18 +125,62 @@ export class Logger {
 
   /**
    * Log at warn level (warning messages that don't prevent operation)
+   * Accepts either (message, context?) or (context, message)
    */
-  warn(message: string, context?: LogContext): void {
-    this.logger.warn({ ...this.defaultContext, ...context }, message)
+  warn(messageOrContext: string | LogContext, contextOrMessage?: LogContext | string): void {
+    let message: string
+    let ctx: LogContext = {}
+
+    // Signature: warn(context, message)
+    if (typeof messageOrContext === 'object' && typeof contextOrMessage === 'string') {
+      ctx = messageOrContext
+      message = contextOrMessage
+    }
+    // Signature: warn(message, context?)
+    else if (typeof messageOrContext === 'string') {
+      message = messageOrContext
+      ctx = (contextOrMessage as LogContext) || {}
+    }
+    // Fallback
+    else {
+      message = 'Unknown warning'
+      ctx = {}
+    }
+
+    this.logger.warn({ ...this.defaultContext, ...ctx }, message)
   }
 
   /**
    * Log at error level (error messages)
+   * Accepts either (message, error?, context?) or (context, message)
    */
-  error(message: string, error?: Error | unknown, context?: LogContext): void {
+  error(messageOrContext: string | LogContext, errorOrMessage?: Error | unknown | string, context?: LogContext): void {
+    let message: string
+    let error: Error | unknown | undefined
+    let ctx: LogContext = {}
+
+    // Signature: error(context, message)
+    if (typeof messageOrContext === 'object' && typeof errorOrMessage === 'string') {
+      ctx = messageOrContext
+      message = errorOrMessage
+      error = undefined
+    }
+    // Signature: error(message, error?, context?)
+    else if (typeof messageOrContext === 'string') {
+      message = messageOrContext
+      error = errorOrMessage
+      ctx = context || {}
+    }
+    // Fallback
+    else {
+      message = 'Unknown error'
+      error = messageOrContext
+      ctx = {}
+    }
+
     const errorContext: LogContext = {
       ...this.defaultContext,
-      ...context,
+      ...ctx,
     }
 
     if (error instanceof Error) {
@@ -332,4 +376,11 @@ export function createDbLogger(context?: LogContext): Logger {
     module: 'database',
     ...context,
   })
+}
+
+/**
+ * Generic logger creator with module name
+ */
+export function createLogger(options: { module: string } & LogContext): Logger {
+  return logger.child(options)
 }

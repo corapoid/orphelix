@@ -1,4 +1,7 @@
 import { App } from '@octokit/app'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'github-app-auth' })
 
 // GitHub App authentication (not OAuth)
 // This allows users to grant access to specific repositories only
@@ -12,7 +15,7 @@ export class GitHubAppAuth {
     const clientSecret = process.env.GITHUB_APP_CLIENT_SECRET
 
     if (!appId || !privateKey || !clientId || !clientSecret) {
-      console.warn('GitHub App credentials not configured')
+      logger.warn('GitHub App credentials not configured')
       return
     }
 

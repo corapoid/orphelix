@@ -1,5 +1,8 @@
 import { auth } from '@/auth'
 import { NextResponse } from 'next/server'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'middleware' })
 
 /**
  * Security Headers Configuration
@@ -75,7 +78,7 @@ export default auth((req) => {
 
   // Debug logging
   if (process.env.NODE_ENV === 'development') {
-    console.log('[Middleware]', {
+    logger.debug('Middleware check', {
       pathname,
       appMode,
       isLoggedIn,
@@ -85,20 +88,20 @@ export default auth((req) => {
 
   // Allow all routes if in demo mode (cookie is set)
   if (appMode === 'demo') {
-    console.log('[Middleware] Allowing demo mode access to:', pathname)
+    logger.debug('Allowing demo mode access', { pathname })
     const response = NextResponse.next()
     return applySecurityHeaders(response)
   }
 
   // Allow all routes if logged in (real mode with GitHub auth)
   if (isLoggedIn) {
-    console.log('[Middleware] Allowing logged in access to:', pathname)
+    logger.debug('Allowing logged in access', { pathname })
     const response = NextResponse.next()
     return applySecurityHeaders(response)
   }
 
   // Otherwise redirect to welcome page
-  console.log('[Middleware] Redirecting to welcome:', pathname)
+  logger.debug('Redirecting to welcome', { pathname })
   const response = NextResponse.redirect(new URL('/', req.url))
   return applySecurityHeaders(response)
 })

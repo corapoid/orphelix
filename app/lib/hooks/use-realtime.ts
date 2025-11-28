@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/core/store'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'use-realtime' })
 
 export type ConnectionStatus = 'connected' | 'connecting' | 'disconnected' | 'error'
 
@@ -77,7 +80,7 @@ export function useRealtimeUpdates() {
 
       // Connection opened
       eventSource.addEventListener('connected', (event) => {
-        console.warn('[SSE] Connected:', event.data)
+        logger.info('SSE connected', { namespace, context: selectedContext?.name, data: event.data })
         setStatus('connected')
         reconnectAttemptsRef.current = 0
         setError(null)
@@ -126,21 +129,27 @@ export function useRealtimeUpdates() {
       // Error from server
       eventSource.addEventListener('error', (event) => {
         const data = JSON.parse((event as MessageEvent).data || '{}')
-        console.error('[SSE] Server error:', data)
+        logger.error({ error: data, namespace, context: selectedContext?.name }, 'SSE server error')
         setError(data.message || 'Unknown server error')
       })
 
       // Connection error (network, etc.)
       eventSource.onerror = (err) => {
-        console.error('[SSE] Connection error:', err)
+        logger.error({ error: err, namespace, context: selectedContext?.name }, 'SSE connection error')
         setStatus('error')
         eventSource.close()
 
         // Attempt reconnection
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++
-          console.warn(
-            `[SSE] Reconnecting... (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts})`
+          logger.warn(
+            {
+              attempt: reconnectAttemptsRef.current,
+              maxAttempts: maxReconnectAttempts,
+              namespace,
+              context: selectedContext?.name
+            },
+            'SSE reconnecting'
           )
 
           reconnectTimeoutRef.current = setTimeout(() => {
@@ -152,7 +161,7 @@ export function useRealtimeUpdates() {
         }
       }
     } catch (err) {
-      console.error('[SSE] Failed to create EventSource:', err)
+      logger.error({ error: err, namespace, context: selectedContext?.name }, 'Failed to create EventSource')
       setStatus('error')
       setError(err instanceof Error ? err.message : 'Failed to connect')
     }

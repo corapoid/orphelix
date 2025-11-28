@@ -3,6 +3,9 @@
  */
 
 import { useState, useEffect } from 'react'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'use-ai-file-matcher' })
 
 interface MatchResult {
   matchedFile: string | null
@@ -61,7 +64,7 @@ export function useAIFileMatcher(
         setResult(data)
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
-        console.error('[AI Matcher] Error:', message)
+        logger.error({ error: err, resourceName, namespace, resourceType }, 'AI matcher error')
         setError(message)
       } finally {
         setMatching(false)

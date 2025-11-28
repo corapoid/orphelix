@@ -5,6 +5,9 @@ import { rateLimit } from '@/lib/security/rate-limiter'
 import { STREAM_LIMIT } from '@/lib/security/rate-limit-configs'
 import { namespaceSchema } from '@/lib/validation/schemas'
 import { ValidationError } from '@/lib/api/errors'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'api-stream' })
 
 // Create rate limiter for SSE stream operations
 const limiter = rateLimit(STREAM_LIMIT)
@@ -52,9 +55,9 @@ export async function GET(request: NextRequest) {
           isClosed = true
           try {
             controller.close()
-          } catch {
+          } catch (error) {
             // Controller already closed, ignore
-            console.debug('[SSE] Controller already closed')
+            logger.debug('SSE controller already closed', { error })
           }
         }
       }
@@ -66,7 +69,7 @@ export async function GET(request: NextRequest) {
           const message = `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`
           controller.enqueue(encoder.encode(message))
         } catch (error) {
-          console.error('[SSE] Failed to send event:', error)
+          logger.error({ error, eventType: type }, 'Failed to send SSE event')
           safeClose()
         }
       }
@@ -83,7 +86,7 @@ export async function GET(request: NextRequest) {
         try {
           sendEvent('heartbeat', { timestamp: new Date().toISOString() })
         } catch (error) {
-          console.error('[SSE] Heartbeat error:', error)
+          logger.error({ error }, 'SSE heartbeat error')
           clearInterval(heartbeatInterval)
           safeClose()
         }
@@ -94,7 +97,7 @@ export async function GET(request: NextRequest) {
         try {
           initK8sClient(contextName)
         } catch (error) {
-          console.error('[SSE] Failed to initialize Kubernetes client:', error)
+          logger.error({ error, context: contextName }, 'Failed to initialize Kubernetes client')
           sendEvent('error', {
             message: 'Kubernetes configuration not available. Real-time updates disabled.'
           })
@@ -114,7 +117,7 @@ export async function GET(request: NextRequest) {
             kc.setCurrentContext(contextName)
           }
         } catch (error) {
-          console.error('[SSE] Failed to load Kubernetes config:', error)
+          logger.error({ error, context: contextName }, 'Failed to load Kubernetes config')
           sendEvent('error', {
             message: 'Kubernetes configuration not available. Real-time updates disabled.'
           })
@@ -126,7 +129,7 @@ export async function GET(request: NextRequest) {
         // Validate cluster configuration
         const cluster = kc.getCurrentCluster()
         if (!cluster?.server) {
-          console.error('[SSE] Cluster server URL not configured')
+          logger.error({ context: contextName }, 'Cluster server URL not configured')
           sendEvent('error', {
             message: 'Kubernetes cluster not configured. Real-time updates disabled.'
           })
@@ -156,7 +159,7 @@ export async function GET(request: NextRequest) {
           },
           (err) => {
             if (err) {
-              console.error('[SSE] Deployment watch error:', err)
+              logger.error({ error: err, namespace }, 'Deployment watch error')
               sendEvent('error', { message: 'Deployment watch failed', error: err.message })
             }
           }
@@ -180,7 +183,7 @@ export async function GET(request: NextRequest) {
           },
           (err) => {
             if (err) {
-              console.error('[SSE] Pod watch error:', err)
+              logger.error({ error: err, namespace }, 'Pod watch error')
               sendEvent('error', { message: 'Pod watch failed', error: err.message })
             }
           }
@@ -207,7 +210,7 @@ export async function GET(request: NextRequest) {
           },
           (err) => {
             if (err) {
-              console.error('[SSE] Event watch error:', err)
+              logger.error({ error: err, namespace }, 'Event watch error')
               sendEvent('error', { message: 'Event watch failed', error: err.message })
             }
           }
@@ -226,13 +229,13 @@ export async function GET(request: NextRequest) {
             ])
             abortControllers.forEach((ac) => ac?.abort())
           } catch (err) {
-            console.error('[SSE] Error aborting watches:', err)
+            logger.error({ error: err }, 'Error aborting watches')
           }
 
           safeClose()
         })
       } catch (error) {
-        console.error('[SSE] Failed to initialize Kubernetes watches:', error)
+        logger.error({ error, namespace, context: contextName }, 'Failed to initialize Kubernetes watches')
         sendEvent('error', {
           message: 'Failed to connect to Kubernetes cluster',
           error: error instanceof Error ? error.message : 'Unknown error',

@@ -9,6 +9,9 @@
  */
 
 import * as k8s from '@kubernetes/client-node'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'k8s-client' })
 
 let kc: k8s.KubeConfig | null = null
 let k8sAppsApi: k8s.AppsV1Api | null = null
@@ -48,7 +51,7 @@ export function initK8sClient(contextName?: string): void {
       throw new Error(`Cluster server URL is not configured for context: ${contextName || currentCtx}`)
     }
   } catch (error) {
-    console.error('[K8s] Failed to load Kubernetes configuration:', error)
+    logger.error({ error, contextName }, 'Failed to load Kubernetes configuration')
     throw new Error('Failed to initialize Kubernetes client. Make sure kubeconfig is properly configured.')
   }
 
@@ -140,7 +143,7 @@ export async function checkConnection(): Promise<boolean> {
     await coreApi.listNamespace()
     return true
   } catch (error) {
-    console.error('[K8s] Connection check failed:', error)
+    logger.error({ error }, 'Connection check failed')
     return false
   }
 }

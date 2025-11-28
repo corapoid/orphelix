@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'api-helpers' })
 
 /**
  * Extract namespace from request query parameters
@@ -33,7 +36,7 @@ export function buildApiUrl(path: string, namespace: string): string {
  * Handles 401 Unauthorized, 403 Forbidden, and other common errors
  */
 export function handleK8sError(error: unknown, resourceType: string): NextResponse {
-  console.error(`[API] Failed to fetch ${resourceType}:`, error)
+  logger.error({ error, resourceType }, 'Failed to fetch Kubernetes resource')
 
   // Check if it's an authorization error (401)
   if (error && typeof error === 'object' && 'code' in error) {
