@@ -22,7 +22,7 @@ export function Footer() {
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
         <Typography variant="caption" color="text.secondary">
-          Orphelix v1.1.0 - Modern Kubernetes Dashboard
+          Orphelix v{process.env.NEXT_PUBLIC_APP_VERSION} - Modern Kubernetes Dashboard
         </Typography>
         <Tooltip title="GitHub Repository" arrow>
           <IconButton

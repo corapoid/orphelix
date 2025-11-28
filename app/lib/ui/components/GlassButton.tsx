@@ -21,7 +21,7 @@ export interface GlassButtonProps extends Omit<ButtonProps, 'href'> {
  */
 export function GlassButton({ selected = false, sx, href, target, rel, size, ...props }: GlassButtonProps) {
   const theme = useMuiTheme()
-  // @ts-ignore - custom theme property
+  // @ts-expect-error - custom theme property
   const isGlass = theme.palette.mode && theme.effects?.transparency !== false
   const surfaceColor = theme.palette.background?.paper ?? theme.palette.background.default
   const hoverColor = alpha(surfaceColor, theme.palette.mode === 'dark' ? 0.9 : 0.95)

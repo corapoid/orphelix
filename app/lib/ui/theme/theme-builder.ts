@@ -50,7 +50,7 @@ export function buildTheme(preset: VisualPreset, mode: 'light' | 'dark', compact
         default: palette.background.default,
         paper: palette.background.paper,
         wallpaper: palette.background.wallpaper,
-      } as any,
+      } as Record<string, string>,
       text: {
         primary: palette.text.primary,
         secondary: palette.text.secondary,
