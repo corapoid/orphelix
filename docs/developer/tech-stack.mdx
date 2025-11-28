@@ -1,12 +1,1159 @@
 ---
 title: 'Tech Stack'
-description: 'Technologies used in Orphelix'
+description: 'Complete technology stack and dependencies used in Orphelix'
 ---
 
 ## Overview
 
-This page is under construction.
+Orphelix is built with modern, production-ready technologies chosen for performance, developer experience, and scalability.
 
-<Note>
-  See [Developer Overview](/developer/overview) for technology information.
-</Note>
+<CardGroup cols={2}>
+  <Card title="Frontend" icon="react">
+    React 19, Next.js 15, Material-UI v7, TypeScript 5.7
+  </Card>
+  <Card title="Backend" icon="server">
+    Next.js API Routes, Kubernetes Client Node, better-sqlite3
+  </Card>
+  <Card title="State & Data" icon="database">
+    TanStack Query, Zustand, SQLite, Server-Sent Events
+  </Card>
+  <Card title="Development" icon="code">
+    Vitest, Playwright, ESLint, Prettier, TypeScript
+  </Card>
+</CardGroup>
+
+## Core Technologies
+
+### Frontend Framework
+
+<AccordionGroup>
+  <Accordion icon="react" title="React 19">
+    **Version:** 19.0.0
+    
+    **Why React 19:**
+    - New concurrent features for better performance
+    - Automatic batching of state updates
+    - Improved Server Components support
+    - Better TypeScript integration
+    - Server Actions for data mutations
+    
+    **Key Features Used:**
+    - React Server Components (RSC)
+    - Suspense boundaries for loading states
+    - `useTransition` for non-blocking updates
+    - `useDeferredValue` for expensive computations
+    - `memo` and `useMemo` for performance optimization
+    
+    **Example:**
+    ```typescript
+    // Server Component (app/deployments/page.tsx)
+    export default async function DeploymentsPage() {
+      // Fetch data on server
+      const deployments = await getDeployments()
+      
+      return <DeploymentList deployments={deployments} />
+    }
+    
+    // Client Component with concurrent features
+    'use client'
+    export function DeploymentSearch() {
+      const [query, setQuery] = useState('')
+      const deferredQuery = useDeferredValue(query)
+      
+      // deferredQuery updates don't block input
+      const results = useSearchResults(deferredQuery)
+      
+      return <SearchInput value={query} onChange={setQuery} />
+    }
+    ```
+  </Accordion>
+
+  <Accordion icon="triangle" title="Next.js 15">
+    **Version:** 16.0.3 (latest)
+    
+    **Why Next.js 15:**
+    - App Router with React Server Components
+    - Built-in API routes (serverless functions)
+    - Automatic code splitting and optimization
+    - Edge runtime support
+    - Turbopack for faster development builds
+    
+    **App Router Features:**
+    - File-based routing (`app/` directory)
+    - Nested layouts with shared UI
+    - Loading UI with Suspense
+    - Error boundaries for graceful errors
+    - Server and Client Components separation
+    
+    **API Routes:**
+    - RESTful endpoints in `app/api/`
+    - Server-side Kubernetes API calls
+    - SSE endpoint for real-time updates
+    - GitHub API integration
+    
+    **Configuration:**
+    ```javascript
+    // next.config.mjs
+    export default {
+      output: 'standalone', // For deployment
+      experimental: {
+        serverActions: true, // Enable Server Actions
+      },
+      webpack: (config) => {
+        // Fix for better-sqlite3
+        config.externals.push({
+          'better-sqlite3': 'commonjs better-sqlite3',
+        })
+        return config
+      },
+    }
+    ```
+  </Accordion>
+
+  <Accordion icon="palette" title="Material-UI v7">
+    **Version:** 7.3.5
+    
+    **Why Material-UI v7:**
+    - Comprehensive component library
+    - Built-in theming system
+    - Responsive design utilities
+    - Accessibility compliant (WCAG)
+    - CSS-in-JS with Emotion
+    
+    **Components Used:**
+    - Layout: `Container`, `Grid`, `Stack`, `Box`
+    - Navigation: `Drawer`, `AppBar`, `Tabs`
+    - Data Display: `Table`, `Card`, `Chip`, `Badge`
+    - Inputs: `TextField`, `Select`, `Switch`, `Button`
+    - Feedback: `Alert`, `Snackbar`, `Skeleton`, `CircularProgress`
+    - Overlay: `Dialog`, `Menu`, `Tooltip`, `Popover`
+    
+    **Theming:**
+    ```typescript
+    // lib/ui/theme/design-tokens.ts
+    export const createTheme = (mode: 'light' | 'dark') => ({
+      palette: {
+        mode,
+        primary: {
+          main: mode === 'dark' ? '#667EEA' : '#764BA2',
+        },
+        background: {
+          default: mode === 'dark' ? '#0A0F1C' : '#F7FAFC',
+          paper: mode === 'dark' ? '#131B2E' : '#FFFFFF',
+        },
+      },
+      typography: {
+        fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      },
+      components: {
+        MuiCard: {
+          styleOverrides: {
+            root: {
+              backdropFilter: 'blur(20px)',
+              background: 'rgba(255, 255, 255, 0.05)',
+            },
+          },
+        },
+      },
+    })
+    ```
+    
+    **Custom Styles:**
+    - Liquid Glass visual preset (glassmorphism)
+    - Classic flat design preset
+    - Dark/light mode support
+    - Custom color gradients
+  </Accordion>
+
+  <Accordion icon="file-code" title="TypeScript 5.7">
+    **Version:** 5.7.2
+    
+    **Why TypeScript:**
+    - Type safety prevents runtime errors
+    - Better IDE autocomplete and IntelliSense
+    - Self-documenting code with type definitions
+    - Easier refactoring with compile-time checks
+    
+    **Configuration:**
+    ```json
+    // tsconfig.json
+    {
+      "compilerOptions": {
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "paths": {
+          "@/*": ["./app/*"],
+          "@/lib/*": ["./app/lib/*"],
+          "@/components/*": ["./app/components/*"]
+        }
+      }
+    }
+    ```
+    
+    **Strict Mode Features:**
+    - `strictNullChecks` - no implicit undefined
+    - `noImplicitAny` - all types must be defined
+    - `strictFunctionTypes` - strict function type checking
+    - `noUncheckedIndexedAccess` - safe array/object access
+  </Accordion>
+</AccordionGroup>
+
+## State Management
+
+<AccordionGroup>
+  <Accordion icon="database" title="TanStack Query v5">
+    **Version:** 5.90.10
+    
+    **Why TanStack Query:**
+    - Declarative data fetching
+    - Automatic caching and invalidation
+    - Background refetching
+    - Optimistic updates
+    - Request deduplication
+    
+    **Key Features:**
+    - `useQuery` for GET requests
+    - `useMutation` for POST/PUT/DELETE
+    - `queryClient` for cache manipulation
+    - Query invalidation on mutations
+    - Prefetching for better UX
+    
+    **Configuration:**
+    ```typescript
+    // app/components/providers/react-query-provider.tsx
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 10_000, // 10 seconds
+          refetchInterval: 30_000, // 30 seconds
+          refetchOnWindowFocus: true,
+          retry: 3,
+          retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        },
+      },
+    })
+    ```
+    
+    **DevTools:**
+    - React Query DevTools for debugging
+    - Cache inspection
+    - Query timeline
+    - Network request tracking
+  </Accordion>
+
+  <Accordion icon="box" title="Zustand 5">
+    **Version:** 5.0.8
+    
+    **Why Zustand:**
+    - Minimal boilerplate (vs Redux)
+    - No Provider wrapper needed
+    - Built-in TypeScript support
+    - Middleware for persistence
+    - Small bundle size (~1KB)
+    
+    **Stores:**
+    - `useModeStore` - App mode, context, namespace
+    - `useGitHubStore` - GitHub repo, PRs, edit basket
+    - `useClusterAliases` - Cluster friendly names
+    - `useCriticalIssuesSettings` - Critical issue preferences
+    - `useSidebarPins` - Sidebar navigation state
+    
+    **Middleware:**
+    ```typescript
+    // lib/core/store.ts
+    import { create } from 'zustand'
+    import { persist } from 'zustand/middleware'
+    
+    export const useGitHubStore = create<GitHubStore>()(
+      persist(
+        (set, get) => ({
+          selectedRepo: null,
+          setSelectedRepo: (repo) => set({ selectedRepo: repo }),
+        }),
+        {
+          name: 'orphelix-github', // localStorage key
+          storage: {
+            getItem: (name) => {
+              // Custom serialization for Map/Set
+            },
+            setItem: (name, value) => {
+              // Custom deserialization
+            },
+          },
+        }
+      )
+    )
+    ```
+  </Accordion>
+
+  <Accordion icon="hard-drive" title="SQLite (better-sqlite3)">
+    **Version:** 12.4.6
+    
+    **Why SQLite:**
+    - Embedded database (no server needed)
+    - Zero configuration
+    - ACID compliant
+    - Fast for read-heavy workloads
+    - Single file database
+    
+    **Database File:**
+    `orphelix.db` in project root
+    
+    **Tables:**
+    - `user_settings` - App preferences
+    - `github_settings` - GitHub integration
+    - `github_pending_prs` - Pending pull requests
+    - `github_edit_basket` - Multi-file PR staging
+    - `cluster_aliases` - Cluster friendly names
+    - `critical_issues_settings` - Monitoring preferences
+    - `sidebar_pins` - Navigation pins
+    
+    **Why better-sqlite3:**
+    - Synchronous API (simpler than async)
+    - 10x faster than node-sqlite3
+    - Prepared statements
+    - WAL mode for concurrency
+    - Type-safe with TypeScript
+    
+    **Performance:**
+    ```typescript
+    // lib/db/database.ts
+    const db = new Database('orphelix.db')
+    
+    // Enable WAL mode for better concurrency
+    db.pragma('journal_mode = WAL')
+    
+    // Prepared statements (cached)
+    const getSettings = db.prepare('SELECT * FROM user_settings WHERE id = 1')
+    const updateSettings = db.prepare('UPDATE user_settings SET mode = ? WHERE id = 1')
+    
+    // Fast synchronous operations
+    const settings = getSettings.get() // No await needed
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Backend Technologies
+
+<AccordionGroup>
+  <Accordion icon="layer-group" title="Kubernetes Client Node">
+    **Version:** 1.4.0
+    
+    **Why @kubernetes/client-node:**
+    - Official Kubernetes JavaScript client
+    - Full API coverage
+    - TypeScript definitions included
+    - Watch API for real-time updates
+    - Multi-cloud authentication support
+    
+    **API Clients:**
+    - `AppsV1Api` - Deployments, StatefulSets, DaemonSets
+    - `CoreV1Api` - Pods, Services, ConfigMaps, Secrets, Nodes
+    - `AutoscalingV2Api` - Horizontal Pod Autoscalers
+    - `BatchV1Api` - Jobs, CronJobs
+    - `NetworkingV1Api` - Ingress
+    - `EventsV1Api` - Kubernetes Events
+    
+    **Authentication:**
+    Supports all kubeconfig auth methods:
+    - Client certificates (x509)
+    - Bearer tokens (service accounts)
+    - Exec plugins (AWS, GCP, Azure)
+    - OIDC authentication
+    
+    **Example:**
+    ```typescript
+    // lib/k8s/client.ts
+    import * as k8s from '@kubernetes/client-node'
+    
+    const kc = new k8s.KubeConfig()
+    kc.loadFromDefault() // Load ~/.kube/config
+    
+    const appsApi = kc.makeApiClient(k8s.AppsV1Api)
+    const response = await appsApi.listNamespacedDeployment('default')
+    ```
+  </Accordion>
+
+  <Accordion icon="bolt" title="Server-Sent Events (SSE)">
+    **Native Web API**
+    
+    **Why SSE:**
+    - Real-time updates without polling
+    - Automatic reconnection
+    - Lower latency than polling
+    - Built into browsers (no library needed)
+    - Server push (not request-response)
+    
+    **vs WebSockets:**
+    - Simpler protocol (HTTP)
+    - One-way communication (server → client)
+    - Better for read-only real-time data
+    - No need for WebSocket server setup
+    
+    **Implementation:**
+    ```typescript
+    // Server: app/api/stream/route.ts
+    export async function GET(request: NextRequest) {
+      const stream = new ReadableStream({
+        async start(controller) {
+          const encoder = new TextEncoder()
+          
+          const sendEvent = (type: string, data: unknown) => {
+            const message = `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`
+            controller.enqueue(encoder.encode(message))
+          }
+          
+          // Watch Kubernetes resources
+          const watch = new k8s.Watch(kc)
+          watch.watch('/apis/apps/v1/namespaces/default/deployments', {}, 
+            (type, obj) => sendEvent('deployment', { type, object: obj }),
+            (err) => sendEvent('error', { message: err.message })
+          )
+        }
+      })
+      
+      return new Response(stream, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
+      })
+    }
+    
+    // Client
+    const eventSource = new EventSource('/api/stream?namespace=default')
+    eventSource.addEventListener('deployment', (e) => {
+      const data = JSON.parse(e.data)
+      queryClient.invalidateQueries(['deployments'])
+    })
+    ```
+  </Accordion>
+
+  <Accordion icon="github" title="GitHub Integration">
+    **Octokit v22 + GitHub App**
+    
+    **Packages:**
+    - `@octokit/rest` (v22.0.1) - REST API client
+    - `@octokit/app` (v16.1.2) - GitHub App auth
+    - `@octokit/auth-app` (v8.1.2) - App authentication
+    - `next-auth` (v5.0.0-beta.30) - OAuth flow
+    
+    **Why GitHub App:**
+    - Organization-level access
+    - Fine-grained permissions
+    - Higher rate limits (5000 req/hour)
+    - Installation-based authentication
+    - Works with private repos
+    
+    **Features:**
+    - Repository file browsing
+    - File content reading/editing
+    - Branch creation
+    - Pull request creation
+    - Multi-file commits
+    - Kustomize structure detection
+    
+    **Configuration:**
+    ```bash
+    # .env.local
+    GITHUB_APP_ID=123456
+    GITHUB_APP_CLIENT_ID=Iv1.abc123
+    GITHUB_APP_CLIENT_SECRET=secret
+    GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n..."
+    NEXTAUTH_SECRET=random_secret
+    NEXTAUTH_URL=http://localhost:3000
+    ```
+  </Accordion>
+
+  <Accordion icon="brain" title="AI Integration (OpenAI)">
+    **Vercel AI SDK v5**
+    
+    **Packages:**
+    - `ai` (v5.0.93) - Vercel AI SDK
+    - `@ai-sdk/openai` (v2.0.65) - OpenAI provider
+    
+    **Why Vercel AI SDK:**
+    - Streaming responses support
+    - Provider-agnostic (swap OpenAI for Anthropic)
+    - Type-safe
+    - Built-in error handling
+    - React hooks for streaming UI
+    
+    **Features:**
+    - Smart file matching (GPT-4o-mini)
+    - Issue troubleshooting explanations
+    - Repository structure analysis
+    - Deployment YAML suggestions
+    
+    **Model Used:**
+    - `gpt-4o-mini` - Fast, cost-effective ($0.15/1M tokens)
+    
+    **Example:**
+    ```typescript
+    // app/api/ai/match-file/route.ts
+    import { generateText } from 'ai'
+    import { openai } from '@ai-sdk/openai'
+    
+    export async function POST(request: Request) {
+      const { deploymentYaml, files } = await request.json()
+      
+      const result = await generateText({
+        model: openai('gpt-4o-mini'),
+        messages: [{
+          role: 'user',
+          content: `Match deployment to file:\n${deploymentYaml}\n\nFiles:\n${files.join('\n')}`
+        }],
+        temperature: 0.1, // Low for consistency
+      })
+      
+      return Response.json({ match: result.text })
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## UI Libraries
+
+<AccordionGroup>
+  <Accordion icon="code" title="Monaco Editor">
+    **Version:** 0.54.0 (via @monaco-editor/react 4.7.0)
+    
+    **Why Monaco:**
+    - Same editor as VS Code
+    - Syntax highlighting for YAML
+    - IntelliSense / autocomplete
+    - Error detection
+    - Diff view for changes
+    
+    **Features Used:**
+    - YAML language support
+    - Dark/light themes
+    - Read-only mode
+    - Diff editor for PR preview
+    - Custom keybindings
+    
+    **Configuration:**
+    ```typescript
+    // components/repo-browser/file-editor-modal.tsx
+    import Editor from '@monaco-editor/react'
+    
+    <Editor
+      height="600px"
+      language="yaml"
+      theme={mode === 'dark' ? 'vs-dark' : 'vs-light'}
+      value={content}
+      onChange={handleChange}
+      options={{
+        minimap: { enabled: false },
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+        insertSpaces: true,
+      }}
+    />
+    ```
+  </Accordion>
+
+  <Accordion icon="diagram-project" title="ReactFlow (@xyflow/react)">
+    **Version:** 12.9.3
+    
+    **Why ReactFlow:**
+    - Interactive node graphs
+    - Custom node rendering
+    - Zoom/pan controls
+    - Edge routing
+    - Layout algorithms
+    
+    **Use Case:**
+    Topology visualization showing:
+    - Deployments → Pods → Nodes
+    - Services → Endpoints
+    - ConfigMaps/Secrets → Deployments
+    - Ingress → Services
+    
+    **Example:**
+    ```typescript
+    // components/topology/topology-graph.tsx
+    import { ReactFlow, Background, Controls } from '@xyflow/react'
+    
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      nodeTypes={customNodeTypes}
+      fitView
+      minZoom={0.1}
+      maxZoom={2}
+    >
+      <Background />
+      <Controls />
+    </ReactFlow>
+    ```
+  </Accordion>
+
+  <Accordion icon="chart-line" title="Recharts">
+    **Version:** 3.4.1
+    
+    **Why Recharts:**
+    - React-first charting library
+    - Responsive charts
+    - Composable components
+    - TypeScript support
+    - Good documentation
+    
+    **Charts Used:**
+    - Line charts (resource usage over time)
+    - Bar charts (pod status distribution)
+    - Pie charts (namespace resource allocation)
+    - Area charts (CPU/memory trends)
+    
+    **Example:**
+    ```typescript
+    // components/metrics/resource-usage-chart.tsx
+    import { LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
+    
+    <LineChart width={600} height={300} data={metrics}>
+      <XAxis dataKey="timestamp" />
+      <YAxis />
+      <Tooltip />
+      <Line type="monotone" dataKey="cpu" stroke="#667EEA" />
+      <Line type="monotone" dataKey="memory" stroke="#764BA2" />
+    </LineChart>
+    ```
+  </Accordion>
+
+  <Accordion icon="markdown" title="React Markdown">
+    **Version:** 10.1.0
+    
+    **Why react-markdown:**
+    - Safe markdown rendering
+    - Customizable components
+    - Syntax highlighting support
+    - GitHub Flavored Markdown
+    
+    **Use Cases:**
+    - AI-generated explanations
+    - Documentation rendering
+    - PR descriptions
+    - README preview
+    
+    **Example:**
+    ```typescript
+    // components/ai/issue-explanation.tsx
+    import ReactMarkdown from 'react-markdown'
+    
+    <ReactMarkdown
+      components={{
+        code: ({ node, ...props }) => (
+          <pre style={{ background: '#1e1e1e', padding: '1rem' }}>
+            <code {...props} />
+          </pre>
+        ),
+      }}
+    >
+      {aiExplanation}
+    </ReactMarkdown>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Development Tools
+
+<AccordionGroup>
+  <Accordion icon="vial" title="Vitest">
+    **Version:** 4.0.10
+    
+    **Why Vitest:**
+    - Vite-native (faster than Jest)
+    - ESM and TypeScript support
+    - Compatible with Jest API
+    - Built-in code coverage
+    - Watch mode with HMR
+    
+    **Configuration:**
+    ```typescript
+    // vitest.config.ts
+    export default defineConfig({
+      test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: ['./vitest.setup.ts'],
+        coverage: {
+          provider: 'v8',
+          reporter: ['text', 'html', 'lcov'],
+          exclude: ['node_modules/', 'dist/', 'tests/'],
+        },
+      },
+    })
+    ```
+    
+    **Test Types:**
+    - Unit tests (lib/, components/)
+    - Integration tests (API routes)
+    - Component tests (React Testing Library)
+    
+    **Example:**
+    ```typescript
+    // __tests__/lib/hooks/use-deployments.test.ts
+    import { renderHook, waitFor } from '@testing-library/react'
+    import { useDeployments } from '@/lib/hooks/use-deployments'
+    
+    describe('useDeployments', () => {
+      it('fetches deployments from API', async () => {
+        const { result } = renderHook(() => useDeployments('default'))
+        
+        await waitFor(() => expect(result.current.isSuccess).toBe(true))
+        
+        expect(result.current.data).toHaveLength(15)
+        expect(result.current.data[0].name).toBe('nginx-deployment')
+      })
+    })
+    ```
+  </Accordion>
+
+  <Accordion icon="robot" title="Playwright">
+    **Version:** 1.56.0
+    
+    **Why Playwright:**
+    - E2E testing in real browsers
+    - Auto-wait for elements
+    - Network interception
+    - Screenshots/videos
+    - Cross-browser support
+    
+    **Configuration:**
+    ```typescript
+    // playwright.config.ts
+    export default defineConfig({
+      testDir: './tests/e2e',
+      fullyParallel: true,
+      forbidOnly: !!process.env.CI,
+      retries: process.env.CI ? 2 : 0,
+      workers: process.env.CI ? 1 : undefined,
+      reporter: 'html',
+      use: {
+        baseURL: 'http://localhost:3000',
+        trace: 'on-first-retry',
+        screenshot: 'only-on-failure',
+      },
+      projects: [
+        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+        { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+      ],
+    })
+    ```
+    
+    **Test Example:**
+    ```typescript
+    // tests/e2e/deployments.spec.ts
+    import { test, expect } from '@playwright/test'
+    
+    test('displays deployment list', async ({ page }) => {
+      await page.goto('/deployments')
+      
+      await expect(page.getByText('nginx-deployment')).toBeVisible()
+      await expect(page.getByText('3/3')).toBeVisible() // replicas
+    })
+    
+    test('restarts deployment', async ({ page }) => {
+      await page.goto('/deployments/nginx-deployment')
+      await page.getByRole('button', { name: 'Restart' }).click()
+      
+      await expect(page.getByText('Deployment restarted')).toBeVisible()
+    })
+    ```
+  </Accordion>
+
+  <Accordion icon="code-branch" title="ESLint & Prettier">
+    **ESLint:** 9.39.1  
+    **Prettier:** 3.6.2
+    
+    **Why ESLint:**
+    - Catch bugs before runtime
+    - Enforce code style
+    - TypeScript-aware linting
+    - Auto-fix common issues
+    
+    **Configuration:**
+    ```javascript
+    // eslint.config.mjs
+    export default [
+      {
+        files: ['**/*.{ts,tsx}'],
+        extends: ['next/core-web-vitals', 'next/typescript'],
+        rules: {
+          '@typescript-eslint/no-unused-vars': 'warn',
+          '@typescript-eslint/no-explicit-any': 'warn',
+          'react-hooks/exhaustive-deps': 'warn',
+        },
+      },
+    ]
+    ```
+    
+    **Why Prettier:**
+    - Consistent code formatting
+    - No style debates
+    - Editor integration
+    - Pre-commit hook support
+    
+    **Configuration:**
+    ```json
+    // .prettierrc
+    {
+      "semi": false,
+      "singleQuote": true,
+      "trailingComma": "es5",
+      "printWidth": 100,
+      "tabWidth": 2
+    }
+    ```
+  </Accordion>
+
+  <Accordion icon="terminal" title="PM2">
+    **Version:** 6.0.13
+    
+    **Why PM2:**
+    - Process management for production
+    - Auto-restart on crash
+    - Log management
+    - Cluster mode
+    - Zero-downtime reload
+    
+    **CLI Features:**
+    ```bash
+    orphelix start    # Start with PM2
+    orphelix stop     # Stop process
+    orphelix restart  # Restart process
+    orphelix logs     # Stream logs
+    orphelix status   # Check status
+    ```
+    
+    **Process Configuration:**
+    ```javascript
+    // Orphelix CLI generates PM2 config
+    {
+      name: 'orphelix-3000',
+      script: 'node',
+      args: ['.next/standalone/orphelix/app/server.js'],
+      cwd: process.cwd(),
+      env: {
+        PORT: 3000,
+        NODE_ENV: 'production',
+      },
+      max_memory_restart: '500M',
+      autorestart: true,
+      watch: false,
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Utilities
+
+<AccordionGroup>
+  <Accordion icon="calendar" title="date-fns">
+    **Version:** 4.1.0
+    
+    **Why date-fns:**
+    - Modular (tree-shakeable)
+    - Immutable
+    - TypeScript support
+    - Locale support
+    - Smaller than Moment.js
+    
+    **Usage:**
+    ```typescript
+    import { formatDistanceToNow, format } from 'date-fns'
+    
+    // "2 hours ago"
+    formatDistanceToNow(new Date(pod.createdAt), { addSuffix: true })
+    
+    // "Jan 15, 2025 10:30 AM"
+    format(new Date(event.timestamp), 'MMM dd, yyyy hh:mm a')
+    ```
+  </Accordion>
+
+  <Accordion icon="file-lines" title="js-yaml">
+    **Version:** 4.1.1
+    
+    **Why js-yaml:**
+    - Parse YAML to JavaScript objects
+    - Dump JavaScript to YAML
+    - Safe loading (no code execution)
+    - Schema validation
+    
+    **Usage:**
+    ```typescript
+    import yaml from 'js-yaml'
+    
+    // Parse YAML
+    const deployment = yaml.load(yamlString) as Deployment
+    
+    // Generate YAML
+    const yamlString = yaml.dump(deployment, {
+      indent: 2,
+      lineWidth: -1, // No line wrapping
+    })
+    ```
+  </Accordion>
+
+  <Accordion icon="code-compare" title="diff">
+    **Version:** 8.0.2
+    
+    **Why diff:**
+    - Text diffing algorithm
+    - Line-by-line comparison
+    - Patch generation
+    - Unified diff format
+    
+    **Usage:**
+    ```typescript
+    import { diffLines, createPatch } from 'diff'
+    
+    // Show diff in PR preview
+    const changes = diffLines(originalYaml, modifiedYaml)
+    
+    changes.forEach((part) => {
+      if (part.added) {
+        console.log(`+ ${part.value}`)
+      } else if (part.removed) {
+        console.log(`- ${part.value}`)
+      }
+    })
+    ```
+  </Accordion>
+
+  <Accordion icon="image" title="html-to-image">
+    **Version:** 1.11.13
+    
+    **Why html-to-image:**
+    - Export DOM to PNG/SVG
+    - Topology graph export
+    - Screenshot generation
+    - Client-side only (no server)
+    
+    **Usage:**
+    ```typescript
+    import { toPng } from 'html-to-image'
+    
+    // Export topology graph
+    const node = document.getElementById('topology-graph')
+    const dataUrl = await toPng(node, {
+      backgroundColor: '#0A0F1C',
+      width: 1920,
+      height: 1080,
+    })
+    
+    // Download
+    const link = document.createElement('a')
+    link.download = 'topology.png'
+    link.href = dataUrl
+    link.click()
+    ```
+  </Accordion>
+
+  <Accordion icon="bell" title="node-notifier">
+    **Version:** 10.0.1
+    
+    **Why node-notifier:**
+    - Desktop notifications
+    - Cross-platform (macOS, Windows, Linux)
+    - Native notification APIs
+    - Custom icons and sounds
+    
+    **Usage:**
+    ```typescript
+    import notifier from 'node-notifier'
+    
+    // Notify on critical issue
+    notifier.notify({
+      title: 'Orphelix - Critical Issue',
+      message: 'Pod nginx-deployment-abc123 is OOMKilled',
+      sound: true,
+      wait: true,
+    })
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Version Compatibility
+
+### Node.js
+
+**Required:** Node.js 20.x or later
+
+```bash
+# Check version
+node --version
+# v20.11.0 or higher
+
+# Recommended: Use nvm
+nvm install 20
+nvm use 20
+```
+
+### Package Manager
+
+**npm 10+** or **pnpm 9+** or **yarn 4+**
+
+```bash
+# npm (recommended)
+npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
+```
+
+### Kubernetes
+
+**Kubernetes 1.25+** (for Watch API compatibility)
+
+Tested on:
+- AWS EKS 1.28, 1.29, 1.30
+- GCP GKE 1.28, 1.29
+- Azure AKS 1.28, 1.29
+- Minikube 1.32+
+- Kind 0.20+
+
+### kubectl
+
+**kubectl 1.25+** (must match cluster version ±1)
+
+```bash
+kubectl version --client
+```
+
+## Dependencies Overview
+
+### Production Dependencies (36 packages)
+
+```json
+{
+  "@ai-sdk/openai": "^2.0.65",
+  "@emotion/react": "^11.13.3",
+  "@emotion/styled": "^11.13.0",
+  "@kubernetes/client-node": "^1.4.0",
+  "@monaco-editor/react": "^4.7.0",
+  "@mui/icons-material": "^7.3.5",
+  "@mui/material": "^7.3.5",
+  "@octokit/app": "^16.1.2",
+  "@octokit/auth-app": "^8.1.2",
+  "@octokit/rest": "^22.0.1",
+  "@tanstack/react-query": "^5.90.10",
+  "@xyflow/react": "^12.9.3",
+  "ai": "^5.0.93",
+  "better-sqlite3": "^12.4.6",
+  "date-fns": "^4.1.0",
+  "diff": "^8.0.2",
+  "html-to-image": "^1.11.13",
+  "js-yaml": "^4.1.1",
+  "monaco-editor": "^0.54.0",
+  "next": "^16.0.3",
+  "next-auth": "^5.0.0-beta.30",
+  "node-notifier": "^10.0.1",
+  "pm2": "^6.0.13",
+  "react": "^19.0.0",
+  "react-dom": "^19.0.0",
+  "react-markdown": "^10.1.0",
+  "recharts": "^3.4.1",
+  "zustand": "^5.0.8"
+}
+```
+
+### Development Dependencies (18 packages)
+
+```json
+{
+  "@playwright/test": "^1.56.0",
+  "@testing-library/jest-dom": "^6.6.3",
+  "@testing-library/react": "^16.0.1",
+  "@types/diff": "^7.0.2",
+  "@types/js-yaml": "^4.0.9",
+  "@types/node": "^24",
+  "@types/react": "^19.2.4",
+  "@types/react-dom": "^19.2.3",
+  "@vitejs/plugin-react": "^5.1.1",
+  "@vitest/coverage-v8": "^4.0.10",
+  "eslint": "^9.39.1",
+  "eslint-config-next": "^16.0.3",
+  "jsdom": "^27.2.0",
+  "prettier": "^3.6.2",
+  "typescript": "^5.7.2",
+  "typescript-eslint": "^8.0.0",
+  "vitest": "^4.0.10"
+}
+```
+
+## Bundle Size
+
+### Client Bundle (Production)
+
+- **Total:** ~450 KB gzipped
+- **React + Next.js:** ~150 KB
+- **Material-UI:** ~120 KB
+- **TanStack Query:** ~25 KB
+- **Monaco Editor:** ~80 KB (lazy loaded)
+- **ReactFlow:** ~40 KB (lazy loaded)
+- **Other libraries:** ~35 KB
+
+### Server Bundle
+
+- **Total:** ~8 MB (includes node_modules)
+- **better-sqlite3:** Native binary (~2 MB)
+- **@kubernetes/client-node:** ~1.5 MB
+- **Next.js runtime:** ~3 MB
+- **Other:** ~1.5 MB
+
+### Optimization Strategies
+
+- Dynamic imports for heavy components
+- Tree shaking with ESM
+- Code splitting per route
+- Image optimization with Next.js
+- Compression (gzip/brotli)
+
+## Browser Support
+
+### Supported Browsers
+
+- **Chrome:** 90+
+- **Firefox:** 88+
+- **Safari:** 14+
+- **Edge:** 90+
+
+### Required Features
+
+- ES2022 support
+- `EventSource` API (SSE)
+- `fetch` API
+- `localStorage` / `sessionStorage`
+- CSS Grid & Flexbox
+- WebAssembly (for Monaco Editor)
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="diagram-project" href="/developer/architecture">
+    System architecture and design patterns
+  </Card>
+  <Card title="Project Structure" icon="folder-tree" href="/developer/project-structure">
+    File organization and conventions
+  </Card>
+  <Card title="Getting Started" icon="rocket" href="/developer/getting-started">
+    Set up development environment
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/developer/contributing">
+    Contribution guidelines
+  </Card>
+</CardGroup>
