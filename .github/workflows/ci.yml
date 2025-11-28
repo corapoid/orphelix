@@ -24,32 +24,30 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
 
       - name: Install dependencies
-        run: npm ci
-
-      - name: Build UI package
-        run: npm run build:ui
+        run: cd app && npm ci
 
       - name: Run linter
-        run: npm run lint
+        run: cd app && npm run lint
 
       - name: Run type check
-        run: npm run type-check
+        run: cd app && npm run type-check
 
       - name: Run unit tests
-        run: npm test
+        run: cd app && npm test
 
       - name: Build application
-        run: npm run build
+        run: cd app && npm run build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: next-build
           path: |
-            .next
-            public
-            package.json
-            package-lock.json
+            app/.next
+            app/public
+            app/package.json
+            app/package-lock.json
           retention-days: 7
