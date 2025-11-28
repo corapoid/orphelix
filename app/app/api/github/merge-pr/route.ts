@@ -1,27 +1,56 @@
 import { GitHubClient } from '@/lib/github/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { getGitHubToken } from '@/lib/github/get-token'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { GITHUB_MERGE_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError, AuthenticationError } from '@/lib/api/errors'
+import { githubOwnerSchema, githubRepoNameSchema } from '@/lib/validation/schemas'
+import { z } from 'zod'
 
+// Create rate limiter for PR merge operations
+const limiter = rateLimit(GITHUB_MERGE_LIMIT)
+
+/**
+ * GitHub PR Merge Request Schema
+ */
+const githubPRMergeSchema = z.object({
+  owner: githubOwnerSchema,
+  repo: githubRepoNameSchema,
+  pullNumber: z.number().int().positive('Pull request number must be positive'),
+  mergeMethod: z.enum(['merge', 'squash', 'rebase']).optional().default('merge'),
+})
+
+/**
+ * POST /api/github/merge-pr
+ *
+ * Merges a GitHub pull request
+ *
+ * Rate Limited: 20 requests per 5 minutes
+ */
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const token = await getGitHubToken()
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized - Please connect GitHub' }, { status: 401 })
+      throw new AuthenticationError('Please connect GitHub')
     }
 
     const body = await request.json()
-    const { owner, repo, pullNumber, mergeMethod = 'merge' } = body
 
-    if (!owner || !repo || !pullNumber) {
-      return NextResponse.json(
-        { error: 'owner, repo, and pullNumber are required' },
-        { status: 400 }
-      )
-    }
+    // Validate input using Zod schema
+    const validated = githubPRMergeSchema.parse(body)
 
     const github = new GitHubClient(token)
-    const result = await github.mergePullRequest(owner, repo, pullNumber, mergeMethod)
+    const result = await github.mergePullRequest(
+      validated.owner,
+      validated.repo,
+      validated.pullNumber,
+      validated.mergeMethod
+    )
 
     if (!result.merged) {
       return NextResponse.json(
@@ -35,10 +64,6 @@ export async function POST(request: NextRequest) {
       message: result.message,
     })
   } catch (error) {
-    console.error('Failed to merge PR:', error)
-    return NextResponse.json(
-      { error: 'Failed to merge PR' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
