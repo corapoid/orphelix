@@ -37,10 +37,6 @@
     {
       "name": "Developer",
       "url": "developer"
-    },
-    {
-      "name": "Roadmap",
-      "url": "roadmap"
     }
   ],
   "anchors": [
@@ -97,6 +93,12 @@
       ]
     },
     {
+      "group": "Roadmap",
+      "pages": [
+        "roadmap/resource-optimization"
+      ]
+    },
+    {
       "group": "CLI Guide",
       "pages": [
         "cli/overview",
@@ -138,12 +140,6 @@
         "cli/commands/update",
         "cli/commands/startup",
         "cli/commands/unstartup"
-      ]
-    },
-    {
-      "group": "Roadmap",
-      "pages": [
-        "roadmap/resource-optimization"
       ]
     },
     {

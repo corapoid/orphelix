@@ -470,33 +470,34 @@ ALTER TABLE user_settings
 
 ### System Components
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Orphelix Application                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────┐      ┌──────────────┐      ┌───────────┐ │
-│  │   Next.js    │◄────►│   SQLite DB  │◄────►│ Collector │ │
-│  │   Frontend   │      │              │      │  Worker   │ │
-│  └──────────────┘      └──────────────┘      └───────────┘ │
-│         │                     │                     │        │
-│         │                     │                     │        │
-│         ▼                     ▼                     ▼        │
-│  ┌──────────────┐      ┌──────────────┐      ┌───────────┐ │
-│  │  UI Charts   │      │  Analysis    │      │  kubectl  │ │
-│  │  Components  │◄────►│  Engine      │      │  commands │ │
-│  └──────────────┘      └──────────────┘      └───────────┘ │
-│                                                               │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Orphelix["Orphelix Application"]
+        Frontend["Next.js<br/>Frontend"]
+        DB["SQLite DB"]
+        Collector["Collector<br/>Worker"]
+        Charts["UI Charts<br/>Components"]
+        Analysis["Analysis<br/>Engine"]
+        Kubectl["kubectl<br/>commands"]
 
-         │                                            │
-         │ HTTP API                                   │ Kubernetes API
-         ▼                                            ▼
-┌─────────────────┐                          ┌────────────────┐
-│  API Endpoints  │                          │   K8s Cluster  │
-│  /api/metrics/* │                          │   (metrics-    │
-│                 │                          │    server)     │
-└─────────────────┘                          └────────────────┘
+        Frontend <--> DB
+        DB <--> Collector
+        Charts --> Frontend
+        DB --> Analysis
+        Collector --> Kubectl
+        Charts <--> Analysis
+    end
+
+    API["API Endpoints<br/>/api/metrics/*"]
+    K8s["K8s Cluster<br/>(metrics-server)"]
+
+    Frontend -->|HTTP API| API
+    Kubectl -->|Kubernetes API| K8s
+
+    style Orphelix fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style Frontend fill:#667EEA,color:#fff
+    style DB fill:#764BA2,color:#fff
+    style Collector fill:#667EEA,color:#fff
 ```
 
 ### Component Details
