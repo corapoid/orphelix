@@ -4,44 +4,44 @@
 
 ## ✅ What Has Been Implemented
 
-### 📚 **Faza 1 - Fundamenty** (COMPLETED)
+### 📚 **Phase 1 - Fundamentals** (COMPLETED)
 
 #### 1. Core Documentation
-- ✅ [AI_CONTEXT.md](AI_CONTEXT.md) - Kluczowe informacje o architekturze, wzorcach i gotchas
-- ✅ [CONTRIBUTING_AI.md](CONTRIBUTING_AI.md) - Wytyczne pracy z AI, best practices
+- ✅ [AI_CONTEXT.md](AI_CONTEXT.md) - Key information about architecture, patterns, and gotchas
+- ✅ [CONTRIBUTING_AI.md](CONTRIBUTING_AI.md) - AI workflow guidelines and best practices
 
 #### 2. Claude Code Agents (`.claude/agents/`)
-- ✅ **feature-implementer.md** - Implementacja nowych funkcjonalności (API route → Hook → Component)
-- ✅ **bug-fixer.md** - Naprawa błędów z root cause analysis
-- ✅ **testing-agent.md** - Generowanie testów (unit + E2E, coverage >80%)
-- ✅ **documentation-maintainer.md** - Utrzymanie dokumentacji (CHANGELOG, docs/)
-- ✅ **code-reviewer.md** - Code review przed mergem (architecture, security, tests)
-- ✅ **refactoring-specialist.md** - Refactoring i technical debt
+- ✅ **feature-implementer.md** - New feature implementation (API route → Hook → Component)
+- ✅ **bug-fixer.md** - Bug fixing with root cause analysis
+- ✅ **testing-agent.md** - Test generation (unit + E2E, coverage >80%)
+- ✅ **documentation-maintainer.md** - Documentation maintenance (CHANGELOG, docs/)
+- ✅ **code-reviewer.md** - Pre-merge code review (architecture, security, tests)
+- ✅ **refactoring-specialist.md** - Refactoring and technical debt management
 
 #### 3. Slash Commands (`.claude/commands/`)
-- ✅ **/add-k8s-resource** - Dodaj nowy zasób K8s (kompletna implementacja)
-- ✅ **/update-changelog** - Automatyczna aktualizacja CHANGELOG.md
-- ✅ **/run-tests** - Uruchom wszystkie testy z raportowaniem
-- ✅ **/code-review** - Przeprowadź code review
-- ✅ **/fix-bug** - Napraw błąd z regression testem
-- ✅ **/refactor** - Refactoring kodu
-- ✅ **/generate-tests** - Generuj testy dla istniejącego kodu
+- ✅ **/add-k8s-resource** - Add new K8s resource (complete implementation)
+- ✅ **/update-changelog** - Automatic CHANGELOG.md updates
+- ✅ **/run-tests** - Run all tests with reporting
+- ✅ **/code-review** - Perform code review
+- ✅ **/fix-bug** - Fix bug with regression test
+- ✅ **/refactor** - Code refactoring
+- ✅ **/generate-tests** - Generate tests for existing code
 
-### ⚙️ **Faza 2 - Automation** (COMPLETED)
+### ⚙️ **Phase 2 - Automation** (COMPLETED)
 
 #### 1. Git Hooks (`.githooks/`)
-- ✅ **pre-commit** - Lint + Type check + Tests (przed commitem)
-- ✅ **commit-msg** - Walidacja formatu commit message
-- ✅ **post-commit** - Podsumowanie + reminder o CHANGELOG
-- ✅ **README.md** - Dokumentacja hooks z AI integration
+- ✅ **pre-commit** - Lint + Type check + Tests (before commit)
+- ✅ **commit-msg** - Commit message format validation
+- ✅ **post-commit** - Summary + CHANGELOG reminder
+- ✅ **README.md** - Hooks documentation with AI integration
 
 #### 2. GitHub Issue Templates (`.github/ISSUE_TEMPLATE/`)
-- ✅ **bug_report.yml** - Zgłoszenia błędów z AI debugging promptami
-- ✅ **feature_request.yml** - Propozycje funkcjonalności z AI implementation promptami
-- ✅ **documentation.yml** - Zgłoszenia problemów z dokumentacją
+- ✅ **bug_report.yml** - Bug reports with AI debugging prompts
+- ✅ **feature_request.yml** - Feature proposals with AI implementation prompts
+- ✅ **documentation.yml** - Documentation issue reports
 
 #### 3. GitHub Actions (`.github/workflows/`)
-- ✅ **ai-code-review.yml** - Automatyczny AI code review na PR
+- ✅ **ai-code-review.yml** - Automatic AI code review on PRs
   - Automated checks (lint, type-check, tests, build)
   - Code pattern analysis (any types, console.log, K8s client issues)
   - Review checklist generation
@@ -51,15 +51,15 @@
 
 ## 🚀 Quick Start
 
-### 1. Aktywuj Git Hooks
+### 1. Activate Git Hooks
 
 ```bash
-cd ~/git_priv/orphelix
+cd ~/orphelix
 
-# Skonfiguruj Git do używania .githooks
+# Configure Git to use .githooks
 git config core.hooksPath .githooks
 
-# Hooks są już executable (chmod +x wykonane)
+# Hooks are already executable (chmod +x applied)
 ```
 
 **Verify:**
@@ -68,28 +68,28 @@ git config core.hooksPath
 # Should output: .githooks
 ```
 
-### 2. Przetestuj Workflow
+### 2. Test Workflow
 
 ```bash
-# Dodaj nowy zasób K8s (przykład)
+# Add new K8s resource (example)
 # Claude Code:
 /add-k8s-resource services
 
-# Lub manualnie test hooks:
+# Or manually test hooks:
 echo "test change" >> test.txt
 git add test.txt
 git commit -m "test: testing git hooks"
 
-# Pre-commit uruchomi się automatycznie:
+# Pre-commit will run automatically:
 # - ESLint ✅
 # - TypeScript type check ✅
 # - Unit tests ✅
 # - Warnings (console.log, TODO, large files)
 ```
 
-### 3. Użyj Agentów
+### 3. Use Agents
 
-**Dodaj nową funkcjonalność:**
+**Add new feature:**
 ```
 Use the feature-implementer agent to add support for Kubernetes Jobs.
 
@@ -102,7 +102,7 @@ Include:
 - Update CHANGELOG.md
 ```
 
-**Napraw błąd:**
+**Fix bug:**
 ```
 Use the bug-fixer agent to fix the following issue:
 
@@ -131,44 +131,44 @@ Focus on:
 
 ---
 
-## 📖 Dokumentacja
+## 📖 Documentation
 
 ### Core Files
 
 | File | Description |
 |------|-------------|
-| [AI_CONTEXT.md](AI_CONTEXT.md) | Architektura, wzorce, common pitfalls |
+| [AI_CONTEXT.md](AI_CONTEXT.md) | Architecture, patterns, common pitfalls |
 | [CONTRIBUTING_AI.md](CONTRIBUTING_AI.md) | Development guidelines, workflow |
-| [TECHNICAL.md](app/TECHNICAL.md) | Pełna dokumentacja techniczna |
+| [TECHNICAL.md](app/TECHNICAL.md) | Complete technical documentation |
 | [SECURITY.md](SECURITY.md) | Security patterns, auth flow |
-| [CHANGELOG.md](CHANGELOG.md) | Historia zmian |
+| [CHANGELOG.md](CHANGELOG.md) | Change history |
 
 ### Agent Documentation
 
 | Agent | Purpose | Usage |
 |-------|---------|-------|
-| **feature-implementer** | Nowe funkcjonalności | `/add-k8s-resource <name>` |
-| **bug-fixer** | Naprawa błędów | `/fix-bug #123` |
-| **testing-agent** | Generowanie testów | `/generate-tests <file>` |
-| **documentation-maintainer** | Dokumentacja | `/update-changelog` |
+| **feature-implementer** | New features | `/add-k8s-resource <name>` |
+| **bug-fixer** | Bug fixes | `/fix-bug #123` |
+| **testing-agent** | Test generation | `/generate-tests <file>` |
+| **documentation-maintainer** | Documentation | `/update-changelog` |
 | **code-reviewer** | Code review | `/code-review PR#123` |
 | **refactoring-specialist** | Refactoring | `/refactor <file>` |
 
 ### Command Documentation
 
-Wszystkie komendy: [.claude/commands/](.claude/commands/)
+All commands: [.claude/commands/](.claude/commands/)
 
 ---
 
-## 🔄 Typowy Workflow AI-First
+## 🔄 Typical AI-First Workflow
 
-### Scenario 1: Dodanie Nowej Funkcjonalności
+### Scenario 1: Adding New Feature
 
 ```bash
-# 1. Użyj feature-implementer agent
+# 1. Use feature-implementer agent
 /add-k8s-resource services
 
-# Agent tworzy:
+# Agent creates:
 # ✅ types/kubernetes.ts (Service interface)
 # ✅ lib/k8s/api.ts (fetchServices, mapService)
 # ✅ app/api/services/route.ts
@@ -180,12 +180,12 @@ Wszystkie komendy: [.claude/commands/](.claude/commands/)
 # ✅ tests/e2e/services.spec.ts
 # ✅ CHANGELOG.md
 
-# 2. Agent uruchamia testy
+# 2. Agent runs tests
 npm run test ✅
 npm run type-check ✅
 npm run build ✅
 
-# 3. Commit (git hooks weryfikują automatycznie)
+# 3. Commit (git hooks verify automatically)
 git add .
 git commit -m "feat(services): add Kubernetes services support"
 
@@ -198,7 +198,7 @@ git commit -m "feat(services): add Kubernetes services support"
 # Post-commit hook reminds:
 # 💡 CHANGELOG.md already updated ✅
 
-# 4. Push i create PR
+# 4. Push and create PR
 git push origin feature/add-services
 gh pr create --title "feat: add services support"
 
@@ -209,28 +209,28 @@ gh pr create --title "feat: add services support"
 # - Comments on PR
 ```
 
-### Scenario 2: Naprawa Błędu
+### Scenario 2: Bug Fix
 
 ```bash
-# 1. User zgłasza bug (issue #234)
-# GitHub Issue Template zawiera AI prompt
+# 1. User reports bug (issue #234)
+# GitHub Issue Template contains AI prompt
 
-# 2. Użyj bug-fixer agent
+# 2. Use bug-fixer agent
 /fix-bug #234
 
 # Agent:
-# 1. Analizuje issue
-# 2. Reprodukuje bug
-# 3. Identyfikuje root cause
-# 4. Implementuje fix
-# 5. Dodaje regression test
-# 6. Aktualizuje CHANGELOG.md
+# 1. Analyzes issue
+# 2. Reproduces bug
+# 3. Identifies root cause
+# 4. Implements fix
+# 5. Adds regression test
+# 6. Updates CHANGELOG.md
 
 # 3. Commit
 git add .
 git commit -m "fix(logs): resolve race condition in pod logs (#234)"
 
-# 4. Push i PR
+# 4. Push and PR
 git push
 # GitHub Actions runs AI review
 ```
@@ -238,17 +238,17 @@ git push
 ### Scenario 3: Refactoring
 
 ```bash
-# 1. Użyj refactoring-specialist
+# 1. Use refactoring-specialist
 /refactor lib/k8s/api.ts
 
 # Agent:
-# 1. Identyfikuje code smells (2074 linii → split)
-# 2. Tworzy plan refactoringu
-# 3. Splituje na moduły (<300 linii each)
-# 4. Weryfikuje testy po każdym kroku
-# 5. Aktualizuje CHANGELOG.md
+# 1. Identifies code smells (2074 lines → split)
+# 2. Creates refactoring plan
+# 3. Splits into modules (<300 lines each)
+# 4. Verifies tests after each step
+# 5. Updates CHANGELOG.md
 
-# 2. Wszystkie testy przechodzą
+# 2. All tests pass
 npm run test ✅
 
 # 3. Commit
@@ -258,7 +258,7 @@ git commit -m "refactor: split k8s-api.ts into focused modules"
 
 ---
 
-## ⚙️ Konfiguracja Git Hooks
+## ⚙️ Git Hooks Configuration
 
 ### Enable/Disable Checks
 
@@ -310,9 +310,9 @@ echo "🤖 Auto-updating CHANGELOG.md..."
 
 ## 🤖 GitHub Actions AI Review
 
-### Konfiguracja
+### Configuration
 
-Plik: [.github/workflows/ai-code-review.yml](.github/workflows/ai-code-review.yml)
+File: [.github/workflows/ai-code-review.yml](.github/workflows/ai-code-review.yml)
 
 **Runs on:**
 - Pull request opened
@@ -351,7 +351,7 @@ Edit `.github/workflows/ai-code-review.yml` to add more checks:
 
 ---
 
-## 📊 Metryki Sukcesu
+## 📊 Success Metrics
 
 **Code Quality:**
 - Test Coverage: >80% ✅
@@ -360,7 +360,7 @@ Edit `.github/workflows/ai-code-review.yml` to add more checks:
 - Build Warnings: 0
 
 **Development Speed:**
-- Nowa funkcjonalność: 15-30 min (vs 2-4h manual)
+- New feature: 15-30 min (vs 2-4h manual)
 - Bugfix: 10-20 min (vs 1-2h manual)
 - Code review: 5-10 min (vs 30-60 min manual)
 
@@ -371,9 +371,9 @@ Edit `.github/workflows/ai-code-review.yml` to add more checks:
 
 ---
 
-## 🎯 Następne Kroki
+## 🎯 Next Steps
 
-### 1. Przetestuj Setup
+### 1. Test Setup
 
 ```bash
 # Test full workflow
@@ -391,20 +391,20 @@ git commit -m "test: verify hooks work"
 # Use feature-implementer to add a simple feature
 ```
 
-### 2. Dostosuj do Swoich Potrzeb
+### 2. Customize to Your Needs
 
-- Edytuj `.githooks/pre-commit` - włącz/wyłącz checki
-- Edytuj `.github/workflows/ai-code-review.yml` - dodaj custom checks
-- Dodaj własne slash commands w `.claude/commands/`
-- Dodaj własne agenty w `.claude/agents/`
+- Edit `.githooks/pre-commit` - enable/disable checks
+- Edit `.github/workflows/ai-code-review.yml` - add custom checks
+- Add your own slash commands in `.claude/commands/`
+- Add your own agents in `.claude/agents/`
 
-### 3. Onboarding Zespołu
+### 3. Team Onboarding
 
-Jeśli pracujesz z zespołem (nawet AI-first):
-1. Przeczytaj [AI_CONTEXT.md](AI_CONTEXT.md)
-2. Przeczytaj [CONTRIBUTING_AI.md](CONTRIBUTING_AI.md)
-3. Aktywuj git hooks: `git config core.hooksPath .githooks`
-4. Przetestuj workflow na małym zadaniu
+If you're working with a team (even AI-first):
+1. Read [AI_CONTEXT.md](AI_CONTEXT.md)
+2. Read [CONTRIBUTING_AI.md](CONTRIBUTING_AI.md)
+3. Activate git hooks: `git config core.hooksPath .githooks`
+4. Test workflow on a small task
 
 ---
 
@@ -412,29 +412,29 @@ Jeśli pracujesz z zespołem (nawet AI-first):
 
 ### DO ✅
 
-1. **Zawsze używaj agentów** dla powtarzalnych zadań
-2. **Commituj często** - małe commity łatwiej rollback
-3. **Uruchamiaj testy** po każdej zmianie
-4. **Aktualizuj CHANGELOG** dla każdej funkcjonalności/bugfixa
-5. **Code review** przed mergem (AI + human)
-6. **Dokumentuj** nowe funkcjonalności
-7. **Refactoruj regularnie** (nie czekaj na tech debt)
+1. **Always use agents** for repeatable tasks
+2. **Commit often** - small commits are easier to rollback
+3. **Run tests** after every change
+4. **Update CHANGELOG** for every feature/bugfix
+5. **Code review** before merge (AI + human)
+6. **Document** new features
+7. **Refactor regularly** (don't wait for tech debt)
 
 ### DON'T ❌
 
-1. **Nie używaj `--no-verify`** (bypass git hooks) bez dobrego powodu
-2. **Nie commituj** bez uruchomienia testów
-3. **Nie wprowadzaj `any` types** - zawsze definiuj proper types
-4. **Nie skipuj dokumentacji** - każda funkcjonalność needs docs
-5. **Nie merguj** PR bez code review
-6. **Nie refactoruj i dodawaj funkcjonalności** w jednym commicie
-7. **Nie używaj K8s client** w 'use client' components
+1. **Don't use `--no-verify`** (bypass git hooks) without good reason
+2. **Don't commit** without running tests
+3. **Don't introduce `any` types** - always define proper types
+4. **Don't skip documentation** - every feature needs docs
+5. **Don't merge** PRs without code review
+6. **Don't refactor and add features** in the same commit
+7. **Don't use K8s client** in 'use client' components
 
 ---
 
 ## 🆘 Troubleshooting
 
-### Git Hooks nie działają
+### Git Hooks Not Working
 
 ```bash
 # Check config
@@ -446,18 +446,18 @@ git config core.hooksPath .githooks
 chmod +x .githooks/*
 ```
 
-### Testy failują w hook ale przechodzą manualnie
+### Tests Fail in Hook But Pass Manually
 
 ```bash
 # Check working directory
 pwd
-# Should be: ~/git_priv/orphelix (or your repository path)
+# Should be: ~/orphelix (or your repository path)
 
 cd app
 npm run test
 ```
 
-### GitHub Actions nie uruchamia się
+### GitHub Actions Not Running
 
 ```bash
 # Check workflow file syntax
@@ -468,7 +468,7 @@ cat .github/workflows/ai-code-review.yml
 # Enable: "Read and write permissions"
 ```
 
-### Agent nie działa
+### Agent Not Working
 
 ```bash
 # Verify agent file exists
@@ -515,4 +515,4 @@ cat .claude/agents/feature-implementer.md
 **Version:** 1.0.0
 **Status:** ✅ Production Ready
 
-**Gratulacje! System AI-first development jest w pełni skonfigurowany i gotowy do użycia! 🚀**
+**Congratulations! Your AI-first development system is fully configured and ready to use! 🚀**
