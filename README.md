@@ -63,8 +63,17 @@
 
 ## 📋 Requirements
 
-- **kubectl** configured with cluster access (for real mode)
-- (Optional) **GitHub App** for YAML editor and PR workflow
+### Minimum (Demo Mode)
+- **Nothing!** Just run the application and explore
+
+### Production Mode (Real Cluster)
+- **kubectl** configured with cluster access
+- **GitHub OAuth App** for login authentication ([setup guide](docs/user/github/oauth-setup.mdx))
+
+### GitOps Features (Optional)
+- **GitHub App** for YAML editor and PR workflow ([setup guide](docs/user/github/github-app-setup.mdx))
+
+> **Note**: GitHub OAuth (for login) and GitHub App (for GitOps) are separate. See [SECURITY.md](SECURITY.md#github-authentication) for details.
 
 ## 🚀 Quick Start
 

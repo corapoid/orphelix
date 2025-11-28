@@ -16,57 +16,91 @@ Orphelix is built with security and privacy as top priorities:
 
 ### GitHub Authentication
 
-Orphelix offers two methods for GitHub authentication, both used **exclusively for GitOps workflows** (editing YAML manifests and creating pull requests):
+Orphelix uses **two separate GitHub authentication mechanisms** for different purposes:
 
-#### Why GitHub Access is Required?
+#### 1. GitHub OAuth - **Required for Login** (Production Mode)
 
-GitHub authentication is **optional** and only needed if you want to use GitOps features:
-- Edit Kubernetes manifest files stored in GitHub repositories
-- Create pull requests with configuration changes
-- Integrate with your existing GitOps workflow
+**Purpose**: Authenticate users to access the application in "real" (non-demo) mode.
 
-**You can use Orphelix without GitHub** - the demo mode and cluster monitoring features work independently.
-
-#### Method 1: GitHub OAuth (Simple)
-
-- **What it does**: Authenticates you with your GitHub account
+- **What it does**: Logs you into Orphelix using your GitHub account
+- **When it's used**: Every time you access Orphelix in production mode (to view real cluster data)
 - **Permissions requested**:
-  - `repo` - Read and write access to code repositories
-  - `read:user` - Read basic user profile information
-- **Data stored**: OAuth access token (encrypted in session cookie)
-- **Token lifetime**: 8 hours (automatically refreshed)
-- **Use case**: Quick setup for personal repositories
+  - `read:user` - Read basic user profile information (username, avatar)
+- **Data stored**: OAuth session token (encrypted in NextAuth session cookie)
+- **Token lifetime**: 30 days (managed by NextAuth)
+- **Required**: ✅ **YES** - to use production mode and view real cluster data
 
 **Setup requirements:**
-- GitHub OAuth App credentials (GITHUB_ID, GITHUB_SECRET)
-- Configured in `.env.local`
+```bash
+# .env.local
+GITHUB_ID=Ov23limD8PcdQGpLjpyT
+GITHUB_SECRET=8078d86a252370bf498469f5b2a4043136656682
+```
 
-#### Method 2: GitHub App (Recommended)
+**Without OAuth:**
+- ❌ Cannot access production mode
+- ✅ Can still use demo mode (no login required)
+- ❌ Cannot view real cluster resources
 
-- **What it does**: Provides granular, repository-level permissions
+---
+
+#### 2. GitHub App - **Optional for GitOps Workflow**
+
+**Purpose**: Edit Kubernetes manifests and create pull requests (GitOps features).
+
+- **What it does**: Provides granular, repository-level access to your manifest repositories
+- **When it's used**: Only when you click "Edit YAML" or create pull requests
 - **Permissions requested**:
   - Contents: Read & Write (to read manifests and create commits)
   - Pull Requests: Read & Write (to create and merge PRs)
   - Metadata: Read (basic repository information)
 - **Data stored**: Installation token (HTTP-only cookie, 8-hour expiry)
 - **Token lifetime**: 8 hours with automatic refresh
-- **Use case**: Teams with multiple repositories, organization accounts
-
-**Advantages over OAuth:**
-- Select specific repositories to grant access (not all-or-nothing)
-- Granular permissions (only what's needed)
-- Better audit trail (GitHub shows which app accessed what)
-- Support for organization repositories with fine-grained control
+- **Required**: ❌ **NO** - only needed for GitOps features
 
 **Setup requirements:**
-- GitHub App created in your GitHub account/organization
-- App credentials configured (GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY, GITHUB_APP_CLIENT_ID, GITHUB_APP_CLIENT_SECRET)
+```bash
+# .env.local (in addition to OAuth above)
+GITHUB_APP_ID=2374024
+GITHUB_APP_CLIENT_ID=Iv23liQcua8GpiX6UdCa
+GITHUB_APP_CLIENT_SECRET=ghs_xxxxx
+GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
+...
+-----END RSA PRIVATE KEY-----"
+```
 
-**Security benefits:**
-- Tokens are stored in HTTP-only cookies (not accessible via JavaScript)
-- Automatic token rotation every 8 hours
-- Revokable at any time from GitHub settings
-- Works with organization security policies (SAML SSO, IP allowlists)
+**Advantages of GitHub App:**
+- ✅ Select specific repositories to grant access (not all-or-nothing)
+- ✅ Granular permissions (only what's needed for GitOps)
+- ✅ Better audit trail (GitHub shows which app accessed what)
+- ✅ Support for organization repositories with fine-grained control
+- ✅ Works independently of user OAuth token (team members don't need OAuth access to manifest repos)
+
+**Without GitHub App:**
+- ✅ Can still login and view cluster resources
+- ✅ Can still use all monitoring features
+- ❌ Cannot edit YAML manifests
+- ❌ Cannot create pull requests
+
+---
+
+#### Summary: What Do You Need?
+
+| Use Case | GitHub OAuth | GitHub App | Demo Mode |
+|----------|--------------|------------|-----------|
+| **Try Orphelix (demo mode)** | ❌ Not needed | ❌ Not needed | ✅ Default |
+| **View real cluster** | ✅ **Required** | ❌ Not needed | ❌ Disabled |
+| **Edit manifests + GitOps** | ✅ **Required** | ✅ **Required** | ❌ Disabled |
+
+**Recommended setup path:**
+1. **Start with demo mode** - No GitHub needed, explore the UI
+2. **Add OAuth** - Login to view your real cluster
+3. **Add GitHub App (optional)** - Enable GitOps workflow when needed
+
+**Why two separate authentications?**
+- **NextAuth requires OAuth** for user login (doesn't support GitHub App login)
+- **GitHub App provides better permissions** for repository access (granular, per-repo)
+- This separation allows you to use Orphelix for monitoring without giving it access to your code repositories
 
 ### Route Protection
 
