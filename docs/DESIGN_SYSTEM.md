@@ -7,7 +7,7 @@ Orphelix uses a unified design system powered by the `@orphelix/ui` package. Thi
 ## Architecture
 
 ```
-kubevista/
+orphelix/
 ├── packages/
 │   └── ui/                    # Shared design system package
 │       ├── src/

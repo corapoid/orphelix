@@ -105,15 +105,8 @@ npm run orphelix open
 
 # Other commands:
 npm run orphelix stop       # Stop the application
-npm run orphelix restart    # Restart the application
-npm run orphelix logs       # View real-time logs
 npm run orphelix status     # Check status
 npm run orphelix help       # Show all commands
-
-# Custom port:
-npm run orphelix start -- --port 8080
-npm run orphelix open -- --port 8080
-```
 
 ## 📖 Documentation
 

@@ -124,7 +124,7 @@ To reset your customization to default settings:
 1. Open your browser's developer console (F12)
 2. Go to the "Application" or "Storage" tab
 3. Find "Local Storage" for your Orphelix domain
-4. Delete the key named `kubevista-sidebar-pins`
+4. Delete the key named `orphelix-sidebar-pins`
 5. Refresh the page
 
 All items will be pinned again by default.

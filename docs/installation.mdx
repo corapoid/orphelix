@@ -27,8 +27,8 @@ For local development and testing:
 <Steps>
   <Step title="Clone the repository">
     ```bash
-    git clone https://github.com/yourusername/kubevista.git
-    cd kubevista
+    git clone https://github.com/corapoid/orphelix.git
+    cd orphelix/app
     ```
   </Step>
 
@@ -66,8 +66,8 @@ For production deployment:
 <Steps>
   <Step title="Clone and install">
     ```bash
-    git clone https://github.com/yourusername/kubevista.git
-    cd kubevista
+    git clone https://github.com/corapoid/orphelix.git
+    cd orphelix/app
     npm install
     ```
   </Step>
@@ -121,12 +121,12 @@ Run Orphelix in a container:
 
 ```bash
 # Build image
-docker build -t kubevista .
+docker build -t orphelix .
 
 # Run container
 docker run -p 3000:3000 \
   -v ~/.kube:/root/.kube:ro \
-  kubevista
+  orphelix
 ```
 
 ### Using Docker Compose
@@ -136,7 +136,7 @@ Create `docker-compose.yml`:
 ```yaml
 version: '3.8'
 services:
-  kubevista:
+  orphelix:
     build: .
     ports:
       - "3000:3000"
@@ -166,22 +166,22 @@ Deploy Orphelix to your Kubernetes cluster:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kubevista
+  name: orphelix
   namespace: kube-system
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kubevista
+      app: orphelix
   template:
     metadata:
       labels:
-        app: kubevista
+        app: orphelix
     spec:
-      serviceAccountName: kubevista
+      serviceAccountName: orphelix
       containers:
-      - name: kubevista
-        image: kubevista:latest
+      - name: orphelix
+        image: orphelix:latest
         ports:
         - containerPort: 3000
         env:
@@ -195,11 +195,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kubevista
+  name: orphelix
   namespace: kube-system
 spec:
   selector:
-    app: kubevista
+    app: orphelix
   ports:
   - port: 80
     targetPort: 3000
@@ -212,13 +212,13 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: kubevista
+  name: orphelix
   namespace: kube-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: kubevista
+  name: orphelix
 rules:
 - apiGroups: [""]
   resources: ["pods", "nodes", "configmaps", "secrets", "events", "namespaces"]
@@ -233,21 +233,21 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: kubevista
+  name: orphelix
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: kubevista
+  name: orphelix
 subjects:
 - kind: ServiceAccount
-  name: kubevista
+  name: orphelix
   namespace: kube-system
 ```
 
 Apply all manifests:
 
 ```bash
-kubectl apply -f kubevista-deployment.yaml
+kubectl apply -f orphelix-deployment.yaml
 ```
 
 ## Verification

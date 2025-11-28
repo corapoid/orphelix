@@ -1,6 +1,6 @@
 # Screenshots
 
-Auto-generated screenshots of KubeVista in demo mode.
+Auto-generated screenshots of Orphelix in demo mode.
 
 ## Welcome modal with mode selection
 
