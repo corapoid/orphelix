@@ -1,12 +1,662 @@
 ---
 title: 'YAML Editor'
-description: 'Documentation under construction'
+description: 'Edit Kubernetes manifests with Monaco editor and create pull requests for GitOps workflow'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+The YAML Editor provides a powerful in-browser editing experience for Kubernetes manifests. Built on Monaco Editor (the same editor powering VS Code), it offers syntax highlighting, auto-completion, and real-time validation.
 
-<Note>
-  Full documentation will be added soon.
-</Note>
+<img src="/images/yaml-editor.png" alt="YAML Editor" />
+
+## Opening the Editor
+
+Access the YAML editor from several places:
+
+<Tabs>
+  <Tab title="Deployment Detail">
+    Click **"Edit YAML"** button on deployment detail page
+    
+    <Steps>
+      <Step title="Navigate to Deployment">
+        Go to Deployments → Click deployment name
+      </Step>
+      <Step title="Click Edit YAML">
+        Button in top-right of detail page
+      </Step>
+      <Step title="Editor Opens">
+        Modal displays full YAML manifest
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Repository Browser">
+    Edit files directly in repo browser
+    
+    <Steps>
+      <Step title="Open Repo Browser">
+        Navigate to Repository Browser page
+      </Step>
+      <Step title="Select Repository">
+        Choose GitHub repository
+      </Step>
+      <Step title="Navigate to File">
+        Browse file tree to YAML file
+      </Step>
+      <Step title="Click Edit">
+        Click file to view, then Edit button
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="List View">
+    Quick edit from deployment list
+    
+    Click **"Edit"** icon in Actions column
+  </Tab>
+</Tabs>
+
+## Editor Features
+
+### Syntax Highlighting
+
+<img src="/images/yaml-syntax.png" alt="Syntax Highlighting" />
+
+**Colored by token type:**
+- **Blue**: Keys (metadata, spec, containers)
+- **Green**: String values
+- **Orange**: Numbers and booleans
+- **Gray**: Comments
+- **Red**: Syntax errors
+
+### Auto-completion
+
+<img src="/images/yaml-autocomplete.png" alt="Auto-completion" />
+
+**Intelligent suggestions:**
+
+<AccordionGroup>
+  <Accordion icon="key" title="Key Suggestions">
+    Type partial key name for suggestions:
+    
+    ```yaml
+    spec:
+      temp|    # Suggests: template, terminationGracePeriodSeconds
+    ```
+  </Accordion>
+
+  <Accordion icon="cube" title="Resource Types">
+    Kubernetes resource type suggestions:
+    
+    ```yaml
+    kind: D|   # Suggests: Deployment, DaemonSet, etc.
+    ```
+  </Accordion>
+
+  <Accordion icon="list" title="Enum Values">
+    Known value suggestions:
+    
+    ```yaml
+    imagePullPolicy: |   # Suggests: Always, IfNotPresent, Never
+    ```
+  </Accordion>
+
+  <Accordion icon="code" title="Snippets">
+    Common patterns:
+    
+    Type `container` → Full container template
+    Type `probe` → Health probe template
+    Type `volume` → Volume mount template
+  </Accordion>
+</AccordionGroup>
+
+**Trigger:**
+- Automatic after typing
+- Manual: `Ctrl+Space` (Windows/Linux) or `Cmd+Space` (Mac)
+
+### Error Detection
+
+<img src="/images/yaml-errors.png" alt="Error Detection" />
+
+**Real-time validation:**
+
+<Tabs>
+  <Tab title="Syntax Errors">
+    **Red squiggly underlines** for YAML syntax issues
+    
+    Examples:
+    - Invalid indentation
+    - Missing colons
+    - Quote mismatch
+    - Invalid characters
+    
+    ```yaml
+    spec
+      replicas 3    # Error: Missing colons
+    ```
+  </Tab>
+
+  <Tab title="Schema Errors">
+    **Yellow underlines** for Kubernetes schema violations
+    
+    Examples:
+    - Unknown fields
+    - Wrong value types
+    - Missing required fields
+    
+    ```yaml
+    spec:
+      replicaCount: 3    # Warning: Should be "replicas"
+    ```
+  </Tab>
+
+  <Tab title="Hover for Details">
+    Hover over errors for explanation:
+    
+    ```
+    ⚠️ Property "replicaCount" is not allowed
+    Did you mean "replicas"?
+    ```
+  </Tab>
+</Tabs>
+
+### Code Actions
+
+Right-click for quick actions:
+
+<AccordionGroup>
+  <Accordion icon="lightbulb" title="Quick Fixes">
+    Automatic fixes for common issues
+    
+    Example:
+    ```yaml
+    imagePullPolicy: always    # Lowercase
+    
+    Quick Fix: Change to "Always"
+    ```
+  </Accordion>
+
+  <Accordion icon="wand-magic-sparkles" title="Refactoring">
+    Code improvements:
+    - Extract to ConfigMap
+    - Move to Secret
+    - Add resource limits
+  </Accordion>
+
+  <Accordion icon="bookmark" title="Go to Definition">
+    Jump to resource definitions:
+    - ConfigMap reference → View ConfigMap
+    - Secret reference → View Secret
+  </Accordion>
+</AccordionGroup>
+
+### Keyboard Shortcuts
+
+| Action | Windows/Linux | Mac |
+|--------|---------------|-----|
+| **Save** | Ctrl+S | Cmd+S |
+| **Find** | Ctrl+F | Cmd+F |
+| **Replace** | Ctrl+H | Cmd+H |
+| **Undo** | Ctrl+Z | Cmd+Z |
+| **Redo** | Ctrl+Y | Cmd+Shift+Z |
+| **Comment Line** | Ctrl+/ | Cmd+/ |
+| **Format Document** | Shift+Alt+F | Shift+Option+F |
+| **Go to Line** | Ctrl+G | Cmd+G |
+| **Multi-cursor** | Alt+Click | Option+Click |
+| **Select All Occurrences** | Ctrl+Shift+L | Cmd+Shift+L |
+
+### Multi-cursor Editing
+
+Edit multiple locations simultaneously:
+
+<Steps>
+  <Step title="Add Cursors">
+    - Alt+Click to add cursor
+    - Ctrl+Alt+↑/↓ to add cursor above/below
+  </Step>
+
+  <Step title="Select Occurrences">
+    - Ctrl+D to select next occurrence
+    - Ctrl+Shift+L to select all occurrences
+  </Step>
+
+  <Step title="Edit">
+    Type to edit all selected locations at once
+  </Step>
+</Steps>
+
+**Example:** Change all `nginx:1.20` to `nginx:1.21`:
+
+1. Select `nginx:1.20`
+2. Press Ctrl+Shift+L
+3. Type `nginx:1.21`
+
+## Common Editing Tasks
+
+### Update Container Image
+
+<Tabs>
+  <Tab title="Find Image">
+    Search for `image:` in YAML
+    
+    ```yaml
+    containers:
+    - name: app
+      image: myapp:v1.0.0    # Current version
+    ```
+  </Tab>
+
+  <Tab title="Change Tag">
+    Update version tag
+    
+    ```yaml
+    containers:
+    - name: app
+      image: myapp:v1.1.0    # New version
+    ```
+  </Tab>
+
+  <Tab title="Save Changes">
+    Click "Create PR" to submit changes
+  </Tab>
+</Tabs>
+
+### Add Environment Variable
+
+```yaml
+# Before
+containers:
+- name: app
+  image: myapp:v1.0.0
+
+# After
+containers:
+- name: app
+  image: myapp:v1.0.0
+  env:
+  - name: LOG_LEVEL
+    value: "debug"
+  - name: DATABASE_URL
+    valueFrom:
+      secretKeyRef:
+        name: db-credentials
+        key: url
+```
+
+### Update Resource Limits
+
+```yaml
+# Before
+resources:
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+
+# After (increased for better performance)
+resources:
+  limits:
+    memory: "1Gi"
+    cpu: "1000m"
+  requests:
+    memory: "512Mi"
+    cpu: "500m"
+```
+
+### Add Health Probes
+
+```yaml
+# Before
+containers:
+- name: app
+  image: myapp:v1.0.0
+  ports:
+  - containerPort: 8080
+
+# After (with probes)
+containers:
+- name: app
+  image: myapp:v1.0.0
+  ports:
+  - containerPort: 8080
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 5
+```
+
+### Change Replica Count
+
+```yaml
+# Before
+spec:
+  replicas: 3
+
+# After (scaled up)
+spec:
+  replicas: 5
+```
+
+<Warning>
+  Changing replicas in YAML won't have immediate effect - the change must be merged and applied to the cluster
+</Warning>
+
+## File Matching
+
+Orphelix can automatically find the YAML file in your repository:
+
+<img src="/images/file-matching.png" alt="File Matching" />
+
+### AI-Powered Matching
+
+**Requires:** OpenAI API key configured in settings
+
+<Steps>
+  <Step title="Analyze Deployment">
+    Extracts:
+    - Deployment name
+    - Namespace
+    - Labels
+    - Container images
+  </Step>
+
+  <Step title="Scan Repository">
+    Reads files in repository:
+    - YAML files
+    - Kustomize bases
+    - Helm values
+  </Step>
+
+  <Step title="AI Matching">
+    Uses GPT-4o-mini to:
+    - Compare deployment spec with files
+    - Calculate similarity scores
+    - Identify best match
+  </Step>
+
+  <Step title="Present Results">
+    Shows matched file with confidence score:
+    
+    ```
+    ✓ Found: k8s/deployments/myapp.yaml (95% confidence)
+    ```
+  </Step>
+</Steps>
+
+### Pattern-based Matching
+
+**Fallback method** when AI unavailable:
+
+Matches by filename patterns:
+- `{deployment-name}.yaml`
+- `deployment-{name}.yaml`
+- `{name}-deployment.yaml`
+- `k8s/{name}.yaml`
+
+Example:
+```
+Deployment: "api-gateway"
+Matches:
+  ✓ k8s/api-gateway.yaml
+  ✓ deployments/api-gateway.yaml
+  ✓ api-gateway-deployment.yaml
+```
+
+### Kustomize Support
+
+Detects and handles Kustomize structure:
+
+<img src="/images/kustomize-editor.png" alt="Kustomize Editor" />
+
+<Steps>
+  <Step title="Detect Kustomize">
+    Finds kustomization.yaml files
+  </Step>
+
+  <Step title="Show Tabs">
+    Editor displays multiple tabs:
+    - Base: `base/deployment.yaml`
+    - Overlay: `overlays/production/deployment.yaml`
+  </Step>
+
+  <Step title="Edit Both">
+    Modify base or overlays as needed
+  </Step>
+
+  <Step title="Create Multi-file PR">
+    Changes to multiple files in single PR
+  </Step>
+</Steps>
+
+## Creating Pull Requests
+
+After editing, submit changes via GitHub:
+
+<Steps>
+  <Step title="Review Changes">
+    Editor shows diff of your modifications
+    
+    <img src="/images/yaml-diff.png" alt="YAML Diff" />
+    
+    - Green: Added lines
+    - Red: Removed lines
+    - Yellow: Modified lines
+  </Step>
+
+  <Step title="Add Commit Message">
+    Enter descriptive commit message:
+    
+    ```
+    Update myapp image to v1.1.0
+    
+    - Bumps image from v1.0.0 to v1.1.0
+    - Increases memory limit to 1Gi
+    - Adds liveness probe on /healthz endpoint
+    ```
+  </Step>
+
+  <Step title="Select Branch">
+    Choose branch strategy:
+    
+    <Tabs>
+      <Tab title="Create New Branch">
+        **Recommended for production**
+        
+        Branch name: `update-myapp-v1.1.0`
+        
+        Creates new branch → Opens PR
+      </Tab>
+      
+      <Tab title="Commit to Main">
+        **For development environments**
+        
+        Commits directly to main/master
+        
+        No PR created (immediate effect)
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step title="Create PR">
+    Click **"Create Pull Request"**
+    
+    Orphelix:
+    1. Creates branch (if selected)
+    2. Commits changes
+    3. Opens PR on GitHub
+    4. Returns PR URL
+  </Step>
+
+  <Step title="Review on GitHub">
+    Click PR URL to view on GitHub:
+    
+    - Review changes
+    - Request reviews from team
+    - Run CI/CD checks
+    - Merge when ready
+  </Step>
+</Steps>
+
+### PR Template
+
+Orphelix auto-generates PR description:
+
+````markdown
+## Changes
+
+Updated deployment: `myapp`
+
+### Modified Files
+- `k8s/deployments/myapp.yaml`
+
+### Changes Made
+- Updated container image from `myapp:v1.0.0` to `myapp:v1.1.0`
+- Increased memory limit from `512Mi` to `1Gi`
+- Added liveness probe on `/healthz` endpoint
+
+### Testing
+- [ ] Deploy to staging
+- [ ] Verify application starts successfully
+- [ ] Test liveness probe endpoint
+- [ ] Monitor memory usage
+
+---
+🤖 Generated with [Orphelix](https://github.com/corapoid/orphelix)
+````
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Small, Focused Changes">
+    One logical change per PR:
+    - ✅ Update image tag
+    - ✅ Add health probe
+    - ❌ Update image + change replicas + add probes (too much!)
+  </Accordion>
+
+  <Accordion icon="check" title="Descriptive Commit Messages">
+    Clear, specific commit messages:
+    
+    ✅ Good:
+    ```
+    Update nginx image to 1.21.6 for CVE fix
+    ```
+    
+    ❌ Bad:
+    ```
+    Update image
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Review Before Submitting">
+    Always review changes:
+    - Check diff for unintended modifications
+    - Verify indentation is correct
+    - Ensure no secrets are exposed
+    - Test in staging first
+  </Accordion>
+
+  <Accordion icon="check" title="Use Branch Protection">
+    Configure GitHub branch protection:
+    - Require pull request reviews
+    - Require status checks
+    - Prevent force push to main
+  </Accordion>
+
+  <Accordion icon="check" title="Link to Issues">
+    Reference related issues in PR:
+    
+    ```
+    Fixes #123
+    
+    Update deployment to fix memory leak reported in #123
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+### File Not Found
+
+**Symptom:** "Cannot find YAML file in repository"
+
+**Solutions:**
+
+1. **Manual File Selection**
+   - Click "Browse Files" button
+   - Navigate to correct file
+   - Select manually
+
+2. **Check Repository**
+   - Verify correct repository selected
+   - Confirm file exists in repo
+   - Check branch (main vs master)
+
+3. **Update File Matching Settings**
+   - Add custom file patterns in settings
+   - Configure OpenAI API key for AI matching
+
+### Permission Denied
+
+**Symptom:** "Failed to create PR: permission denied"
+
+**Check:**
+
+1. **GitHub App Permissions**
+   - Contents: Read & Write
+   - Pull Requests: Read & Write
+
+2. **Repository Access**
+   - Orphelix app installed on repository?
+   - Repository not archived/disabled?
+
+3. **Branch Protection**
+   - Can create branches?
+   - PR allowed from fork?
+
+### Merge Conflicts
+
+**Symptom:** PR shows merge conflicts
+
+**Resolution:**
+
+<Steps>
+  <Step title="Fetch Latest">
+    Pull latest changes from main
+  </Step>
+
+  <Step title="Resolve Conflicts">
+    Open GitHub, resolve conflicts in UI
+  </Step>
+
+  <Step title="Alternative: Start Fresh">
+    Close PR, fetch latest, make changes again
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Pull Requests" icon="code-pull-request" href="/user/github/pull-requests">
+    Learn about PR management
+  </Card>
+  <Card title="GitHub Setup" icon="github" href="/user/github/github-app-setup">
+    Configure GitHub App
+  </Card>
+  <Card title="Deployments" icon="layer-group" href="/user/deployments">
+    Back to deployments
+  </Card>
+  <Card title="Repository Browser" icon="folder-tree" href="/user/repo-browser">
+    Browse repository files
+  </Card>
+</CardGroup>
