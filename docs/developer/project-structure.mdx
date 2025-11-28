@@ -1,12 +1,910 @@
 ---
 title: 'Project Structure'
-description: 'Code organization and directory structure'
+description: 'File organization, directory structure, and naming conventions in Orphelix'
 ---
 
 ## Overview
 
-This page is under construction.
+Orphelix follows Next.js 15 App Router conventions with a clear separation of concerns. The project is organized into distinct layers for frontend, backend, data, and utilities.
 
-<Note>
-  See [Developer Overview](/developer/overview) for repository structure.
-</Note>
+<CardGroup cols={2}>
+  <Card title="app/" icon="folder">
+    Next.js App Router pages and API routes
+  </Card>
+  <Card title="lib/" icon="book">
+    Reusable utilities, hooks, and business logic
+  </Card>
+  <Card title="types/" icon="code">
+    TypeScript type definitions
+  </Card>
+  <Card title="public/" icon="image">
+    Static assets (images, logos, fonts)
+  </Card>
+</CardGroup>
+
+## Directory Structure
+
+### Root Level
+
+```
+orphelix/
+├── app/                    # Main application directory
+│   ├── app/               # Next.js App Router (pages + API)
+│   ├── lib/               # Business logic & utilities
+│   ├── types/             # TypeScript types
+│   ├── public/            # Static assets
+│   ├── tests/             # E2E tests (Playwright)
+│   ├── __tests__/         # Unit tests (Vitest)
+│   ├── package.json       # Dependencies
+│   ├── tsconfig.json      # TypeScript config
+│   ├── next.config.mjs    # Next.js config
+│   ├── vitest.config.ts   # Vitest config
+│   └── playwright.config.ts # Playwright config
+├── docs/                  # Mintlify documentation
+├── .github/               # GitHub workflows & config
+├── LICENSE                # License file
+└── README.md              # Project README
+```
+
+## App Directory (`app/`)
+
+### App Router (`app/app/`)
+
+Next.js 15 App Router with file-based routing:
+
+```
+app/app/
+├── page.tsx                    # Dashboard home page (/)
+├── layout.tsx                  # Root layout with theme provider
+├── globals.css                 # Global styles
+├── favicon.ico                 # Favicon
+│
+├── deployments/                # Deployments pages
+│   ├── page.tsx               # List view (/deployments)
+│   └── [name]/                # Dynamic route
+│       └── page.tsx           # Detail view (/deployments/nginx)
+│
+├── pods/                       # Pods pages
+│   ├── page.tsx               # List view
+│   └── [name]/
+│       └── page.tsx           # Pod detail + logs
+│
+├── nodes/                      # Nodes pages
+│   ├── page.tsx               # Node list
+│   └── [name]/
+│       └── page.tsx           # Node detail
+│
+├── services/                   # Services pages
+├── ingress/                    # Ingress pages
+├── configmaps/                 # ConfigMaps pages
+├── secrets/                    # Secrets pages
+├── namespaces/                 # Namespaces pages
+├── statefulsets/               # StatefulSets pages
+├── daemonsets/                 # DaemonSets pages
+├── jobs/                       # Jobs pages
+├── cronjobs/                   # CronJobs pages
+├── events/                     # Events page
+├── labels/                     # Labels explorer
+├── topology/                   # Topology graph
+├── settings/                   # Settings page
+├── repo-browser/               # GitHub repo browser
+│
+├── demo/                       # Demo mode routes (mirrors above)
+│   ├── deployments/
+│   ├── pods/
+│   └── [...slug]/             # Catch-all for demo routes
+│
+├── api/                        # API Routes (see below)
+│
+└── components/                 # React components
+    ├── layout/                # Layout components
+    ├── dashboard/             # Dashboard components
+    ├── common/                # Shared components
+    ├── deployments/           # Deployment-specific
+    ├── pods/                  # Pod-specific
+    ├── nodes/                 # Node-specific
+    ├── services/              # Service-specific
+    ├── configmaps/            # ConfigMap-specific
+    ├── secrets/               # Secret-specific
+    ├── repo-browser/          # GitHub integration
+    ├── topology/              # Topology graph
+    ├── settings/              # Settings components
+    ├── metrics/               # Charts & metrics
+    └── theme-provider.tsx     # Theme context provider
+```
+
+### API Routes (`app/app/api/`)
+
+RESTful API endpoints following Next.js conventions:
+
+```
+app/app/api/
+├── deployments/
+│   ├── route.ts                    # GET /api/deployments
+│   └── [name]/
+│       ├── route.ts                # GET /api/deployments/:name
+│       ├── restart/
+│       │   └── route.ts            # POST /api/deployments/:name/restart
+│       ├── pods/
+│       │   └── route.ts            # GET /api/deployments/:name/pods
+│       └── events/
+│           └── route.ts            # GET /api/deployments/:name/events
+│
+├── pods/
+│   ├── route.ts                    # GET /api/pods
+│   └── [name]/
+│       ├── route.ts                # GET /api/pods/:name
+│       ├── logs/
+│       │   └── route.ts            # GET /api/pods/:name/logs
+│       ├── restart/
+│       │   └── route.ts            # POST /api/pods/:name/restart
+│       └── events/
+│           └── route.ts            # GET /api/pods/:name/events
+│
+├── nodes/
+│   ├── route.ts                    # GET /api/nodes
+│   └── [name]/
+│       ├── route.ts                # GET /api/nodes/:name
+│       ├── pods/
+│       │   └── route.ts            # GET /api/nodes/:name/pods
+│       └── events/
+│           └── route.ts            # GET /api/nodes/:name/events
+│
+├── services/                       # Service endpoints
+├── ingress/                        # Ingress endpoints
+├── configmaps/                     # ConfigMap endpoints
+├── secrets/                        # Secret endpoints
+├── namespaces/                     # Namespace endpoints
+├── statefulsets/                   # StatefulSet endpoints
+├── daemonsets/                     # DaemonSet endpoints
+├── jobs/                           # Job endpoints
+├── cronjobs/                       # CronJob endpoints
+├── events/
+│   └── route.ts                    # GET /api/events
+├── hpa/
+│   └── route.ts                    # GET /api/hpa
+├── labels/
+│   └── route.ts                    # GET /api/labels
+│
+├── dashboard/
+│   └── summary/
+│       └── route.ts                # GET /api/dashboard/summary
+│
+├── metrics/
+│   └── pods/
+│       └── route.ts                # GET /api/metrics/pods
+│
+├── stream/
+│   └── route.ts                    # GET /api/stream (SSE)
+│
+├── contexts/
+│   └── route.ts                    # GET /api/contexts
+│
+├── test-connection/
+│   └── route.ts                    # GET /api/test-connection
+│
+├── cluster-health/
+│   └── route.ts                    # GET /api/cluster-health
+│
+├── github/
+│   ├── repos/
+│   │   └── route.ts                # GET /api/github/repos
+│   ├── tree/
+│   │   └── route.ts                # GET /api/github/tree
+│   ├── file/
+│   │   └── route.ts                # GET /api/github/file
+│   ├── files/
+│   │   └── route.ts                # GET /api/github/files
+│   ├── branches/
+│   │   └── route.ts                # GET /api/github/branches
+│   ├── create-pr/
+│   │   └── route.ts                # POST /api/github/create-pr
+│   ├── create-multi-file-pr/
+│   │   └── route.ts                # POST /api/github/create-multi-file-pr
+│   ├── merge-pr/
+│   │   └── route.ts                # POST /api/github/merge-pr
+│   ├── match-file/
+│   │   └── route.ts                # POST /api/github/match-file
+│   ├── kustomize/
+│   │   └── route.ts                # GET /api/github/kustomize
+│   ├── analyze-structure/
+│   │   └── route.ts                # POST /api/github/analyze-structure
+│   └── auth-status/
+│       └── route.ts                # GET /api/github/auth-status
+│
+├── github-app/
+│   ├── callback/
+│   │   └── route.ts                # GET /api/github-app/callback
+│   ├── installations/
+│   │   └── route.ts                # GET /api/github-app/installations
+│   ├── repositories/
+│   │   └── route.ts                # GET /api/github-app/repositories
+│   └── logout/
+│       └── route.ts                # POST /api/github-app/logout
+│
+├── ai/
+│   ├── match-file/
+│   │   └── route.ts                # POST /api/ai/match-file
+│   └── troubleshoot/
+│       └── route.ts                # POST /api/ai/troubleshoot
+│
+├── settings/
+│   ├── route.ts                    # GET/POST/DELETE /api/settings
+│   ├── aliases/
+│   │   └── route.ts                # GET/POST /api/settings/aliases
+│   ├── critical-issues/
+│   │   └── route.ts                # GET/POST /api/settings/critical-issues
+│   ├── sidebar-pins/
+│   │   └── route.ts                # GET/POST /api/settings/sidebar-pins
+│   ├── github/
+│   │   ├── route.ts                # GET/POST /api/settings/github
+│   │   ├── basket/
+│   │   │   └── route.ts            # GET/POST/DELETE basket
+│   │   └── prs/
+│   │       └── route.ts            # GET/POST/DELETE PRs
+│   └── migrate/
+│       └── route.ts                # POST /api/settings/migrate
+│
+├── notifications/
+│   └── route.ts                    # POST /api/notifications
+│
+├── auth/
+│   └── [...nextauth]/
+│       └── route.ts                # NextAuth.js endpoints
+│
+└── resources/
+    └── [type]/
+        └── [name]/
+            └── yaml/
+                └── route.ts        # GET /api/resources/:type/:name/yaml
+```
+
+## Library Directory (`app/lib/`)
+
+Reusable business logic, utilities, and shared code:
+
+```
+app/lib/
+├── k8s/                            # Kubernetes client layer
+│   ├── client.ts                  # K8s client initialization
+│   ├── deployments.ts             # Deployment operations
+│   ├── pods.ts                    # Pod operations
+│   ├── nodes.ts                   # Node operations
+│   ├── services.ts                # Service operations
+│   └── ...                        # Other resource operations
+│
+├── hooks/                          # React hooks (TanStack Query)
+│   ├── use-deployments.ts         # useDeployments() hook
+│   ├── use-pods.ts                # usePods() hook
+│   ├── use-nodes.ts               # useNodes() hook
+│   ├── use-services.ts            # useServices() hook
+│   ├── use-events.ts              # useEvents() hook
+│   ├── use-dashboard.ts           # useDashboard() hook
+│   ├── use-labels.ts              # useLabels() hook
+│   ├── use-jobs.ts                # useJobs() hook
+│   ├── use-cronjobs.ts            # useCronJobs() hook
+│   └── ...                        # Other resource hooks
+│
+├── core/                           # Core utilities
+│   ├── store.ts                   # Zustand stores
+│   └── utils.ts                   # Helper functions
+│
+├── db/                             # Database layer (SQLite)
+│   ├── database.ts                # Database connection
+│   ├── services.ts                # Database services (CRUD)
+│   ├── schema.sql                 # Database schema
+│   └── client-sync.ts             # Client-server sync
+│
+├── github/                         # GitHub integration
+│   ├── client.ts                  # Octokit client
+│   ├── auth.ts                    # GitHub App auth
+│   ├── repos.ts                   # Repository operations
+│   ├── files.ts                   # File operations
+│   ├── prs.ts                     # Pull request operations
+│   └── kustomize.ts               # Kustomize detection
+│
+├── ai/                             # AI features (OpenAI)
+│   ├── match-file.ts              # AI file matching
+│   └── troubleshoot.ts            # AI troubleshooting
+│
+├── mocks/                          # Demo mode data
+│   ├── data.ts                    # Mock K8s resources
+│   └── github-data.ts             # Mock GitHub data
+│
+├── ui/                             # UI utilities
+│   ├── theme/                     # Theme system
+│   │   ├── design-tokens.ts       # Color tokens
+│   │   └── visual-presets.ts      # Visual presets
+│   ├── components/                # Utility components
+│   │   └── glass-panel.tsx        # Glassmorphism panel
+│   ├── providers/                 # Context providers
+│   │   └── react-query-provider.tsx
+│   ├── use-glass-surface.ts       # Glass effect hook
+│   └── topology.ts                # Topology graph utils
+│
+├── notifications/                  # Desktop notifications
+│   └── notifier.ts                # node-notifier wrapper
+│
+├── auth/                           # Authentication
+│   └── config.ts                  # NextAuth config
+│
+├── config/                         # App configuration
+│   └── constants.ts               # Constants
+│
+├── contexts/                       # React contexts
+│   └── theme-context.tsx          # Theme context
+│
+└── cli/                            # CLI utilities
+    ├── commands.ts                # CLI command handlers
+    └── pm2-config.ts              # PM2 configuration
+```
+
+## Types Directory (`app/types/`)
+
+TypeScript type definitions:
+
+```
+app/types/
+├── kubernetes.ts                   # K8s resource types
+│   ├── Deployment
+│   ├── Pod
+│   ├── Node
+│   ├── Service
+│   ├── ConfigMap
+│   ├── Secret
+│   ├── Event
+│   └── ...
+│
+├── app.ts                          # App-specific types
+│   ├── AppMode ('demo' | 'real')
+│   ├── KubernetesContext
+│   ├── VisualPreset
+│   └── ...
+│
+├── topology.ts                     # Topology graph types
+│   ├── TopologyNode
+│   ├── TopologyEdge
+│   └── ...
+│
+└── next-auth.d.ts                  # NextAuth type extensions
+```
+
+## Public Directory (`app/public/`)
+
+Static assets served directly:
+
+```
+app/public/
+├── logo/
+│   ├── light-with-text.svg        # Logo for light mode
+│   ├── dark-with-text.svg         # Logo for dark mode
+│   ├── icon.svg                   # App icon
+│   └── favicon.ico                # Favicon
+│
+└── fonts/                          # Custom fonts (if any)
+```
+
+## Test Directory (`app/tests/`)
+
+End-to-end tests with Playwright:
+
+```
+app/tests/
+└── e2e/
+    ├── app-launch.spec.ts         # App startup tests
+    ├── navigation.spec.ts         # Navigation tests
+    ├── dashboard.spec.ts          # Dashboard tests
+    ├── deployments.spec.ts        # Deployment tests
+    └── pods.spec.ts               # Pod tests
+```
+
+## Unit Tests (`app/__tests__/`)
+
+Unit tests with Vitest:
+
+```
+app/__tests__/
+└── lib/
+    ├── utils.test.ts              # Utils tests
+    ├── store.test.ts              # Store tests
+    ├── mock-data.test.ts          # Mock data tests
+    └── hooks/
+        ├── use-deployments.test.ts
+        ├── use-pods.test.ts
+        ├── use-dashboard.test.ts
+        ├── use-jobs.test.ts
+        └── use-cronjobs.test.ts
+```
+
+## Documentation (`docs/`)
+
+Mintlify documentation:
+
+```
+docs/
+├── mint.json                       # Mintlify config
+├── introduction.mdx                # Getting started
+├── installation.mdx                # Installation guide
+│
+├── user/                           # User documentation
+│   ├── dashboard.mdx
+│   ├── deployments.mdx
+│   ├── pods.mdx
+│   ├── nodes.mdx
+│   ├── ...
+│   ├── github/
+│   │   ├── yaml-editor.mdx
+│   │   └── pull-requests.mdx
+│   └── configuration/
+│       ├── cluster-connection.mdx
+│       ├── namespaces.mdx
+│       ├── settings.mdx
+│       └── demo-mode.mdx
+│
+└── developer/                      # Developer documentation
+    ├── overview.mdx
+    ├── architecture.mdx
+    ├── tech-stack.mdx
+    ├── project-structure.mdx       # This file
+    ├── getting-started.mdx
+    ├── testing.mdx
+    ├── contributing.mdx
+    ├── deployment.mdx
+    └── api/
+        ├── introduction.mdx
+        ├── deployments.mdx
+        ├── pods.mdx
+        ├── nodes.mdx
+        ├── events.mdx
+        └── realtime.mdx
+```
+
+## Configuration Files
+
+### Root Configuration
+
+```
+app/
+├── package.json                    # Dependencies & scripts
+├── tsconfig.json                   # TypeScript config
+├── next.config.mjs                 # Next.js config
+├── vitest.config.ts                # Vitest config
+├── playwright.config.ts            # Playwright config
+├── eslint.config.mjs               # ESLint config
+├── .prettierrc                     # Prettier config
+├── .env.local                      # Environment variables
+├── .gitignore                      # Git ignore rules
+└── orphelix-cli.js                 # CLI entry point
+```
+
+## Naming Conventions
+
+### Files
+
+<AccordionGroup>
+  <Accordion icon="file" title="React Components">
+    **Convention:** `kebab-case.tsx`
+    
+    **Examples:**
+    - `deployment-card.tsx`
+    - `pod-logs-viewer.tsx`
+    - `namespace-selector.tsx`
+    - `cluster-health-score.tsx`
+    
+    **Component Names:** `PascalCase`
+    ```typescript
+    // File: deployment-card.tsx
+    export function DeploymentCard({ deployment }: Props) {
+      // ...
+    }
+    ```
+  </Accordion>
+
+  <Accordion icon="code" title="TypeScript Files">
+    **Convention:** `kebab-case.ts`
+    
+    **Examples:**
+    - `kubernetes-client.ts`
+    - `use-deployments.ts`
+    - `github-auth.ts`
+    - `design-tokens.ts`
+    
+    **Exports:** `camelCase` for functions, `PascalCase` for types/classes
+    ```typescript
+    // File: use-deployments.ts
+    export function useDeployments() { }
+    export type Deployment = { }
+    ```
+  </Accordion>
+
+  <Accordion icon="route" title="API Routes">
+    **Convention:** `route.ts` in nested directories
+    
+    **Examples:**
+    - `api/deployments/route.ts` → `/api/deployments`
+    - `api/deployments/[name]/route.ts` → `/api/deployments/:name`
+    - `api/pods/[name]/logs/route.ts` → `/api/pods/:name/logs`
+    
+    **Exports:** Named exports (`GET`, `POST`, `PUT`, `DELETE`)
+    ```typescript
+    // File: api/deployments/route.ts
+    export async function GET(request: NextRequest) { }
+    export async function POST(request: NextRequest) { }
+    ```
+  </Accordion>
+
+  <Accordion icon="browser" title="Page Routes">
+    **Convention:** `page.tsx` in route directories
+    
+    **Examples:**
+    - `app/deployments/page.tsx` → `/deployments`
+    - `app/deployments/[name]/page.tsx` → `/deployments/:name`
+    - `app/settings/page.tsx` → `/settings`
+    
+    **Exports:** Default export
+    ```typescript
+    // File: app/deployments/page.tsx
+    export default function DeploymentsPage() {
+      return <DeploymentList />
+    }
+    ```
+  </Accordion>
+
+  <Accordion icon="layer-group" title="Layouts">
+    **Convention:** `layout.tsx` in route directories
+    
+    **Examples:**
+    - `app/layout.tsx` → Root layout
+    - `app/deployments/layout.tsx` → Deployments layout
+    
+    **Exports:** Default export with `children` prop
+    ```typescript
+    // File: app/layout.tsx
+    export default function RootLayout({ children }: Props) {
+      return (
+        <html>
+          <body>{children}</body>
+        </html>
+      )
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Variables & Functions
+
+<AccordionGroup>
+  <Accordion icon="code" title="Variables">
+    **Convention:** `camelCase`
+    
+    **Examples:**
+    ```typescript
+    const deploymentName = 'nginx'
+    const isLoading = true
+    const podStatusMap = new Map()
+    let retryCount = 0
+    ```
+  </Accordion>
+
+  <Accordion icon="function" title="Functions">
+    **Convention:** `camelCase`
+    
+    **Examples:**
+    ```typescript
+    function getDeployments() { }
+    async function fetchPodLogs() { }
+    const restartDeployment = () => { }
+    ```
+    
+    **React Components:** `PascalCase`
+    ```typescript
+    function DeploymentCard() { }
+    const PodStatusBadge = () => { }
+    ```
+  </Accordion>
+
+  <Accordion icon="cube" title="Constants">
+    **Convention:** `UPPER_SNAKE_CASE`
+    
+    **Examples:**
+    ```typescript
+    const API_BASE_URL = '/api'
+    const MAX_RETRY_COUNT = 3
+    const DEFAULT_NAMESPACE = 'default'
+    ```
+  </Accordion>
+
+  <Accordion icon="code-branch" title="Types & Interfaces">
+    **Convention:** `PascalCase`
+    
+    **Examples:**
+    ```typescript
+    type Deployment = { }
+    interface Pod { }
+    type DeploymentStatus = 'Available' | 'Progressing'
+    ```
+  </Accordion>
+
+  <Accordion icon="link" title="Enums">
+    **Convention:** `PascalCase` for enum, `UPPER_SNAKE_CASE` for values
+    
+    **Examples:**
+    ```typescript
+    enum PodPhase {
+      PENDING = 'Pending',
+      RUNNING = 'Running',
+      SUCCEEDED = 'Succeeded',
+      FAILED = 'Failed',
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Import Conventions
+
+### Path Aliases
+
+Configured in `tsconfig.json`:
+
+```typescript
+// tsconfig.json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./app/*"],
+      "@/lib/*": ["./app/lib/*"],
+      "@/components/*": ["./app/components/*"],
+      "@/types/*": ["./app/types/*"]
+    }
+  }
+}
+```
+
+### Import Order
+
+Recommended order (enforced by ESLint):
+
+```typescript
+// 1. React & Next.js
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+
+// 2. External libraries
+import { useQuery } from '@tanstack/react-query'
+import { Card, CardContent } from '@mui/material'
+
+// 3. Internal utilities (@ aliases)
+import { useDeployments } from '@/lib/hooks/use-deployments'
+import { useModeStore } from '@/lib/core/store'
+import type { Deployment } from '@/types/kubernetes'
+
+// 4. Internal components
+import { DeploymentCard } from '@/components/deployments/deployment-card'
+import { StatusBadge } from '@/components/common/status-badge'
+
+// 5. Relative imports (within same directory)
+import { formatDeploymentStatus } from './utils'
+import styles from './deployments.module.css'
+```
+
+## Code Organization Best Practices
+
+### Component Structure
+
+```typescript
+// app/components/deployments/deployment-card.tsx
+
+// 1. Imports
+import { Card, CardContent, Typography } from '@mui/material'
+import { useDeployments } from '@/lib/hooks/use-deployments'
+import type { Deployment } from '@/types/kubernetes'
+
+// 2. Types
+interface DeploymentCardProps {
+  deployment: Deployment
+  onRestart?: (name: string) => void
+}
+
+// 3. Constants
+const DEFAULT_REPLICAS = 1
+
+// 4. Component
+export function DeploymentCard({ deployment, onRestart }: DeploymentCardProps) {
+  // 4.1. Hooks
+  const [isHovered, setIsHovered] = useState(false)
+  const { data, isLoading } = useDeployments()
+  
+  // 4.2. Computed values
+  const statusColor = deployment.status === 'Available' ? 'success' : 'warning'
+  
+  // 4.3. Handlers
+  const handleRestart = () => {
+    onRestart?.(deployment.name)
+  }
+  
+  // 4.4. Effects
+  useEffect(() => {
+    // Side effects
+  }, [])
+  
+  // 4.5. Render
+  return (
+    <Card onMouseEnter={() => setIsHovered(true)}>
+      <CardContent>
+        <Typography variant="h6">{deployment.name}</Typography>
+        {/* ... */}
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+### API Route Structure
+
+```typescript
+// app/api/deployments/route.ts
+
+// 1. Imports
+import { NextRequest } from 'next/server'
+import { getAppsApi } from '@/lib/k8s/client'
+
+// 2. Types
+interface DeploymentParams {
+  namespace: string
+  context?: string
+}
+
+// 3. Helper functions
+function validateNamespace(namespace: string): boolean {
+  return namespace.length > 0
+}
+
+// 4. Route handlers
+export async function GET(request: NextRequest) {
+  // 4.1. Parse params
+  const searchParams = request.nextUrl.searchParams
+  const namespace = searchParams.get('namespace') || 'default'
+  
+  try {
+    // 4.2. Validate
+    if (!validateNamespace(namespace)) {
+      return Response.json({ error: 'Invalid namespace' }, { status: 400 })
+    }
+    
+    // 4.3. Fetch data
+    const appsApi = getAppsApi()
+    const response = await appsApi.listNamespacedDeployment(namespace)
+    
+    // 4.4. Transform
+    const deployments = response.body.items.map(transformDeployment)
+    
+    // 4.5. Return
+    return Response.json(deployments)
+  } catch (error) {
+    // 4.6. Error handling
+    console.error('[API] Error:', error)
+    return Response.json({ error: error.message }, { status: 500 })
+  }
+}
+```
+
+### Custom Hook Structure
+
+```typescript
+// lib/hooks/use-deployments.ts
+
+// 1. Imports
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useModeStore } from '@/lib/core/store'
+import type { Deployment } from '@/types/kubernetes'
+
+// 2. Types
+interface UseDeploymentsOptions {
+  namespace?: string
+  enabled?: boolean
+}
+
+// 3. Hook
+export function useDeployments(options?: UseDeploymentsOptions) {
+  // 3.1. Get state
+  const { mode, selectedContext, selectedNamespace } = useModeStore()
+  const namespace = options?.namespace || selectedNamespace
+  
+  // 3.2. Query
+  return useQuery({
+    queryKey: ['deployments', namespace, mode, selectedContext],
+    queryFn: async () => {
+      const params = new URLSearchParams({ namespace, context: selectedContext || '' })
+      const res = await fetch(`/api/deployments?${params}`)
+      if (!res.ok) throw new Error('Failed to fetch')
+      return res.json() as Promise<Deployment[]>
+    },
+    enabled: options?.enabled !== false && !!namespace,
+    refetchInterval: 30000,
+  })
+}
+
+// 4. Mutation hook
+export function useRestartDeployment() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: async ({ name, namespace }: { name: string; namespace: string }) => {
+      const res = await fetch(`/api/deployments/${name}/restart`, {
+        method: 'POST',
+        body: JSON.stringify({ namespace }),
+      })
+      if (!res.ok) throw new Error('Failed to restart')
+      return res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deployments'] })
+    },
+  })
+}
+```
+
+## File Size Guidelines
+
+### Recommended Limits
+
+- **Components:** < 300 lines
+- **Hooks:** < 150 lines
+- **API Routes:** < 200 lines
+- **Utilities:** < 100 lines per function
+
+### When to Split
+
+Split files when:
+- File exceeds recommended limit
+- Multiple unrelated concerns in one file
+- Code becomes hard to navigate
+- Too many exports from single file
+
+**Example Refactoring:**
+
+```typescript
+// Before: deployment-utils.ts (500 lines)
+export function formatDeploymentStatus() { }
+export function calculateReplicaHealth() { }
+export function getDeploymentConditions() { }
+export function transformDeploymentYaml() { }
+export function validateDeploymentSpec() { }
+
+// After: Split into multiple files
+// lib/deployments/format.ts
+export function formatDeploymentStatus() { }
+
+// lib/deployments/health.ts
+export function calculateReplicaHealth() { }
+
+// lib/deployments/conditions.ts
+export function getDeploymentConditions() { }
+
+// lib/deployments/yaml.ts
+export function transformDeploymentYaml() { }
+export function validateDeploymentSpec() { }
+
+// lib/deployments/index.ts (barrel export)
+export * from './format'
+export * from './health'
+export * from './conditions'
+export * from './yaml'
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="diagram-project" href="/developer/architecture">
+    System architecture overview
+  </Card>
+  <Card title="Getting Started" icon="rocket" href="/developer/getting-started">
+    Set up development environment
+  </Card>
+  <Card title="Testing" icon="vial" href="/developer/testing">
+    Testing strategy and examples
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/developer/contributing">
+    Contribution guidelines
+  </Card>
+</CardGroup>

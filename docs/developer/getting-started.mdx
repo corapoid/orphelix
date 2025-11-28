@@ -1,12 +1,847 @@
 ---
 title: 'Getting Started'
-description: 'Developer setup guide'
+description: 'Complete development environment setup guide for Orphelix contributors'
 ---
 
 ## Overview
 
-This page is under construction.
+This guide walks you through setting up a complete Orphelix development environment, from initial repository clone to running tests and making your first contribution.
 
 <Note>
-  See [Quickstart](/quickstart) for installation instructions.
+For production deployment, see [Deployment Guide](/developer/deployment).
+</Note>
+
+## Prerequisites
+
+### Required Software
+
+<AccordionGroup>
+  <Accordion icon="node-js" title="Node.js 20+">
+    **Version:** 20.11.0 or later
+    
+    **Install with nvm (recommended):**
+    ```bash
+    # Install nvm
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+    
+    # Install Node.js 20
+    nvm install 20
+    nvm use 20
+    
+    # Verify
+    node --version
+    # v20.11.0 or higher
+    ```
+    
+    **Alternative (direct install):**
+    - macOS: `brew install node@20`
+    - Windows: Download from [nodejs.org](https://nodejs.org)
+    - Linux: Use package manager (`apt`, `yum`, etc.)
+  </Accordion>
+
+  <Accordion icon="cube" title="npm 10+ (or pnpm/yarn)">
+    **npm** comes with Node.js:
+    ```bash
+    npm --version
+    # 10.0.0 or higher
+    ```
+    
+    **Or use pnpm (faster):**
+    ```bash
+    npm install -g pnpm
+    pnpm --version
+    ```
+    
+    **Or use yarn:**
+    ```bash
+    npm install -g yarn
+    yarn --version
+    ```
+  </Accordion>
+
+  <Accordion icon="git" title="Git 2.30+">
+    **Verify installation:**
+    ```bash
+    git --version
+    # git version 2.30.0 or higher
+    ```
+    
+    **Install if needed:**
+    - macOS: `brew install git`
+    - Windows: Download from [git-scm.com](https://git-scm.com)
+    - Linux: `sudo apt install git` or `sudo yum install git`
+  </Accordion>
+
+  <Accordion icon="cube" title="kubectl 1.25+ (for real cluster testing)">
+    **Version:** 1.25.0 or later
+    
+    **Install:**
+    ```bash
+    # macOS
+    brew install kubectl
+    
+    # Linux
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    chmod +x kubectl
+    sudo mv kubectl /usr/local/bin/
+    
+    # Windows (PowerShell)
+    choco install kubernetes-cli
+    ```
+    
+    **Verify:**
+    ```bash
+    kubectl version --client
+    ```
+    
+    **Note:** Not required for demo mode development
+  </Accordion>
+
+  <Accordion icon="docker" title="Docker (optional - for local Kubernetes cluster)">
+    **For running local test cluster:**
+    
+    **Install Docker Desktop:**
+    - macOS/Windows: [docker.com/products/docker-desktop](https://docker.com/products/docker-desktop)
+    - Linux: Follow [docs.docker.com](https://docs.docker.com/engine/install/)
+    
+    **Enable Kubernetes in Docker Desktop:**
+    1. Open Docker Desktop
+    2. Settings → Kubernetes
+    3. Check "Enable Kubernetes"
+    4. Click "Apply & Restart"
+    
+    **Alternative: Minikube or Kind:**
+    ```bash
+    # Minikube
+    brew install minikube
+    minikube start
+    
+    # Kind
+    brew install kind
+    kind create cluster
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Optional Tools
+
+- **VS Code** - Recommended IDE with extensions:
+  - TypeScript and JavaScript
+  - ESLint
+  - Prettier
+  - Tailwind CSS IntelliSense
+  - YAML
+- **GitHub CLI** (`gh`) - Simplifies PR creation
+- **PostgreSQL client** (for database inspection)
+
+## Repository Setup
+
+### 1. Clone Repository
+
+```bash
+# HTTPS
+git clone https://github.com/dmakowski/orphelix.git
+
+# SSH (recommended)
+git clone git@github.com:dmakowski/orphelix.git
+
+cd orphelix/app
+```
+
+### 2. Install Dependencies
+
+<Tabs>
+  <Tab title="npm">
+    ```bash
+    npm install
+    ```
+  </Tab>
+  <Tab title="pnpm">
+    ```bash
+    pnpm install
+    ```
+  </Tab>
+  <Tab title="yarn">
+    ```bash
+    yarn install
+    ```
+  </Tab>
+</Tabs>
+
+This installs:
+- Next.js 15 and React 19
+- Material-UI v7
+- Kubernetes client node
+- TanStack Query
+- Vitest and Playwright
+- ...and 50+ other packages
+
+**Expected output:**
+```
+added 1245 packages in 45s
+```
+
+### 3. Environment Configuration
+
+Create environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local`:
+
+```bash
+# Database (SQLite - auto-created)
+DATABASE_URL=file:./orphelix.db
+
+# NextAuth (generate with: openssl rand -base64 32)
+NEXTAUTH_SECRET=your-secret-here
+NEXTAUTH_URL=http://localhost:3000
+
+# GitHub OAuth (optional - for login authentication)
+GITHUB_ID=your-oauth-app-client-id
+GITHUB_SECRET=your-oauth-app-client-secret
+
+# GitHub App (optional - for GitOps features)
+GITHUB_APP_ID=123456
+GITHUB_APP_CLIENT_ID=Iv1.abc123
+GITHUB_APP_CLIENT_SECRET=secret
+GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----"
+
+# OpenAI (optional - for AI features)
+OPENAI_API_KEY=sk-...
+
+# Node environment
+NODE_ENV=development
+```
+
+<Note>
+**Demo Mode:** You can skip GitHub and OpenAI configuration if you only want to work on demo mode features.
+</Note>
+
+### 4. Database Setup
+
+Initialize SQLite database:
+
+```bash
+# Database is created automatically on first run
+npm run dev
+```
+
+The database file `orphelix.db` will be created in the `app/` directory.
+
+**Schema location:** `app/lib/db/schema.sql`
+
+**Inspect database:**
+```bash
+sqlite3 orphelix.db
+
+sqlite> .tables
+# user_settings  github_settings  cluster_aliases  ...
+
+sqlite> .schema user_settings
+# CREATE TABLE user_settings (...);
+
+sqlite> .quit
+```
+
+## Development Workflow
+
+### Start Development Server
+
+<Tabs>
+  <Tab title="npm">
+    ```bash
+    npm run dev
+    ```
+  </Tab>
+  <Tab title="Turbopack (faster)">
+    ```bash
+    npm run dev -- --turbopack
+    ```
+  </Tab>
+</Tabs>
+
+Server starts at [http://localhost:3000](http://localhost:3000)
+
+**Features enabled in dev mode:**
+- Hot Module Replacement (HMR)
+- Fast Refresh (instant updates)
+- Source maps
+- Detailed error pages
+- React Query DevTools
+- Turbopack compilation (optional)
+
+**Console output:**
+```
+▲ Next.js 15.0.3
+- Local:        http://localhost:3000
+- Ready in 2.1s
+
+✓ Compiled /
+```
+
+### Demo Mode (No Cluster Required)
+
+**Default mode** - no kubeconfig needed:
+
+1. Start dev server: `npm run dev`
+2. Open [http://localhost:3000](http://localhost:3000)
+3. Click "Switch to Demo Mode" (or it's already selected)
+4. Explore with mock data:
+   - 15 deployments
+   - 42 pods
+   - 3 nodes
+   - 25 ConfigMaps/Secrets
+   - 150+ events
+
+**Perfect for:**
+- UI development
+- Component testing
+- Learning the codebase
+- Presentations
+
+### Real Cluster Mode
+
+**Requires kubeconfig:**
+
+1. Configure kubectl:
+   ```bash
+   # Check current context
+   kubectl config current-context
+   
+   # List available contexts
+   kubectl config get-contexts
+   
+   # Switch context
+   kubectl config use-context my-cluster
+   ```
+
+2. Verify access:
+   ```bash
+   kubectl get nodes
+   kubectl get pods --all-namespaces
+   ```
+
+3. Start Orphelix:
+   ```bash
+   npm run dev
+   ```
+
+4. Switch to Real mode in UI
+5. Select cluster context
+6. Select namespace
+
+**Supported clusters:**
+- AWS EKS
+- Google GKE
+- Azure AKS
+- Minikube
+- Kind
+- Docker Desktop Kubernetes
+- Any Kubernetes 1.25+
+
+## Project Structure Quick Tour
+
+```
+app/
+├── app/                      # Next.js App Router
+│   ├── api/                 # Backend API routes
+│   ├── components/          # React components
+│   ├── deployments/         # Deployments pages
+│   ├── pods/                # Pods pages
+│   └── ...                  # Other pages
+│
+├── lib/                      # Shared libraries
+│   ├── hooks/               # React hooks (TanStack Query)
+│   ├── k8s/                 # Kubernetes client
+│   ├── db/                  # Database (SQLite)
+│   ├── github/              # GitHub integration
+│   ├── ai/                  # AI features
+│   └── mocks/               # Demo mode data
+│
+├── types/                    # TypeScript types
+│   ├── kubernetes.ts        # K8s resource types
+│   ├── app.ts               # App types
+│   └── topology.ts          # Topology types
+│
+├── public/                   # Static assets
+│   └── logo/                # Logos and icons
+│
+├── tests/                    # E2E tests (Playwright)
+│   └── e2e/
+│
+├── __tests__/               # Unit tests (Vitest)
+│   └── lib/
+│
+├── package.json             # Dependencies
+├── tsconfig.json            # TypeScript config
+├── next.config.mjs          # Next.js config
+├── vitest.config.ts         # Vitest config
+├── playwright.config.ts     # Playwright config
+└── orphelix-cli.js          # CLI tool
+```
+
+## Running Tests
+
+### Unit Tests (Vitest)
+
+<Tabs>
+  <Tab title="Run all tests">
+    ```bash
+    npm test
+    ```
+  </Tab>
+  <Tab title="Watch mode">
+    ```bash
+    npm run test:watch
+    ```
+  </Tab>
+  <Tab title="Coverage">
+    ```bash
+    npm run test:coverage
+    ```
+    
+    Open `coverage/index.html` to see report
+  </Tab>
+  <Tab title="Specific test">
+    ```bash
+    npm test -- use-deployments.test.ts
+    ```
+  </Tab>
+</Tabs>
+
+**Expected output:**
+```
+✓ lib/utils.test.ts (12)
+✓ lib/store.test.ts (8)
+✓ lib/hooks/use-deployments.test.ts (6)
+
+Test Files  3 passed (3)
+     Tests  26 passed (26)
+```
+
+### E2E Tests (Playwright)
+
+<Tabs>
+  <Tab title="Run all E2E tests">
+    ```bash
+    npm run test:e2e
+    ```
+  </Tab>
+  <Tab title="Interactive mode">
+    ```bash
+    npm run test:e2e:ui
+    ```
+  </Tab>
+  <Tab title="Specific browser">
+    ```bash
+    npm run test:e2e -- --project=chromium
+    npm run test:e2e -- --project=firefox
+    npm run test:e2e -- --project=webkit
+    ```
+  </Tab>
+  <Tab title="Headed mode">
+    ```bash
+    npm run test:e2e -- --headed
+    ```
+  </Tab>
+</Tabs>
+
+**Note:** E2E tests start dev server automatically
+
+### Type Checking
+
+```bash
+npm run type-check
+```
+
+This runs `tsc --noEmit` to check TypeScript types without compilation.
+
+### Linting
+
+<Tabs>
+  <Tab title="Check">
+    ```bash
+    npm run lint
+    ```
+  </Tab>
+  <Tab title="Fix">
+    ```bash
+    npm run lint:fix
+    ```
+  </Tab>
+</Tabs>
+
+### Format Code
+
+```bash
+npm run format
+```
+
+Formats all files with Prettier.
+
+## Making Changes
+
+### 1. Create Feature Branch
+
+```bash
+git checkout -b feature/my-feature
+# or
+git checkout -b fix/bug-description
+```
+
+**Branch naming:**
+- `feature/` - New features
+- `fix/` - Bug fixes
+- `docs/` - Documentation
+- `refactor/` - Code refactoring
+- `test/` - Test improvements
+
+### 2. Make Changes
+
+**Example: Add new resource view**
+
+1. Create API route:
+   ```typescript
+   // app/api/services/route.ts
+   export async function GET(request: NextRequest) {
+     // Fetch services from Kubernetes
+   }
+   ```
+
+2. Create custom hook:
+   ```typescript
+   // lib/hooks/use-services.ts
+   export function useServices() {
+     return useQuery({
+       queryKey: ['services'],
+       queryFn: async () => {
+         const res = await fetch('/api/services')
+         return res.json()
+       },
+     })
+   }
+   ```
+
+3. Create page component:
+   ```typescript
+   // app/services/page.tsx
+   export default function ServicesPage() {
+     const { data, isLoading } = useServices()
+     return <ServiceList services={data} />
+   }
+   ```
+
+4. Add tests:
+   ```typescript
+   // __tests__/lib/hooks/use-services.test.ts
+   describe('useServices', () => {
+     it('fetches services', async () => {
+       // Test implementation
+     })
+   })
+   ```
+
+### 3. Test Changes
+
+```bash
+# Type check
+npm run type-check
+
+# Lint
+npm run lint
+
+# Unit tests
+npm test
+
+# E2E tests
+npm run test:e2e
+
+# Manual testing
+npm run dev
+```
+
+### 4. Commit Changes
+
+```bash
+git add .
+git commit -m "feat: add services resource view"
+```
+
+**Commit message format:**
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation
+- `style:` - Code style (formatting, etc.)
+- `refactor:` - Code refactoring
+- `test:` - Tests
+- `chore:` - Build, dependencies, etc.
+
+### 5. Push and Create PR
+
+```bash
+# Push to your fork
+git push origin feature/my-feature
+
+# Create PR (with GitHub CLI)
+gh pr create --title "Add services resource view" --body "Implements #123"
+```
+
+## Common Development Tasks
+
+### Add New Dependency
+
+```bash
+npm install package-name
+
+# Dev dependency
+npm install -D package-name
+```
+
+**Update package.json and commit:**
+```bash
+git add package.json package-lock.json
+git commit -m "chore: add package-name dependency"
+```
+
+### Add New API Route
+
+1. Create route file:
+   ```bash
+   mkdir -p app/api/my-resource
+   touch app/api/my-resource/route.ts
+   ```
+
+2. Implement handler:
+   ```typescript
+   import { NextRequest } from 'next/server'
+   
+   export async function GET(request: NextRequest) {
+     // Implementation
+     return Response.json({ data: [] })
+   }
+   ```
+
+3. Add tests:
+   ```bash
+   touch __tests__/api/my-resource.test.ts
+   ```
+
+### Add New Component
+
+1. Create component file:
+   ```bash
+   touch app/components/my-component.tsx
+   ```
+
+2. Implement component:
+   ```typescript
+   export function MyComponent({ prop }: Props) {
+     return <div>{prop}</div>
+   }
+   ```
+
+3. Export from index (if creating component library):
+   ```typescript
+   // app/components/index.ts
+   export * from './my-component'
+   ```
+
+### Add Demo Mode Data
+
+Edit mock data file:
+
+```typescript
+// lib/mocks/data.ts
+export const mockMyResources: MyResource[] = [
+  {
+    name: 'resource-1',
+    // ... mock data
+  },
+  // Add more mocks
+]
+```
+
+### Debug Application
+
+**VS Code launch.json:**
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev"
+    },
+    {
+      "name": "Next.js: debug client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000"
+    }
+  ]
+}
+```
+
+**Chrome DevTools:**
+1. Open [chrome://inspect](chrome://inspect)
+2. Click "Open dedicated DevTools for Node"
+3. Start dev server with `--inspect`
+
+**React DevTools:**
+```bash
+# Install extension
+# Chrome: https://chrome.google.com/webstore/detail/react-developer-tools
+# Firefox: https://addons.mozilla.org/en-US/firefox/addon/react-devtools/
+```
+
+## Troubleshooting
+
+### Port 3000 Already in Use
+
+```bash
+# Find process using port
+lsof -i :3000
+
+# Kill process
+kill -9 <PID>
+
+# Or use different port
+npm run dev -- -p 3001
+```
+
+### Node Modules Issues
+
+```bash
+# Clean install
+rm -rf node_modules package-lock.json
+npm install
+
+# Or with cache clear
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### TypeScript Errors
+
+```bash
+# Restart TypeScript server (VS Code)
+# Cmd+Shift+P → "TypeScript: Restart TS Server"
+
+# Check tsconfig
+npm run type-check
+```
+
+### Database Locked
+
+```bash
+# Close all connections
+pkill -f "node.*next"
+
+# Delete and recreate
+rm orphelix.db
+npm run dev
+```
+
+### kubectl Not Working
+
+```bash
+# Check config
+kubectl config view
+
+# Check current context
+kubectl config current-context
+
+# Test connection
+kubectl get nodes
+
+# Check permissions
+kubectl auth can-i get pods --all-namespaces
+```
+
+### Build Fails
+
+```bash
+# Check Node version
+node --version  # Should be 20+
+
+# Clean build cache
+rm -rf .next
+npm run build
+
+# Check for TypeScript errors
+npm run type-check
+```
+
+## IDE Setup
+
+### VS Code
+
+**Recommended extensions:**
+
+```json
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "redhat.vscode-yaml",
+    "ms-kubernetes-tools.vscode-kubernetes-tools"
+  ]
+}
+```
+
+**Settings:**
+
+```json
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
+```
+
+### WebStorm / IntelliJ
+
+1. Open project
+2. Enable TypeScript support
+3. Set Node.js interpreter (v20+)
+4. Enable ESLint
+5. Enable Prettier
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="diagram-project" href="/developer/architecture">
+    Understand system design
+  </Card>
+  <Card title="Project Structure" icon="folder-tree" href="/developer/project-structure">
+    Learn code organization
+  </Card>
+  <Card title="Testing Guide" icon="vial" href="/developer/testing">
+    Write and run tests
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/developer/contributing">
+    Contribution guidelines
+  </Card>
+</CardGroup>
+
+## Getting Help
+
+- **Documentation**: [docs.orphelix.dev](https://docs.orphelix.dev)
+- **GitHub Issues**: [github.com/dmakowski/orphelix/issues](https://github.com/dmakowski/orphelix/issues)
+- **Discussions**: [github.com/dmakowski/orphelix/discussions](https://github.com/dmakowski/orphelix/discussions)
+
+<Note>
+Join our community! We're here to help you get started and answer any questions.
 </Note>
