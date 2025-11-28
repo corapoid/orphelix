@@ -19,25 +19,47 @@
 
 ## ✨ Features
 
-### Core Functionality
-- **Resource Monitoring** - Deployments, Pods, Nodes, ConfigMaps, Secrets, HPA, Persistent Volumes, Events
+### 🎯 Core Capabilities
+- **Multi-Cluster & Namespace Support** - Switch between clusters and namespaces seamlessly (essential for namespace-scoped access control)
+- **Comprehensive Resource Management** - View and manage all Kubernetes resources: Deployments, Pods, Nodes, ConfigMaps, Secrets, Services, Ingress, Jobs, CronJobs, StatefulSets, DaemonSets, HPA, PersistentVolumes, and Events
+- **Quick Actions** - Restart deployments or individual pods with a single click
 - **Real-time Updates** - Server-Sent Events (SSE) with automatic reconnection and heartbeat monitoring
 - **Resource Metrics** - CPU/Memory monitoring with color-coded indicators
-- **Topology Visualization** - Interactive dependency graphs with pan, zoom, and fit-to-view controls
-- **Pod Management** - Container logs viewer with search/download, pod restart functionality
-- **Demo Mode** - Realistic test data for presentations without cluster requirements (default mode)
-- **Server-Side Security** - NextAuth v5 with route protection that cannot be bypassed from client
+- **Demo Mode** - Explore the full application without cluster access - no login required (perfect for demos and evaluation)
 
-### GitHub Integration & GitOps
-- **Dual Authentication** - GitHub OAuth and GitHub App support with granular permissions
-- **YAML Editor** - Monaco editor with syntax highlighting and Kubernetes schema validation
-- **Smart File Matching** - AI-powered automatic file matching using cluster YAML comparison
-- **Kustomization Support** - Detect and edit Kustomize base & overlays with tab navigation
-- **Pull Request Workflow** - Create and merge PRs directly from the dashboard
+### 🔧 Advanced Operations
+- **YAML Manifest Editor** - Built-in Monaco editor with syntax highlighting and Kubernetes schema validation
+- **GitOps Workflow** - Edit manifests and create pull requests directly from the dashboard (code-based changes only)
+- **ConfigMap Editor** - Modify ConfigMaps in-place with automatic PR creation
+- **Kustomization Support** - Automatically detect and edit Kustomize base & overlay structures
+- **Smart File Matching** - AI-powered automatic deployment-to-file matching using YAML comparison
 
-### User Experience
-- **Namespace Selection** - Easy switching between Kubernetes namespaces
-- **Context Switching** - Support for multiple kubectl contexts
+### 🤖 AI-Powered Features
+- **Intelligent Troubleshooting** - AI analyzes logs and identifies root causes when deployments fail
+- **System Notifications** - Real-time desktop notifications for cluster issues and critical events
+- **Topology Visualization** - Interactive dependency graphs showing resource relationships for deployments
+
+### 🔐 Security & Authentication
+- **Dual GitHub Authentication** - OAuth and GitHub App support with granular repository permissions
+- **Server-Side Protection** - NextAuth v5 with route protection that cannot be bypassed from client
+- **Local Credentials** - Uses kubeconfig from local system - no credentials stored
+
+### 🎨 User Experience
+- **Modern Glass UI** - Beautiful liquid glass design with dark/light mode support
+- **Advanced Search & Filters** - Find resources quickly with powerful filtering
+- **Namespace-Scoped Views** - Perfect for teams with namespace-based access control
+
+...and this is just the beginning!
+
+## 🗺️ What's Coming Next?
+
+- **Resource Optimization** - Analyze CPU/memory usage against limits and suggest cost-saving adjustments
+- **Advanced Log Analysis** - AI-powered troubleshooting for non-deployment issues (services, networking, configuration)
+- **Cluster Cost Insights** - Track and optimize infrastructure spending
+- **Multi-Cluster Dashboard** - Unified view across multiple Kubernetes clusters
+- **Custom Alerts & Rules** - Define your own notification rules and thresholds
+
+...and much more!
 
 ## 📋 Requirements
 
