@@ -1,12 +1,750 @@
 ---
 title: 'Contributing'
-description: 'How to contribute to Orphelix'
+description: 'Guidelines for contributing to Orphelix - code, documentation, and community'
 ---
 
-## Overview
+## Welcome Contributors!
 
-This page is under construction.
+Thank you for your interest in contributing to Orphelix! We welcome contributions from everyone, whether you're fixing a typo, adding a feature, or improving documentation.
 
 <Note>
-  Full contributing guidelines will be added soon.
+Before contributing, please read our [Code of Conduct](https://github.com/dmakowski/orphelix/blob/main/CODE_OF_CONDUCT.md).
+</Note>
+
+## Ways to Contribute
+
+<CardGroup cols={2}>
+  <Card title="Code" icon="code">
+    Fix bugs, add features, improve performance
+  </Card>
+  <Card title="Documentation" icon="book">
+    Improve docs, add examples, fix typos
+  </Card>
+  <Card title="Testing" icon="vial">
+    Write tests, report bugs, test features
+  </Card>
+  <Card title="Design" icon="palette">
+    UI/UX improvements, accessibility
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+### 1. Fork and Clone
+
+<Steps>
+  <Step title="Fork repository">
+    Click "Fork" on [GitHub](https://github.com/dmakowski/orphelix)
+  </Step>
+  
+  <Step title="Clone your fork">
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/orphelix.git
+    cd orphelix/app
+    ```
+  </Step>
+  
+  <Step title="Add upstream remote">
+    ```bash
+    git remote add upstream https://github.com/dmakowski/orphelix.git
+    git fetch upstream
+    ```
+  </Step>
+  
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+  </Step>
+  
+  <Step title="Start development">
+    ```bash
+    npm run dev
+    ```
+  </Step>
+</Steps>
+
+### 2. Find Something to Work On
+
+<Tabs>
+  <Tab title="Good First Issues">
+    Look for issues labeled [`good first issue`](https://github.com/dmakowski/orphelix/labels/good%20first%20issue)
+    
+    These are:
+    - Well-documented
+    - Not too complex
+    - Great for beginners
+    - Have clear acceptance criteria
+  </Tab>
+  
+  <Tab title="Help Wanted">
+    Check [`help wanted`](https://github.com/dmakowski/orphelix/labels/help%20wanted) label
+    
+    These are:
+    - Higher priority
+    - Need community help
+    - May require more experience
+    - Important for project goals
+  </Tab>
+  
+  <Tab title="Propose New Feature">
+    Have an idea? Create a discussion:
+    
+    1. Go to [Discussions](https://github.com/dmakowski/orphelix/discussions)
+    2. Click "New discussion"
+    3. Choose "Ideas" category
+    4. Describe your feature
+    5. Wait for feedback
+  </Tab>
+</Tabs>
+
+### 3. Claim an Issue
+
+Comment on the issue:
+> I'd like to work on this issue. Could you assign it to me?
+
+Wait for confirmation before starting work.
+
+## Development Workflow
+
+### Create Feature Branch
+
+```bash
+# Update main branch
+git checkout main
+git pull upstream main
+
+# Create feature branch
+git checkout -b feature/your-feature-name
+
+# Or for bug fixes
+git checkout -b fix/bug-description
+```
+
+**Branch naming conventions:**
+- `feature/` - New features
+- `fix/` - Bug fixes
+- `docs/` - Documentation changes
+- `refactor/` - Code refactoring
+- `test/` - Test improvements
+- `chore/` - Build, dependencies, etc.
+
+### Make Changes
+
+Follow our coding standards:
+
+<AccordionGroup>
+  <Accordion icon="code" title="Code Style">
+    **TypeScript:**
+    - Use TypeScript for all new code
+    - Avoid `any` type
+    - Add JSDoc comments for public APIs
+    
+    **Formatting:**
+    - Prettier handles formatting (runs on save)
+    - 2 spaces for indentation
+    - Single quotes for strings
+    - Semicolons optional
+    
+    **Naming:**
+    - `camelCase` for variables and functions
+    - `PascalCase` for components and types
+    - `UPPER_SNAKE_CASE` for constants
+    - `kebab-case` for file names
+  </Accordion>
+
+  <Accordion icon="react" title="React/Next.js">
+    **Components:**
+    - Use functional components with hooks
+    - Prefer named exports over default exports
+    - Keep components under 300 lines
+    - Extract reusable logic to custom hooks
+    
+    **Hooks:**
+    - Name custom hooks `use*`
+    - Keep hooks under 150 lines
+    - Use TanStack Query for data fetching
+    - Use Zustand for global state
+    
+    **Files:**
+    - One component per file
+    - Co-locate types with components
+    - Use `@/` path alias for imports
+  </Accordion>
+
+  <Accordion icon="layer-group" title="API Routes">
+    **Structure:**
+    - One route per file
+    - Export named functions (GET, POST, etc.)
+    - Keep routes under 200 lines
+    - Extract business logic to lib/
+    
+    **Error Handling:**
+    - Always try-catch async operations
+    - Return appropriate HTTP status codes
+    - Include error messages in response
+    - Log errors for debugging
+    
+    **Example:**
+    ```typescript
+    export async function GET(request: NextRequest) {
+      try {
+        const data = await fetchData()
+        return Response.json(data)
+      } catch (error) {
+        console.error('[API] Error:', error)
+        return Response.json(
+          { error: error.message },
+          { status: 500 }
+        )
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion icon="vial" title="Testing">
+    **Required:**
+    - Add unit tests for new features
+    - Add E2E tests for user flows
+    - Ensure all tests pass before PR
+    
+    **Coverage:**
+    - Aim for 80%+ coverage
+    - Test edge cases and errors
+    - Mock external dependencies
+    
+    **Run tests:**
+    ```bash
+    npm test
+    npm run test:e2e
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Commit Your Changes
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```bash
+git add .
+git commit -m "type(scope): description"
+```
+
+**Commit types:**
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation only
+- `style:` - Code style (formatting, semicolons, etc.)
+- `refactor:` - Code change that neither fixes bug nor adds feature
+- `perf:` - Performance improvement
+- `test:` - Adding or updating tests
+- `chore:` - Build process, dependencies, etc.
+
+**Examples:**
+```bash
+git commit -m "feat(deployments): add restart all button"
+git commit -m "fix(pods): correct log streaming memory leak"
+git commit -m "docs(readme): update installation instructions"
+git commit -m "test(api): add deployment endpoint tests"
+git commit -m "chore(deps): upgrade react to 19.0.1"
+```
+
+### Push Changes
+
+```bash
+git push origin feature/your-feature-name
+```
+
+## Pull Request Process
+
+### 1. Create Pull Request
+
+Go to your fork on GitHub and click "New pull request"
+
+**PR Title:**
+Follow conventional commit format:
+```
+feat(deployments): add restart all button
+```
+
+**PR Description Template:**
+```markdown
+## Description
+Brief description of the changes
+
+## Related Issue
+Closes #123
+
+## Type of Change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+
+## How Has This Been Tested?
+Describe the tests you ran
+
+## Screenshots (if applicable)
+Add screenshots to help explain your changes
+
+## Checklist
+- [ ] My code follows the style guidelines of this project
+- [ ] I have performed a self-review of my own code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
+- [ ] Any dependent changes have been merged and published
+```
+
+### 2. Code Review
+
+**What reviewers look for:**
+- Code quality and readability
+- Test coverage
+- Documentation updates
+- Breaking changes
+- Performance implications
+- Security concerns
+
+**Responding to feedback:**
+1. Make requested changes
+2. Push to same branch (PR updates automatically)
+3. Respond to comments
+4. Mark conversations as resolved
+
+### 3. CI Checks
+
+**Automated checks that must pass:**
+- TypeScript compilation
+- ESLint (no errors)
+- Unit tests
+- E2E tests
+- Build succeeds
+
+**If CI fails:**
+```bash
+# Run checks locally
+npm run type-check
+npm run lint
+npm test
+npm run build
+```
+
+Fix issues and push again.
+
+### 4. Merge
+
+Once approved and CI passes:
+- Maintainer will merge your PR
+- Your branch will be deleted
+- Congratulations! 🎉
+
+## Code Review Guidelines
+
+### For Contributors
+
+<AccordionGroup>
+  <Accordion icon="eye" title="Self-Review">
+    Before requesting review:
+    - Read your own code
+    - Check for typos
+    - Remove debug code
+    - Add comments where needed
+    - Update documentation
+  </Accordion>
+
+  <Accordion icon="clock" title="Be Patient">
+    Maintainers review PRs in their free time. It may take a few days.
+  </Accordion>
+
+  <Accordion icon="comments" title="Be Responsive">
+    Respond to feedback within a week. PRs may be closed if inactive for >2 weeks.
+  </Accordion>
+
+  <Accordion icon="heart" title="Be Respectful">
+    Feedback is about the code, not you. Stay professional and courteous.
+  </Accordion>
+</AccordionGroup>
+
+### For Reviewers
+
+<AccordionGroup>
+  <Accordion icon="check" title="What to Check">
+    - Code correctness
+    - Test coverage
+    - Documentation
+    - Performance
+    - Security
+    - Accessibility
+  </Accordion>
+
+  <Accordion icon="message" title="Feedback Style">
+    - Be specific and constructive
+    - Explain the "why"
+    - Suggest alternatives
+    - Praise good work
+    - Use "we" not "you"
+  </Accordion>
+
+  <Accordion icon="bolt" title="Response Time">
+    - Review within 1-2 days if possible
+    - Leave comment if you need more time
+    - Request changes or approve clearly
+  </Accordion>
+</AccordionGroup>
+
+## Documentation
+
+### When to Update Docs
+
+Update documentation when you:
+- Add new feature
+- Change existing behavior
+- Add new API endpoint
+- Modify configuration
+- Update dependencies
+
+### Documentation Locations
+
+```
+docs/
+├── user/              # User-facing docs
+│   ├── *.mdx         # Feature guides
+│   ├── github/       # GitHub integration
+│   └── configuration/ # Settings
+│
+└── developer/         # Developer docs
+    ├── *.mdx         # Dev guides
+    └── api/          # API reference
+```
+
+### Writing Good Docs
+
+<AccordionGroup>
+  <Accordion icon="language" title="Style">
+    - Clear and concise
+    - Active voice
+    - Short sentences
+    - Examples with code
+    - Screenshots when helpful
+  </Accordion>
+
+  <Accordion icon="book" title="Structure">
+    - Start with overview
+    - Prerequisites section
+    - Step-by-step instructions
+    - Troubleshooting section
+    - Next steps / related pages
+  </Accordion>
+
+  <Accordion icon="code" title="Code Examples">
+    - Include complete examples
+    - Add comments
+    - Show input and output
+    - Use realistic data
+    - Test all examples
+  </Accordion>
+</AccordionGroup>
+
+## Reporting Bugs
+
+### Before Reporting
+
+1. **Search existing issues** - Check if already reported
+2. **Update to latest** - Bug may be fixed
+3. **Test in demo mode** - Isolate from cluster issues
+4. **Reproduce consistently** - Document exact steps
+
+### Bug Report Template
+
+```markdown
+**Describe the bug**
+A clear description of what the bug is
+
+**To Reproduce**
+Steps to reproduce:
+1. Go to '...'
+2. Click on '...'
+3. Scroll down to '...'
+4. See error
+
+**Expected behavior**
+What you expected to happen
+
+**Screenshots**
+If applicable, add screenshots
+
+**Environment:**
+- OS: [e.g. macOS 14.0]
+- Browser: [e.g. Chrome 120]
+- Node version: [e.g. 20.11.0]
+- Orphelix version: [e.g. 0.1.0]
+- Kubernetes version: [e.g. 1.28.0]
+- Cluster type: [e.g. Minikube, AWS EKS]
+
+**Additional context**
+Any other context about the problem
+
+**Logs**
+```
+Paste relevant logs here
+```
+```
+
+## Suggesting Features
+
+### Feature Request Template
+
+```markdown
+**Is your feature request related to a problem?**
+Describe the problem you're trying to solve
+
+**Describe the solution you'd like**
+Clear description of what you want to happen
+
+**Describe alternatives you've considered**
+Other solutions or features you've considered
+
+**Use cases**
+Who would use this feature and how?
+
+**Additional context**
+Mockups, screenshots, or examples
+```
+
+## Community Guidelines
+
+### Code of Conduct
+
+We follow the [Contributor Covenant](https://www.contributor-covenant.org/):
+
+- Be respectful and inclusive
+- Welcome newcomers
+- Focus on what's best for the community
+- Show empathy towards others
+- Accept constructive criticism gracefully
+
+### Communication Channels
+
+<CardGroup cols={2}>
+  <Card title="GitHub Issues" icon="github">
+    Bug reports and feature requests
+  </Card>
+  <Card title="GitHub Discussions" icon="messages">
+    General questions and ideas
+  </Card>
+  <Card title="Discord" icon="discord">
+    Real-time chat (coming soon)
+  </Card>
+  <Card title="Twitter" icon="twitter">
+    Updates and announcements
+  </Card>
+</CardGroup>
+
+### Getting Help
+
+<AccordionGroup>
+  <Accordion icon="question" title="I have a question">
+    Ask in [GitHub Discussions](https://github.com/dmakowski/orphelix/discussions)
+  </Accordion>
+
+  <Accordion icon="bug" title="I found a bug">
+    Create an [issue](https://github.com/dmakowski/orphelix/issues/new)
+  </Accordion>
+
+  <Accordion icon="lightbulb" title="I have an idea">
+    Start a [discussion](https://github.com/dmakowski/orphelix/discussions/new)
+  </Accordion>
+
+  <Accordion icon="code" title="I need dev help">
+    Ask in [Discord](https://discord.gg/orphelix) or Discussions
+  </Accordion>
+</AccordionGroup>
+
+## Recognition
+
+### Contributors
+
+All contributors are recognized in:
+- [CONTRIBUTORS.md](https://github.com/dmakowski/orphelix/blob/main/CONTRIBUTORS.md)
+- GitHub contributors page
+- Release notes
+
+### Types of Contributions
+
+We recognize all contributions:
+- Code (features, fixes, refactoring)
+- Documentation (guides, API docs, examples)
+- Testing (writing tests, reporting bugs)
+- Design (UI/UX, logos, screenshots)
+- Community (answering questions, mentoring)
+- Infrastructure (CI/CD, deployments)
+
+### Becoming a Maintainer
+
+Active contributors may be invited to become maintainers:
+
+**Criteria:**
+- 10+ merged PRs
+- 3+ months of active contribution
+- Good understanding of codebase
+- Helpful to community
+- Follows guidelines
+
+**Responsibilities:**
+- Review PRs
+- Triage issues
+- Mentor contributors
+- Maintain code quality
+
+## Advanced Topics
+
+### Working with Forks
+
+**Keep fork updated:**
+```bash
+# Fetch upstream changes
+git fetch upstream
+
+# Merge into main
+git checkout main
+git merge upstream/main
+
+# Push to fork
+git push origin main
+```
+
+**Rebase feature branch:**
+```bash
+git checkout feature/my-feature
+git rebase main
+
+# If conflicts, resolve and continue
+git rebase --continue
+
+# Force push (your feature branch only!)
+git push --force-with-lease origin feature/my-feature
+```
+
+### Draft Pull Requests
+
+Create draft PR for work in progress:
+
+1. Open PR as normal
+2. Click "Create draft pull request"
+3. Mark ready for review when done
+
+**Benefits:**
+- Get early feedback
+- Show progress
+- Run CI checks
+- Collaborate with others
+
+### Multiple Commits in PR
+
+**Option 1: Squash before merge**
+- GitHub can squash on merge
+- All commits become one
+- Clean history
+
+**Option 2: Keep separate commits**
+- Each commit is meaningful
+- Good commit messages
+- Logical progression
+
+### Co-authoring Commits
+
+Give credit to collaborators:
+
+```bash
+git commit -m "feat: add feature
+
+Co-authored-by: Name <name@example.com>
+Co-authored-by: Another Name <another@example.com>"
+```
+
+## Troubleshooting
+
+### Common Issues
+
+<AccordionGroup>
+  <Accordion icon="circle-exclamation" title="Merge conflicts">
+    ```bash
+    # Update your branch with latest main
+    git fetch upstream
+    git checkout main
+    git merge upstream/main
+    git checkout feature/my-feature
+    git rebase main
+    
+    # Resolve conflicts in editor
+    # Then continue
+    git add .
+    git rebase --continue
+    
+    # Force push (your branch only!)
+    git push --force-with-lease origin feature/my-feature
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="CI failing">
+    ```bash
+    # Run checks locally
+    npm run type-check  # TypeScript
+    npm run lint        # ESLint
+    npm test            # Unit tests
+    npm run test:e2e    # E2E tests
+    npm run build       # Build
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Tests failing">
+    ```bash
+    # Update snapshots
+    npm test -- -u
+    
+    # Run specific test
+    npm test -- my-test.test.ts
+    
+    # Debug test
+    npm test -- --inspect-brk
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Can't push to main">
+    Main branch is protected. Always work in feature branches:
+    
+    ```bash
+    git checkout -b feature/my-feature
+    # Make changes
+    git push origin feature/my-feature
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Additional Resources
+
+<CardGroup cols={2}>
+  <Card title="Getting Started" icon="rocket" href="/developer/getting-started">
+    Set up development environment
+  </Card>
+  <Card title="Architecture" icon="diagram-project" href="/developer/architecture">
+    Understand system design
+  </Card>
+  <Card title="Testing Guide" icon="vial" href="/developer/testing">
+    Write and run tests
+  </Card>
+  <Card title="API Reference" icon="code" href="/developer/api/introduction">
+    API documentation
+  </Card>
+</CardGroup>
+
+## Thank You!
+
+Thank you for contributing to Orphelix! Every contribution, no matter how small, makes a difference.
+
+<Note>
+Questions? Ask in [GitHub Discussions](https://github.com/dmakowski/orphelix/discussions) or create an [issue](https://github.com/dmakowski/orphelix/issues).
 </Note>
