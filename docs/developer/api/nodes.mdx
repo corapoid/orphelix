@@ -1,0 +1,66 @@
+---
+title: 'Nodes API'
+description: 'API endpoints for monitoring Kubernetes Nodes'
+---
+
+## Endpoints
+
+### List Nodes
+```http
+GET /api/nodes?context=minikube
+```
+
+**Response:**
+```json
+{
+  "nodes": [{
+    "name": "node-1",
+    "status": "Ready",
+    "roles": ["control-plane", "master"],
+    "version": "v1.28.0",
+    "capacity": {
+      "cpu": "4",
+      "memory": "8Gi",
+      "pods": "110"
+    },
+    "allocatable": {
+      "cpu": "4",
+      "memory": "7.5Gi",
+      "pods": "110"
+    },
+    "conditions": [{
+      "type": "Ready",
+      "status": "True",
+      "reason": "KubeletReady"
+    }]
+  }]
+}
+```
+
+### Get Node Details
+```http
+GET /api/nodes/[name]?context=minikube
+```
+
+### Get Node Pods
+```http
+GET /api/nodes/[name]/pods?context=minikube
+```
+
+### Get Node Events
+```http
+GET /api/nodes/[name]/events?context=minikube
+```
+
+## Examples
+
+```typescript
+async function getNodeMetrics(nodeName: string) {
+  const node = await fetch(`/api/nodes/${nodeName}`).then(r => r.json())
+  
+  const cpuUsage = parseInt(node.capacity.cpu) - parseInt(node.allocatable.cpu)
+  const memoryUsage = parseMemory(node.capacity.memory) - parseMemory(node.allocatable.memory)
+  
+  return { cpuUsage, memoryUsage }
+}
+```

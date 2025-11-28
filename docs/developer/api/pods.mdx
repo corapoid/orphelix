@@ -1,0 +1,75 @@
+---
+title: 'Pods API'
+description: 'API endpoints for managing Kubernetes Pods'
+---
+
+## Endpoints
+
+### List Pods
+```http
+GET /api/pods?namespace=default&context=minikube
+```
+
+**Response:**
+```json
+{
+  "pods": [{
+    "name": "nginx-abc123",
+    "namespace": "default",
+    "status": "Running",
+    "phase": "Running",
+    "nodeName": "node-1",
+    "podIP": "10.244.1.5",
+    "containers": [{
+      "name": "nginx",
+      "image": "nginx:1.21",
+      "ready": true,
+      "restartCount": 0
+    }]
+  }]
+}
+```
+
+### Get Pod Details
+```http
+GET /api/pods/[name]?namespace=default
+```
+
+### Get Pod Logs
+```http
+GET /api/pods/[name]/logs?namespace=default&container=nginx&follow=true&tail=100
+```
+
+**Query Parameters:**
+- `container`: Container name (required if multi-container)
+- `follow`: Stream logs (boolean)
+- `tail`: Number of lines (default: 100)
+- `since`: Time duration (e.g., "5m", "1h")
+
+**Response:** Plain text log stream
+
+### Restart Pod (Delete)
+```http
+POST /api/pods/[name]/restart
+Body: { "namespace": "default" }
+```
+
+### Get Pod Events
+```http
+GET /api/pods/[name]/events?namespace=default
+```
+
+## Examples
+
+```typescript
+// Stream logs
+const response = await fetch('/api/pods/nginx-abc123/logs?namespace=default&follow=true')
+const reader = response.body.getReader()
+const decoder = new TextDecoder()
+
+while (true) {
+  const { done, value } = await reader.read()
+  if (done) break
+  console.log(decoder.decode(value))
+}
+```

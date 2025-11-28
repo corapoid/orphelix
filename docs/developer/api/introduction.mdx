@@ -1,12 +1,592 @@
 ---
-title: 'API Introduction'
-description: 'REST API overview'
+title: 'API Reference'
+description: 'Complete REST API documentation for Orphelix backend endpoints'
 ---
 
 ## Overview
 
-This page is under construction.
+Orphelix provides a RESTful API for managing Kubernetes resources and accessing cluster data. All API endpoints are server-side Next.js API routes that communicate with the Kubernetes API.
 
-<Note>
-  Full API reference will be added soon.
-</Note>
+<CardGroup cols={2}>
+  <Card title="Resources" icon="cube">
+    Deployments, Pods, Nodes, Services, ConfigMaps, Secrets
+  </Card>
+  <Card title="Real-time" icon="bolt">
+    Server-Sent Events for live updates
+  </Card>
+  <Card title="GitHub" icon="github">
+    Repository browsing and PR creation
+  </Card>
+  <Card title="AI Features" icon="brain">
+    File matching and troubleshooting
+  </Card>
+</CardGroup>
+
+## Base URL
+
+```
+http://localhost:3000/api
+```
+
+**Production:**
+```
+https://your-domain.com/api
+```
+
+## Authentication
+
+### GitHub OAuth
+
+Most endpoints work without authentication. GitHub integration requires OAuth:
+
+```bash
+# Login endpoint
+GET /api/auth/signin
+```
+
+**Session cookie:**
+- `next-auth.session-token` (httpOnly, secure)
+
+### Kubernetes Access
+
+API uses kubeconfig from server's filesystem:
+- `~/.kube/config`
+- Or `$KUBECONFIG` environment variable
+
+## Request Format
+
+### Query Parameters
+
+All resource endpoints accept:
+
+```typescript
+interface QueryParams {
+  namespace?: string    // Kubernetes namespace (required for most endpoints)
+  context?: string      // Kubeconfig context (optional, uses current context if not provided)
+}
+```
+
+**Example:**
+```bash
+GET /api/deployments?namespace=default&context=minikube
+```
+
+### Headers
+
+```http
+Content-Type: application/json
+Accept: application/json
+```
+
+## Response Format
+
+### Success Response
+
+```json
+{
+  "data": [...],
+  "metadata": {
+    "count": 10,
+    "namespace": "default",
+    "timestamp": "2025-01-28T10:00:00Z"
+  }
+}
+```
+
+### Error Response
+
+```json
+{
+  "error": "Resource not found",
+  "code": "NOT_FOUND",
+  "details": {
+    "resource": "deployment",
+    "name": "nginx",
+    "namespace": "default"
+  }
+}
+```
+
+### HTTP Status Codes
+
+| Code | Meaning |
+|------|---------|
+| 200 | Success |
+| 201 | Created |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden (RBAC) |
+| 404 | Not Found |
+| 500 | Internal Server Error |
+| 503 | Service Unavailable |
+
+## Rate Limiting
+
+**No rate limiting currently implemented.**
+
+For production deployments, consider:
+- nginx rate limiting
+- API gateway
+- Custom middleware
+
+## Pagination
+
+**Not currently implemented.**
+
+All list endpoints return full results. For large clusters:
+- Use namespace filtering
+- Implement label selectors
+- Future: Add `limit` and `offset` params
+
+## Error Handling
+
+### Kubernetes API Errors
+
+```json
+{
+  "error": "Forbidden: User cannot get resource \"deployments\" in API group \"apps\" in namespace \"production\"",
+  "code": "FORBIDDEN",
+  "statusCode": 403
+}
+```
+
+### Connection Errors
+
+```json
+{
+  "error": "Unable to connect to cluster",
+  "code": "CONNECTION_ERROR",
+  "details": {
+    "message": "ECONNREFUSED"
+  }
+}
+```
+
+## Demo Mode
+
+When app is in demo mode, API returns mock data:
+
+```bash
+# Check mode
+GET /api/settings
+
+# Response
+{
+  "mode": "demo",  // or "real"
+  "selectedContext": null,
+  "selectedNamespace": "default"
+}
+```
+
+**Demo mode features:**
+- No kubeconfig required
+- Realistic mock data
+- All endpoints functional
+- Perfect for testing
+
+## API Endpoints Overview
+
+### Resources
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/deployments` | GET | List deployments |
+| `/api/deployments/[name]` | GET | Get deployment details |
+| `/api/deployments/[name]/restart` | POST | Restart deployment |
+| `/api/deployments/[name]/pods` | GET | Get deployment pods |
+| `/api/deployments/[name]/events` | GET | Get deployment events |
+| `/api/pods` | GET | List pods |
+| `/api/pods/[name]` | GET | Get pod details |
+| `/api/pods/[name]/logs` | GET | Stream pod logs |
+| `/api/pods/[name]/restart` | POST | Delete pod (restart) |
+| `/api/pods/[name]/events` | GET | Get pod events |
+| `/api/nodes` | GET | List nodes |
+| `/api/nodes/[name]` | GET | Get node details |
+| `/api/nodes/[name]/pods` | GET | Get node pods |
+| `/api/nodes/[name]/events` | GET | Get node events |
+| `/api/services` | GET | List services |
+| `/api/services/[name]` | GET | Get service details |
+| `/api/configmaps` | GET | List ConfigMaps |
+| `/api/configmaps/[name]` | GET | Get ConfigMap details |
+| `/api/secrets` | GET | List Secrets |
+| `/api/secrets/[name]` | GET | Get Secret details |
+| `/api/events` | GET | List all events |
+| `/api/hpa` | GET | List HPAs |
+| `/api/statefulsets` | GET | List StatefulSets |
+| `/api/daemonsets` | GET | List DaemonSets |
+| `/api/jobs` | GET | List Jobs |
+| `/api/cronjobs` | GET | List CronJobs |
+| `/api/ingress` | GET | List Ingress |
+| `/api/namespaces` | GET | List namespaces |
+| `/api/namespaces/[name]` | GET | Get namespace details |
+
+### Dashboard
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/dashboard/summary` | GET | Cluster summary stats |
+| `/api/cluster-health` | GET | Cluster health score |
+
+### Real-time
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/stream` | GET | SSE for live updates |
+
+### GitHub
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/github/repos` | GET | List repositories |
+| `/api/github/tree` | GET | Browse repository files |
+| `/api/github/file` | GET | Get file content |
+| `/api/github/branches` | GET | List branches |
+| `/api/github/create-pr` | POST | Create pull request |
+| `/api/github/create-multi-file-pr` | POST | Create multi-file PR |
+| `/api/github/match-file` | POST | AI file matching |
+
+### AI
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/ai/match-file` | POST | Match deployment to file |
+| `/api/ai/troubleshoot` | POST | Troubleshoot issues |
+
+### Settings
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/settings` | GET | Get user settings |
+| `/api/settings` | POST | Update settings |
+| `/api/settings` | DELETE | Reset settings |
+| `/api/contexts` | GET | List kubeconfig contexts |
+| `/api/test-connection` | GET | Test cluster connection |
+
+## Common Patterns
+
+### Listing Resources
+
+```typescript
+// Request
+GET /api/deployments?namespace=default
+
+// Response
+{
+  "deployments": [
+    {
+      "name": "nginx",
+      "namespace": "default",
+      "replicas": {
+        "desired": 3,
+        "ready": 3,
+        "available": 3
+      },
+      "status": "Available",
+      "age": "5d",
+      "images": ["nginx:1.21"]
+    }
+  ]
+}
+```
+
+### Getting Resource Details
+
+```typescript
+// Request
+GET /api/deployments/nginx?namespace=default
+
+// Response
+{
+  "name": "nginx",
+  "namespace": "default",
+  "replicas": {
+    "desired": 3,
+    "ready": 3,
+    "available": 3,
+    "unavailable": 0
+  },
+  "status": "Available",
+  "conditions": [
+    {
+      "type": "Available",
+      "status": "True",
+      "reason": "MinimumReplicasAvailable"
+    }
+  ],
+  "strategy": {
+    "type": "RollingUpdate",
+    "rollingUpdate": {
+      "maxSurge": 1,
+      "maxUnavailable": 0
+    }
+  },
+  "selector": {
+    "app": "nginx"
+  },
+  "template": {
+    "metadata": {
+      "labels": {
+        "app": "nginx"
+      }
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "nginx",
+          "image": "nginx:1.21",
+          "ports": [
+            {
+              "containerPort": 80,
+              "protocol": "TCP"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "createdAt": "2025-01-23T10:00:00Z"
+}
+```
+
+### Updating Resources
+
+```typescript
+// Request
+POST /api/deployments/nginx/restart?namespace=default
+
+// Response
+{
+  "success": true,
+  "message": "Deployment restarted",
+  "timestamp": "2025-01-28T10:00:00Z"
+}
+```
+
+## SDK / Client Libraries
+
+**Official SDK:** Coming soon
+
+**Manual Implementation:**
+
+```typescript
+// TypeScript example
+class OrphelixAPI {
+  constructor(private baseURL: string) {}
+
+  async getDeployments(namespace: string, context?: string) {
+    const params = new URLSearchParams({ namespace })
+    if (context) params.append('context', context)
+    
+    const res = await fetch(`${this.baseURL}/deployments?${params}`)
+    if (!res.ok) throw new Error(await res.text())
+    
+    return res.json()
+  }
+
+  async restartDeployment(name: string, namespace: string) {
+    const res = await fetch(
+      `${this.baseURL}/deployments/${name}/restart`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ namespace }),
+      }
+    )
+    
+    if (!res.ok) throw new Error(await res.text())
+    return res.json()
+  }
+}
+
+// Usage
+const api = new OrphelixAPI('http://localhost:3000/api')
+const deployments = await api.getDeployments('default')
+```
+
+## WebSocket Alternative
+
+Orphelix uses Server-Sent Events (SSE) instead of WebSocket for real-time updates.
+
+**Why SSE:**
+- Simpler protocol (HTTP)
+- Automatic reconnection
+- One-way communication (sufficient for monitoring)
+- Built into browsers
+
+See [Real-time API](/developer/api/realtime) for details.
+
+## API Versioning
+
+**Current version:** v1 (implicit)
+
+No versioning prefix currently used. Future versions may use:
+```
+/api/v2/deployments
+```
+
+Breaking changes will be announced in release notes.
+
+## OpenAPI Specification
+
+**Coming soon:** OpenAPI 3.0 spec for automatic client generation
+
+Will be available at:
+```
+GET /api/openapi.json
+```
+
+## Examples
+
+### cURL
+
+```bash
+# List deployments
+curl http://localhost:3000/api/deployments?namespace=default
+
+# Get deployment
+curl http://localhost:3000/api/deployments/nginx?namespace=default
+
+# Restart deployment
+curl -X POST http://localhost:3000/api/deployments/nginx/restart \
+  -H "Content-Type: application/json" \
+  -d '{"namespace":"default"}'
+
+# Stream logs
+curl http://localhost:3000/api/pods/nginx-abc123/logs?namespace=default&follow=true
+
+# SSE stream
+curl -N http://localhost:3000/api/stream?namespace=default
+```
+
+### JavaScript (fetch)
+
+```javascript
+// List deployments
+const deployments = await fetch('/api/deployments?namespace=default')
+  .then(res => res.json())
+
+// Restart deployment
+const result = await fetch('/api/deployments/nginx/restart', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ namespace: 'default' })
+}).then(res => res.json())
+
+// SSE stream
+const eventSource = new EventSource('/api/stream?namespace=default')
+eventSource.addEventListener('deployment', (e) => {
+  const data = JSON.parse(e.data)
+  console.log('Deployment updated:', data)
+})
+```
+
+### Python
+
+```python
+import requests
+
+# List deployments
+response = requests.get(
+    'http://localhost:3000/api/deployments',
+    params={'namespace': 'default'}
+)
+deployments = response.json()
+
+# Restart deployment
+response = requests.post(
+    'http://localhost:3000/api/deployments/nginx/restart',
+    json={'namespace': 'default'}
+)
+result = response.json()
+
+# SSE stream
+import sseclient
+
+response = requests.get(
+    'http://localhost:3000/api/stream',
+    params={'namespace': 'default'},
+    stream=True
+)
+
+client = sseclient.SSEClient(response)
+for event in client.events():
+    if event.event == 'deployment':
+        print(f'Deployment updated: {event.data}')
+```
+
+## Rate Limits & Best Practices
+
+### Recommendations
+
+1. **Use SSE for real-time updates** - Don't poll
+2. **Cache responses** - Use `staleTime` in React Query
+3. **Batch requests** - Fetch related data together
+4. **Use namespaces** - Filter by namespace when possible
+5. **Handle errors gracefully** - Retry with exponential backoff
+
+### Example with React Query
+
+```typescript
+import { useQuery } from '@tanstack/react-query'
+
+function useDeployments(namespace: string) {
+  return useQuery({
+    queryKey: ['deployments', namespace],
+    queryFn: async () => {
+      const res = await fetch(`/api/deployments?namespace=${namespace}`)
+      if (!res.ok) throw new Error('Failed to fetch')
+      return res.json()
+    },
+    staleTime: 10_000,      // Cache for 10s
+    refetchInterval: 30_000, // Auto-refetch every 30s
+    retry: 3,                // Retry 3 times on failure
+  })
+}
+```
+
+## Security
+
+### CORS
+
+CORS is disabled by default (same-origin only).
+
+To enable for external clients:
+
+```typescript
+// middleware.ts
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  
+  response.headers.set('Access-Control-Allow-Origin', 'https://trusted-domain.com')
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+  
+  return response
+}
+```
+
+### API Keys
+
+**Not currently implemented.**
+
+For API key authentication in future:
+```http
+Authorization: Bearer your-api-key
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Deployments API" icon="cube" href="/developer/api/deployments">
+    Deployment endpoints reference
+  </Card>
+  <Card title="Pods API" icon="box" href="/developer/api/pods">
+    Pod endpoints reference
+  </Card>
+  <Card title="Nodes API" icon="server" href="/developer/api/nodes">
+    Node endpoints reference
+  </Card>
+  <Card title="Real-time API" icon="bolt" href="/developer/api/realtime">
+    SSE streaming reference
+  </Card>
+</CardGroup>

@@ -1,0 +1,248 @@
+---
+title: 'Real-time API (SSE)'
+description: 'Server-Sent Events for live Kubernetes updates'
+---
+
+## Overview
+
+Orphelix uses Server-Sent Events (SSE) for real-time updates instead of WebSocket. This provides automatic reconnection and simpler implementation.
+
+## SSE Endpoint
+
+```http
+GET /api/stream?namespace=default&context=minikube
+```
+
+**Query Parameters:**
+- `namespace`: Required - namespace to watch
+- `context`: Optional - kubeconfig context
+
+## Event Types
+
+### Connected
+Initial connection established.
+
+```json
+event: connected
+data: {
+  "timestamp": "2025-01-28T10:00:00Z",
+  "namespace": "default",
+  "context": "minikube"
+}
+```
+
+### Heartbeat
+Keep-alive ping every 30 seconds.
+
+```json
+event: heartbeat
+data: {
+  "timestamp": "2025-01-28T10:00:30Z"
+}
+```
+
+### Deployment
+Deployment change (ADDED, MODIFIED, DELETED).
+
+```json
+event: deployment
+data: {
+  "type": "MODIFIED",
+  "object": {
+    "name": "nginx",
+    "namespace": "default",
+    "replicas": {
+      "desired": 3,
+      "ready": 3,
+      "available": 3
+    }
+  }
+}
+```
+
+### Pod
+Pod change.
+
+```json
+event: pod
+data: {
+  "type": "MODIFIED",
+  "object": {
+    "name": "nginx-abc123",
+    "namespace": "default",
+    "status": "Running",
+    "nodeName": "node-1"
+  }
+}
+```
+
+### Event
+Kubernetes event.
+
+```json
+event: event
+data: {
+  "type": "ADDED",
+  "object": {
+    "type": "Warning",
+    "reason": "BackOff",
+    "message": "Back-off restarting failed container",
+    "kind": "Pod",
+    "name": "nginx-abc123"
+  }
+}
+```
+
+### Error
+Watch error or connection issue.
+
+```json
+event: error
+data: {
+  "message": "Deployment watch failed",
+  "error": "Connection timeout"
+}
+```
+
+## Client Implementation
+
+### JavaScript (Native)
+
+```javascript
+const eventSource = new EventSource('/api/stream?namespace=default')
+
+// Handle connection
+eventSource.addEventListener('connected', (e) => {
+  const data = JSON.parse(e.data)
+  console.log('Connected:', data)
+})
+
+// Handle deployments
+eventSource.addEventListener('deployment', (e) => {
+  const data = JSON.parse(e.data)
+  console.log('Deployment:', data.type, data.object.name)
+  
+  // Invalidate React Query cache
+  queryClient.invalidateQueries(['deployments'])
+})
+
+// Handle pods
+eventSource.addEventListener('pod', (e) => {
+  const data = JSON.parse(e.data)
+  console.log('Pod:', data.type, data.object.name)
+  queryClient.invalidateQueries(['pods'])
+})
+
+// Handle events
+eventSource.addEventListener('event', (e) => {
+  const data = JSON.parse(e.data)
+  if (data.object.type === 'Warning') {
+    showNotification(data.object.message)
+  }
+})
+
+// Handle errors
+eventSource.addEventListener('error', (e) => {
+  console.error('SSE error:', e)
+})
+
+// Cleanup
+window.addEventListener('beforeunload', () => {
+  eventSource.close()
+})
+```
+
+### React Hook
+
+```typescript
+import { useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+
+export function useRealtimeUpdates(namespace: string, context?: string) {
+  const queryClient = useQueryClient()
+  
+  useEffect(() => {
+    if (!namespace) return
+    
+    const params = new URLSearchParams({ namespace })
+    if (context) params.append('context', context)
+    
+    const eventSource = new EventSource(`/api/stream?${params}`)
+    
+    eventSource.addEventListener('deployment', () => {
+      queryClient.invalidateQueries({ queryKey: ['deployments'] })
+    })
+    
+    eventSource.addEventListener('pod', () => {
+      queryClient.invalidateQueries({ queryKey: ['pods'] })
+    })
+    
+    eventSource.addEventListener('event', (e) => {
+      const data = JSON.parse(e.data)
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+      
+      // Show notification for warnings
+      if (data.object.type === 'Warning') {
+        showNotification({
+          title: data.object.reason,
+          message: data.object.message,
+          type: 'warning'
+        })
+      }
+    })
+    
+    return () => eventSource.close()
+  }, [namespace, context, queryClient])
+}
+```
+
+## Advantages of SSE
+
+<AccordionGroup>
+  <Accordion icon="check" title="Simpler Protocol">
+    HTTP-based, no special server setup required
+  </Accordion>
+  <Accordion icon="rotate" title="Auto-Reconnection">
+    Browser automatically reconnects on disconnect
+  </Accordion>
+  <Accordion icon="arrow-right" title="One-Way Communication">
+    Perfect for monitoring (server → client only)
+  </Accordion>
+  <Accordion icon="fire" title="Built-in Browser Support">
+    Native EventSource API, no library needed
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+### Connection Closes Immediately
+
+**Cause:** Namespace parameter missing or invalid
+
+**Solution:** Ensure namespace is provided:
+```javascript
+const eventSource = new EventSource('/api/stream?namespace=default')
+```
+
+### No Events Received
+
+**Cause:** No resources in namespace
+
+**Solution:** Create some resources or use demo mode
+
+### Frequent Reconnections
+
+**Cause:** Network issues or server restart
+
+**Solution:** SSE automatically reconnects. Check server logs for errors.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Deployments API" icon="cube" href="/developer/api/deployments">
+    Deployment endpoints
+  </Card>
+  <Card title="Pods API" icon="box" href="/developer/api/pods">
+    Pod endpoints
+  </Card>
+</CardGroup>

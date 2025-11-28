@@ -1,0 +1,67 @@
+---
+title: 'Events API'
+description: 'API endpoints for Kubernetes Events'
+---
+
+## Endpoints
+
+### List All Events
+```http
+GET /api/events?namespace=default&context=minikube
+```
+
+**Query Parameters:**
+- `namespace`: Filter by namespace
+- `context`: Kubeconfig context
+- `type`: Filter by type (Normal, Warning, Error)
+
+**Response:**
+```json
+{
+  "events": [{
+    "type": "Warning",
+    "reason": "BackOff",
+    "message": "Back-off restarting failed container",
+    "count": 5,
+    "firstTimestamp": "2025-01-28T10:00:00Z",
+    "lastTimestamp": "2025-01-28T10:05:00Z",
+    "involvedObject": {
+      "kind": "Pod",
+      "name": "nginx-abc123",
+      "namespace": "default"
+    },
+    "source": {
+      "component": "kubelet",
+      "host": "node-1"
+    }
+  }]
+}
+```
+
+## Common Event Reasons
+
+| Reason | Type | Description |
+|--------|------|-------------|
+| `Scheduled` | Normal | Pod scheduled to node |
+| `Pulling` | Normal | Pulling container image |
+| `Pulled` | Normal | Image pulled successfully |
+| `Created` | Normal | Container created |
+| `Started` | Normal | Container started |
+| `BackOff` | Warning | Back-off restarting failed container |
+| `Failed` | Warning | Failed to pull image |
+| `FailedScheduling` | Warning | Failed to schedule pod |
+| `OOMKilling` | Warning | Out of memory |
+| `Unhealthy` | Warning | Liveness/readiness probe failed |
+
+## Examples
+
+```typescript
+// Get recent errors
+async function getRecentErrors(namespace: string) {
+  const res = await fetch(`/api/events?namespace=${namespace}&type=Warning`)
+  const { events } = await res.json()
+  return events.filter(e => 
+    Date.now() - new Date(e.lastTimestamp).getTime() < 5 * 60 * 1000 // Last 5 minutes
+  )
+}
+```

@@ -1,0 +1,412 @@
+---
+title: 'Deployments API'
+description: 'API endpoints for managing Kubernetes Deployments'
+---
+
+## Overview
+
+The Deployments API provides endpoints for listing, viewing, and managing Kubernetes Deployments.
+
+## Endpoints
+
+### List Deployments
+
+```http
+GET /api/deployments
+```
+
+**Query Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `namespace` | string | Yes | Kubernetes namespace |
+| `context` | string | No | Kubeconfig context |
+
+**Example Request:**
+```bash
+curl "http://localhost:3000/api/deployments?namespace=default"
+```
+
+**Example Response:**
+```json
+{
+  "deployments": [
+    {
+      "name": "nginx",
+      "namespace": "default",
+      "replicas": {
+        "desired": 3,
+        "ready": 3,
+        "available": 3,
+        "unavailable": 0
+      },
+      "status": "Available",
+      "age": "5d",
+      "images": ["nginx:1.21"],
+      "labels": {
+        "app": "nginx",
+        "tier": "frontend"
+      },
+      "createdAt": "2025-01-23T10:00:00Z"
+    }
+  ]
+}
+```
+
+### Get Deployment Details
+
+```http
+GET /api/deployments/[name]
+```
+
+**Path Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Deployment name |
+
+**Query Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `namespace` | string | Yes | Kubernetes namespace |
+| `context` | string | No | Kubeconfig context |
+
+**Example Request:**
+```bash
+curl "http://localhost:3000/api/deployments/nginx?namespace=default"
+```
+
+**Example Response:**
+```json
+{
+  "name": "nginx",
+  "namespace": "default",
+  "uid": "abc123...",
+  "replicas": {
+    "desired": 3,
+    "ready": 3,
+    "available": 3,
+    "unavailable": 0,
+    "updated": 3
+  },
+  "status": "Available",
+  "conditions": [
+    {
+      "type": "Available",
+      "status": "True",
+      "lastUpdateTime": "2025-01-23T10:05:00Z",
+      "lastTransitionTime": "2025-01-23T10:05:00Z",
+      "reason": "MinimumReplicasAvailable",
+      "message": "Deployment has minimum availability."
+    },
+    {
+      "type": "Progressing",
+      "status": "True",
+      "lastUpdateTime": "2025-01-23T10:05:00Z",
+      "lastTransitionTime": "2025-01-23T10:00:00Z",
+      "reason": "NewReplicaSetAvailable",
+      "message": "ReplicaSet \"nginx-abc123\" has successfully progressed."
+    }
+  ],
+  "strategy": {
+    "type": "RollingUpdate",
+    "rollingUpdate": {
+      "maxSurge": 1,
+      "maxUnavailable": 0
+    }
+  },
+  "selector": {
+    "matchLabels": {
+      "app": "nginx"
+    }
+  },
+  "template": {
+    "metadata": {
+      "labels": {
+        "app": "nginx"
+      }
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "nginx",
+          "image": "nginx:1.21",
+          "ports": [
+            {
+              "containerPort": 80,
+              "protocol": "TCP"
+            }
+          ],
+          "resources": {
+            "requests": {
+              "cpu": "100m",
+              "memory": "128Mi"
+            },
+            "limits": {
+              "cpu": "500m",
+              "memory": "512Mi"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "createdAt": "2025-01-23T10:00:00Z",
+  "labels": {
+    "app": "nginx",
+    "tier": "frontend"
+  },
+  "annotations": {
+    "deployment.kubernetes.io/revision": "1"
+  }
+}
+```
+
+### Restart Deployment
+
+```http
+POST /api/deployments/[name]/restart
+```
+
+**Path Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Deployment name |
+
+**Request Body:**
+```json
+{
+  "namespace": "default"
+}
+```
+
+**Example Request:**
+```bash
+curl -X POST "http://localhost:3000/api/deployments/nginx/restart" \
+  -H "Content-Type: application/json" \
+  -d '{"namespace":"default"}'
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Deployment restarted successfully",
+  "deployment": "nginx",
+  "namespace": "default",
+  "timestamp": "2025-01-28T10:00:00Z"
+}
+```
+
+**How it works:**
+Adds `kubectl.kubernetes.io/restartedAt` annotation to pod template, triggering rolling restart.
+
+### Get Deployment Pods
+
+```http
+GET /api/deployments/[name]/pods
+```
+
+**Path Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Deployment name |
+
+**Query Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `namespace` | string | Yes | Kubernetes namespace |
+| `context` | string | No | Kubeconfig context |
+
+**Example Request:**
+```bash
+curl "http://localhost:3000/api/deployments/nginx/pods?namespace=default"
+```
+
+**Example Response:**
+```json
+{
+  "pods": [
+    {
+      "name": "nginx-abc123-xyz",
+      "namespace": "default",
+      "status": "Running",
+      "phase": "Running",
+      "nodeName": "node-1",
+      "podIP": "10.244.1.5",
+      "containers": [
+        {
+          "name": "nginx",
+          "image": "nginx:1.21",
+          "ready": true,
+          "restartCount": 0,
+          "state": {
+            "running": {
+              "startedAt": "2025-01-23T10:00:00Z"
+            }
+          }
+        }
+      ],
+      "createdAt": "2025-01-23T10:00:00Z"
+    }
+  ]
+}
+```
+
+### Get Deployment Events
+
+```http
+GET /api/deployments/[name]/events
+```
+
+**Path Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Deployment name |
+
+**Query Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `namespace` | string | Yes | Kubernetes namespace |
+| `context` | string | No | Kubeconfig context |
+
+**Example Request:**
+```bash
+curl "http://localhost:3000/api/deployments/nginx/events?namespace=default"
+```
+
+**Example Response:**
+```json
+{
+  "events": [
+    {
+      "type": "Normal",
+      "reason": "ScalingReplicaSet",
+      "message": "Scaled up replica set nginx-abc123 to 3",
+      "count": 1,
+      "firstTimestamp": "2025-01-23T10:00:00Z",
+      "lastTimestamp": "2025-01-23T10:00:00Z",
+      "involvedObject": {
+        "kind": "Deployment",
+        "name": "nginx",
+        "namespace": "default"
+      }
+    }
+  ]
+}
+```
+
+## Error Responses
+
+### 400 Bad Request
+
+```json
+{
+  "error": "Namespace parameter is required",
+  "code": "BAD_REQUEST"
+}
+```
+
+### 403 Forbidden
+
+```json
+{
+  "error": "Forbidden: User cannot get resource \"deployments\" in API group \"apps\" in namespace \"default\"",
+  "code": "FORBIDDEN",
+  "statusCode": 403
+}
+```
+
+### 404 Not Found
+
+```json
+{
+  "error": "Deployment not found",
+  "code": "NOT_FOUND",
+  "deployment": "nginx",
+  "namespace": "default"
+}
+```
+
+### 500 Internal Server Error
+
+```json
+{
+  "error": "Failed to fetch deployments",
+  "code": "INTERNAL_ERROR",
+  "details": "Connection timeout"
+}
+```
+
+## Usage Examples
+
+### JavaScript/TypeScript
+
+```typescript
+// List deployments
+async function listDeployments(namespace: string) {
+  const res = await fetch(`/api/deployments?namespace=${namespace}`)
+  if (!res.ok) throw new Error('Failed to fetch deployments')
+  return res.json()
+}
+
+// Get deployment
+async function getDeployment(name: string, namespace: string) {
+  const res = await fetch(`/api/deployments/${name}?namespace=${namespace}`)
+  if (!res.ok) throw new Error('Failed to fetch deployment')
+  return res.json()
+}
+
+// Restart deployment
+async function restartDeployment(name: string, namespace: string) {
+  const res = await fetch(`/api/deployments/${name}/restart`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ namespace })
+  })
+  if (!res.ok) throw new Error('Failed to restart deployment')
+  return res.json()
+}
+```
+
+### React Query Hook
+
+```typescript
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+
+export function useDeployments(namespace: string) {
+  return useQuery({
+    queryKey: ['deployments', namespace],
+    queryFn: () => listDeployments(namespace),
+    enabled: !!namespace,
+    refetchInterval: 30000,
+  })
+}
+
+export function useRestartDeployment() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: ({ name, namespace }: { name: string; namespace: string }) =>
+      restartDeployment(name, namespace),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deployments'] })
+    },
+  })
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Pods API" icon="box" href="/developer/api/pods">
+    Pod management endpoints
+  </Card>
+  <Card title="Nodes API" icon="server" href="/developer/api/nodes">
+    Node monitoring endpoints
+  </Card>
+  <Card title="Events API" icon="bell" href="/developer/api/events">
+    Event tracking endpoints
+  </Card>
+  <Card title="Real-time API" icon="bolt" href="/developer/api/realtime">
+    Live updates with SSE
+  </Card>
+</CardGroup>
