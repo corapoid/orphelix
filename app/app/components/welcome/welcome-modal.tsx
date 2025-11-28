@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { signIn, useSession } from 'next-auth/react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
@@ -40,7 +40,6 @@ type WelcomeStep = 'initial' | 'github-required' | 'cluster-selection'
 export function WelcomeModal() {
   const { status } = useSession()
   const router = useRouter()
-  const pathname = usePathname()
   const { hasCompletedWelcome, setMode, setContext, setNamespace, setHasCompletedWelcome } = useModeStore()
   const { actualTheme, setThemeMode } = useThemeMode()
   const [open, setOpen] = useState(!hasCompletedWelcome)
@@ -116,49 +115,24 @@ export function WelcomeModal() {
     setThemeMode(actualTheme === 'light' ? 'dark' : 'light')
   }
 
-  const isValidRoute = (path: string) => {
-    // List of valid routes in the app
-    const validRoutes = [
-      '/',
-      '/deployments',
-      '/statefulsets',
-      '/daemonsets',
-      '/pods',
-      '/jobs',
-      '/cronjobs',
-      '/services',
-      '/ingress',
-      '/configmaps',
-      '/secrets',
-      '/namespaces',
-      '/nodes',
-      '/hpa',
-      '/pv',
-      '/events',
-      '/labels',
-      '/topology',
-      '/settings',
-      '/repo-browser',
-    ]
-
-    // Check if path matches valid routes or dynamic routes (e.g., /pods/[name])
-    return validRoutes.some(route => path === route || path.startsWith(route + '/'))
-  }
-
-  const handleDemoMode = () => {
+  const handleDemoMode = async () => {
+    // Set all state synchronously first
     setMode('demo')
-    setContext(null) // Clear any real cluster context
-    setNamespace('default') // Set default namespace for demo
+    setContext(null)
+    setNamespace('default')
     setHasCompletedWelcome(true)
-    setOpen(false)
 
     // Set cookie for server-side middleware validation
     document.cookie = 'app-mode=demo; path=/; max-age=31536000; SameSite=Lax'
 
-    // Redirect to home if on invalid route
-    if (!isValidRoute(pathname)) {
-      router.push('/')
-    }
+    // Close modal immediately
+    setOpen(false)
+
+    // Navigate to home page
+    await router.push('/')
+
+    // Force full page refresh to sync everything
+    window.location.reload()
   }
 
   const handleGitHubLogin = async () => {
@@ -235,15 +209,18 @@ export function WelcomeModal() {
       setNamespace(namespaceToSet)
 
       setHasCompletedWelcome(true)
-      setOpen(false)
 
       // Set cookie for server-side middleware validation
       document.cookie = 'app-mode=real; path=/; max-age=31536000; SameSite=Lax'
 
-      // Redirect to home if on invalid route
-      if (!isValidRoute(pathname)) {
-        router.push('/')
-      }
+      // Close modal immediately
+      setOpen(false)
+
+      // Navigate to home
+      await router.push('/')
+
+      // Force full page refresh
+      window.location.reload()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to verify cluster connection')
     } finally {
@@ -374,23 +351,34 @@ export function WelcomeModal() {
           >
 
           <Box sx={{ textAlign: 'center', mb: 5, mt: 3 }}>
-            {/* Logo/Icon */}
+            {/* Logo/Icon with Glow Effect */}
             <Box
               sx={{
-                width: 96,
-                height: 96,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                position: 'relative',
+                width: 160,
+                height: 'auto',
+                margin: '0 auto 28px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 28px',
-                boxShadow: '0 8px 32px rgba(102, 126, 234, 0.4)',
               }}
             >
-              <Typography variant="h2" sx={{ color: 'white', fontWeight: 700 }}>
-                O
-              </Typography>
+              <Box
+                component="img"
+                src="/logo.svg"
+                alt="Orphelix Logo"
+                sx={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  position: 'relative',
+                  zIndex: 2,
+                  filter: (theme) => {
+                    const baseFilter = theme.palette.mode === 'dark' ? 'none' : 'invert(1)';
+                    return `${baseFilter} drop-shadow(0 0 40px rgba(102, 126, 234, 0.6)) drop-shadow(0 0 80px rgba(118, 75, 162, 0.4))`;
+                  },
+                }}
+              />
             </Box>
 
             {/* App Name */}

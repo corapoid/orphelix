@@ -1,27 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 
-export async function proxy(request: NextRequest) {
-  const session = await auth()
-  const { pathname } = request.nextUrl
+export default auth((req) => {
+  const { pathname } = req.nextUrl
+  const isLoggedIn = !!req.auth
 
-  // Allow access to root path (welcome screen)
-  if (pathname === '/') return NextResponse.next()
+  // Always allow root path (welcome screen)
+  if (pathname === '/') return
 
-  // Allow API routes
-  if (pathname.startsWith('/api')) return NextResponse.next()
+  // Always allow API routes
+  if (pathname.startsWith('/api')) return
 
-  // Check if user is authenticated (for real mode)
-  if (session) return NextResponse.next()
+  // Always allow Next.js internal routes
+  if (pathname.startsWith('/_next')) return
 
-  // Check for demo mode cookie
-  const appMode = request.cookies.get('app-mode')?.value
-  if (appMode === 'demo') return NextResponse.next()
+  // Check demo mode cookie
+  const appMode = req.cookies.get('app-mode')?.value
 
-  // Deny access - redirect to '/'
-  return NextResponse.redirect(new URL('/', request.url))
-}
+  // Debug logging
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Middleware]', {
+      pathname,
+      appMode,
+      isLoggedIn,
+      cookies: Object.fromEntries(req.cookies.getAll().map(c => [c.name, c.value]))
+    })
+  }
+
+  // Allow all routes if in demo mode (cookie is set)
+  if (appMode === 'demo') {
+    console.log('[Middleware] Allowing demo mode access to:', pathname)
+    return
+  }
+
+  // Allow all routes if logged in (real mode with GitHub auth)
+  if (isLoggedIn) {
+    console.log('[Middleware] Allowing logged in access to:', pathname)
+    return
+  }
+
+  // Otherwise redirect to welcome page
+  console.log('[Middleware] Redirecting to welcome:', pathname)
+  return Response.redirect(new URL('/', req.url))
+})
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.svg|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.ico|.*\\.webp).*)'],
 }
