@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 export type ViewMode = 'list' | 'grid'
 
-const STORAGE_KEY = 'kubevista-view-mode'
+const STORAGE_KEY = 'orphelix-view-mode'
 
 /**
  * Global hook for managing view mode (list/grid) across all resource pages

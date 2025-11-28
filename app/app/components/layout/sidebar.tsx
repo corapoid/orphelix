@@ -546,7 +546,7 @@ export function Sidebar() {
             <Tooltip title="GitHub" placement="right">
               <IconButton
                 component="a"
-                href="https://github.com/dmachard/kubevista"
+                href="https://github.com/corapoid/orphelix"
                 target="_blank"
                 rel="noopener noreferrer"
                 size="small"
@@ -606,7 +606,7 @@ export function Sidebar() {
               </Tooltip>
               <IconButton
                 component="a"
-                href="https://github.com/dmachard/kubevista"
+                href="https://github.com/corapoid/orphelix"
                 target="_blank"
                 rel="noopener noreferrer"
                 size="small"

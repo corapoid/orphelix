@@ -324,7 +324,7 @@ export function WelcomeModal() {
             <Tooltip title="GitHub Repository" arrow>
               <IconButton
                 component={Link}
-                href="https://github.com/dmakowski-rasp/kubevista"
+                href="https://github.com/corapoid/orphelix"
                 target="_blank"
                 rel="noopener noreferrer"
                 size="small"

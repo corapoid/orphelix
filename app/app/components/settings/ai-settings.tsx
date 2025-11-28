@@ -17,7 +17,7 @@ import CodeIcon from '@mui/icons-material/Code'
 import { AI_FEATURES } from '@/lib/config/ai-features'
 import { useTheme } from '@/lib/ui'
 
-const LOCAL_STORAGE_KEY = 'kubevista_openai_key'
+const LOCAL_STORAGE_KEY = 'orphelix_openai_key'
 
 export function AISettings() {
   const { visualPreset } = useTheme()

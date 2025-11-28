@@ -59,7 +59,7 @@ export function TroubleshootingChat({ context }: TroubleshootingChatProps) {
 
     try {
       // Get API key from localStorage
-      const apiKey = localStorage.getItem('kubevista_openai_key')
+      const apiKey = localStorage.getItem('orphelix_openai_key')
       if (!apiKey) {
         setError('OpenAI API key not configured. Please add it in Settings.')
         setIsLoading(false)

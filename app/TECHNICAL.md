@@ -151,7 +151,7 @@
 ## Project Structure
 
 ```
-kubevista/
+orphelix/
 ├── app/                          # Next.js App Router
 │   ├── api/                      # API Routes (server-side only)
 │   │   ├── deployments/
@@ -312,7 +312,7 @@ npm -v   # v10+
 
 # Installation
 git clone <repo>
-cd kubevista
+cd orphelix
 npm install
 
 # Configure kubectl (for real mode)
@@ -892,7 +892,7 @@ export const useModeStore = create<ModeStore>()(
       reset: () => set({ mode: 'mock', selectedContext: null, realtimeEnabled: false }),
     }),
     {
-      name: 'kubevista-mode', // localStorage key
+      name: 'orphelix-mode', // localStorage key
     }
   )
 )
@@ -1111,10 +1111,10 @@ CMD ["node", "server.js"]
 **Build and run:**
 
 ```bash
-docker build -t kubevista:1.0.0 .
+docker build -t orphelix:1.0.0 .
 docker run -p 3000:3000 \
   -v ~/.kube/config:/home/nextjs/.kube/config:ro \
-  kubevista:1.0.0
+  orphelix:1.0.0
 ```
 
 ### Kubernetes Deployment
@@ -1125,22 +1125,22 @@ docker run -p 3000:3000 \
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kubevista
+  name: orphelix
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kubevista
+      app: orphelix
   template:
     metadata:
       labels:
-        app: kubevista
+        app: orphelix
     spec:
-      serviceAccountName: kubevista
+      serviceAccountName: orphelix
       containers:
       - name: dashboard
-        image: kubevista:1.0.0
+        image: orphelix:1.0.0
         ports:
         - containerPort: 3000
         env:
@@ -1150,13 +1150,13 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: kubevista
+  name: orphelix
   namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: kubevista
+  name: orphelix
 rules:
 - apiGroups: ["", "apps", "autoscaling"]
   resources: ["*"]
@@ -1168,20 +1168,20 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: kubevista
+  name: orphelix
 subjects:
 - kind: ServiceAccount
-  name: kubevista
+  name: orphelix
   namespace: default
 roleRef:
   kind: ClusterRole
-  name: kubevista
+  name: orphelix
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: kubevista
+  name: orphelix
   namespace: default
 spec:
   type: LoadBalancer
@@ -1189,14 +1189,14 @@ spec:
   - port: 80
     targetPort: 3000
   selector:
-    app: kubevista
+    app: orphelix
 ```
 
 **Deploy:**
 
 ```bash
 kubectl apply -f deployment.yaml
-kubectl get svc kubevista
+kubectl get svc orphelix
 ```
 
 ---
@@ -1377,7 +1377,7 @@ import { FixedSizeList } from 'react-window'
 
 - **GitHub Issues:** Bugs and feature requests
 - **Discussions:** Technical questions and discussions
-- **Email:** tech@kubevista.dev (example)
+- **Email:** tech@orphelix.dev (example)
 
 ---
 

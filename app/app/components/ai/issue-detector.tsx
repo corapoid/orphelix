@@ -36,11 +36,11 @@ export function IssueDetector({ events = [], metrics }: IssueDetectorProps) {
   const [hasApiKey, setHasApiKey] = useState(false)
 
   useEffect(() => {
-    const apiKey = localStorage.getItem('kubevista_openai_key')
+    const apiKey = localStorage.getItem('orphelix_openai_key')
     setHasApiKey(!!apiKey)
 
     const handleKeyUpdate = () => {
-      const key = localStorage.getItem('kubevista_openai_key')
+      const key = localStorage.getItem('orphelix_openai_key')
       setHasApiKey(!!key)
     }
 

@@ -94,7 +94,7 @@ export function YamlEditorModal({
 
       try {
         // Check if AI is available (OpenAI key configured)
-        const openaiKey = localStorage.getItem('kubevista_openai_key')
+        const openaiKey = localStorage.getItem('orphelix_openai_key')
 
         let response: Response
 

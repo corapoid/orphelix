@@ -56,11 +56,11 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary, namespace
   }, [])
 
   useEffect(() => {
-    const apiKey = localStorage.getItem('kubevista_openai_key')
+    const apiKey = localStorage.getItem('orphelix_openai_key')
     setHasApiKey(!!apiKey)
 
     const handleKeyUpdate = () => {
-      const key = localStorage.getItem('kubevista_openai_key')
+      const key = localStorage.getItem('orphelix_openai_key')
       setHasApiKey(!!key)
     }
 
@@ -145,7 +145,7 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary, namespace
     })
 
     try {
-      const apiKey = localStorage.getItem('kubevista_openai_key')
+      const apiKey = localStorage.getItem('orphelix_openai_key')
       if (!apiKey) return
 
       // Build context for AI

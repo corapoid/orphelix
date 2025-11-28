@@ -118,7 +118,7 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
   }, [content, editBasket, filePath])
 
   const handleEditorBeforeMount = (monaco: typeof import('monaco-editor')) => {
-    monaco.editor.defineTheme('kubevista-theme', {
+    monaco.editor.defineTheme('orphelix-theme', {
       base: theme.palette.mode === 'dark' ? 'vs-dark' : 'vs',
       inherit: true,
       rules: [],
@@ -138,7 +138,7 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
   const handleEditorMount = (editorRef: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
     setMonacoInstance(monaco)
     setEditorInstance(editorRef)
-    monaco.editor.setTheme('kubevista-theme')
+    monaco.editor.setTheme('orphelix-theme')
   }
 
   // Update editor language when file changes
@@ -155,7 +155,7 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
   useEffect(() => {
     if (!monacoInstance) return
 
-    monacoInstance.editor.defineTheme('kubevista-theme', {
+    monacoInstance.editor.defineTheme('orphelix-theme', {
       base: theme.palette.mode === 'dark' ? 'vs-dark' : 'vs',
       inherit: true,
       rules: [],
@@ -170,7 +170,7 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
         'editorIndentGuide.activeBackground': theme.palette.mode === 'dark' ? '#70707080' : '#b0b0b080',
       },
     })
-    monacoInstance.editor.setTheme('kubevista-theme')
+    monacoInstance.editor.setTheme('orphelix-theme')
   }, [theme.palette.mode, monacoInstance, theme.palette.primary.main])
 
   if (error) {
@@ -254,7 +254,7 @@ export function FileViewer({ owner, repo, branch, filePath }: FileViewerProps) {
               height="100%"
               language={editorLanguage}
               value={content}
-              theme="kubevista-theme"
+              theme="orphelix-theme"
               beforeMount={handleEditorBeforeMount}
               onChange={(value) => setContent(value || '')}
               onMount={handleEditorMount}

@@ -27,7 +27,7 @@ export function Footer() {
         <Tooltip title="GitHub Repository" arrow>
           <IconButton
             component={Link}
-            href="https://github.com/dmakowski-rasp/kubevista"
+            href="https://github.com/corapoid/orphelix"
             target="_blank"
             rel="noopener noreferrer"
             sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}

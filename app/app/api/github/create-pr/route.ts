@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const { sha } = await github.getFileContent(owner, repo, filePath, baseBranch)
 
     // 2. Create new branch
-    const branchName = `kubevista/${namespace}/${deploymentName}-${Date.now()}`
+    const branchName = `orphelix/${namespace}/${deploymentName}-${Date.now()}`
     await github.createBranch(owner, repo, baseBranch, branchName)
 
     // 3. Commit changes
@@ -41,7 +41,7 @@ Updated \`${filePath}\` for deployment **${deploymentName}** in namespace **${na
 
 ---
 
-🤖 Generated with [Orphelix](https://github.com/yourorg/kubevista)
+🤖 Generated with [Orphelix](https://github.com/corapoid/orphelix)
 `
 
     const pr = await github.createPullRequest(owner, repo, prTitle, branchName, baseBranch, prBody)

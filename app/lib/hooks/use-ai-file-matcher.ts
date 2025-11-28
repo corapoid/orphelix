@@ -33,7 +33,7 @@ export function useAIFileMatcher(
 
       try {
         // Check for OpenAI API key - get fresh value from localStorage
-        const apiKey = localStorage.getItem('kubevista_openai_key')?.trim()
+        const apiKey = localStorage.getItem('orphelix_openai_key')?.trim()
         if (!apiKey) {
           setError('OpenAI API key not configured')
           setMatching(false)

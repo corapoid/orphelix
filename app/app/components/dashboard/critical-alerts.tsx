@@ -64,11 +64,11 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
   const namespace = useModeStore((state) => state.selectedNamespace)
 
   useEffect(() => {
-    const apiKey = localStorage.getItem('kubevista_openai_key')
+    const apiKey = localStorage.getItem('orphelix_openai_key')
     setHasApiKey(!!apiKey)
 
     const handleKeyUpdate = () => {
-      const key = localStorage.getItem('kubevista_openai_key')
+      const key = localStorage.getItem('orphelix_openai_key')
       setHasApiKey(!!key)
     }
 
@@ -99,7 +99,7 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
     setAiExplanations(prev => ({ ...prev, [index]: '' }))
 
     try {
-      const apiKey = localStorage.getItem('kubevista_openai_key')
+      const apiKey = localStorage.getItem('orphelix_openai_key')
       if (!apiKey) return
 
       // Collect detailed context from failing pods
