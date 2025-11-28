@@ -109,7 +109,6 @@ function sendNotification(title, message, type = 'info') {
     sound: type === 'critical' ? 'Basso' : false,
     wait: false,
     timeout: 10,
-    icon: path.join(APP_DIR, 'public', 'icon.png'), // Optional: add icon
   })
 }
 
