@@ -14,7 +14,7 @@ function createMockRequest(ip: string = '127.0.0.1'): NextRequest {
       'x-forwarded-for': ip,
     }),
     nextUrl: new URL('http://localhost:3000/api/test'),
-  } as NextRequest
+  } as unknown as NextRequest
 }
 
 describe('Rate Limiter', () => {
@@ -104,7 +104,7 @@ describe('Rate Limiter', () => {
           'x-forwarded-for': '203.0.113.1, 198.51.100.1',
         }),
         nextUrl: new URL('http://localhost:3000/api/test'),
-      } as NextRequest
+      } as unknown as NextRequest
 
       await limiter(request)
 
@@ -124,7 +124,7 @@ describe('Rate Limiter', () => {
         ip: '10.0.0.1',
         headers: new Headers(),
         nextUrl: new URL('http://localhost:3000/api/test'),
-      } as NextRequest
+      } as unknown as NextRequest
 
       await limiter(request)
 
@@ -188,7 +188,7 @@ describe('Rate Limiter', () => {
       const request = createMockRequest('192.168.99.99')
 
       // Send requests sequentially
-      const results: (NextResponse | null)[] = []
+      const results: (Response | null)[] = []
       for (let i = 0; i < 10; i++) {
         const result = await limiter(request)
         results.push(result)
