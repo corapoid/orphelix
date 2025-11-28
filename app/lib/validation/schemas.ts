@@ -366,3 +366,12 @@ export function validateQueryParams<T>(
 
   return schema.parse(params)
 }
+
+/**
+ * K8s Resource Detail Request Schema
+ * For GET requests to fetch a specific resource by name
+ */
+export const k8sResourceDetailSchema = z.object({
+  name: k8sNameSchema,
+  namespace: namespaceSchema,
+})

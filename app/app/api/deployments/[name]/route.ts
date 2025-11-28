@@ -1,36 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
 import { fetchDeployment } from '@/lib/k8s/api'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
+import { k8sResourceDetailSchema } from '@/lib/validation/schemas'
+import { handleApiError, NotFoundError } from '@/lib/api/errors'
 
+// Create rate limiter for K8s detail operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
+
+/**
+ * GET /api/deployments/[name]
+ *
+ * Retrieves a specific deployment by name
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
     const context = getContextFromRequest(request)
 
-    if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
-    }
+    // Validate input
+    const validated = k8sResourceDetailSchema.parse({ name, namespace })
 
-    const deployment = await fetchDeployment(name, namespace, context)
+    const deployment = await fetchDeployment(validated.name, validated.namespace, context)
     if (!deployment) {
-      return NextResponse.json(
-        { error: 'Deployment not found' },
-        { status: 404 }
-      )
+      throw new NotFoundError('Deployment', validated.name)
     }
     return NextResponse.json(deployment)
   } catch (error) {
-    console.error('[API] Failed to fetch deployment:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch deployment' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
