@@ -20,18 +20,19 @@ Before you begin, make sure you have:
 
 <Tabs>
   <Tab title="CLI (Recommended)">
-    **Easiest way to run Orphelix - one command to install and start!**
+    **Easiest way to run Orphelix - one command setup!**
 
     <Steps>
-      <Step title="Install globally via npm">
+      <Step title="Clone the repository">
         ```bash
-        npm install -g orphelix
+        git clone https://github.com/corapoid/orphelix.git
+        cd orphelix/app
         ```
       </Step>
 
       <Step title="Start Orphelix">
         ```bash
-        orphelix start
+        npm run orphelix start
         ```
 
         First run automatically:
@@ -44,7 +45,7 @@ Before you begin, make sure you have:
 
       <Step title="Open in browser">
         ```bash
-        orphelix open
+        npm run orphelix open
         ```
 
         Or visit: [http://orphelix.local:3000](http://orphelix.local:3000)
@@ -52,7 +53,7 @@ Before you begin, make sure you have:
     </Steps>
 
     <Note>
-      Orphelix runs as a background service using pm2. No need to keep terminal open!
+      Orphelix runs as a background service using PM2. No need to keep terminal open!
     </Note>
 
     See [CLI Guide](/cli/overview) for all commands.
@@ -64,8 +65,8 @@ Before you begin, make sure you have:
     <Steps>
       <Step title="Clone the repository">
         ```bash
-        git clone <repository-url>
-        cd orphelix
+        git clone https://github.com/corapoid/orphelix.git
+        cd orphelix/app
         ```
       </Step>
 
@@ -180,22 +181,22 @@ Orphelix CLI provides powerful commands for managing your dashboard:
 
 ```bash
 # View status
-orphelix status
+npm run orphelix status
 
 # View logs
-orphelix logs
+npm run orphelix logs
 
 # Restart application
-orphelix restart
+npm run orphelix restart
 
 # Create backup
-orphelix backup
+npm run orphelix backup
 
 # Enable auto-startup on boot
-orphelix startup
+npm run orphelix startup
 
 # Run health checks
-orphelix doctor
+npm run orphelix doctor
 ```
 
 See [CLI Commands](/cli/commands/start) for complete reference.

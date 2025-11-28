@@ -67,7 +67,7 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 
 # Now install without sudo
-npm install -g orphelix
+git clone https://github.com/corapoid/orphelix.git && cd orphelix/app
 ```
 
 ---
@@ -346,7 +346,7 @@ orphelix update
 
 3. If still failing, update manually:
 ```bash
-npm install -g orphelix@latest
+git clone https://github.com/corapoid/orphelix.git && cd orphelix/app@latest
 orphelix restart
 ```
 

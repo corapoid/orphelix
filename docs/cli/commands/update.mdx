@@ -105,7 +105,7 @@ If the update causes issues, restore from the automatic backup:
 orphelix restore ~/orphelix-backups/orphelix-backup-2025-11-26-103045.db
 
 # Reinstall previous version
-npm install -g orphelix@1.2.3
+git clone https://github.com/corapoid/orphelix.git && cd orphelix/app@1.2.3
 
 # Restart
 orphelix restart
@@ -128,7 +128,7 @@ The update command installs stable releases only. Pre-release versions must be i
 To install pre-release:
 
 ```bash
-npm install -g orphelix@next
+git clone https://github.com/corapoid/orphelix.git && cd orphelix/app@next
 ```
 
 ## Troubleshooting
@@ -150,7 +150,7 @@ Error: EACCES: permission denied
 Update npm permissions or use:
 
 ```bash
-sudo npm install -g orphelix
+sudo git clone https://github.com/corapoid/orphelix.git && cd orphelix/app
 ```
 
 (Not recommended - fix npm permissions instead)

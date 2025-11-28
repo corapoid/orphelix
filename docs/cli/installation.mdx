@@ -7,42 +7,31 @@ description: 'Install and configure Orphelix CLI'
 
 ## Prerequisites
 
-Before installing Orphelix CLI, ensure you have:
+Before installing Orphelix, ensure you have:
 
 - **Node.js** >= 24.0.0 ([Download](https://nodejs.org/))
-- **kubectl** installed and configured ([Install Guide](https://kubernetes.io/docs/tasks/tools/))
-- **npm** or **yarn** package manager
+- **kubectl** installed and configured (optional, for real cluster access) ([Install Guide](https://kubernetes.io/docs/tasks/tools/))
+- **Git** to clone the repository
 - **macOS** or **Linux** operating system
 
-## Install via npm
+## Install from Source
 
-Install Orphelix CLI globally using npm:
-
-```bash
-npm install -g orphelix
-```
-
-This will make the `orphelix` command available system-wide.
-
-## Verify Installation
-
-Check that the installation was successful:
+Clone and set up Orphelix:
 
 ```bash
-orphelix --version
+# Clone the repository
+git clone https://github.com/corapoid/orphelix.git
+cd orphelix/app
 ```
 
-You should see output like:
-```
-Orphelix v1.0.0
-```
+That's it! The CLI is available via `npm run orphelix`.
 
 ## First Run
 
 Start Orphelix for the first time:
 
 ```bash
-orphelix start
+npm run orphelix start
 ```
 
 ### What Happens on First Run?
@@ -52,8 +41,7 @@ The CLI will automatically:
 1. **Check Dependencies**
    ```
    📦 Checking dependencies...
-   ✅ Node.js version: v24.1.0
-   ✅ kubectl installed
+   ✅ Node.js version: v24.11.1
    ```
 
 2. **Install npm Packages** (if needed)
@@ -96,8 +84,8 @@ The CLI will automatically:
 
    🔔 Notification worker started
 
-   📊 View logs: orphelix logs
-   🛑 Stop: orphelix stop
+   📊 View logs: npm run orphelix logs
+   🛑 Stop: npm run orphelix stop
    ```
 
 ## Configuration Options
@@ -108,11 +96,11 @@ Run on a different port:
 
 ```bash
 # Via command flag
-orphelix start --port 8080
+npm run orphelix start -- --port 8080
 
 # Via environment variable
 export ORPHELIX_PORT=8080
-orphelix start
+npm run orphelix start
 ```
 
 ### Skip Hostname Configuration
@@ -131,7 +119,7 @@ You can still access via `http://localhost:3000`
 After installation, check the status:
 
 ```bash
-orphelix status
+npm run orphelix status
 ```
 
 Expected output:
@@ -139,14 +127,14 @@ Expected output:
 ┌────────────┬────┬──────┬────────┬─────┬─────────┐
 │ name       │ id │ mode │ status │ cpu │ memory  │
 ├────────────┼────┼──────┼────────┼─────┼─────────┤
-│ orphelix   │ 0  │ fork │ online │ 0%  │ 85.2 MB │
+│ orphelix   │ 0  │ fork │ online │ 0%  │ 150 MB  │
 └────────────┴────┴──────┴────────┴─────┴─────────┘
 ```
 
 Open in browser:
 
 ```bash
-orphelix open
+npm run orphelix open
 ```
 
 ## Directory Structure
@@ -154,7 +142,7 @@ orphelix open
 After installation, Orphelix creates:
 
 ```
-/path/to/orphelix/
+orphelix/app/
 ├── orphelix.db              # SQLite database
 ├── orphelix.db-shm          # Database shared memory
 ├── orphelix.db-wal          # Database write-ahead log
@@ -187,7 +175,7 @@ nvm use 24
 
 ### "kubectl not found"
 
-Install kubectl:
+Install kubectl (only needed for real cluster access):
 
 ```bash
 # macOS
@@ -200,27 +188,12 @@ sudo apt-get install kubectl
 # https://kubernetes.io/docs/tasks/tools/
 ```
 
-### "Permission denied" during npm install
-
-Run with sudo (not recommended) or fix npm permissions:
-
-```bash
-# Fix npm permissions (recommended)
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
-
-# Then install without sudo
-npm install -g orphelix
-```
-
 ### "Port 3000 already in use"
 
 Use a different port:
 
 ```bash
-orphelix start --port 8080
+npm run orphelix start -- --port 8080
 ```
 
 Or kill the process using port 3000:
@@ -234,21 +207,22 @@ lsof -ti:3000 | xargs kill
 Remove the database and restart:
 
 ```bash
-orphelix stop
+npm run orphelix stop
 rm orphelix.db*
-orphelix start
+npm run orphelix start
 ```
 
 ## Uninstallation
 
-To completely remove Orphelix:
+To remove Orphelix:
 
 ```bash
-# Stop and remove from pm2
-orphelix delete
+# Stop and remove from PM2
+npm run orphelix delete
 
-# Uninstall globally
-npm uninstall -g orphelix
+# Remove the repository
+cd ..
+rm -rf orphelix
 
 # Remove data (optional)
 rm -rf ~/orphelix-backups
