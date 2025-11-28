@@ -1,4 +1,6 @@
-# Orphelix
+<div align="center">
+  <img src="app/public/logo.svg" alt="Orphelix Logo" width="200"/>
+  <h1>Orphelix</h1>
 
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/dmakowski/orphelix)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
@@ -8,6 +10,7 @@
 [![React](https://img.shields.io/badge/React-19.0-61dafb.svg)](https://reactjs.org/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/dmakowski/orphelix)
 [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-5A67D8.svg)](https://claude.ai/claude-code)
+</div>
 
 > **🚧 Active Development**: This project is under active development. Features and APIs may change.
 >
