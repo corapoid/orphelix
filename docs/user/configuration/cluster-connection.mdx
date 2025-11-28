@@ -1,12 +1,773 @@
 ---
 title: 'Cluster Connection'
-description: 'Documentation under construction'
+description: 'Connect Orphelix to your Kubernetes clusters using kubeconfig contexts'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+Orphelix connects to Kubernetes clusters using your local kubeconfig file. Switch between multiple clusters and contexts seamlessly from the dashboard.
+
+<img src="/images/cluster-connection.png" alt="Cluster Connection" />
+
+## How Cluster Connection Works
+
+Orphelix uses the standard Kubernetes authentication method:
+
+<Steps>
+  <Step title="Read Kubeconfig">
+    Loads `~/.kube/config` on server startup
+    
+    Location can be overridden with `KUBECONFIG` env var
+  </Step>
+
+  <Step title="List Contexts">
+    Extracts all available contexts from kubeconfig
+    
+    Each context represents a cluster + user + namespace combination
+  </Step>
+
+  <Step title="Select Context">
+    User selects context from dropdown in header
+  </Step>
+
+  <Step title="Authenticate">
+    Uses credentials from selected context:
+    - Client certificates
+    - Bearer tokens
+    - Cloud provider auth (AWS, GCP, Azure)
+    - Service account tokens
+  </Step>
+
+  <Step title="Connect to API Server">
+    Establishes connection to Kubernetes API server
+    
+    All resource queries use this connection
+  </Step>
+</Steps>
+
+## Kubeconfig File
+
+Standard Kubernetes configuration file:
+
+### Location
+
+<Tabs>
+  <Tab title="Default">
+    **Path:** `~/.kube/config`
+    
+    ```bash
+    # Check if exists
+    ls -la ~/.kube/config
+    ```
+  </Tab>
+
+  <Tab title="Custom">
+    **Environment variable:** `KUBECONFIG`
+    
+    ```bash
+    export KUBECONFIG=/path/to/custom-config
+    npm run orphelix start
+    ```
+  </Tab>
+
+  <Tab title="Multiple Files">
+    **Merged configs:**
+    
+    ```bash
+    export KUBECONFIG=~/.kube/config:~/.kube/cluster2.yaml
+    npm run orphelix start
+    ```
+    
+    Orphelix merges all files
+  </Tab>
+</Tabs>
+
+### Structure
+
+```yaml
+apiVersion: v1
+kind: Config
+clusters:
+- name: production-cluster
+  cluster:
+    server: https://prod-k8s.example.com
+    certificate-authority-data: LS0tLS...
+
+- name: staging-cluster
+  cluster:
+    server: https://staging-k8s.example.com
+    certificate-authority-data: LS0tLS...
+
+users:
+- name: admin-user
+  user:
+    client-certificate-data: LS0tLS...
+    client-key-data: LS0tLS...
+
+- name: developer-user
+  user:
+    token: eyJhbGci...
+
+contexts:
+- name: prod
+  context:
+    cluster: production-cluster
+    user: admin-user
+    namespace: default
+
+- name: staging
+  context:
+    cluster: staging-cluster
+    user: developer-user
+    namespace: staging
+
+current-context: prod
+```
+
+### Key Components
+
+<AccordionGroup>
+  <Accordion icon="server" title="Clusters">
+    Kubernetes API server endpoints
+    
+    **Required fields:**
+    - `server`: API server URL
+    - `certificate-authority-data`: CA certificate (or path)
+    
+    **Optional:**
+    - `insecure-skip-tls-verify`: Skip TLS verification (not recommended)
+    - `tls-server-name`: Server name for TLS
+  </Accordion>
+
+  <Accordion icon="user" title="Users">
+    Authentication credentials
+    
+    **Methods:**
+    - Client certificates (cert + key)
+    - Bearer tokens
+    - Username + password (deprecated)
+    - Cloud provider auth plugins
+    - Exec plugins (custom auth)
+    
+    **Examples:**
+    ```yaml
+    # Certificate auth
+    user:
+      client-certificate-data: LS0tLS...
+      client-key-data: LS0tLS...
+    
+    # Token auth
+    user:
+      token: eyJhbGci...
+    
+    # AWS EKS
+    user:
+      exec:
+        apiVersion: client.authentication.k8s.io/v1beta1
+        command: aws
+        args:
+          - eks
+          - get-token
+          - --cluster-name
+          - my-cluster
+    ```
+  </Accordion>
+
+  <Accordion icon="link" title="Contexts">
+    Cluster + User + Namespace combination
+    
+    **Fields:**
+    - `cluster`: Which cluster to connect to
+    - `user`: Which credentials to use
+    - `namespace`: Default namespace (optional)
+    
+    **Purpose:** Quick switching between environments
+  </Accordion>
+</AccordionGroup>
+
+## Context Selector
+
+Switch contexts from the Orphelix header:
+
+<img src="/images/context-selector.png" alt="Context Selector" />
+
+### Features
+
+<CardGroup cols={2}>
+  <Card title="Quick Switch" icon="arrows-rotate">
+    Click dropdown to change contexts instantly
+  </Card>
+  <Card title="Search" icon="magnifying-glass">
+    Filter contexts by name
+  </Card>
+  <Card title="Connection Status" icon="signal">
+    Visual indicator shows connection health
+  </Card>
+  <Card title="Test Connection" icon="vial">
+    Verify connectivity before switching
+  </Card>
+</CardGroup>
+
+### Context Display
+
+Each context shows:
+- **Name**: Context identifier
+- **Cluster**: Cluster name
+- **Server**: API server URL (truncated)
+- **Namespace**: Default namespace
+- **Status**: Connection indicator
+
+**Connection Status Icons:**
+- 🟢 **Connected**: Active, healthy connection
+- 🟡 **Connecting**: Establishing connection
+- 🔴 **Disconnected**: Cannot connect
+- ⚪ **Unknown**: Not yet tested
+
+### Switching Contexts
+
+<Steps>
+  <Step title="Click Context Dropdown">
+    In the top header, click current context name
+  </Step>
+
+  <Step title="Select New Context">
+    Click desired context from list
+  </Step>
+
+  <Step title="Wait for Connection">
+    Orphelix connects to new cluster (1-2 seconds)
+  </Step>
+
+  <Step title="Page Refreshes">
+    Data reloads for new cluster
+    
+    - Deployments list updates
+    - Pods list updates
+    - Dashboard shows new cluster stats
+  </Step>
+</Steps>
 
 <Note>
-  Full documentation will be added soon.
+  Context selection persists across browser sessions (stored in cookies)
 </Note>
+
+## Testing Connection
+
+Verify cluster connectivity before using:
+
+<img src="/images/test-connection.png" alt="Test Connection" />
+
+### Test Connection Dialog
+
+<Steps>
+  <Step title="Open Dialog">
+    Click context dropdown → **"Test Connection"** button
+  </Step>
+
+  <Step title="Select Context">
+    Choose context to test
+  </Step>
+
+  <Step title="Run Tests">
+    Orphelix performs checks:
+    
+    1. **DNS Resolution**: Can resolve API server hostname?
+    2. **TCP Connection**: Can reach API server port?
+    3. **TLS Handshake**: Valid certificates?
+    4. **Authentication**: Valid credentials?
+    5. **Authorization**: Can list namespaces?
+    6. **API Version**: Compatible Kubernetes version?
+  </Step>
+
+  <Step title="View Results">
+    Each test shows:
+    - ✅ Pass: Test succeeded
+    - ❌ Fail: Test failed (with error message)
+    - ⏭️ Skipped: Test not applicable
+  </Step>
+</Steps>
+
+### Test Results
+
+<Tabs>
+  <Tab title="All Pass">
+    **Indicator:** Green checkmark
+    
+    ```
+    ✅ DNS Resolution: success
+    ✅ TCP Connection: success (123ms)
+    ✅ TLS Handshake: success
+    ✅ Authentication: success (admin user)
+    ✅ Authorization: can list namespaces
+    ✅ API Version: v1.28.3
+    
+    Connection is healthy!
+    ```
+  </Tab>
+
+  <Tab title="Some Failures">
+    **Indicator:** Yellow warning
+    
+    ```
+    ✅ DNS Resolution: success
+    ✅ TCP Connection: success
+    ❌ TLS Handshake: certificate verify failed
+       Error: x509: certificate signed by unknown authority
+    
+    Connection has issues - check certificates
+    ```
+  </Tab>
+
+  <Tab title="Complete Failure">
+    **Indicator:** Red error
+    
+    ```
+    ✅ DNS Resolution: success
+    ❌ TCP Connection: timeout
+       Error: dial tcp 10.0.0.1:6443: i/o timeout
+    
+    Cannot connect to cluster - check network/firewall
+    ```
+  </Tab>
+</Tabs>
+
+## Cluster Aliases
+
+Give clusters friendly names:
+
+<img src="/images/cluster-aliases.png" alt="Cluster Aliases" />
+
+### Creating Aliases
+
+<Steps>
+  <Step title="Open Settings">
+    Navigate to Settings → Cluster Configuration tab
+  </Step>
+
+  <Step title="Add Alias">
+    Click **"Add Alias"** button
+  </Step>
+
+  <Step title="Configure Alias">
+    - **Context Name**: Select from dropdown
+    - **Friendly Name**: Enter display name
+    - **Icon**: Choose emoji/icon (optional)
+    - **Description**: Add notes (optional)
+    
+    Example:
+    ```
+    Context: arn:aws:eks:us-east-1:123456:cluster/prod
+    Friendly Name: 🚀 Production (US East)
+    Description: Main production cluster
+    ```
+  </Step>
+
+  <Step title="Save">
+    Click **"Save"** - alias appears in context selector
+  </Step>
+</Steps>
+
+### Alias Benefits
+
+<AccordionGroup>
+  <Accordion icon="eye" title="Readability">
+    Replace long, cryptic context names with readable labels
+    
+    **Before:** `gke_my-project_us-central1-a_cluster-1`
+    
+    **After:** `🌎 GKE Production`
+  </Accordion>
+
+  <Accordion icon="shield" title="Safety">
+    Prevent accidental operations on wrong cluster
+    
+    Clear visual distinction between prod/staging/dev
+  </Accordion>
+
+  <Accordion icon="users" title="Team Consistency">
+    Everyone sees same cluster names
+    
+    Shared aliases configuration via settings file
+  </Accordion>
+</AccordionGroup>
+
+## Multi-Cluster Management
+
+Manage multiple clusters simultaneously:
+
+### Common Scenarios
+
+<Tabs>
+  <Tab title="Multi-Environment">
+    **Setup:** Dev, Staging, Production
+    
+    ```yaml
+    contexts:
+    - name: dev
+      context:
+        cluster: dev-cluster
+        namespace: default
+    
+    - name: staging
+      context:
+        cluster: staging-cluster
+        namespace: default
+    
+    - name: prod
+      context:
+        cluster: prod-cluster
+        namespace: default
+    ```
+    
+    **Workflow:**
+    1. Test changes in dev
+    2. Promote to staging
+    3. Deploy to production
+  </Tab>
+
+  <Tab title="Multi-Region">
+    **Setup:** Different geographic regions
+    
+    ```yaml
+    contexts:
+    - name: us-east
+      context:
+        cluster: eks-us-east-1
+        namespace: default
+    
+    - name: eu-west
+      context:
+        cluster: eks-eu-west-1
+        namespace: default
+    
+    - name: ap-south
+      context:
+        cluster: eks-ap-south-1
+        namespace: default
+    ```
+    
+    **Use case:** Monitor global infrastructure
+  </Tab>
+
+  <Tab title="Multi-Tenant">
+    **Setup:** Different customer clusters
+    
+    ```yaml
+    contexts:
+    - name: customer-a
+      context:
+        cluster: cluster-customer-a
+        namespace: default
+    
+    - name: customer-b
+      context:
+        cluster: cluster-customer-b
+        namespace: default
+    ```
+    
+    **Use case:** Managed Kubernetes service
+  </Tab>
+</Tabs>
+
+### Switching Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Verify Before Actions">
+    Always check current context before:
+    - Restarting deployments
+    - Editing YAML
+    - Scaling resources
+    
+    Context shown in header - confirm it's correct
+  </Accordion>
+
+  <Accordion icon="check" title="Use Clear Naming">
+    Context names should indicate:
+    - Environment (dev/staging/prod)
+    - Region (if multi-region)
+    - Purpose (monitoring/management)
+    
+    Example: `prod-us-east-1-monitoring`
+  </Accordion>
+
+  <Accordion icon="check" title="Limit Production Access">
+    Separate kubeconfig files for production:
+    
+    ```bash
+    # Development clusters
+    export KUBECONFIG=~/.kube/dev-config
+    
+    # Production clusters (separate terminal)
+    export KUBECONFIG=~/.kube/prod-config
+    ```
+    
+    Prevents accidental production changes
+  </Accordion>
+</AccordionGroup>
+
+## Authentication Methods
+
+Orphelix supports all standard Kubernetes authentication:
+
+### Client Certificates
+
+Most common method:
+
+```yaml
+users:
+- name: admin
+  user:
+    client-certificate-data: LS0tLS1CRUd...
+    client-key-data: LS0tLS1CRUdJT...
+```
+
+**Pros:**
+- Widely supported
+- No token expiration
+- Offline authentication
+
+**Cons:**
+- Certificate rotation needed
+- Key must be kept secure
+
+### Bearer Tokens
+
+Service account or OAuth tokens:
+
+```yaml
+users:
+- name: sa-user
+  user:
+    token: eyJhbGciOiJSUzI1NiIsImtpZCI6Ik...
+```
+
+**Pros:**
+- Easy to distribute
+- Can have expiration
+- Revocable
+
+**Cons:**
+- May expire
+- Must be refreshed
+
+### Cloud Provider Auth
+
+AWS, GCP, Azure authentication:
+
+<Tabs>
+  <Tab title="AWS EKS">
+    ```yaml
+    users:
+    - name: aws-user
+      user:
+        exec:
+          apiVersion: client.authentication.k8s.io/v1beta1
+          command: aws
+          args:
+            - eks
+            - get-token
+            - --cluster-name
+            - my-cluster
+            - --region
+            - us-east-1
+    ```
+    
+    **Requirements:**
+    - AWS CLI installed
+    - AWS credentials configured
+    - IAM permissions for EKS
+  </Tab>
+
+  <Tab title="GCP GKE">
+    ```yaml
+    users:
+    - name: gcp-user
+      user:
+        exec:
+          apiVersion: client.authentication.k8s.io/v1beta1
+          command: gke-gcloud-auth-plugin
+          installHint: Install gke-gcloud-auth-plugin
+          provideClusterInfo: true
+    ```
+    
+    **Requirements:**
+    - gcloud CLI installed
+    - Authenticated with gcloud
+    - GKE cluster access
+  </Tab>
+
+  <Tab title="Azure AKS">
+    ```yaml
+    users:
+    - name: azure-user
+      user:
+        exec:
+          apiVersion: client.authentication.k8s.io/v1beta1
+          command: kubelogin
+          args:
+            - get-token
+            - --environment
+            - AzurePublicCloud
+            - --server-id
+            - <client-id>
+            - --tenant-id
+            - <tenant-id>
+    ```
+    
+    **Requirements:**
+    - Azure CLI installed
+    - kubelogin installed
+    - Azure AD authentication
+  </Tab>
+</Tabs>
+
+## Troubleshooting
+
+### Cannot List Contexts
+
+**Symptom:** Context dropdown is empty
+
+**Causes:**
+
+1. **Kubeconfig Not Found**
+   ```bash
+   ls ~/.kube/config
+   # If missing, create one
+   ```
+
+2. **Invalid Kubeconfig**
+   ```bash
+   kubectl config view
+   # Check for syntax errors
+   ```
+
+3. **Wrong KUBECONFIG Path**
+   ```bash
+   echo $KUBECONFIG
+   # Verify path is correct
+   ```
+
+**Solutions:**
+- Create valid kubeconfig file
+- Fix YAML syntax errors
+- Set correct KUBECONFIG environment variable
+
+### Connection Failed
+
+**Symptom:** "Failed to connect to cluster"
+
+**Diagnostic Steps:**
+
+<Steps>
+  <Step title="Test with kubectl">
+    ```bash
+    kubectl cluster-info
+    kubectl get nodes
+    ```
+    
+    If kubectl fails, issue is with cluster/credentials, not Orphelix
+  </Step>
+
+  <Step title="Check Network">
+    ```bash
+    # Test API server connectivity
+    curl -k https://api-server-url:6443
+    ```
+    
+    Should return error (expected), but confirms connectivity
+  </Step>
+
+  <Step title="Verify Credentials">
+    ```bash
+    kubectl config view --minify
+    # Check current context credentials
+    ```
+  </Step>
+
+  <Step title="Check Certificates">
+    ```bash
+    # Verify certificates are valid
+    openssl x509 -in cert.pem -text -noout
+    ```
+  </Step>
+</Steps>
+
+### Authentication Failed
+
+**Symptom:** "Unauthorized" or "Forbidden" errors
+
+**Common Issues:**
+
+<AccordionGroup>
+  <Accordion icon="clock" title="Expired Tokens">
+    Token-based auth expired
+    
+    **Solution:** Refresh token:
+    ```bash
+    # For cloud providers
+    aws eks update-kubeconfig --name cluster-name
+    gcloud container clusters get-credentials cluster-name
+    az aks get-credentials --name cluster-name --resource-group rg
+    ```
+  </Accordion>
+
+  <Accordion icon="ban" title="Insufficient Permissions">
+    User lacks RBAC permissions
+    
+    **Solution:** Grant necessary permissions:
+    ```bash
+    kubectl create clusterrolebinding orphelix-admin \
+      --clusterrole=cluster-admin \
+      --user=myuser
+    ```
+  </Accordion>
+
+  <Accordion icon="key" title="Wrong User">
+    Context using incorrect user
+    
+    **Solution:** Update context:
+    ```bash
+    kubectl config set-context <context> --user=<correct-user>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Certificate Errors
+
+**Symptom:** TLS handshake failures
+
+**Solutions:**
+
+1. **Untrusted CA**
+   ```bash
+   # Option 1: Add CA to system trust store
+   # Option 2: Skip verification (not recommended)
+   kubectl config set-cluster <cluster> --insecure-skip-tls-verify=true
+   ```
+
+2. **Certificate Name Mismatch**
+   ```bash
+   # Set correct TLS server name
+   kubectl config set-cluster <cluster> --tls-server-name=kubernetes.example.com
+   ```
+
+3. **Expired Certificate**
+   - Renew cluster certificates
+   - Update kubeconfig with new certificates
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Namespaces" icon="layer-group" href="/user/configuration/namespaces">
+    Configure namespace filtering
+  </Card>
+  <Card title="Demo Mode" icon="flask" href="/user/configuration/demo-mode">
+    Try demo mode without cluster
+  </Card>
+  <Card title="Settings" icon="gear" href="/user/configuration/settings">
+    Configure Orphelix settings
+  </Card>
+  <Card title="Dashboard" icon="chart-line" href="/user/dashboard">
+    View cluster resources
+  </Card>
+</CardGroup>

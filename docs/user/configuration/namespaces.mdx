@@ -1,12 +1,725 @@
 ---
 title: 'Namespace Selection'
-description: 'Documentation under construction'
+description: 'Filter resources by Kubernetes namespace and manage namespace access'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+Namespaces provide logical isolation for Kubernetes resources. Orphelix allows you to filter views by namespace, switch between namespaces, and view resources across multiple namespaces.
+
+<img src="/images/namespace-selector.png" alt="Namespace Selector" />
+
+## What are Namespaces?
+
+Kubernetes namespaces partition cluster resources:
+
+<CardGroup cols={2}>
+  <Card title="Isolation" icon="layer-group">
+    Separate resources by environment, team, or application
+  </Card>
+  <Card title="Access Control" icon="shield">
+    Apply RBAC policies per namespace
+  </Card>
+  <Card title="Resource Quotas" icon="gauge">
+    Limit CPU/memory usage per namespace
+  </Card>
+  <Card title="Name Scoping" icon="tag">
+    Same resource names in different namespaces
+  </Card>
+</CardGroup>
+
+### Default Namespaces
+
+Every Kubernetes cluster has these namespaces:
+
+<AccordionGroup>
+  <Accordion icon="gear" title="default">
+    **Purpose:** Default namespace for resources without explicit namespace
+    
+    **Usage:** Development, testing, or small deployments
+    
+    **Best practice:** Don't use for production
+  </Accordion>
+
+  <Accordion icon="server" title="kube-system">
+    **Purpose:** Kubernetes system components
+    
+    **Resources:**
+    - kube-dns / CoreDNS
+    - kube-proxy
+    - Metrics server
+    - Cloud provider components
+    
+    **Access:** Usually restricted to cluster admins
+  </Accordion>
+
+  <Accordion icon="users" title="kube-public">
+    **Purpose:** Publicly readable resources
+    
+    **Usage:** ConfigMaps accessible cluster-wide
+    
+    **Rare use case**
+  </Accordion>
+
+  <Accordion icon="id-badge" title="kube-node-lease">
+    **Purpose:** Node heartbeat objects
+    
+    **Usage:** Internal Kubernetes node tracking
+    
+    **Don't modify**
+  </Accordion>
+</AccordionGroup>
+
+## Namespace Selector
+
+Switch namespaces from the header:
+
+<img src="/images/namespace-dropdown.png" alt="Namespace Dropdown" />
+
+### Location
+
+The namespace selector appears in two places:
+
+1. **Header (top-right)**: Global namespace selection
+2. **Mode selector dialog**: When switching from Demo to Real mode
+
+### Selecting a Namespace
+
+<Steps>
+  <Step title="Click Namespace Dropdown">
+    Click current namespace name in header
+  </Step>
+
+  <Step title="Choose Namespace">
+    Select from list of available namespaces
+    
+    <img src="/images/namespace-list.png" alt="Namespace List" />
+  </Step>
+
+  <Step title="Wait for Reload">
+    Resources reload for selected namespace (1-2 seconds)
+  </Step>
+
+  <Step title="Verify">
+    Check header shows correct namespace
+    
+    All pages now show resources from selected namespace
+  </Step>
+</Steps>
 
 <Note>
-  Full documentation will be added soon.
+  Namespace selection persists across browser sessions
 </Note>
+
+### Namespace Information
+
+Each namespace in the dropdown shows:
+
+- **Name**: Namespace identifier
+- **Status**: Active or Terminating
+- **Resource Count**: Number of pods in namespace
+- **Labels**: Important labels (environment, team, etc.)
+
+**Example display:**
+```
+📦 production (25 pods)
+   env=prod, team=platform
+
+📦 staging (12 pods)
+   env=staging, team=platform
+
+📦 development (8 pods)
+   env=dev, team=platform
+```
+
+## All Namespaces View
+
+View resources across all namespaces:
+
+<Tabs>
+  <Tab title="Enable">
+    **Option 1:** Select "All Namespaces" from dropdown
+    
+    **Option 2:** Check "All Namespaces" checkbox (where available)
+  </Tab>
+
+  <Tab title="Behavior">
+    When enabled:
+    - Lists resources from ALL accessible namespaces
+    - Adds "Namespace" column to tables
+    - Useful for cluster-wide overview
+    
+    <Warning>
+      Can be slow on large clusters with many namespaces
+    </Warning>
+  </Tab>
+
+  <Tab title="Permissions">
+    Requires RBAC permissions:
+    ```yaml
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: namespace-reader
+    rules:
+    - apiGroups: [""]
+      resources: ["namespaces"]
+      verbs: ["list", "get"]
+    ```
+  </Tab>
+</Tabs>
+
+## Namespace Details Page
+
+View comprehensive namespace information:
+
+<img src="/images/namespace-detail.png" alt="Namespace Detail" />
+
+### Overview Section
+
+<Steps>
+  <Step title="Basic Information">
+    - **Name**: Namespace name
+    - **Status**: Active, Terminating
+    - **Created**: Creation timestamp
+    - **Labels**: All namespace labels
+    - **Annotations**: Namespace annotations
+  </Step>
+
+  <Step title="Resource Counts">
+    Number of resources in namespace:
+    
+    - Deployments
+    - StatefulSets
+    - DaemonSets
+    - Pods
+    - Services
+    - ConfigMaps
+    - Secrets
+    - HPAs
+  </Step>
+
+  <Step title="Resource Quotas">
+    CPU/memory limits and usage:
+    
+    <img src="/images/namespace-quotas.png" alt="Resource Quotas" />
+    
+    **Quota cards show:**
+    - CPU requests/limits
+    - Memory requests/limits
+    - Pod count limits
+    - PVC count/storage limits
+    - Current usage vs quota
+    - Percentage used (progress bar)
+  </Step>
+</Steps>
+
+### Resource Quotas
+
+Namespaces can have ResourceQuota objects limiting usage:
+
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: production
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+    pods: "50"
+```
+
+**Orphelix displays:**
+
+<Tabs>
+  <Tab title="CPU Quota">
+    ```
+    CPU Requests: 7.5 / 10 cores (75%)
+    CPU Limits: 15 / 20 cores (75%)
+    
+    [████████████████████░░░░░] 75%
+    ```
+    
+    - Green: < 70% used
+    - Yellow: 70-90% used
+    - Red: > 90% used
+  </Tab>
+
+  <Tab title="Memory Quota">
+    ```
+    Memory Requests: 15 GB / 20 GB (75%)
+    Memory Limits: 30 GB / 40 GB (75%)
+    
+    [████████████████████░░░░░] 75%
+    ```
+  </Tab>
+
+  <Tab title="Pod Count">
+    ```
+    Pods: 42 / 50 (84%)
+    
+    [███████████████████████░░] 84%
+    ```
+    
+    Warning when approaching limit
+  </Tab>
+
+  <Tab title="Storage">
+    ```
+    PVCs: 15 / 20 (75%)
+    Storage: 450 GB / 500 GB (90%)
+    
+    [█████████████████████████] 90%
+    ```
+  </Tab>
+</Tabs>
+
+### Limit Ranges
+
+LimitRange objects set default/min/max resource values:
+
+```yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: resource-limits
+  namespace: production
+spec:
+  limits:
+  - type: Container
+    default:
+      cpu: "500m"
+      memory: "512Mi"
+    defaultRequest:
+      cpu: "250m"
+      memory: "256Mi"
+    max:
+      cpu: "2"
+      memory: "2Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+```
+
+**Orphelix shows:**
+- Default requests/limits (applied if not specified)
+- Min/max values (prevents pods outside range)
+- Affects new pods only (not existing)
+
+## Creating Namespaces
+
+<Tabs>
+  <Tab title="kubectl">
+    ```bash
+    kubectl create namespace production
+    ```
+  </Tab>
+
+  <Tab title="YAML">
+    ```yaml
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: production
+      labels:
+        environment: prod
+        team: platform
+    ```
+    
+    Apply:
+    ```bash
+    kubectl apply -f namespace.yaml
+    ```
+  </Tab>
+
+  <Tab title="With Quotas">
+    ```yaml
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: production
+    ---
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: compute-quota
+      namespace: production
+    spec:
+      hard:
+        requests.cpu: "10"
+        requests.memory: "20Gi"
+        pods: "50"
+    ---
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: resource-limits
+      namespace: production
+    spec:
+      limits:
+      - type: Container
+        default:
+          cpu: "500m"
+          memory: "512Mi"
+        defaultRequest:
+          cpu: "250m"
+          memory: "256Mi"
+    ```
+  </Tab>
+</Tabs>
+
+## Namespace Organization Strategies
+
+### By Environment
+
+```
+namespaces:
+  - development
+  - staging
+  - production
+```
+
+**Pros:**
+- Clear environment separation
+- Easy to understand
+- Simple RBAC policies
+
+**Cons:**
+- Limited scalability
+- All apps mixed per environment
+
+### By Team
+
+```
+namespaces:
+  - team-platform
+  - team-frontend
+  - team-backend
+  - team-data
+```
+
+**Pros:**
+- Team ownership clear
+- Independent team workflows
+- Isolated team quotas
+
+**Cons:**
+- Multiple deployments per team
+- Cross-team dependencies complex
+
+### By Application
+
+```
+namespaces:
+  - app-api-gateway
+  - app-user-service
+  - app-order-service
+  - app-payment-service
+```
+
+**Pros:**
+- Clear app boundaries
+- Easy to track app resources
+- Independent scaling
+
+**Cons:**
+- Many namespaces
+- Shared services complicated
+
+### Hybrid (Environment + Application)
+
+```
+namespaces:
+  - prod-api-gateway
+  - prod-user-service
+  - staging-api-gateway
+  - staging-user-service
+  - dev-api-gateway
+  - dev-user-service
+```
+
+**Pros:**
+- Complete isolation
+- Clear environment + app
+- Flexible RBAC
+
+**Cons:**
+- Namespace explosion
+- Management overhead
+
+## RBAC and Namespaces
+
+Control who can access each namespace:
+
+### Namespace-scoped Roles
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+  namespace: development
+rules:
+- apiGroups: ["", "apps"]
+  resources: ["pods", "deployments", "services"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developers
+  namespace: development
+subjects:
+- kind: Group
+  name: developers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer
+  apiGroup: rbac.authorization.k8s.io
+```
+
+**Effect:** Developers can manage resources in `development` namespace only
+
+### Read-only Access
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: viewer
+  namespace: production
+rules:
+- apiGroups: ["", "apps"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+```
+
+**Effect:** View all resources but cannot modify
+
+### Cross-namespace Access
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: multi-namespace-viewer
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: viewer-prod
+  namespace: production
+roleRef:
+  kind: ClusterRole
+  name: multi-namespace-viewer
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: User
+  name: alice
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: viewer-staging
+  namespace: staging
+roleRef:
+  kind: ClusterRole
+  name: multi-namespace-viewer
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: User
+  name: alice
+```
+
+**Effect:** Alice can view resources in both production and staging
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Use Descriptive Names">
+    Clear namespace naming convention:
+    
+    ✅ Good:
+    - `prod-api-gateway`
+    - `staging-user-service`
+    - `dev-data-pipeline`
+    
+    ❌ Bad:
+    - `ns1`
+    - `test`
+    - `myapp`
+  </Accordion>
+
+  <Accordion icon="check" title="Apply Resource Quotas">
+    Prevent resource exhaustion:
+    
+    ```yaml
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: quota
+      namespace: development
+    spec:
+      hard:
+        requests.cpu: "10"
+        requests.memory: "20Gi"
+        pods: "50"
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Set Default Limits">
+    Use LimitRanges for consistency:
+    
+    ```yaml
+    apiVersion: v1
+    kind: LimitRange
+    metadata:
+      name: defaults
+      namespace: production
+    spec:
+      limits:
+      - type: Container
+        default:
+          memory: "512Mi"
+          cpu: "500m"
+        defaultRequest:
+          memory: "256Mi"
+          cpu: "250m"
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Label Namespaces">
+    Add metadata for filtering/reporting:
+    
+    ```yaml
+    metadata:
+      labels:
+        environment: production
+        team: platform
+        cost-center: "12345"
+        compliance: pci-dss
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Document Namespace Purpose">
+    Use annotations:
+    
+    ```yaml
+    metadata:
+      annotations:
+        description: "Production API Gateway service"
+        owner: "platform-team@example.com"
+        slack-channel: "#platform-alerts"
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Don't Overuse Namespaces">
+    Balance isolation vs complexity:
+    
+    - Too few: No isolation
+    - Too many: Management overhead
+    
+    Typical: 5-20 namespaces per cluster
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+### Namespace Stuck in Terminating
+
+**Symptom:** `kubectl delete namespace` hangs
+
+**Cause:** Finalizers preventing deletion
+
+**Solution:**
+
+<Steps>
+  <Step title="Check Finalizers">
+    ```bash
+    kubectl get namespace <name> -o yaml
+    ```
+    
+    Look for `spec.finalizers`
+  </Step>
+
+  <Step title="Remove Finalizers">
+    ```bash
+    kubectl get namespace <name> -o json \
+      | jq '.spec.finalizers=[]' \
+      | kubectl replace --raw "/api/v1/namespaces/<name>/finalize" -f -
+    ```
+  </Step>
+
+  <Step title="Force Delete">
+    If still stuck:
+    ```bash
+    kubectl delete namespace <name> --force --grace-period=0
+    ```
+  </Step>
+</Steps>
+
+### Resource Quota Exceeded
+
+**Symptom:** Cannot create pods - "exceeded quota"
+
+**Check:**
+```bash
+kubectl describe resourcequota -n <namespace>
+```
+
+**Solutions:**
+
+1. **Increase Quota**
+   ```bash
+   kubectl edit resourcequota compute-quota -n <namespace>
+   ```
+
+2. **Delete Unused Resources**
+   ```bash
+   kubectl delete deployment <old-deployment> -n <namespace>
+   ```
+
+3. **Reduce Resource Requests**
+   ```yaml
+   resources:
+     requests:
+       cpu: "250m"  # Was 500m
+       memory: "256Mi"  # Was 512Mi
+   ```
+
+### Cannot Access Namespace
+
+**Symptom:** "Forbidden" errors
+
+**Check RBAC:**
+```bash
+kubectl auth can-i get pods -n <namespace>
+```
+
+**Solution:** Request access from cluster admin
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Cluster Connection" icon="plug" href="/user/configuration/cluster-connection">
+    Configure cluster access
+  </Card>
+  <Card title="Settings" icon="gear" href="/user/configuration/settings">
+    Customize Orphelix settings
+  </Card>
+  <Card title="Deployments" icon="layer-group" href="/user/deployments">
+    View namespace resources
+  </Card>
+  <Card title="Dashboard" icon="chart-line" href="/user/dashboard">
+    Monitor namespace usage
+  </Card>
+</CardGroup>

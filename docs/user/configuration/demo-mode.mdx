@@ -1,12 +1,605 @@
 ---
 title: 'Demo Mode'
-description: 'Documentation under construction'
+description: 'Explore Orphelix features with realistic mock data without connecting to a real cluster'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+Demo Mode lets you explore all Orphelix features using realistic mock data, without needing a Kubernetes cluster. Perfect for testing, presentations, training, or learning Kubernetes concepts.
+
+<img src="/images/demo-mode.png" alt="Demo Mode" />
+
+## What is Demo Mode?
+
+Demo Mode provides:
+
+<CardGroup cols={2}>
+  <Card title="Realistic Data" icon="database">
+    Mock deployments, pods, nodes, and events that simulate a production environment
+  </Card>
+  <Card title="Full Features" icon="sparkles">
+    All Orphelix features work in demo mode - explore without limitations
+  </Card>
+  <Card title="No Cluster Needed" icon="ban">
+    No Kubernetes cluster or kubectl required
+  </Card>
+  <Card title="Safe Exploration" icon="shield">
+    Make changes safely - nothing affects real infrastructure
+  </Card>
+</CardGroup>
+
+## Enabling Demo Mode
+
+### Automatic Demo Mode
+
+On first launch, Orphelix starts in Demo Mode automatically if no cluster is configured.
+
+<Steps>
+  <Step title="Start Orphelix">
+    ```bash
+    npm run orphelix start
+    # or
+    npm run dev
+    ```
+  </Step>
+
+  <Step title="Open Browser">
+    Navigate to [http://localhost:3000](http://localhost:3000)
+    
+    Or [http://orphelix.local:3000](http://orphelix.local:3000) if using CLI
+  </Step>
+
+  <Step title="Demo Mode Active">
+    Header shows **"DEMO MODE"** badge
+    
+    All data is mocked
+  </Step>
+</Steps>
+
+### Manual Switch to Demo Mode
+
+If connected to a cluster, switch to demo mode:
+
+<Steps>
+  <Step title="Click Mode Badge">
+    Click **"DEMO MODE"** or cluster name badge in header
+  </Step>
+
+  <Step title="Select Demo Mode">
+    Toggle from "Real Cluster" to "Demo Mode"
+  </Step>
+
+  <Step title="Confirm">
+    Page reloads with demo data
+  </Step>
+</Steps>
+
+## Demo Data
+
+Demo Mode provides realistic mock data for:
+
+### Resources
+
+<AccordionGroup>
+  <Accordion icon="layer-group" title="Deployments (15)">
+    **Mock deployments:**
+    - `nginx-deployment` (3 replicas)
+    - `api-gateway` (5 replicas, some issues)
+    - `user-service` (2 replicas)
+    - `order-service` (3 replicas)
+    - `payment-service` (2 replicas)
+    - `notification-service` (1 replica)
+    - `frontend` (4 replicas)
+    - `backend` (3 replicas)
+    - `database-proxy` (1 replica)
+    - `redis-cache` (2 replicas)
+    - `metrics-collector` (1 replica)
+    - `log-aggregator` (2 replicas)
+    - `monitoring-agent` (3 replicas)
+    - `backup-service` (1 replica)
+    - `cron-scheduler` (1 replica)
+    
+    **Status mix:**
+    - 12 healthy (all replicas available)
+    - 2 progressing (updating)
+    - 1 degraded (some replicas unavailable)
+  </Accordion>
+
+  <Accordion icon="cube" title="Pods (42)">
+    **Pod states:**
+    - 35 Running (healthy)
+    - 3 Pending (starting)
+    - 2 CrashLoopBackOff (failing)
+    - 1 ImagePullBackOff (image issue)
+    - 1 OOMKilled (memory limit)
+    
+    **Features:**
+    - Multiple containers per pod
+    - Restart counts (0-15)
+    - Resource requests/limits
+    - ConfigMap/Secret mounts
+    - Node assignments
+  </Accordion>
+
+  <Accordion icon="server" title="Nodes (3)">
+    **Mock nodes:**
+    - `node-1` (Ready, 45% CPU, 60% memory)
+    - `node-2` (Ready, 70% CPU, 75% memory)
+    - `node-3` (Ready, 30% CPU, 40% memory)
+    
+    **Capacities:**
+    - 8 CPU cores each
+    - 32 GB memory each
+    - 110 pod capacity each
+    
+    **Features:**
+    - Resource allocation tracking
+    - Pod distribution
+    - Node conditions
+  </Accordion>
+
+  <Accordion icon="key" title="ConfigMaps & Secrets (25)">
+    **ConfigMaps:**
+    - `app-config` - Application configuration
+    - `nginx-config` - Nginx settings
+    - `env-config` - Environment variables
+    - `logging-config` - Log configuration
+    - `database-config` - DB connection settings
+    
+    **Secrets:**
+    - `db-credentials` - Database passwords
+    - `api-keys` - API tokens
+    - `tls-cert` - TLS certificates
+    - `github-token` - GitHub access token
+    - `docker-registry` - Registry credentials
+    
+    **Features:**
+    - Data key-value pairs
+    - Usage tracking (which deployments use them)
+    - Masked secret values
+  </Accordion>
+
+  <Accordion icon="arrows-up-down" title="HPA (5)">
+    **Autoscalers:**
+    - `api-gateway-hpa` (2-10 replicas, target: 80% CPU)
+    - `frontend-hpa` (3-15 replicas, target: 70% CPU)
+    - `backend-hpa` (2-8 replicas, target: 75% CPU)
+    - `worker-hpa` (1-20 replicas, target: 85% CPU)
+    - `processor-hpa` (2-12 replicas, target: 80% CPU)
+    
+    **Status:**
+    - 4 operating normally
+    - 1 near max replicas (warning)
+  </Accordion>
+
+  <Accordion icon="bell" title="Events (150+)">
+    **Event types:**
+    - Normal: Scheduled, Pulling, Started, Created (120 events)
+    - Warning: Failed, BackOff, FailedScheduling, Unhealthy (30 events)
+    
+    **Time range:** Last 24 hours
+    
+    **Features:**
+    - Multiple occurrences (count column)
+    - Age tracking
+    - Resource associations
+  </Accordion>
+</AccordionGroup>
+
+### Additional Resources
+
+- **Services**: 10 services (ClusterIP, NodePort, LoadBalancer)
+- **Ingress**: 3 ingress rules
+- **StatefulSets**: 2 StatefulSets (databases)
+- **DaemonSets**: 3 DaemonSets (logging, monitoring)
+- **Jobs**: 5 completed jobs
+- **CronJobs**: 2 scheduled jobs
+- **Namespaces**: 4 namespaces (default, kube-system, production, staging)
+- **PersistentVolumes**: 8 PVs
+- **PersistentVolumeClaims**: 5 PVCs
+
+## Demo Mode Features
+
+### All Features Work
+
+Demo Mode supports all Orphelix features:
+
+<Tabs>
+  <Tab title="Viewing">
+    **Full access to:**
+    - Dashboard with stats
+    - Deployment list and details
+    - Pod list, details, and logs
+    - Node list and details
+    - ConfigMaps & Secrets
+    - HPA status
+    - Events timeline
+    - Topology visualization
+  </Tab>
+
+  <Tab title="Searching">
+    **Search functionality:**
+    - Global search bar works
+    - Filter by status
+    - Sort tables
+    - Time range filters (events)
+    - Namespace selection
+  </Tab>
+
+  <Tab title="Actions">
+    **Safe actions:**
+    - Restart deployment (simulated)
+    - View logs (mock log data)
+    - Edit YAML (opens editor)
+    - Create PR (demo repository)
+    - Switch namespaces
+    
+    <Note>
+      Actions don't affect real infrastructure - they're simulated
+    </Note>
+  </Tab>
+
+  <Tab title="Integrations">
+    **GitHub Integration:**
+    - Demo repository available
+    - YAML editor works
+    - PR creation simulated
+    - File tree browsing
+    
+    **AI Features:**
+    - Issue explanations work (if OpenAI configured)
+    - File matching simulated
+  </Tab>
+</Tabs>
+
+### Mock Data Behavior
+
+Demo data has realistic behavior:
+
+<AccordionGroup>
+  <Accordion icon="rotate" title="Dynamic Updates">
+    Data changes over time:
+    - Pod restarts increase
+    - Events accumulate
+    - Deployment status changes
+    - Resource usage fluctuates
+    
+    Simulates real cluster activity
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="Failure Scenarios">
+    Includes common issues:
+    - CrashLoopBackOff pods
+    - OOMKilled containers
+    - ImagePullBackOff errors
+    - Failed deployments
+    - Node pressure conditions
+    
+    Perfect for troubleshooting practice
+  </Accordion>
+
+  <Accordion icon="chart-line" title="Realistic Metrics">
+    Resource usage simulated:
+    - CPU utilization varies (20-85%)
+    - Memory usage fluctuates
+    - Pod restart counts increase
+    - HPA scales up/down
+    
+    Shows realistic cluster patterns
+  </Accordion>
+</AccordionGroup>
+
+## Use Cases
+
+### 1. Learning Kubernetes
+
+Explore Kubernetes concepts safely:
+
+<Steps>
+  <Step title="Understand Resources">
+    Browse deployments, pods, services without fear of breaking anything
+  </Step>
+
+  <Step title="Practice Troubleshooting">
+    Use demo failures (CrashLoopBackOff, OOMKill) to practice debugging
+  </Step>
+
+  <Step title="Learn YAML">
+    View and edit deployment YAMLs to understand structure
+  </Step>
+
+  <Step title="Experiment">
+    Try features, search, filters without consequences
+  </Step>
+</Steps>
+
+**Example learning path:**
+1. Browse dashboard to understand resource types
+2. Click deployment → View pods → Check logs
+3. Investigate CrashLoopBackOff pod
+4. View events to understand what happened
+5. Edit deployment YAML to "fix" issue
+
+### 2. Presentations & Demos
+
+Show Orphelix features without cluster:
+
+<Tabs>
+  <Tab title="Product Demo">
+    **Scenario:** Demonstrate Orphelix to potential users
+    
+    **Benefits:**
+    - No cluster setup needed
+    - Consistent data (no surprises)
+    - All features available
+    - Works offline
+    
+    **Tips:**
+    - Use demo issues to show troubleshooting features
+    - Demonstrate YAML editing with demo repo
+    - Show topology visualization
+  </Tab>
+
+  <Tab title="Training">
+    **Scenario:** Train team on Orphelix
+    
+    **Benefits:**
+    - Everyone sees same data
+    - Safe environment for learning
+    - Can demonstrate actions without risk
+    
+    **Tips:**
+    - Walk through each page
+    - Show search and filtering
+    - Demonstrate GitHub integration
+    - Practice troubleshooting workflows
+  </Tab>
+
+  <Tab title="Screenshots">
+    **Scenario:** Documentation, marketing, blog posts
+    
+    **Benefits:**
+    - Clean, consistent data
+    - No sensitive information
+    - All features visible
+    
+    **Tips:**
+    - Enable dark mode for modern look
+    - Show topology visualizations
+    - Capture dashboard with stats
+  </Tab>
+</Tabs>
+
+### 3. Development & Testing
+
+Test Orphelix features during development:
+
+<AccordionGroup>
+  <Accordion icon="code" title="Feature Development">
+    Develop new features without cluster:
+    
+    - Test UI changes with realistic data
+    - Verify layouts with different resource counts
+    - Check error handling with failure scenarios
+    
+    Faster dev loop (no cluster startup)
+  </Accordion>
+
+  <Accordion icon="vial" title="Testing">
+    Test Orphelix behavior:
+    
+    - E2E tests use demo mode
+    - Consistent test data
+    - No flaky cluster dependencies
+    
+    More reliable CI/CD
+  </Accordion>
+
+  <Accordion icon="bug" title="Debugging">
+    Debug issues without cluster:
+    
+    - Reproduce bugs with demo data
+    - Test fixes without affecting real resources
+    - Iterate quickly
+  </Accordion>
+</AccordionGroup>
+
+### 4. Offline Usage
+
+Use Orphelix without internet:
+
+- No cluster connection required
+- Demo data built-in
+- GitHub integration simulated (unless using real GitHub App)
+- AI features require OpenAI (but not cluster)
+
+**Perfect for:**
+- Airplane coding
+- Offline demos
+- Network-restricted environments
+
+## Switching to Real Cluster
+
+Ready to connect to a real cluster?
+
+<Steps>
+  <Step title="Click Demo Mode Badge">
+    Click **"DEMO MODE"** badge in header
+  </Step>
+
+  <Step title="Select Real Cluster">
+    Toggle to "Real Cluster"
+  </Step>
+
+  <Step title="Choose Context">
+    Select kubectl context from dropdown
+    
+    (Requires kubeconfig configured)
+  </Step>
+
+  <Step title="Select Namespace">
+    Choose namespace to monitor
+    
+    Default: "default"
+  </Step>
+
+  <Step title="Test Connection">
+    Click **"Test Connection"** to verify cluster access
+  </Step>
+
+  <Step title="Switch Mode">
+    Click **"Switch to Real Cluster"**
+    
+    Page reloads with live data
+  </Step>
+</Steps>
 
 <Note>
-  Full documentation will be added soon.
+  You can switch back to Demo Mode anytime by clicking the cluster name badge and selecting "Demo Mode"
 </Note>
+
+## Demo vs Real Cluster
+
+Comparison:
+
+| Feature | Demo Mode | Real Cluster |
+|---------|-----------|--------------|
+| **Data Source** | Mock data | Live Kubernetes API |
+| **Actions** | Simulated | Real effects |
+| **Requirements** | None | kubeconfig, cluster access |
+| **Performance** | Fast (no API calls) | Depends on cluster |
+| **Safety** | 100% safe | Actions affect cluster |
+| **Learning** | Perfect | Requires caution |
+| **Offline** | Works offline | Requires connectivity |
+| **Auto-refresh** | Simulated | Real-time updates |
+
+## Customizing Demo Data
+
+Advanced: Modify demo data for custom scenarios:
+
+<Steps>
+  <Step title="Find Demo Data">
+    Demo data in: `app/lib/demo/mock-data.ts`
+  </Step>
+
+  <Step title="Edit Mock Data">
+    Modify deployments, pods, events, etc:
+    
+    ```typescript
+    export const mockDeployments = [
+      {
+        name: "custom-app",
+        namespace: "default",
+        replicas: { desired: 3, available: 3 },
+        status: "Available",
+        // ... more fields
+      },
+      // Add more deployments
+    ];
+    ```
+  </Step>
+
+  <Step title="Rebuild">
+    ```bash
+    npm run build
+    npm run orphelix restart
+    ```
+  </Step>
+
+  <Step title="View Changes">
+    Demo mode now shows your custom data
+  </Step>
+</Steps>
+
+**Use cases for custom demo data:**
+- Company-specific scenarios
+- Training for specific architectures
+- Testing with high resource counts
+- Simulating specific failure modes
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Start with Demo Mode">
+    Always explore Orphelix in demo mode first:
+    - Learn UI without pressure
+    - Understand features before using on real clusters
+    - Practice workflows safely
+  </Accordion>
+
+  <Accordion icon="check" title="Use for Presentations">
+    Demo mode is perfect for demos:
+    - Predictable data
+    - No setup time
+    - Works anywhere
+    - No surprises during presentation
+  </Accordion>
+
+  <Accordion icon="check" title="Practice Troubleshooting">
+    Use demo failures to practice:
+    - Debug CrashLoopBackOff
+    - Investigate OOMKills
+    - Analyze events
+    - Find root causes
+    
+    Build skills before encountering real issues
+  </Accordion>
+
+  <Accordion icon="check" title="Test Features">
+    Try all features in demo mode:
+    - YAML editing
+    - GitHub PRs
+    - Search and filters
+    - Topology visualization
+    
+    Understand capabilities before using on production
+  </Accordion>
+</AccordionGroup>
+
+## Limitations
+
+Demo Mode has some limitations:
+
+<AccordionGroup>
+  <Accordion icon="ban" title="Static Data">
+    Demo data doesn't fully simulate cluster:
+    - Changes don't persist between reloads
+    - Resource creation not supported
+    - No real-time events (simulated only)
+  </Accordion>
+
+  <Accordion icon="ban" title="No Real Actions">
+    Actions are simulated:
+    - Restart deployment doesn't actually restart
+    - YAML changes don't apply to anything
+    - PRs go to demo repository (or fail gracefully)
+  </Accordion>
+
+  <Accordion icon="ban" title="Limited Realism">
+    Some behaviors simplified:
+    - Metrics don't reflect real resource usage
+    - Events don't follow real Kubernetes patterns exactly
+    - No actual pod scheduling
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  These limitations are intentional - demo mode prioritizes safety and ease of use over perfect simulation
+</Note>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Cluster Connection" icon="plug" href="/user/configuration/cluster-connection">
+    Connect to a real Kubernetes cluster
+  </Card>
+  <Card title="Quickstart" icon="play" href="/quickstart">
+    Get started with Orphelix
+  </Card>
+  <Card title="Dashboard" icon="chart-line" href="/user/dashboard">
+    Explore the dashboard
+  </Card>
+  <Card title="Settings" icon="gear" href="/user/configuration/settings">
+    Configure Orphelix
+  </Card>
+</CardGroup>

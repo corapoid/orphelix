@@ -1,12 +1,713 @@
 ---
 title: 'Settings'
-description: 'Documentation under construction'
+description: 'Configure Orphelix preferences, GitHub integration, AI features, and design options'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+The Settings page allows you to customize Orphelix behavior, appearance, and integrations. Access settings from the gear icon in the header or navigate to `/settings`.
 
-<Note>
-  Full documentation will be added soon.
-</Note>
+<img src="/images/settings.png" alt="Settings Page" />
+
+## Settings Tabs
+
+Settings are organized into 4 tabs:
+
+<CardGroup cols={2}>
+  <Card title="Cluster Configuration" icon="server">
+    Cluster aliases and connection preferences
+  </Card>
+  <Card title="GitHub Integration" icon="github">
+    GitHub App setup and repository configuration
+  </Card>
+  <Card title="AI Features" icon="brain">
+    OpenAI API configuration for AI-powered features
+  </Card>
+  <Card title="Design" icon="palette">
+    Theme, visual preset, and UI customization
+  </Card>
+</CardGroup>
+
+## Cluster Configuration
+
+### Cluster Aliases
+
+Give clusters friendly, recognizable names:
+
+<img src="/images/cluster-aliases.png" alt="Cluster Aliases" />
+
+<Steps>
+  <Step title="Add Alias">
+    Click **"Add Alias"** button
+  </Step>
+
+  <Step title="Select Context">
+    Choose kubectl context from dropdown
+  </Step>
+
+  <Step title="Configure">
+    - **Friendly Name**: Display name (e.g., "🚀 Production")
+    - **Description**: Optional notes
+    - **Color**: Badge color (optional)
+  </Step>
+
+  <Step title="Save">
+    Alias appears in context selector
+  </Step>
+</Steps>
+
+**Example aliases:**
+```
+arn:aws:eks:us-east-1:123:cluster/prod → 🚀 Production (US East)
+gke_project_us-central1_cluster → 🌎 GKE Staging
+minikube → 💻 Local Development
+```
+
+### Critical Issues Monitoring
+
+Configure which resource types trigger critical alerts:
+
+<img src="/images/critical-issues-settings.png" alt="Critical Issues Settings" />
+
+**Configurable per resource type:**
+
+<AccordionGroup>
+  <Accordion icon="layer-group" title="Deployments">
+    Alert when:
+    - ✅ No replicas available
+    - ✅ Image pull failures
+    - ✅ CrashLoopBackOff pods
+    
+    **Default:** Enabled
+  </Accordion>
+
+  <Accordion icon="cube" title="Pods">
+    Alert when:
+    - ✅ OOMKilled
+    - ✅ Failed status
+    - ✅ Evicted
+    - ✅ High restart count (>10)
+    
+    **Default:** Enabled
+  </Accordion>
+
+  <Accordion icon="server" title="Nodes">
+    Alert when:
+    - ✅ NotReady status
+    - ✅ Disk pressure
+    - ✅ Memory pressure
+    - ✅ PID pressure
+    
+    **Default:** Enabled
+  </Accordion>
+
+  <Accordion icon="arrows-up-down" title="HPA">
+    Alert when:
+    - ✅ Cannot scale (no metrics)
+    - ✅ At max replicas
+    - ✅ Scaling failures
+    
+    **Default:** Disabled (less critical)
+  </Accordion>
+</AccordionGroup>
+
+**Alert Settings:**
+
+- **Enable/Disable per type**: Toggle monitoring
+- **Severity threshold**: Choose alert level (Warning, Error, Critical)
+- **Cooldown period**: Minimum time between alerts (default: 5 minutes)
+
+### Desktop Notifications
+
+Configure browser notifications for critical issues:
+
+<img src="/images/notification-settings.png" alt="Notification Settings" />
+
+<Tabs>
+  <Tab title="Enable">
+    <Steps>
+      <Step title="Click Enable Notifications">
+        Button in Critical Issues section
+      </Step>
+
+      <Step title="Grant Browser Permission">
+        Browser prompts for notification permission
+        
+        Click "Allow"
+      </Step>
+
+      <Step title="Test Notification">
+        Click "Send Test" to verify it works
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Configure">
+    **Notification options:**
+    
+    - **Show for:** Select resource types
+    - **Severity:** Warning, Error, or Critical only
+    - **Sound:** Enable notification sound
+    - **Persistent:** Keep notification until closed
+    - **Do Not Disturb:** Disable during specified hours
+  </Tab>
+
+  <Tab title="Examples">
+    **Example notifications:**
+    
+    ```
+    ⚠️ Deployment Alert
+    api-gateway has 0/3 replicas available
+    Namespace: production
+    [View Details]
+    ```
+    
+    ```
+    🔴 Node Critical
+    node-1 is NotReady
+    Reason: Kubelet stopped posting status
+    [View Details]
+    ```
+    
+    ```
+    💀 Pod OOMKilled
+    backend-abc123 killed due to OOM
+    Memory limit: 512Mi
+    [View Logs]
+    ```
+  </Tab>
+</Tabs>
+
+### Auto-refresh
+
+Configure automatic resource refresh interval:
+
+<Tabs>
+  <Tab title="Intervals">
+    **Available intervals:**
+    - Off (manual refresh only)
+    - 10 seconds (real-time)
+    - 30 seconds (recommended)
+    - 1 minute
+    - 5 minutes
+    
+    **Default:** 30 seconds
+  </Tab>
+
+  <Tab title="Behavior">
+    When enabled:
+    - Resources automatically refresh
+    - Real-time status updates
+    - Event stream updates
+    - No page reload required
+    
+    <Note>
+      Auto-refresh pauses when tab is inactive (saves resources)
+    </Note>
+  </Tab>
+
+  <Tab title="Per-page">
+    Some pages have independent refresh:
+    - Dashboard: Auto-refresh enabled
+    - Logs viewer: Real-time streaming
+    - Events: Auto-update
+    
+    Can be toggled per page
+  </Tab>
+</Tabs>
+
+## GitHub Integration
+
+Configure GitHub App for YAML editing and PRs:
+
+<img src="/images/github-integration-settings.png" alt="GitHub Integration Settings" />
+
+### GitHub App Setup
+
+<Steps>
+  <Step title="Create GitHub App">
+    See [GitHub App Setup](/user/github/github-app-setup) for detailed instructions
+  </Step>
+
+  <Step title="Configure Environment Variables">
+    Add to `.env.local`:
+    
+    ```bash
+    GITHUB_APP_ID=123456
+    GITHUB_APP_CLIENT_ID=Iv1.abc123
+    GITHUB_APP_CLIENT_SECRET=secret_here
+    GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n..."
+    NEXTAUTH_SECRET=random_secret
+    NEXTAUTH_URL=http://localhost:3000
+    ```
+  </Step>
+
+  <Step title="Login in Settings">
+    Click **"Login with GitHub App"** button
+    
+    Redirects to GitHub for authorization
+  </Step>
+
+  <Step title="Select Repository">
+    After login, select default repository for YAML editing
+  </Step>
+</Steps>
+
+### Repository Settings
+
+<AccordionGroup>
+  <Accordion icon="folder" title="Default Repository">
+    **Purpose:** Repository used for YAML editing
+    
+    **Selection:**
+    - Choose from installed repositories
+    - Must have Contents & Pull Requests permissions
+    - Can be changed anytime
+    
+    **Example:** `myorg/k8s-manifests`
+  </Accordion>
+
+  <Accordion icon="code-branch" title="Default Branch">
+    **Purpose:** Branch to create PRs from
+    
+    **Options:**
+    - main (recommended)
+    - master
+    - develop
+    - Custom branch
+    
+    **Default:** main
+  </Accordion>
+
+  <Accordion icon="folder-tree" title="File Path Patterns">
+    **Purpose:** Where to find deployment YAML files
+    
+    **Examples:**
+    - `k8s/deployments/*.yaml`
+    - `manifests/production/*.yaml`
+    - `*/deployment.yaml`
+    
+    **Default:** `**/*.yaml` (search all)
+  </Accordion>
+</AccordionGroup>
+
+### GitHub Status
+
+Shows current GitHub integration state:
+
+<Tabs>
+  <Tab title="Connected">
+    ✅ **GitHub App connected**
+    
+    **Display:**
+    - Logged in as: @username
+    - Repositories: 5 accessible
+    - Default repo: myorg/k8s-manifests
+    - Token expires: Never (GitHub App)
+    
+    **Actions:**
+    - Change repository
+    - Logout
+  </Tab>
+
+  <Tab title="Not Connected">
+    ⚪ **No GitHub connection**
+    
+    **Display:**
+    - Login button available
+    - Setup instructions link
+    
+    **Actions:**
+    - Login with GitHub App
+    - View setup guide
+  </Tab>
+
+  <Tab title="Error">
+    ❌ **Connection error**
+    
+    **Possible causes:**
+    - Token expired
+    - App uninstalled
+    - Repository access revoked
+    - API rate limit exceeded
+    
+    **Actions:**
+    - Re-authenticate
+    - Check app installation
+    - Review permissions
+  </Tab>
+</Tabs>
+
+## AI Features
+
+Configure OpenAI integration for AI-powered features:
+
+<img src="/images/ai-settings.png" alt="AI Settings" />
+
+### OpenAI API Key
+
+<Steps>
+  <Step title="Get API Key">
+    Create key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+  </Step>
+
+  <Step title="Add to Environment">
+    Update `.env.local`:
+    
+    ```bash
+    OPENAI_API_KEY=sk-proj-...
+    ```
+  </Step>
+
+  <Step title="Verify in Settings">
+    Settings shows:
+    - ✅ API key configured
+    - Model: gpt-4o-mini
+    - Features enabled
+  </Step>
+</Steps>
+
+### AI-Powered Features
+
+When OpenAI configured, enables:
+
+<AccordionGroup>
+  <Accordion icon="magnifying-glass" title="Smart File Matching">
+    **Feature:** AI finds correct YAML file for deployment
+    
+    **How it works:**
+    1. Analyzes deployment spec
+    2. Reads repository files
+    3. GPT-4o-mini calculates match scores
+    4. Suggests best match
+    
+    **Fallback:** Pattern-based matching if API unavailable
+  </Accordion>
+
+  <Accordion icon="stethoscope" title="Issue Explanations">
+    **Feature:** AI explains critical cluster issues
+    
+    **How it works:**
+    1. Detects issue (OOMKill, CrashLoop, etc.)
+    2. Collects context (logs, events, specs)
+    3. GPT-4o-mini analyzes problem
+    4. Provides explanation and solutions
+    
+    **Example:**
+    ```
+    Issue: Pod repeatedly OOMKilled
+    
+    Explanation:
+    Your pod is exceeding its 512Mi memory limit due to a 
+    memory leak in the application. The Java heap size is 
+    configured to use 1GB but the pod limit is only 512Mi.
+    
+    Solutions:
+    1. Increase memory limit to 1Gi
+    2. Reduce Java heap size to 400m
+    3. Investigate memory leak with profiler
+    ```
+  </Accordion>
+
+  <Accordion icon="robot" title="Troubleshooting Chat">
+    **Feature:** Interactive AI assistant for debugging
+    
+    **How it works:**
+    1. User describes problem
+    2. AI asks clarifying questions
+    3. Analyzes logs, events, manifests
+    4. Suggests solutions step-by-step
+    
+    **Usage:** Click "AI Troubleshoot" button on resources
+  </Accordion>
+
+  <Accordion icon="folder-tree" title="Repository Analysis">
+    **Feature:** AI understands repo structure
+    
+    **How it works:**
+    1. Scans repository
+    2. Identifies structure (Helm, Kustomize, plain YAML)
+    3. Maps deployments to files
+    4. Suggests improvements
+    
+    **Example:**
+    ```
+    Structure detected: Kustomize
+    Base: k8s/base/
+    Overlays: k8s/overlays/production/
+    
+    Mapped deployments:
+    - api-gateway → k8s/base/api-gateway/deployment.yaml
+    - user-service → k8s/base/user-service/deployment.yaml
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### AI Usage & Costs
+
+<Tabs>
+  <Tab title="Token Usage">
+    **Estimated costs** (gpt-4o-mini):
+    
+    - File matching: ~500 tokens = $0.0001
+    - Issue explanation: ~1000 tokens = $0.0002
+    - Troubleshooting chat: ~2000 tokens/message = $0.0004
+    - Repository analysis: ~5000 tokens = $0.001
+    
+    **Total typical monthly cost:** $1-5
+    
+    <Note>
+      Costs depend on usage frequency and repository size
+    </Note>
+  </Tab>
+
+  <Tab title="Rate Limits">
+    OpenAI rate limits (Tier 1):
+    - 500 requests/minute
+    - 30,000 tokens/minute
+    
+    Orphelix automatically:
+    - Queues requests
+    - Retries on rate limit
+    - Shows progress indicators
+  </Tab>
+
+  <Tab title="Privacy">
+    **Data sent to OpenAI:**
+    - Deployment specifications (YAML)
+    - Pod logs (last 100 lines)
+    - Event messages
+    - File contents from repository
+    
+    **NOT sent:**
+    - Secret values (masked)
+    - Passwords or tokens
+    - Full cluster state
+    
+    <Warning>
+      Review OpenAI's privacy policy if handling sensitive data
+    </Warning>
+  </Tab>
+</Tabs>
+
+## Design
+
+Customize Orphelix appearance:
+
+<img src="/images/design-settings.png" alt="Design Settings" />
+
+### Theme Mode
+
+<Tabs>
+  <Tab title="Light Mode">
+    **Appearance:** Bright, high contrast
+    
+    **Best for:**
+    - Daytime use
+    - Well-lit environments
+    - Presentations
+    
+    **Colors:**
+    - Background: White
+    - Text: Dark gray
+    - Primary: Purple/Blue
+  </Tab>
+
+  <Tab title="Dark Mode">
+    **Appearance:** Low contrast, easy on eyes
+    
+    **Best for:**
+    - Extended use
+    - Low-light environments
+    - Late night work
+    
+    **Colors:**
+    - Background: Dark gray
+    - Text: Light gray
+    - Primary: Purple/Blue
+    
+    **Default** theme
+  </Tab>
+
+  <Tab title="System">
+    **Appearance:** Follows OS preference
+    
+    **Behavior:**
+    - Auto-switches based on system
+    - Detects OS dark mode setting
+    - Updates in real-time
+    
+    **Best for:** Consistency with OS
+  </Tab>
+</Tabs>
+
+### Visual Preset
+
+Choose UI style:
+
+<AccordionGroup>
+  <Accordion icon="square" title="Classic">
+    **Style:** Traditional flat design
+    
+    **Features:**
+    - Solid backgrounds
+    - Sharp borders
+    - High contrast
+    - Faster rendering
+    
+    **Best for:** Performance, accessibility
+  </Accordion>
+
+  <Accordion icon="droplet" title="Liquid Glass">
+    **Style:** Modern glassmorphism
+    
+    **Features:**
+    - Frosted glass effects
+    - Subtle shadows
+    - Backdrop blur
+    - Gradient accents
+    
+    **Best for:** Modern aesthetic, visual appeal
+    
+    **Default** preset
+  </Accordion>
+</AccordionGroup>
+
+### Sidebar
+
+Customize sidebar behavior:
+
+- **Auto-collapse**: Collapse on small screens
+- **Pin favorite pages**: Quick access menu
+- **Show icons only**: Compact mode
+- **Default width**: Sidebar width (200-300px)
+
+### Animations
+
+Control UI animations:
+
+- **Enable animations**: Smooth transitions
+- **Reduce motion**: Minimal animations (accessibility)
+- **Animation speed**: Fast, Normal, Slow
+
+## Saving Settings
+
+<Tabs>
+  <Tab title="Auto-save">
+    Most settings save automatically:
+    - Theme changes
+    - Auto-refresh interval
+    - Sidebar preferences
+    
+    **No save button needed**
+  </Tab>
+
+  <Tab title="Manual Save">
+    Some settings require save:
+    - Cluster aliases
+    - Notification preferences
+    - GitHub repository selection
+    
+    **Click "Save" button** after changes
+  </Tab>
+
+  <Tab title="Persistence">
+    Settings stored in:
+    - **Browser:** LocalStorage (theme, sidebar)
+    - **Database:** SQLite (aliases, notifications)
+    - **Environment:** .env.local (API keys)
+    
+    **Sync:** Settings sync across browser tabs
+  </Tab>
+</Tabs>
+
+## Exporting/Importing Settings
+
+<Steps>
+  <Step title="Export Settings">
+    Click **"Export Settings"** button
+    
+    Downloads `orphelix-settings.json`:
+    ```json
+    {
+      "theme": "dark",
+      "visualPreset": "liquid-glass",
+      "autoRefresh": 30,
+      "aliases": [
+        {
+          "context": "prod",
+          "name": "🚀 Production"
+        }
+      ],
+      "notifications": {
+        "enabled": true,
+        "types": ["deployments", "pods", "nodes"]
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Import Settings">
+    Click **"Import Settings"** button
+    
+    Upload `orphelix-settings.json` file
+    
+    **Overwrites** current settings
+  </Step>
+
+  <Step title="Share with Team">
+    Distribute settings file to team:
+    
+    ```bash
+    # Commit to repo
+    git add .orphelix/settings.json
+    git commit -m "Add Orphelix team settings"
+    
+    # Team members import file
+    ```
+  </Step>
+</Steps>
+
+## Resetting Settings
+
+<Warning>
+  Resetting settings cannot be undone. Export first if needed.
+</Warning>
+
+<Steps>
+  <Step title="Open Reset Dialog">
+    Click **"Reset All Settings"** button at bottom
+  </Step>
+
+  <Step title="Confirm Reset">
+    Checkbox: "I understand this will reset all settings"
+    
+    Click **"Reset"**
+  </Step>
+
+  <Step title="Settings Cleared">
+    All settings return to defaults:
+    - Theme: Dark
+    - Visual Preset: Liquid Glass
+    - Auto-refresh: 30s
+    - Aliases: None
+    - Notifications: Disabled
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Cluster Connection" icon="plug" href="/user/configuration/cluster-connection">
+    Configure cluster access
+  </Card>
+  <Card title="GitHub Setup" icon="github" href="/user/github/github-app-setup">
+    Set up GitHub integration
+  </Card>
+  <Card title="Demo Mode" icon="flask" href="/user/configuration/demo-mode">
+    Explore demo mode
+  </Card>
+  <Card title="Dashboard" icon="chart-line" href="/user/dashboard">
+    Back to dashboard
+  </Card>
+</CardGroup>
