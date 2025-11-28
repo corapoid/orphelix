@@ -1,12 +1,17 @@
 # Orphelix
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/yourusername/kubevista)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/dmakowski/orphelix)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.0-black.svg)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.0-61dafb.svg)](https://reactjs.org/)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/yourusername/kubevista)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/dmakowski/orphelix)
+[![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-5A67D8.svg)](https://claude.ai/claude-code)
+
+> **🚧 Active Development**: This project is under active development. Features and APIs may change.
+>
+> **🤖 Built with AI**: Developed with [Claude Code](https://claude.ai/claude-code) - Anthropic's AI-powered coding assistant.
 
 **Orphelix** is a comprehensive web dashboard for monitoring and managing Kubernetes resources. The application offers a demo mode with realistic test data, live updates via Server-Sent Events, pod management, topology visualization, and GitHub integration for GitOps workflows.
 
@@ -31,22 +36,17 @@
 - **Pull Request Workflow** - Create and merge PRs directly from the dashboard
 
 ### User Experience
-- **Dark/Light Theme** - Toggle between themes with preference persistence
-- **Responsive Design** - Mobile and desktop optimized
 - **Namespace Selection** - Easy switching between Kubernetes namespaces
 - **Context Switching** - Support for multiple kubectl contexts
 
 ## 📋 Requirements
 
-- **Node.js** >= 24.0.0
 - **kubectl** configured with cluster access (for real mode)
 - (Optional) **GitHub App** for YAML editor and PR workflow
 
 ## 🚀 Quick Start
 
 ### Running the Application
-
-**Option 1: Production Mode (Recommended for daily use)**
 
 ```bash
 # 🚀 ONE COMMAND SETUP - Auto-installs, builds, and configures everything!
@@ -76,44 +76,6 @@ npm run orphelix help       # Show all commands
 npm run orphelix start -- --port 8080
 npm run orphelix open -- --port 8080
 ```
-
-**Option 2: Development Mode**
-
-```bash
-cd app
-npm run dev
-# Open http://localhost:3000
-```
-
-### Global CLI Installation (Optional)
-
-To use `orphelix` command from anywhere:
-
-```bash
-cd app
-npm link
-```
-
-Now you can use commands globally (auto-install on first run):
-```bash
-orphelix start                  # Auto-installs & starts!
-orphelix start --port 8080      # Custom port
-orphelix stop
-orphelix logs
-orphelix open --port 8080       # Open with custom port
-```
-
-### Features of Production Mode
-
-✅ **Zero configuration** - Auto-installs dependencies and builds on first run
-✅ **Custom hostname** - Automatically configures `orphelix.local` (requires sudo once)
-✅ **Runs in background** - Close terminal, application keeps running
-✅ **Fast startup** - Optimized standalone build
-✅ **Auto-restart** - Automatically restarts on crashes
-✅ **Log management** - Logs stored in `app/logs/`
-✅ **Low resource usage** - Production-optimized build
-✅ **Custom port** - Use `--port` flag or `ORPHELIX_PORT` env variable
-✅ **Persistent storage** - SQLite database for settings (auto-created on first run)
 
 ## 📖 Documentation
 
@@ -187,43 +149,3 @@ Note: Mintlify may have dependency issues. Documentation is fully readable as ma
 - ✅ **Secrets masked** - Secret values never displayed in UI
 - ✅ **Read-only by default** - Most operations are read-only (except pod restart)
 
-## 💾 Data Storage
-
-Orphelix uses a local SQLite database (`app/orphelix.db`) to persist:
-- User preferences (theme, visual preset, compact mode)
-- Application settings (auto-refresh, realtime updates)
-- Cluster aliases (friendly names for contexts)
-- GitHub integration settings (selected repo, pending PRs)
-- Sidebar customization (pinned items)
-- Critical issues monitoring preferences
-
-**Database location:** `app/orphelix.db`
-**Automatic migration:** On first run, existing localStorage settings are automatically migrated to SQLite
-**Backup:** Simply copy `app/orphelix.db` to backup your settings
-
-## 💬 Support
-
-### Reporting Issues
-
-If you encounter problems or have suggestions, use [GitHub Issues](https://github.com/your-username/kubevista/issues).
-
-### Quick Answers
-
-**Q: Can I use without a Kubernetes cluster?**
-A: Yes! Demo mode works without any cluster.
-
-**Q: How do I connect to my cluster?**
-A: Ensure `kubectl` works, then click "DEMO MODE" badge and select a context.
-
-**Q: Can I edit Kubernetes manifests?**
-A: Yes! Set up GitHub integration (see [docs/github-setup.md](docs/github-setup.md)) and use the YAML editor.
-
-## 📄 License
-
-This project is distributed under the **Apache License 2.0**.
-
-**Key Points:**
-- ✅ Permissive, OSI-approved license for personal, commercial, and production use
-- 🔁 Requires preservation of copyright and license notices
-- ⚖️ Provides explicit patent grant and contribution terms
-- 📘 See the [LICENSE](LICENSE) file for the full legal text

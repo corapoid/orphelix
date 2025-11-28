@@ -5,569 +5,89 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] - 2025-11-28
+
+First official release of Orphelix - Modern Kubernetes Dashboard
 
 ### Added
 
-- **Repository Browser - Inline Branch Creation**: New animated branch creation feature
-  - Inline branch creation with expandable text field animation
-  - Smooth Dribbble-inspired animation (cubic-bezier easing with bounce effect)
-  - Branch selector converted from Select to Menu component (matching namespace/context selector style)
-  - Mock branches support in demo mode (main, develop, feature/demo)
-  - Dynamic branch list updates when new branches are created
-  - Search bar auto-hides with opacity animation when creating branches
-  - Minimalist border design (1px solid, transparent by default, primary color on focus)
-  - Glass surface styling with transparent backgrounds for text inputs
-  - Unified 39px height for all header elements (islands, search, branch selector)
-  - Branch creation via API in real mode, instant local update in demo mode
+#### Core Features
+- **Kubernetes Resource Monitoring** - Full support for Deployments, Pods, Nodes, ConfigMaps, Secrets, HPA, PersistentVolumes, Events
+- **Real-time Updates** - Server-Sent Events (SSE) with automatic reconnection, heartbeat monitoring, and live cluster state updates
+- **Demo Mode** - Realistic test data for presentations without cluster requirements (default mode)
+- **Namespace Support** - Full namespace selection functionality with persisted state
+- **Context Switching** - Support for multiple kubectl contexts with real context detection
+- **Resource Metrics** - CPU/Memory monitoring with color-coded indicators and progress bars
+- **Topology Visualization** - Interactive dependency graphs using React Flow with pan, zoom, and fit-to-view controls
+- **Pod Management** - Container logs viewer with search/download, pod restart functionality
+- **Dark/Light Theme** - Toggle between themes with preference persistence
 
-- **NextAuth v5 with Server-Side Route Protection**: Complete security overhaul
-  - NextAuth.js v5 (beta.30) with GitHub OAuth provider
-  - Server-side proxy.ts (Next.js 16 convention) for route protection
-  - HTTP cookie-based app-mode tracking accessible to middleware
-  - Authorization callback with server-side validation
-  - User menu component with sign-out functionality
-  - Repository selector components for GitHub integration
-  - Cannot be bypassed from client-side (JavaScript, localStorage, DevTools)
-  - Demo mode properly validated server-side via cookies
-  - NextAuth type extensions for session management
-  - GitHub App repositories API route
-  - Layout content component with route validation
+#### Production Deployment
+- **PM2 Integration** - Background process management for production deployment
+- **Orphelix CLI** - Command-line interface with auto-install, start/stop/restart/logs/status commands
+- **SQLite Storage** - Local database for session and state persistence (better-sqlite3)
+- **Desktop Notifications** - macOS native notifications using node-notifier for deployment events
+- **Standalone Build** - Next.js standalone output for optimized production deployment
+- **Custom Hostname** - Automatic orphelix.local hostname configuration
 
-- **Demo Mode as Default**: Changed application default mode
-  - Default mode changed from 'real' to 'demo' for better UX
-  - Users can try the application immediately without cluster setup
-  - Renamed from 'mock' to 'demo' across entire codebase
-  - Updated all TypeScript types (AppMode = 'demo' | 'real')
-  - Cookie-based mode persistence for server-side validation
+#### GitHub Integration & GitOps
+- **NextAuth v5** - Server-side route protection with GitHub OAuth that cannot be bypassed from client
+- **GitHub App Integration** - Granular repository permissions with installation-based authentication
+- **Dual Authentication** - Support for both GitHub App (recommended) and OAuth (legacy) methods
+- **YAML Editor** - Monaco editor with syntax highlighting and Kubernetes schema validation
+- **AI-Powered File Matching** - OpenAI GPT-4o-mini integration for smart deployment-to-file matching
+- **Kustomization Support** - Detect and edit Kustomize base & overlays with tab navigation
+- **Pull Request Workflow** - Create and merge PRs directly from the dashboard
+- **Repository Browser** - Inline branch creation with animated UI
 
-- **Detail Pages UI Consistency**: Improved layout and visual consistency
-  - Disabled documentation sidebars across all resource detail pages
-  - Search bar moved to top bar (centered) alongside namespace selector
-  - SearchBar integrated with SearchContext for global state management
-  - Applied 50% width constraints to Jobs and CronJobs information panels
-  - Human-readable cron schedule descriptions (e.g., "Every 5 minutes", "Daily at midnight")
-  - Namespace removed from metadata in ConfigMaps, Secrets, and CronJobs
-  - Pods and Conditions sections converted to GlassPanel component
-  - Services Ports section uses GlassPanel styling
-  - Limit Ranges section removed from Namespaces detail page
-  - Fixed Age display in Nodes (removed formatAge causing N/A)
-  - Labels styling unified across ConfigMaps, Secrets, and Namespaces (glass morphism Paper)
-  - ConfigMaps and Secrets data sections simplified (removed GlassPanel backgrounds)
-  - Cleaned up unused imports and variables across all detail pages
+#### UI/UX Improvements
+- **Material-UI v6** - Modern component library with glass morphism design
+- **Responsive Design** - Mobile and desktop optimized layouts
+- **Search & Filters** - Global search moved to header with context-aware filtering
+- **Status Badges** - Pill-shaped badges with icons (CheckCircle, Error, HourglassEmpty)
+- **Collapsible Sections** - Topology, events, and logs sections with smooth transitions
+- **PageHeader Component** - Unified header with breadcrumbs, refresh button, and metadata
+- **Footer Component** - Version display with automatic inheritance from package.json
+- **Settings Page** - Centralized configuration with inline mode selection and GitHub integration tabs
 
-- **UI Design Improvements**: Major visual redesign of badges and detail pages
-  - New pill-shaped status badges using MUI Chip component with icons
-  - Global search moved to top header (centered) for better accessibility
-  - SearchContext with Context API for global search state management
-  - Filters added to all list pages (Deployments, Pods, Events)
-  - Status filters for Deployments (Available, Progressing, Degraded)
-  - Vertical metadata layout on detail pages for better readability
-  - Refresh button moved to breadcrumb level for cleaner UI
-  - Interactive node links in pod detail view for easy navigation
-  - Badge demo page (`/badge-demo`) with 5 design variants
+#### Architecture & Security
+- **Server-Side API Routes** - 19+ endpoints with type-safe K8s resource mapping
+- **Kubernetes API Integration** - @kubernetes/client-node with automatic kubeconfig discovery
+- **HTTP-only Cookies** - Secure token storage for GitHub App authentication
+- **Route Protection** - NextAuth v5 proxy.ts middleware preventing client-side bypassing
+- **Cookie-based Mode Tracking** - Server-side validation of demo/real mode
+- **Secret Masking** - Secret values never exposed in UI (only keys displayed)
 
-- **AI-Powered File Matching (OpenAI Integration)**: Intelligent YAML file matching
-  - OpenAI GPT-4o-mini integration for smart deployment-to-file matching
-  - User-configurable OpenAI API key in Settings (stored in localStorage)
-  - Automatic exclusion of base/ directory files when environment files exist
-  - Confidence scoring and reasoning display for AI matches
-  - Fallback to pattern matching when OpenAI key not configured
-  - `/api/ai/match-file` endpoint with structured AI prompts
-  - AI settings panel in Settings page
-  - Match info alerts showing method (AI/pattern) and confidence
-  - Support for complex repository structures (Kustomize, multi-environment)
-  - Intelligent handling of naming patterns (hyphens, underscores, suffixes)
-
-- **GitHub App Integration (Granular Permissions)**: Major security improvement
-  - GitHub App authentication with fine-grained repository permissions
-  - Users can select specific repositories to grant access (not all or nothing)
-  - Installation-based token system with automatic 8-hour refresh
-  - Support for both GitHub App (recommended) and OAuth (legacy) methods
-  - Tabbed interface in Settings to choose between GitHub App and OAuth
-  - Installation management UI with repository counts and access control
-  - 3 new API routes: `/api/github-app/*` (callback, installations, logout)
-  - GitHubAppInstallButton and GitHubAppRepoSelector components
-  - HTTP-only cookie storage for GitHub App tokens (more secure)
-  - Support for multiple installations (personal + organization accounts)
-  - Grouped repository dropdown by installation
-  - Private/public repository badges in UI
-  - "Add More Repositories" workflow integration
-  - Comprehensive GitHub App setup guide (GITHUB_APP_SETUP_PL.md)
-  - @octokit/app and @octokit/auth-app dependencies
-
-- **GitHub Integration & YAML Editor**: Complete GitOps workflow integration
-  - NextAuth GitHub OAuth authentication with session management (legacy method)
-  - Repository selection with localStorage persistence
-  - YAML file browser with recursive directory scanning
-  - Monaco Editor integration for YAML editing
-  - Kustomization structure detection and parsing
-  - Base + Overlays tab navigation for Kustomize projects
-  - Automatic Pull Request creation with formatted messages
-  - PR tracking in Zustand store (pending PRs per deployment)
-  - GitHub API client with full Octokit integration
-  - 5 new API routes: `/api/auth`, `/api/github/*`
-  - GitHubLoginButton, RepoSelector, and YamlEditorModal components
-  - "Edit YAML" button on deployment details page
-  - GitHub Integration section in Settings page with method selection
-  - Comprehensive setup guides (GITHUB_SETUP.md, GITHUB_SETUP_PL.md)
-  - Map serialization support in Zustand for localStorage
-  - Session provider integration with NextAuth
-  - Type definitions for NextAuth session extensions
+#### Testing & Quality
+- **217 Unit Tests** - 100% passing with Vitest
+- **93 E2E Tests** - Playwright integration tests for critical user flows
+- **TypeScript 5.7** - Full type safety across codebase
+- **ESLint Configuration** - Strict linting rules with auto-fix support
+- **Turbopack Support** - Fast refresh in development mode
 
 ### Changed
 
-- **License**: Switched from Business Source License 1.1 to Apache License 2.0 (fully open source)
-- **Security Architecture**: Complete shift to server-side validation
-  - Moved from client-side localStorage validation to server-side cookies
-  - Route protection now executes before any page rendering
-  - Welcome modal sets HTTP cookies for middleware validation
-  - GitHub OAuth login uses NextAuth v5 signIn() with redirect
-  - Authorization logic centralized in auth.ts callback
-
-- **Mode Terminology**: Renamed 'mock' to 'demo' throughout codebase
-  - Changed type definition: AppMode = 'demo' | 'real'
-  - Updated all hooks (56 files): use-pods, use-deployments, use-jobs, etc.
-  - Updated all tests: changed mockReturnValue to mockImplementation
-  - Fixed query key expectations: ['mock', 'mock'] → ['demo', 'demo']
-  - Updated store default mode: 'real' → 'demo'
-  - Updated all API routes to handle 'demo' mode parameter
-  - Fixed GitHub analyzer mode type: mode?: 'demo'
-
-- **Test Infrastructure**: Improved Zustand mocking pattern
-  - Changed from simple mockReturnValue to mockImplementation with selectors
-  - Proper support for Zustand selector pattern: useModeStore((state) => state.mode)
-  - All 233 tests passing after migration
-  - Fixed 53 test failures related to mode migration
-
-- **Dependencies**: Added NextAuth v5 and updated authentication stack
-  - next-auth@5.0.0-beta.30 (upgraded from v4)
-  - Removed deprecated middleware.ts convention (Next.js 16)
-  - Added proxy.ts for route protection
-
-- **Status Badges**: Complete redesign using MUI Chip component
-  - V4 variant: pill-shaped with icons (CheckCircle, Error, HourglassEmpty)
-  - Consistent colors: success (green), error (red), warning (orange), info (blue)
-  - Size variants: small (min-width: 100px) and medium (min-width: 120px)
-  - Extra rounded borders (borderRadius: 16px) for modern look
-- **Search Bar**: Moved from PageHeader to global Header component
-  - Centered positioning in top navigation bar
-  - Dynamic placeholder based on current page
-  - Auto-clear on page navigation
-  - Global search state via SearchContext
-- **PageHeader Component**: Major restructuring
-  - Removed search props (now in global header)
-  - Added metadata array support for vertical layout
-  - Metadata accepts ReactNode for interactive elements
-  - Refresh button moved to breadcrumb level
-  - Filters positioned on right side (same line as title)
-  - Support for both string and ReactNode titles
-- **Detail Pages Layout**: Unified metadata presentation
-  - Changed from "Deployment in namespace" to "Namespace: ..." format
-  - Vertical layout instead of horizontal bullet-separated
-  - Status badge inline with title
-  - Metadata stacked vertically for better readability
-  - Applied to all detail pages (Deployments, Pods, Nodes, ConfigMaps, Secrets)
-- **RealtimeStatus**: Reduced gap between status badge and reconnect button (1.5 → 0.75)
-- **Nodes UI Improvements**:
-  - Removed 'Roles' column from nodes table and details page
-  - Removed 'Conditions' section from node details
-  - Added CPU and memory usage percentages (allocatable/capacity)
-  - Simplified node details with single Resources section
-  - Namespace-scoped nodes filtering (show only nodes with pods in selected namespace)
-- **Secrets Details Page**: Standardized styling to match app design (removed gradient header)
-- **YAML Editor**: Removed unnecessary Kustomize tabs (Base/Overlay)
-- **Dependencies**: Added `next-auth@beta`, `@octokit/rest`, `@octokit/app`, `@octokit/auth-app`, `@monaco-editor/react`, `ai`, `@ai-sdk/openai`
-- **Store**: Extended with GitHub repository and PR tracking state
-- **Environment**: Added GitHub App and OAuth configuration variables (.env.example updated)
-- **Settings Page**: Now includes tabbed interface for GitHub App vs OAuth selection
-- **Security**: GitHub App tokens stored in HTTP-only cookies (not localStorage)
+- **License** - Switched from Business Source License 1.1 to Apache License 2.0 (fully open source)
+- **Default Mode** - Changed from 'real' to 'demo' for better first-run experience
+- **Mode Terminology** - Renamed 'mock' to 'demo' throughout codebase (56 files updated)
+- **Security Architecture** - Complete shift from client-side localStorage to server-side cookies
+- **Search Bar** - Moved from PageHeader to global Header component with centered positioning
+- **Version Display** - Automated version inheritance from package.json via NEXT_PUBLIC_APP_VERSION
+- **Monorepo Structure** - Simplified to single workspace (landing-page removed)
+- **Node Requirements** - Updated to Node.js >= 24.0.0
+- **Next.js 15/16** - Updated to latest conventions (proxy.ts, standalone output, typedRoutes)
 
 ### Fixed
 
-- **Security Vulnerability**: Client-side validation could be bypassed
-  - Previous validation in welcome-modal.tsx was client-side only
-  - Could be circumvented by: disabling JavaScript, modifying localStorage, direct URL access
-  - Fixed by implementing server-side proxy with NextAuth v5
-  - Route protection now executes before any rendering
-  - Validation uses HTTP cookies accessible to server middleware
-
-- **GitHub Login Not Working**: Fixed NextAuth v5 signIn() call
-  - Added redirect: true parameter to signIn() function
-  - Added callbackUrl: '/' to redirect after authentication
-  - Fixed error handling with try-catch and user feedback
-
-- **Test Failures After Mock → Demo Migration**: Fixed 53 failing tests
-  - Store tests: Updated default mode expectations from 'real' to 'demo'
-  - Hook tests: Changed mockReturnValue to mockImplementation for proper selector support
-  - Query key tests: Updated expectations from 'mock' to 'demo'
-  - use-pods tests: Fixed all 22 tests with proper Zustand mocking
-  - Fixed selectedNamespace expectations: 'mock' → 'demo'
-
-- **Duplicate Headers**: Removed duplicate title/metadata sections from detail pages
-  - Fixed deployment name appearing twice with incorrect namespace
-  - Consolidated all metadata into PageHeader component
-  - Cleaner single-header layout across all detail pages
-- **PageHeader Types**: Updated to accept ReactNode for title and metadata items
-  - Conditional rendering for string vs ReactNode titles
-  - Proper TypeScript types for flexible content
-- **StatusBadge Tests**: Complete rewrite to test MUI Chip implementation
-  - Updated all 16 tests to check MUI classes instead of inline styles
-  - Test color classes (MuiChip-colorSuccess, etc.)
-  - Test size classes (MuiChip-sizeSmall, MuiChip-sizeMedium)
-- **AI Matcher**: Fixed OpenAI API key parameter passing (use `createOpenAI` client)
-- **YAML Editor UI**: Fixed empty blue alert bar (added AI method support)
-- **YAML Editor UI**: Removed confusing Base/Overlay tabs for non-Kustomize repos
-- **Nodes Filtering**: Use namespace-scoped pod API for better permission handling
-- **Permission Errors**: Graceful 403 handling for node events and pods
-- **ESLint**: Fixed unused Chip import and let→const warnings
-- All TypeScript compilation errors in GitHub integration code
-- Import cleanup in repo-selector, yaml-editor-modal, and GitHub App components
-- NextAuth handler exports for route compatibility
-- GitHub App token extraction from Octokit response
-- LogLine type inference in logs-viewer component
-- Unused import warnings across components
-
-## [1.2.0] - 2025-11-13
-
-### Added
-
-- **Resource Metrics Visualization**: Added real-time resource usage monitoring
-  - New `ResourceUsageChart` component with CPU/Memory metrics
-  - Card-based progress bars showing Current/Requested/Limit resources
-  - Color-coded usage indicators (green/yellow/red)
-  - Tooltips explaining percentage calculations
-  - `/api/metrics/pods` endpoint for fetching pod metrics via kubectl top
-  - Support for both real cluster metrics and demo mode with mock data
-  - Auto-refresh every 30 seconds in real mode
-  - Metrics displayed on deployment detail pages
-- **Collapsible Sections**: Improved UX with collapsible components
-  - Topology section on dashboard (collapsed by default)
-  - Recent Events with "Show N More" expansion (displays 3 by default)
-  - Container Logs section on pod details (collapsed by default)
-  - Smooth transitions and hover effects
-- **Enhanced Detail Pages**:
-  - Vertical layout for metadata (namespace, age, node) - one item per line
-  - Unified resource display (ConfigMaps & Secrets in single section)
-  - Consistent styling between deployment and pod details
-  - Improved logs viewer with inline controls (Formatted/Raw chips)
-- **Settings Page Improvements**:
-  - Dedicated `/settings` route with centralized configuration
-  - Inline mode selection (Demo/Real Cluster) without modal
-  - Connection testing before switching to real cluster
-  - Minimized Appearance section with icon-based theme selection
-- **Connection Validation**: `/api/test-connection` endpoint to validate cluster connectivity
-- **Footer Component**: Global footer with version info and GitHub link
-
-### Changed
-
-- **Sidebar Bottom Section**: Redesigned Settings and Collapse buttons layout
-  - Combined into single section with horizontal layout
-  - Settings button on left, Collapse chevron on right (when expanded)
-  - Single chevron button when collapsed
-  - Consistent font weights and styling across menu items
-- **Topology Graph**: Disabled scroll-based zoom/pan for better UX
-  - `zoomOnScroll={false}` and `panOnScroll={false}`
-  - Manual dragging still enabled with `panOnDrag={true}`
-  - Fixed hover artifacts with proper overflow handling
-- **Loading Skeleton**: Removed colorful gradient, replaced with neutral MUI Skeleton
-- **Pod Details**: Fixed Age display (was showing N/A, now correctly formatted)
-- **Logs Viewer**: Removed duplicate "Container Logs" header
-  - Moved Formatted/Raw chips to toolbar
-  - Cleaner single-header layout in collapsible section
-
-### Fixed
-
-- **Demo Mode Metrics**: Fixed metrics API to support both 'mock' and 'demo' mode values
-  - Prevents kubectl errors in console during demo mode
-  - Properly returns mock data when mode parameter is set
-- **Topology Section**: Removed hover artifacts on edges with `overflow: 'hidden'`
-- **Expand Button**: Fixed unwanted square highlight with `disableRipple` and transparent hover
-- **Age Formatting**: Removed duplicate `formatAge()` call in pod details
-- **Resource Display**: Unified ConfigMaps/Secrets sections between deployment and pod pages
-- **ESLint**: Fixed unused import warnings (removed unused `Collapse` import)
-
-## [1.1.0] - 2025-11-12
-
-### Added
-
-- **Namespace Support**: Full namespace selection functionality
-  - Added namespace dropdown in header (visible in real mode)
-  - GET `/api/namespaces` endpoint to fetch available namespaces
-  - NamespaceSelector component with loading states
-  - Namespace persisted in Zustand store
-  - All API routes now accept `namespace` query parameter
-- **Real Kubectl Context Detection**: `/api/contexts` endpoint fetches actual kubectl contexts
-- **ModeSelector Component**: Dialog for switching between mock and real mode with context selection
-- **API Helper Functions**: `getNamespaceFromRequest()` and `buildApiUrl()` utilities
-
-### Changed
-
-- **Store**: Added `selectedNamespace` field (default: 'default')
-- **API Routes**: All routes now accept and use namespace from query parameters
-- **Hooks**: Updated to pass namespace to API calls (use-deployments, use-pods, etc.)
-- **ModeSelector**: Now fetches real kubectl contexts instead of mock data
-- **KubernetesContext Type**: Made `namespace` field optional
-- **.gitignore**: Added Turbopack cache, Playwright cache, OS files, temporary files
-- **Project Name**: Rebranded to **Orphelix**
-- **Documentation**: Translated all `.md` files to English
-- **README**: Added attractive badges and improved visual appeal
-- **License**: Changed from MIT to **MPL-2.0** (Mozilla Public License 2.0)
-
-### Fixed
-
-- **Hydration Errors**: Fixed React hydration errors in recent-events component
-- **TypeScript Errors**: Fixed all type errors in tests (Event structure, age types)
-- **Header Badge**: Made "DEMO MODE" badge clickable to open ModeSelector dialog
-- **Test Files**: Fixed corrupt test files and updated to use flat Event structure
+- **Security Vulnerability** - Client-side validation could be bypassed via JavaScript/localStorage manipulation
+- **Hydration Errors** - Fixed React hydration errors in recent-events component
+- **Test Infrastructure** - Improved Zustand mocking pattern with proper selector support
+- **GitHub Login** - Fixed NextAuth v5 signIn() with proper redirect parameters
+- **Module Resolution** - Fixed "Can't resolve 'net'" by moving K8s client to server-side
+- **Age Formatting** - Removed duplicate formatAge() causing N/A displays
+- **Permission Errors** - Graceful 403 handling for node events and pods
+- **Static Files 404** - Fixed standalone build path for public and .next/static directories
 
 ---
 
-## [1.0.0] - 2025-11-12
-
-### Added
-
-#### Stage 8: Kubernetes API Integration
-- Real Kubernetes cluster integration using @kubernetes/client-node
-- Server-side API routes architecture (19 endpoints)
-- Automatic kubeconfig discovery (in-cluster + local)
-- K8s client initialization with fallback mechanisms
-- API Routes for all resource types:
-  - Deployments (list, detail, pods, events)
-  - Pods (list, detail, logs, events, restart)
-  - Nodes (list, detail, pods, events)
-  - ConfigMaps (list, detail, events)
-  - Secrets (list, detail, events)
-  - HPA (list, detail, events)
-  - PersistentVolumes (list, detail)
-  - Events (list, filtered by resource)
-  - Topology (graph data)
-- Type-safe K8s resource mapping with proper error handling
-- Fixed Event structure (flattened involvedObject)
-- Fixed age type (Date → string throughout)
-
-#### Stage 9: Real-time Updates with SSE
-- Server-Sent Events (SSE) implementation for real-time updates
-- Kubernetes Watch API integration for deployments, pods, and events
-- Auto-reconnection mechanism with exponential backoff (max 5 attempts, 3s delay)
-- RealtimeStatus component with visual connection indicator
-- Heartbeat monitoring (30s intervals)
-- Automatic TanStack Query cache invalidation on resource changes
-- useRealtimeUpdates hook for connection state management
-- Real-time mode toggle in store (realtimeEnabled flag)
-
-#### Stage 10: Restart Pods Functionality
-- POST /api/pods/:name/restart endpoint (delete + controller recreates)
-- useRestartPod hook with TanStack Query mutation
-- RestartPodDialog component with confirmation and warnings
-- Loading states and progress indicators during restart
-- Success/error toast notifications with Snackbar
-- Automatic cache invalidation after pod restart
-- Standalone pod detection warnings in dialog
-
-#### Stage 11: Flux GitOps Integration
-- Flux resource type definitions (GitRepository, Kustomization, HelmRelease)
-- FluxCondition and FluxResourceStatus types
-- Flux information page (/flux) with documentation
-- GitOps workflow guidance and setup instructions
-- Navigation link in sidebar with GitHub icon
-- Ready for Flux CD deployment monitoring
-
-#### Stage 12: Finalization & Documentation
-- Updated README.md with comprehensive user documentation
-- Bumped version to 1.0.0 in package.json
-- Final build verification (successful)
-- All 216 unit tests passing (100%)
-- All 93 E2E tests passing (100%)
-- Production-ready deployment configuration
-
-### Changed
-
-- **Event Structure**: Flattened involvedObject to direct fields (kind, name, namespace)
-- **Age Type**: Changed from Date to string throughout all types
-- **Deployment Status**: Changed 'Healthy' to 'Available' for consistency
-- **API Signatures**: Updated to @kubernetes/client-node object parameters
-- **Response Structure**: Updated to use direct response (no .body wrapper)
-- **Next.js 15 Params**: Updated all dynamic routes to use Promise-based params
-- Updated all TanStack Query hooks to use API routes instead of direct K8s client imports
-
-### Fixed
-
-- **Module Resolution**: Fixed "Can't resolve 'net'" error by moving K8s client to server-side API routes
-- **Next.js 15 Compatibility**: Fixed dynamic route params type errors (Promise-based)
-- **@kubernetes/client-node API**: Fixed method signatures to use object parameters
-- **Response Structure**: Fixed to use direct response objects instead of .body
-- **Event Type Mismatch**: Fixed involvedObject → flat structure throughout codebase
-- **Type Errors**: Fixed age type (Date → string) across all resource types
-- **Missing Type Fields**: Added selector, labels, data, targetRef, reclaimPolicy to types
-- **DeploymentStatus**: Fixed 'Healthy' → 'Available' mapping
-- **Test Failures**: Fixed 10 test failures related to Event structure and age types
-- **SSE Watch API**: Fixed Promise-based abort controller handling
-- **ESLint Warnings**: Fixed unused variables and console.log statements
-
-### Developer Experience
-
-- Created comprehensive TECHNICAL.md with architecture documentation
-- Added troubleshooting guide for common issues
-- Documented all API routes with examples
-- Added development workflow and best practices
-- Created performance optimization guidelines
-- Added contribution guidelines
-
-### Security
-
-- All K8s operations server-side only (credentials never exposed to browser)
-- Secret values masked in UI (only keys displayed)
-- Read-only operations by default (except pod restart with confirmation)
-- Kubernetes RBAC respected (ServiceAccount permissions)
-
----
-
-## [0.1.0] - 2025-11-11
-
-### Added
-
-#### Stage 1-2: Project Setup & Dashboard Overview
-- Initial project setup with Next.js 15, React 19, and TypeScript
-- Material-UI (MUI) v6 for UI components
-- Zustand store for application mode management (mock vs real)
-- TanStack Query v5 for data fetching and caching
-- Mock data generator for all Kubernetes resources
-  - Deployments, Pods, Nodes
-  - ConfigMaps, Secrets
-  - HPA, PersistentVolumes, PersistentVolumeClaims
-  - Events
-- Basic application layout
-  - Responsive Header with theme toggle and mode badge
-  - Sidebar navigation with all resource sections
-  - Dark/Light theme support
-- Dashboard overview page with 7 summary cards
-  - Deployments, Pods, Nodes, ConfigMaps, Secrets, HPA, PersistentVolumes
-- Recent Events component displaying last 10 cluster events with severity indicators
-- TanStack Query hooks for data fetching
-  - `useDashboardSummary` hook for fetching resource summary statistics
-  - `useRecentEvents` hook for fetching recent cluster events
-- Placeholder pages for all navigation routes
-- Loading states and error handling across all components
-- 39 unit tests for components and hooks
-- 26 E2E tests for Dashboard Overview and navigation
-
-#### Stage 3: Deployments Management
-- Deployments list page with comprehensive table view
-  - Sortable columns for name, namespace, replicas, and age
-  - Search and filter functionality for deployments
-  - Clickable rows linking to deployment details
-- StatusBadge component for displaying resource status
-  - Color-coded status indicators (success, warning, error, info)
-  - Configurable size variants (small, medium)
-  - Tooltip support for additional context
-- Deployment detail page with dynamic routing
-  - Full deployment metadata and specifications
-  - Container information with images and resources
-  - Deployment conditions and status
-- Pods list component in deployment detail view
-  - Table view of all pods belonging to the deployment
-  - Pod status, IP addresses, and node assignments
-  - Container readiness indicators
-- Events list component in deployment detail view
-  - Chronological event timeline
-  - Event type and reason indicators
-  - Human-readable timestamps
-- TanStack Query hooks for deployments
-  - `useDeployments` hook for fetching deployment list
-  - `useDeployment` hook for fetching single deployment details
-  - `useDeploymentPods` hook for fetching pods by deployment
-  - `useDeploymentEvents` hook for fetching deployment-related events
-- 55 new unit tests for deployments feature
-  - 21 unit tests for TanStack Query hooks
-  - 34 unit tests for StatusBadge component
-- 30 new E2E tests for deployments feature
-  - Deployment list page navigation and interactions
-  - Search and filter functionality
-  - Deployment detail page routing and content
-  - Pods and events display in detail view
-
-#### Stage 4: Pods Management
-- Pods list page with comprehensive table view
-  - Sortable columns for name, status, node, IP, restarts, containers, and age
-  - Search and filter functionality with status dropdown
-  - Clickable rows linking to pod details
-  - Restart count indicators with color-coded chips
-- Pod detail page with dynamic routing
-  - Full pod metadata, status, and specifications
-  - Details section showing IP, restart count, and container count
-  - Labels section with chip display
-  - Containers section with table view (name, image, ready status, restarts)
-  - Container status indicators (ready/not ready icons)
-- LogsViewer component for container logs
-  - Real-time log display with search functionality
-  - Download logs as text file
-  - Refresh logs on demand
-  - Auto-scroll to bottom with manual scroll detection
-  - Container selector for multi-container pods
-  - Syntax highlighting for log entries
-- Events section in pod detail page
-  - Chronological event timeline
-  - Event type and reason indicators with color-coded chips
-  - Event count and age display
-- TanStack Query hooks for pods
-  - `usePods` hook for fetching pod list with optional status filter
-  - `usePod` hook for fetching single pod details
-  - `usePodEvents` hook for fetching pod-related events
-  - `usePodLogs` hook for fetching container logs with tail parameter
-- 41 new unit tests for pods feature
-  - 22 unit tests for TanStack Query hooks (pods, pod details, events, logs)
-  - 19 unit tests for LogsViewer component (search, download, refresh, auto-scroll)
-- 32 new E2E tests for pods feature
-  - Pods list page navigation and interactions
-  - Status filter and search functionality
-  - Pod detail page routing and content
-  - Logs viewer functionality and container selection
-  - Events display in detail view
-
-#### Stage 5: Nodes, ConfigMaps & Secrets
-- Nodes view with resource metrics and capacity information
-- ConfigMaps detailed views with data inspection
-- Secrets detailed views with security considerations (values masked)
-- Resource relationship tracking
-
-#### Stage 6: HPA, PersistentVolumes & Events
-- HorizontalPodAutoscaler (HPA) detailed views with scaling metrics
-- PersistentVolumes (PV) management with capacity and status
-- Events timeline with filtering and search capabilities
-- Resource status monitoring across all resource types
-
-#### Stage 7: Topology Visualization
-- Interactive topology graphs using React Flow
-- Resource dependency visualization (Deployment → Pod → Node)
-- Node and edge customization with color-coded status
-- Pan, zoom, and fit-to-view controls
-- Custom node rendering for different resource types
-
-### Security
-
-- Secrets values are never exposed in the UI (only keys shown)
-- Uses local kubeconfig for cluster authentication
-- Read-only access by default
-
----
-
-## [Unreleased]
-
-### Planned Features
-
-- Multi-cluster management
-- RBAC integration and user permissions
-- Custom metrics with Prometheus/Grafana
-- Helm chart for easy deployment
-- GitOps PR creation from UI
-- Admission webhook visualization
-- Resource quota management
-
----
-
-**Version History:**
-- **1.2.0** (2025-11-13) - Resource metrics, collapsible sections, enhanced UX, settings page improvements
-- **1.1.0** (2025-11-12) - Namespace support, real context detection, rebranding to Orphelix
-- **1.0.0** (2025-11-12) - Production release with full K8s integration, real-time updates, and GitOps support
-- **0.1.0** (2025-11-11) - Initial release with mock data and core UI features
+**Version:** 0.1.0 (2025-11-28) - First official release
