@@ -18,12 +18,12 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "https://github.com/yourusername/kubevista/issues"
+      "url": "https://github.com/corapoid/orphelix/issues"
     }
   ],
   "topbarCtaButton": {
     "name": "GitHub",
-    "url": "https://github.com/yourusername/kubevista"
+    "url": "https://github.com/corapoid/orphelix"
   },
   "tabs": [
     {
@@ -37,22 +37,18 @@
     {
       "name": "Developer",
       "url": "developer"
-    },
-    {
-      "name": "Roadmap",
-      "url": "roadmap"
     }
   ],
   "anchors": [
     {
       "name": "GitHub",
       "icon": "github",
-      "url": "https://github.com/yourusername/kubevista"
+      "url": "https://github.com/corapoid/orphelix"
     },
     {
       "name": "Issues",
       "icon": "bug",
-      "url": "https://github.com/yourusername/kubevista/issues"
+      "url": "https://github.com/corapoid/orphelix/issues"
     }
   ],
   "navigation": [
@@ -141,12 +137,6 @@
       ]
     },
     {
-      "group": "Roadmap",
-      "pages": [
-        "roadmap/resource-optimization"
-      ]
-    },
-    {
       "group": "Developer Guide",
       "pages": [
         "developer/overview",
@@ -177,6 +167,6 @@
     }
   ],
   "footerSocials": {
-    "github": "https://github.com/yourusername/kubevista"
+    "github": "https://github.com/corapoid/orphelix"
   }
 }
