@@ -1,14 +1,31 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { githubApp } from '@/lib/auth/github-app'
 import { cookies } from 'next/headers'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { GITHUB_FILE_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError, AuthenticationError } from '@/lib/api/errors'
 
-export async function GET() {
+// Create rate limiter
+const limiter = rateLimit(GITHUB_FILE_LIMIT)
+
+/**
+ * GET /api/github-app/installations
+ *
+ * Retrieves GitHub App installations for the authenticated user
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get('github_app_token')?.value
 
     if (!token) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+      throw new AuthenticationError('Not authenticated with GitHub App')
     }
 
     // Get user's installations
@@ -58,10 +75,6 @@ export async function GET() {
 
     return NextResponse.json(installationsWithRepos)
   } catch (error) {
-    console.error('Error fetching installations:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch installations' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

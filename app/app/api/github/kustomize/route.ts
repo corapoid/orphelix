@@ -1,31 +1,61 @@
 import { GitHubClient } from '@/lib/github/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { getGitHubToken } from '@/lib/github/get-token'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { GITHUB_FILE_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError, AuthenticationError } from '@/lib/api/errors'
+import { z } from 'zod'
 
+// Create rate limiter
+const limiter = rateLimit(GITHUB_FILE_LIMIT)
+
+// Validate request parameters
+const kustomizeRequestSchema = z.object({
+  owner: z.string().min(1, 'Owner is required'),
+  repo: z.string().min(1, 'Repo is required'),
+  filePath: z.string().min(1, 'File path is required'),
+  ref: z.string().optional().default('main'),
+})
+
+/**
+ * GET /api/github/kustomize
+ *
+ * Retrieves kustomize structure from GitHub
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const token = await getGitHubToken()
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized - Please connect GitHub' }, { status: 401 })
+      throw new AuthenticationError('Please connect GitHub')
     }
 
     const { searchParams } = new URL(request.url)
-    const owner = searchParams.get('owner')
-    const repo = searchParams.get('repo')
-    const filePath = searchParams.get('filePath')
-    const ref = searchParams.get('ref') || 'main'
 
-    if (!owner || !repo || !filePath) {
-      return NextResponse.json({ error: 'owner, repo and filePath are required' }, { status: 400 })
-    }
+    // Validate input
+    const validated = kustomizeRequestSchema.parse({
+      owner: searchParams.get('owner'),
+      repo: searchParams.get('repo'),
+      filePath: searchParams.get('filePath'),
+      ref: searchParams.get('ref') || 'main',
+    })
 
     const github = new GitHubClient(token)
-    const structure = await github.getKustomizeStructure(owner, repo, filePath, ref)
+    const structure = await github.getKustomizeStructure(
+      validated.owner,
+      validated.repo,
+      validated.filePath,
+      validated.ref
+    )
 
     return NextResponse.json(structure)
   } catch (error) {
-    console.error('Failed to fetch kustomize structure:', error)
-    return NextResponse.json({ error: 'Failed to fetch kustomize structure' }, { status: 500 })
+    return handleApiError(error)
   }
 }
