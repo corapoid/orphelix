@@ -209,23 +209,23 @@ async function checkCriticalIssues() {
 function sendDemoNotification() {
   const demoExamples = [
     {
-      title: 'Pod Failures Detected',
-      message: '2 new pod(s) in failed state. Total: 3',
+      title: '🔴 Critical: Pod Failures',
+      message: '2 pods in failed state\n\n• nginx-deployment-abc123\n• api-server-xyz789\n\nCheck your dashboard for details.',
       type: 'critical'
     },
     {
-      title: 'Deployment Issues',
-      message: '1 deployment degraded. Check your cluster status.',
+      title: '⚠️ Warning: Deployment Issues',
+      message: 'frontend-app deployment degraded\n\nDesired: 3 replicas\nAvailable: 1 replica\n\nScale or investigate immediately.',
       type: 'warning'
     },
     {
-      title: 'Node Issues Detected',
-      message: '1 node not ready. Total: 1',
+      title: '🔴 Critical: Node Not Ready',
+      message: 'Worker node-2 not responding\n\nStatus: NotReady\nAge: 45m\n\nCluster capacity reduced.',
       type: 'critical'
     },
     {
-      title: 'Volume Issues',
-      message: '1 persistent volume unbound. Total: 1',
+      title: '⚠️ Warning: Storage Issues',
+      message: 'PersistentVolume unbound\n\npvc-mysql-data (10Gi)\nStatus: Pending\n\nCheck storage provisioner.',
       type: 'warning'
     }
   ]
