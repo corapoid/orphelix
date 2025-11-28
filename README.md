@@ -160,14 +160,7 @@ Note: Mintlify may have dependency issues. Documentation is fully readable as ma
 - **[Roadmap](ROADMAP.md)** - Future features and development plans
 
 ### 📋 Project Information
+
+- **[Security & Privacy](SECURITY.md)** - How data is stored and accessed
 - **[Changelog](CHANGELOG.md)** - Complete version history and updates
 - **[License](LICENSE)** - Apache License 2.0
-
-## 🔒 Security
-
-- ✅ **Local credentials** - Uses kubeconfig from local system
-- ✅ **Local storage** - SQLite database stores only user preferences (theme, settings, aliases)
-- ✅ **No cluster data stored** - All Kubernetes data fetched on demand from cluster
-- ✅ **Secrets masked** - Secret values never displayed in UI
-- ✅ **Read-only by default** - Most operations are read-only (except pod restart)
-
