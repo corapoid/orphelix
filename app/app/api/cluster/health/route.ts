@@ -1,9 +1,25 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getCoreApi } from '@/lib/k8s/client'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+// Create rate limiter for cluster health operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
+
+/**
+ * GET /api/cluster/health
+ *
+ * Check cluster connection health
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const coreV1Api = getCoreApi()
 
@@ -16,8 +32,6 @@ export async function GET() {
       message: 'Successfully connected to Kubernetes cluster',
     })
   } catch (error: unknown) {
-    console.error('[Health Check] Cluster connection failed:', error)
-
     const err = error as { code?: number; message?: string; body?: { message?: string } }
     const statusCode = err.code || 500
     const message = err.body?.message || err.message || 'Unknown error'
