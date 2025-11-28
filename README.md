@@ -6,13 +6,13 @@
   </picture>
   <h1>Orphelix</h1>
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/dmakowski/orphelix)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/corapoid/orphelix)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.0-black.svg)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.0-61dafb.svg)](https://reactjs.org/)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/dmakowski/orphelix)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/corapoid/orphelix)
 [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-5A67D8.svg)](https://claude.ai/claude-code)
 </div>
 

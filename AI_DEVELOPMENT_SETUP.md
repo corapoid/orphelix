@@ -54,7 +54,7 @@
 ### 1. Aktywuj Git Hooks
 
 ```bash
-cd /Users/dmakowski/git_priv/orphelix
+cd ~/git_priv/orphelix
 
 # Skonfiguruj Git do używania .githooks
 git config core.hooksPath .githooks
@@ -451,7 +451,7 @@ chmod +x .githooks/*
 ```bash
 # Check working directory
 pwd
-# Should be: /Users/dmakowski/git_priv/orphelix
+# Should be: ~/git_priv/orphelix (or your repository path)
 
 cd app
 npm run test
