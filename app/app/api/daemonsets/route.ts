@@ -1,16 +1,36 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { fetchDaemonSets } from '@/lib/k8s/api'
-import { handleK8sError } from '@/lib/core/api-helpers'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_LIST_LIMIT } from '@/lib/security/rate-limit-configs'
+import { namespaceSchema } from '@/lib/validation/schemas'
+import { handleApiError } from '@/lib/api/errors'
 
-export async function GET(request: Request) {
+// Create rate limiter for K8s list operations
+const limiter = rateLimit(K8S_LIST_LIMIT)
+
+/**
+ * GET /api/daemonsets
+ *
+ * Retrieves list of DaemonSets in a namespace
+ *
+ * Rate Limited: 120 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { searchParams } = new URL(request.url)
     const namespace = searchParams.get('namespace') || 'default'
     const contextName = searchParams.get('context') || undefined
 
-    const daemonsets = await fetchDaemonSets(namespace, contextName)
+    // Validate namespace
+    const validated = namespaceSchema.parse(namespace)
+
+    const daemonsets = await fetchDaemonSets(validated, contextName)
     return NextResponse.json(daemonsets)
   } catch (error) {
-    return handleK8sError(error, 'DaemonSets')
+    return handleApiError(error)
   }
 }
