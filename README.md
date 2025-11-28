@@ -107,6 +107,7 @@ npm run orphelix open
 npm run orphelix stop       # Stop the application
 npm run orphelix status     # Check status
 npm run orphelix help       # Show all commands
+```
 
 ## 📖 Documentation
 
