@@ -1,44 +1,94 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { GitHubSettingsService } from '@/lib/db/services'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { SETTINGS_UPDATE_LIMIT, GENERAL_API_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError, ValidationError } from '@/lib/api/errors'
+import { z } from 'zod'
 
-export async function GET() {
+// Create rate limiters
+const updateLimiter = rateLimit(SETTINGS_UPDATE_LIMIT)
+const generalLimiter = rateLimit(GENERAL_API_LIMIT)
+
+// Validate request schemas
+const pendingPRSchema = z.object({
+  deploymentName: z.string().min(1, 'Deployment name is required'),
+  namespace: z.string().min(1, 'Namespace is required'),
+  prNumber: z.number().int().positive('PR number must be positive'),
+})
+
+/**
+ * GET /api/settings/github/prs
+ *
+ * Retrieves pending pull requests
+ *
+ * Rate Limited: 100 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await generalLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const pendingPRs = GitHubSettingsService.getPendingPRs()
     return NextResponse.json(pendingPRs)
   } catch (error) {
-    console.error('Failed to get pending PRs:', error)
-    return NextResponse.json({ error: 'Failed to get pending PRs' }, { status: 500 })
+    return handleApiError(error)
   }
 }
 
-export async function POST(request: Request) {
+/**
+ * POST /api/settings/github/prs
+ *
+ * Sets a pending pull request
+ *
+ * Rate Limited: 30 requests per 60 seconds
+ */
+export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await updateLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
-    const { deploymentName, namespace, prNumber } = await request.json()
-    GitHubSettingsService.setPendingPR(deploymentName, namespace, prNumber)
+    const body = await request.json()
+
+    // Validate input
+    const validated = pendingPRSchema.parse(body)
+
+    GitHubSettingsService.setPendingPR(
+      validated.deploymentName,
+      validated.namespace,
+      validated.prNumber
+    )
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Failed to set pending PR:', error)
-    return NextResponse.json({ error: 'Failed to set pending PR' }, { status: 500 })
+    return handleApiError(error)
   }
 }
 
-export async function DELETE(request: Request) {
+/**
+ * DELETE /api/settings/github/prs
+ *
+ * Removes a pending pull request
+ *
+ * Rate Limited: 100 requests per 60 seconds
+ */
+export async function DELETE(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await generalLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { searchParams } = new URL(request.url)
     const deploymentName = searchParams.get('deploymentName')
     const namespace = searchParams.get('namespace')
 
     if (!deploymentName || !namespace) {
-      return NextResponse.json(
-        { error: 'deploymentName and namespace are required' },
-        { status: 400 }
-      )
+      throw new ValidationError('deploymentName and namespace parameters are required')
     }
 
     GitHubSettingsService.removePendingPR(deploymentName, namespace)
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Failed to remove pending PR:', error)
-    return NextResponse.json({ error: 'Failed to remove pending PR' }, { status: 500 })
+    return handleApiError(error)
   }
 }

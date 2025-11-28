@@ -1,7 +1,25 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { GitHubSettingsService } from '@/lib/db/services'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { SETTINGS_UPDATE_LIMIT, GENERAL_API_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError } from '@/lib/api/errors'
 
-export async function GET() {
+// Create rate limiters
+const updateLimiter = rateLimit(SETTINGS_UPDATE_LIMIT)
+const generalLimiter = rateLimit(GENERAL_API_LIMIT)
+
+/**
+ * GET /api/settings/github
+ *
+ * Retrieves GitHub settings
+ *
+ * Rate Limited: 100 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await generalLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const settings = GitHubSettingsService.get()
     const pendingPRs = GitHubSettingsService.getPendingPRs()
@@ -13,12 +31,22 @@ export async function GET() {
       editBasket,
     })
   } catch (error) {
-    console.error('Failed to get GitHub settings:', error)
-    return NextResponse.json({ error: 'Failed to get GitHub settings' }, { status: 500 })
+    return handleApiError(error)
   }
 }
 
-export async function POST(request: Request) {
+/**
+ * POST /api/settings/github
+ *
+ * Updates GitHub settings
+ *
+ * Rate Limited: 30 requests per 60 seconds
+ */
+export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await updateLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const data = await request.json()
 
@@ -36,7 +64,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Failed to update GitHub settings:', error)
-    return NextResponse.json({ error: 'Failed to update GitHub settings' }, { status: 500 })
+    return handleApiError(error)
   }
 }
