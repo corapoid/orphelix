@@ -1,30 +1,45 @@
 import { NextRequest } from 'next/server'
 import { initK8sClient } from '@/lib/k8s/client'
 import * as k8s from '@kubernetes/client-node'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { STREAM_LIMIT } from '@/lib/security/rate-limit-configs'
+import { namespaceSchema } from '@/lib/validation/schemas'
+import { ValidationError } from '@/lib/api/errors'
+
+// Create rate limiter for SSE stream operations
+const limiter = rateLimit(STREAM_LIMIT)
 
 /**
+ * GET /api/stream
+ *
  * SSE endpoint for real-time Kubernetes updates
  *
  * Streams events for:
  * - Pods changes
  * - Deployments changes
  * - Kubernetes Events
+ *
+ * Rate Limited: 5 requests per 60 seconds
  */
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   const encoder = new TextEncoder()
 
   // Get namespace and context from query parameters
   const searchParams = request.nextUrl.searchParams
-  const namespace = searchParams.get('namespace') || ''
+  const namespaceParam = searchParams.get('namespace') || ''
   const contextName = searchParams.get('context') || undefined
 
   // Namespace is required for SSE
-  if (!namespace) {
-    return new Response(
-      JSON.stringify({ error: 'Namespace parameter is required' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    )
+  if (!namespaceParam) {
+    throw new ValidationError('Namespace parameter is required')
   }
+
+  // Validate namespace
+  const namespace = namespaceSchema.parse(namespaceParam)
 
   // Create ReadableStream for SSE
   const stream = new ReadableStream({

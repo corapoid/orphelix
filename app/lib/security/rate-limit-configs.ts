@@ -134,6 +134,16 @@ export const LOGS_FETCH_LIMIT: RateLimitConfig = {
 }
 
 /**
+ * Rate limit for SSE stream connections
+ * Very restrictive to prevent resource exhaustion
+ */
+export const STREAM_LIMIT: RateLimitConfig = {
+  windowMs: getEnvNumber('RL_STREAM_WINDOW_MS', 60 * 1000), // 1 minute
+  maxRequests: getEnvNumber('RL_STREAM_MAX', 5), // 5 connections per minute
+  message: 'Too many stream connections. Please wait before opening another stream.',
+}
+
+/**
  * Export all configurations as a map for easy access
  */
 export const RATE_LIMIT_CONFIGS = {
@@ -149,6 +159,7 @@ export const RATE_LIMIT_CONFIGS = {
   K8S_LIST: K8S_LIST_LIMIT,
   K8S_DETAIL: K8S_DETAIL_LIMIT,
   LOGS_FETCH: LOGS_FETCH_LIMIT,
+  STREAM: STREAM_LIMIT,
 } as const
 
 /**
