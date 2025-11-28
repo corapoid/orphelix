@@ -1,5 +1,9 @@
 <div align="center">
-  <img src="app/public/logo.svg" alt="Orphelix Logo" width="200"/>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="app/public/logo.svg">
+    <source media="(prefers-color-scheme: light)" srcset="app/public/logo-dark.svg">
+    <img src="app/public/logo-dark.svg" alt="Orphelix Logo" width="200"/>
+  </picture>
   <h1>Orphelix</h1>
 
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/dmakowski/orphelix)
