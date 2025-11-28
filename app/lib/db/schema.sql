@@ -79,6 +79,15 @@ CREATE TABLE IF NOT EXISTS sidebar_pins (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- API keys (encrypted storage for sensitive keys like OpenAI)
+CREATE TABLE IF NOT EXISTS api_keys (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  key_name TEXT NOT NULL UNIQUE, -- 'openai', 'anthropic', etc.
+  encrypted_value TEXT NOT NULL, -- AES-256-GCM encrypted key
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Initialize default values
 INSERT OR IGNORE INTO user_settings (id) VALUES (1);
 INSERT OR IGNORE INTO github_settings (id) VALUES (1);
@@ -117,3 +126,4 @@ INSERT OR IGNORE INTO sidebar_pins (path, pinned) VALUES
 CREATE INDEX IF NOT EXISTS idx_github_pending_prs_lookup ON github_pending_prs(deployment_name, namespace);
 CREATE INDEX IF NOT EXISTS idx_cluster_aliases_context ON cluster_aliases(context_name);
 CREATE INDEX IF NOT EXISTS idx_sidebar_pins_path ON sidebar_pins(path);
+CREATE INDEX IF NOT EXISTS idx_api_keys_name ON api_keys(key_name);

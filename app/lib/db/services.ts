@@ -1,5 +1,9 @@
 import { getDatabase } from './database'
 import type { AppMode, KubernetesContext } from '@/types/app'
+import { encrypt, decrypt } from '@/lib/security/encryption'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'db-services' })
 
 /**
  * User Settings Type
@@ -318,5 +322,87 @@ export const SidebarPinsService = {
     db.prepare(
       'INSERT OR REPLACE INTO sidebar_pins (path, pinned, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)'
     ).run(path, pinned ? 1 : 0)
+  },
+}
+
+/**
+ * API Keys Service
+ * Stores API keys with AES-256-GCM encryption at rest
+ */
+export const ApiKeysService = {
+  /**
+   * Get an API key by name (decrypted)
+   * @param keyName - The name of the key (e.g., 'openai', 'anthropic')
+   * @returns Decrypted API key or null if not found
+   */
+  async get(keyName: string): Promise<string | null> {
+    const db = getDatabase()
+    const row = db.prepare('SELECT encrypted_value FROM api_keys WHERE key_name = ?').get(keyName) as { encrypted_value: string } | undefined
+
+    if (!row) {
+      return null
+    }
+
+    try {
+      return await decrypt(row.encrypted_value)
+    } catch (error) {
+      logger.error({ error, keyName }, 'Failed to decrypt API key')
+      return null
+    }
+  },
+
+  /**
+   * Set an API key (encrypted)
+   * @param keyName - The name of the key (e.g., 'openai', 'anthropic')
+   * @param value - The plaintext API key to encrypt and store
+   */
+  async set(keyName: string, value: string): Promise<void> {
+    if (!value || value.trim() === '') {
+      throw new Error('API key value cannot be empty')
+    }
+
+    const db = getDatabase()
+
+    try {
+      const encryptedValue = await encrypt(value)
+
+      db.prepare(
+        'INSERT OR REPLACE INTO api_keys (key_name, encrypted_value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)'
+      ).run(keyName, encryptedValue)
+
+      logger.info('API key stored successfully', { keyName })
+    } catch (error) {
+      logger.error({ error, keyName }, 'Failed to encrypt and store API key')
+      throw error
+    }
+  },
+
+  /**
+   * Remove an API key
+   * @param keyName - The name of the key to remove
+   */
+  remove(keyName: string): void {
+    const db = getDatabase()
+    db.prepare('DELETE FROM api_keys WHERE key_name = ?').run(keyName)
+    logger.info('API key removed', { keyName })
+  },
+
+  /**
+   * Check if an API key exists
+   * @param keyName - The name of the key to check
+   */
+  exists(keyName: string): boolean {
+    const db = getDatabase()
+    const row = db.prepare('SELECT 1 FROM api_keys WHERE key_name = ?').get(keyName)
+    return Boolean(row)
+  },
+
+  /**
+   * List all API key names (not the values)
+   */
+  listKeys(): string[] {
+    const db = getDatabase()
+    const rows = db.prepare('SELECT key_name FROM api_keys').all() as Array<{ key_name: string }>
+    return rows.map((row) => row.key_name)
   },
 }

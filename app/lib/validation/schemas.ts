@@ -391,3 +391,17 @@ export const k8sResourceDetailSchema = z.object({
 export const k8sClusterResourceSchema = z.object({
   name: k8sNameSchema,
 })
+
+/**
+ * API Key Management Schema
+ * Validates API key storage operations
+ */
+export const apiKeyManagementSchema = z.object({
+  keyName: z.string()
+    .min(1, 'Key name is required')
+    .max(50, 'Key name too long')
+    .regex(/^[a-z][a-z0-9_-]*$/, 'Key name must be lowercase alphanumeric with hyphens/underscores'),
+  value: z.string()
+    .min(1, 'API key value is required')
+    .max(500, 'API key too long'),
+})

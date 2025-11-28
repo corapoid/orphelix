@@ -144,6 +144,16 @@ export const STREAM_LIMIT: RateLimitConfig = {
 }
 
 /**
+ * Rate limit for API key operations
+ * More restrictive to protect sensitive data
+ */
+export const API_KEYS_LIMIT: RateLimitConfig = {
+  windowMs: getEnvNumber('RL_API_KEYS_WINDOW_MS', 60 * 1000), // 1 minute
+  maxRequests: getEnvNumber('RL_API_KEYS_MAX', 10), // 10 requests per minute
+  message: 'Too many API key requests. Please wait before trying again.',
+}
+
+/**
  * Export all configurations as a map for easy access
  */
 export const RATE_LIMIT_CONFIGS = {
@@ -160,6 +170,7 @@ export const RATE_LIMIT_CONFIGS = {
   K8S_DETAIL: K8S_DETAIL_LIMIT,
   LOGS_FETCH: LOGS_FETCH_LIMIT,
   STREAM: STREAM_LIMIT,
+  API_KEYS: API_KEYS_LIMIT,
 } as const
 
 /**
