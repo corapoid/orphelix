@@ -1,12 +1,1161 @@
 ---
 title: 'Deployment'
-description: 'Production deployment guide'
+description: 'Complete production deployment guide for Orphelix - standalone, Docker, Kubernetes, and cloud platforms'
 ---
 
 ## Overview
 
-This page is under construction.
+Orphelix can be deployed in multiple ways depending on your infrastructure and requirements. This guide covers all deployment methods from simple standalone setups to enterprise Kubernetes deployments.
+
+<CardGroup cols={2}>
+  <Card title="Standalone" icon="server">
+    Single-server deployment with PM2
+  </Card>
+  <Card title="Docker" icon="docker">
+    Containerized deployment with Docker Compose
+  </Card>
+  <Card title="Kubernetes" icon="dharmachakra">
+    Native Kubernetes deployment with Helm
+  </Card>
+  <Card title="Cloud Platforms" icon="cloud">
+    AWS, GCP, Azure managed services
+  </Card>
+</CardGroup>
+
+## Prerequisites
+
+### General Requirements
+
+<AccordionGroup>
+  <Accordion icon="node-js" title="Node.js 20+">
+    **Required for all deployment methods**
+    
+    ```bash
+    node --version
+    # v20.11.0 or higher
+    ```
+  </Accordion>
+
+  <Accordion icon="key" title="Kubernetes Access">
+    **Required for real cluster mode**
+    
+    - Valid kubeconfig file
+    - Appropriate RBAC permissions
+    - Network access to Kubernetes API
+    
+    **Minimum permissions:**
+    - `get`, `list`, `watch` on: pods, deployments, services, nodes, events, configmaps, secrets
+    - `patch` on deployments (for restart)
+  </Accordion>
+
+  <Accordion icon="github" title="GitHub Integration (Optional)">
+    **Required for GitOps features**
+    
+    - GitHub OAuth App credentials
+    - GitHub App credentials (for repository access)
+    
+    See [GitHub Setup Guide](/user/configuration/github-setup)
+  </Accordion>
+
+  <Accordion icon="brain" title="OpenAI API Key (Optional)">
+    **Required for AI features**
+    
+    ```bash
+    OPENAI_API_KEY=sk-...
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Deployment Methods
+
+### Method 1: Standalone (PM2)
+
+**Best for:** Small teams, single server, quick setup
+
+<Steps>
+  <Step title="Clone repository">
+    ```bash
+    git clone https://github.com/dmakowski/orphelix.git
+    cd orphelix/app
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+  </Step>
+
+  <Step title="Configure environment">
+    ```bash
+    cp .env.example .env.local
+    ```
+    
+    Edit `.env.local`:
+    ```bash
+    NEXTAUTH_SECRET=your-random-secret
+    NEXTAUTH_URL=https://your-domain.com
+    
+    # GitHub OAuth (optional)
+    GITHUB_ID=your-oauth-app-id
+    GITHUB_SECRET=your-oauth-app-secret
+    
+    # GitHub App (optional)
+    GITHUB_APP_ID=123456
+    GITHUB_APP_CLIENT_ID=Iv1.abc123
+    GITHUB_APP_CLIENT_SECRET=secret
+    GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n..."
+    
+    # OpenAI (optional)
+    OPENAI_API_KEY=sk-...
+    ```
+  </Step>
+
+  <Step title="Build application">
+    ```bash
+    npm run build:standalone
+    ```
+    
+    This creates a standalone build in `.next/standalone/`
+  </Step>
+
+  <Step title="Start with CLI">
+    ```bash
+    # Start (with PM2)
+    ./orphelix-cli.js start
+    
+    # Check status
+    ./orphelix-cli.js status
+    
+    # View logs
+    ./orphelix-cli.js logs
+    
+    # Stop
+    ./orphelix-cli.js stop
+    ```
+  </Step>
+
+  <Step title="Access application">
+    Open [http://localhost:3000](http://localhost:3000)
+  </Step>
+</Steps>
+
+**Production considerations:**
+- Use reverse proxy (nginx, Caddy)
+- Enable HTTPS with Let's Encrypt
+- Configure firewall rules
+- Set up log rotation
+- Enable automatic restart on crash
+
+### Method 2: Docker
+
+**Best for:** Containerized environments, isolated deployments
+
+<Tabs>
+  <Tab title="Docker Compose (Recommended)">
+    **Create docker-compose.yml:**
+    
+    ```yaml
+    version: '3.8'
+    
+    services:
+      orphelix:
+        image: orphelix:latest
+        build:
+          context: ./app
+          dockerfile: Dockerfile
+        ports:
+          - "3000:3000"
+        environment:
+          - NODE_ENV=production
+          - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+          - NEXTAUTH_URL=${NEXTAUTH_URL}
+          - GITHUB_ID=${GITHUB_ID}
+          - GITHUB_SECRET=${GITHUB_SECRET}
+          - GITHUB_APP_ID=${GITHUB_APP_ID}
+          - GITHUB_APP_CLIENT_ID=${GITHUB_APP_CLIENT_ID}
+          - GITHUB_APP_CLIENT_SECRET=${GITHUB_APP_CLIENT_SECRET}
+          - GITHUB_APP_PRIVATE_KEY=${GITHUB_APP_PRIVATE_KEY}
+          - OPENAI_API_KEY=${OPENAI_API_KEY}
+        volumes:
+          - ./orphelix.db:/app/orphelix.db
+          - ~/.kube:/root/.kube:ro
+        restart: unless-stopped
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+          interval: 30s
+          timeout: 10s
+          retries: 3
+    ```
+    
+    **Create Dockerfile:**
+    
+    ```dockerfile
+    # Build stage
+    FROM node:20-alpine AS builder
+    
+    WORKDIR /app
+    
+    # Copy package files
+    COPY package*.json ./
+    
+    # Install dependencies
+    RUN npm ci
+    
+    # Copy application files
+    COPY . .
+    
+    # Build application
+    RUN npm run build:standalone
+    
+    # Production stage
+    FROM node:20-alpine AS runner
+    
+    WORKDIR /app
+    
+    # Create non-root user
+    RUN addgroup --system --gid 1001 nodejs
+    RUN adduser --system --uid 1001 nextjs
+    
+    # Copy built application
+    COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+    COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+    COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+    
+    # Install kubectl (for K8s access)
+    RUN apk add --no-cache curl && \
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+        chmod +x kubectl && \
+        mv kubectl /usr/local/bin/
+    
+    USER nextjs
+    
+    EXPOSE 3000
+    
+    ENV PORT 3000
+    ENV HOSTNAME "0.0.0.0"
+    
+    CMD ["node", "server.js"]
+    ```
+    
+    **Deploy:**
+    
+    ```bash
+    # Build and start
+    docker-compose up -d
+    
+    # View logs
+    docker-compose logs -f
+    
+    # Stop
+    docker-compose down
+    ```
+  </Tab>
+  
+  <Tab title="Docker CLI">
+    ```bash
+    # Build image
+    docker build -t orphelix:latest ./app
+    
+    # Run container
+    docker run -d \
+      --name orphelix \
+      -p 3000:3000 \
+      -v $(pwd)/orphelix.db:/app/orphelix.db \
+      -v ~/.kube:/root/.kube:ro \
+      -e NEXTAUTH_SECRET=your-secret \
+      -e NEXTAUTH_URL=https://your-domain.com \
+      orphelix:latest
+    
+    # View logs
+    docker logs -f orphelix
+    
+    # Stop
+    docker stop orphelix
+    ```
+  </Tab>
+</Tabs>
+
+**Important notes:**
+- Mount kubeconfig as read-only volume
+- Persist database with volume
+- Use secrets management for sensitive data
+- Configure health checks
+- Set resource limits (CPU, memory)
+
+### Method 3: Kubernetes (Helm)
+
+**Best for:** Enterprise deployments, high availability, scalability
+
+<Steps>
+  <Step title="Install Helm">
+    ```bash
+    # macOS
+    brew install helm
+    
+    # Linux
+    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    ```
+  </Step>
+
+  <Step title="Add Orphelix Helm repository">
+    ```bash
+    helm repo add orphelix https://charts.orphelix.dev
+    helm repo update
+    ```
+    
+    <Note>
+    Helm chart coming soon! For now, use manual deployment below.
+    </Note>
+  </Step>
+
+  <Step title="Create namespace">
+    ```bash
+    kubectl create namespace orphelix
+    ```
+  </Step>
+
+  <Step title="Create secrets">
+    ```bash
+    # NextAuth secret
+    kubectl create secret generic orphelix-nextauth \
+      --from-literal=secret=$(openssl rand -base64 32) \
+      -n orphelix
+    
+    # GitHub OAuth
+    kubectl create secret generic orphelix-github-oauth \
+      --from-literal=client-id=your-oauth-client-id \
+      --from-literal=client-secret=your-oauth-client-secret \
+      -n orphelix
+    
+    # GitHub App
+    kubectl create secret generic orphelix-github-app \
+      --from-literal=app-id=123456 \
+      --from-literal=client-id=Iv1.abc123 \
+      --from-literal=client-secret=secret \
+      --from-file=private-key=github-app-private-key.pem \
+      -n orphelix
+    
+    # OpenAI
+    kubectl create secret generic orphelix-openai \
+      --from-literal=api-key=sk-... \
+      -n orphelix
+    ```
+  </Step>
+
+  <Step title="Create deployment manifest">
+    **Create orphelix-deployment.yaml:**
+    
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: orphelix
+      namespace: orphelix
+      labels:
+        app: orphelix
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: orphelix
+      template:
+        metadata:
+          labels:
+            app: orphelix
+        spec:
+          serviceAccountName: orphelix
+          containers:
+          - name: orphelix
+            image: orphelix:latest
+            ports:
+            - containerPort: 3000
+              name: http
+            env:
+            - name: NODE_ENV
+              value: "production"
+            - name: NEXTAUTH_URL
+              value: "https://orphelix.your-domain.com"
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-nextauth
+                  key: secret
+            - name: GITHUB_ID
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-github-oauth
+                  key: client-id
+            - name: GITHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-github-oauth
+                  key: client-secret
+            - name: GITHUB_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-github-app
+                  key: app-id
+            - name: GITHUB_APP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-github-app
+                  key: client-id
+            - name: GITHUB_APP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-github-app
+                  key: client-secret
+            - name: GITHUB_APP_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-github-app
+                  key: private-key
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: orphelix-openai
+                  key: api-key
+            resources:
+              requests:
+                cpu: 500m
+                memory: 512Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+            livenessProbe:
+              httpGet:
+                path: /api/health
+                port: 3000
+              initialDelaySeconds: 30
+              periodSeconds: 10
+            readinessProbe:
+              httpGet:
+                path: /api/health
+                port: 3000
+              initialDelaySeconds: 10
+              periodSeconds: 5
+            volumeMounts:
+            - name: kubeconfig
+              mountPath: /root/.kube
+              readOnly: true
+          volumes:
+          - name: kubeconfig
+            secret:
+              secretName: orphelix-kubeconfig
+    
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: orphelix
+      namespace: orphelix
+    spec:
+      selector:
+        app: orphelix
+      ports:
+      - port: 80
+        targetPort: 3000
+        name: http
+      type: ClusterIP
+    
+    ---
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: orphelix
+      namespace: orphelix
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    spec:
+      ingressClassName: nginx
+      tls:
+      - hosts:
+        - orphelix.your-domain.com
+        secretName: orphelix-tls
+      rules:
+      - host: orphelix.your-domain.com
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: orphelix
+                port:
+                  number: 80
+    ```
+  </Step>
+
+  <Step title="Create RBAC for cluster access">
+    **Create orphelix-rbac.yaml:**
+    
+    ```yaml
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: orphelix
+      namespace: orphelix
+    
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: orphelix-viewer
+    rules:
+    # Core resources
+    - apiGroups: [""]
+      resources:
+      - pods
+      - pods/log
+      - services
+      - nodes
+      - namespaces
+      - events
+      - configmaps
+      - secrets
+      - persistentvolumes
+      - persistentvolumeclaims
+      - resourcequotas
+      - limitranges
+      verbs: ["get", "list", "watch"]
+    
+    # Apps
+    - apiGroups: ["apps"]
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+      verbs: ["get", "list", "watch"]
+    
+    # Deployments - restart (patch)
+    - apiGroups: ["apps"]
+      resources:
+      - deployments
+      verbs: ["patch"]
+    
+    # Batch
+    - apiGroups: ["batch"]
+      resources:
+      - jobs
+      - cronjobs
+      verbs: ["get", "list", "watch"]
+    
+    # Networking
+    - apiGroups: ["networking.k8s.io"]
+      resources:
+      - ingresses
+      verbs: ["get", "list", "watch"]
+    
+    # Autoscaling
+    - apiGroups: ["autoscaling"]
+      resources:
+      - horizontalpodautoscalers
+      verbs: ["get", "list", "watch"]
+    
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: orphelix-viewer
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: orphelix-viewer
+    subjects:
+    - kind: ServiceAccount
+      name: orphelix
+      namespace: orphelix
+    ```
+  </Step>
+
+  <Step title="Deploy">
+    ```bash
+    # Apply RBAC
+    kubectl apply -f orphelix-rbac.yaml
+    
+    # Apply deployment
+    kubectl apply -f orphelix-deployment.yaml
+    
+    # Check status
+    kubectl get pods -n orphelix
+    kubectl logs -f deployment/orphelix -n orphelix
+    ```
+  </Step>
+
+  <Step title="Access application">
+    ```bash
+    # Via ingress (if configured)
+    https://orphelix.your-domain.com
+    
+    # Or port-forward
+    kubectl port-forward -n orphelix svc/orphelix 3000:80
+    ```
+  </Step>
+</Steps>
+
+**High availability configuration:**
+- Set `replicas: 3` or more
+- Use anti-affinity rules
+- Configure HPA for auto-scaling
+- Use external database (PostgreSQL)
+- Implement distributed sessions
+
+### Method 4: Cloud Platforms
+
+<Tabs>
+  <Tab title="AWS">
+    **AWS Elastic Kubernetes Service (EKS)**
+    
+    <Steps>
+      <Step title="Create EKS cluster">
+        ```bash
+        eksctl create cluster \
+          --name orphelix-cluster \
+          --region us-east-1 \
+          --nodegroup-name standard-workers \
+          --node-type t3.medium \
+          --nodes 3
+        ```
+      </Step>
+      
+      <Step title="Install AWS Load Balancer Controller">
+        ```bash
+        helm repo add eks https://aws.github.io/eks-charts
+        helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+          -n kube-system \
+          --set clusterName=orphelix-cluster
+        ```
+      </Step>
+      
+      <Step title="Deploy Orphelix">
+        Use Kubernetes deployment method above
+        
+        Update Ingress:
+        ```yaml
+        annotations:
+          kubernetes.io/ingress.class: alb
+          alb.ingress.kubernetes.io/scheme: internet-facing
+          alb.ingress.kubernetes.io/target-type: ip
+          alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:...
+        ```
+      </Step>
+    </Steps>
+    
+    **AWS-specific features:**
+    - Use EKS IRSA for kubeconfig auth
+    - Store secrets in AWS Secrets Manager
+    - Use RDS for database
+    - CloudWatch for logs and metrics
+  </Tab>
+  
+  <Tab title="GCP">
+    **Google Kubernetes Engine (GKE)**
+    
+    <Steps>
+      <Step title="Create GKE cluster">
+        ```bash
+        gcloud container clusters create orphelix-cluster \
+          --num-nodes=3 \
+          --zone=us-central1-a \
+          --machine-type=n1-standard-2
+        ```
+      </Step>
+      
+      <Step title="Get credentials">
+        ```bash
+        gcloud container clusters get-credentials orphelix-cluster \
+          --zone=us-central1-a
+        ```
+      </Step>
+      
+      <Step title="Deploy Orphelix">
+        Use Kubernetes deployment method above
+      </Step>
+    </Steps>
+    
+    **GCP-specific features:**
+    - Use Workload Identity for authentication
+    - Store secrets in Secret Manager
+    - Use Cloud SQL for database
+    - Cloud Logging for logs
+  </Tab>
+  
+  <Tab title="Azure">
+    **Azure Kubernetes Service (AKS)**
+    
+    <Steps>
+      <Step title="Create AKS cluster">
+        ```bash
+        az aks create \
+          --resource-group orphelix-rg \
+          --name orphelix-cluster \
+          --node-count 3 \
+          --node-vm-size Standard_D2s_v3 \
+          --enable-managed-identity
+        ```
+      </Step>
+      
+      <Step title="Get credentials">
+        ```bash
+        az aks get-credentials \
+          --resource-group orphelix-rg \
+          --name orphelix-cluster
+        ```
+      </Step>
+      
+      <Step title="Deploy Orphelix">
+        Use Kubernetes deployment method above
+      </Step>
+    </Steps>
+    
+    **Azure-specific features:**
+    - Use Managed Identity for authentication
+    - Store secrets in Azure Key Vault
+    - Use Azure Database for PostgreSQL
+    - Azure Monitor for logs and metrics
+  </Tab>
+</Tabs>
+
+## Configuration
+
+### Environment Variables
+
+<AccordionGroup>
+  <Accordion icon="gear" title="Required">
+    ```bash
+    # NextAuth
+    NEXTAUTH_SECRET=your-random-secret-here
+    NEXTAUTH_URL=https://your-domain.com
+    
+    # Database
+    DATABASE_URL=file:./orphelix.db
+    
+    # Node
+    NODE_ENV=production
+    ```
+  </Accordion>
+
+  <Accordion icon="github" title="GitHub Integration">
+    ```bash
+    # GitHub OAuth (for login)
+    GITHUB_ID=your-oauth-app-client-id
+    GITHUB_SECRET=your-oauth-app-client-secret
+    
+    # GitHub App (for GitOps)
+    GITHUB_APP_ID=123456
+    GITHUB_APP_CLIENT_ID=Iv1.abc123
+    GITHUB_APP_CLIENT_SECRET=your-client-secret
+    GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----"
+    ```
+  </Accordion>
+
+  <Accordion icon="brain" title="AI Features">
+    ```bash
+    # OpenAI
+    OPENAI_API_KEY=sk-...
+    ```
+  </Accordion>
+
+  <Accordion icon="sliders" title="Optional">
+    ```bash
+    # Port (default: 3000)
+    PORT=3000
+    
+    # Hostname (default: 0.0.0.0)
+    HOSTNAME=0.0.0.0
+    
+    # Log level
+    LOG_LEVEL=info
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Reverse Proxy (nginx)
+
+**nginx configuration:**
+
+```nginx
+server {
+    listen 80;
+    server_name orphelix.your-domain.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name orphelix.your-domain.com;
+
+    ssl_certificate /etc/letsencrypt/live/orphelix.your-domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/orphelix.your-domain.com/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # SSE support
+    location /api/stream {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Connection '';
+        proxy_buffering off;
+        proxy_cache off;
+        chunked_transfer_encoding off;
+    }
+}
+```
+
+## Monitoring
+
+### Health Checks
+
+**Endpoint:** `/api/health`
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "timestamp": "2025-01-28T10:00:00Z",
+  "version": "0.1.0"
+}
+```
+
+### Logs
+
+<Tabs>
+  <Tab title="PM2">
+    ```bash
+    # View logs
+    ./orphelix-cli.js logs
+    
+    # Or directly
+    pm2 logs orphelix
+    
+    # Log location
+    ~/.pm2/logs/
+    ```
+  </Tab>
+  
+  <Tab title="Docker">
+    ```bash
+    # View logs
+    docker logs -f orphelix
+    
+    # Last 100 lines
+    docker logs --tail 100 orphelix
+    ```
+  </Tab>
+  
+  <Tab title="Kubernetes">
+    ```bash
+    # View logs
+    kubectl logs -f deployment/orphelix -n orphelix
+    
+    # All pods
+    kubectl logs -f -l app=orphelix -n orphelix
+    ```
+  </Tab>
+</Tabs>
+
+### Metrics
+
+**Prometheus metrics:** (Coming soon)
+
+```yaml
+# /api/metrics endpoint
+# Prometheus format
+orphelix_http_requests_total{method="GET",path="/api/deployments"} 1234
+orphelix_http_request_duration_seconds{method="GET",path="/api/deployments"} 0.123
+```
+
+## Backup and Recovery
+
+### Database Backup
+
+**SQLite database:**
+
+```bash
+# Backup
+cp orphelix.db orphelix.db.backup
+
+# Or with timestamp
+cp orphelix.db "orphelix.db.$(date +%Y%m%d_%H%M%S).backup"
+
+# Restore
+cp orphelix.db.backup orphelix.db
+```
+
+**Automated backup script:**
+
+```bash
+#!/bin/bash
+# backup-orphelix.sh
+
+BACKUP_DIR="/backups/orphelix"
+DB_PATH="/app/orphelix.db"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+mkdir -p "$BACKUP_DIR"
+cp "$DB_PATH" "$BACKUP_DIR/orphelix-$TIMESTAMP.db"
+
+# Keep only last 30 days
+find "$BACKUP_DIR" -name "orphelix-*.db" -mtime +30 -delete
+```
+
+**Cron job:**
+```bash
+0 2 * * * /usr/local/bin/backup-orphelix.sh
+```
+
+### Kubernetes Backup
+
+**Using Velero:**
+
+```bash
+# Install Velero
+velero install \
+  --provider aws \
+  --bucket orphelix-backups \
+  --backup-location-config region=us-east-1
+
+# Backup Orphelix namespace
+velero backup create orphelix-backup --include-namespaces orphelix
+
+# Restore
+velero restore create --from-backup orphelix-backup
+```
+
+## Security Hardening
+
+### Best Practices
+
+<AccordionGroup>
+  <Accordion icon="lock" title="HTTPS Only">
+    - Force HTTPS redirect
+    - Use valid SSL certificates
+    - Enable HSTS headers
+    - Configure secure cookies
+  </Accordion>
+
+  <Accordion icon="key" title="Secrets Management">
+    - Never commit secrets to Git
+    - Use environment variables
+    - Use secret managers (AWS Secrets Manager, Azure Key Vault, etc.)
+    - Rotate secrets regularly
+  </Accordion>
+
+  <Accordion icon="shield" title="Network Security">
+    - Configure firewall rules
+    - Use private networks
+    - Implement rate limiting
+    - Enable DDoS protection
+  </Accordion>
+
+  <Accordion icon="user-shield" title="Authentication">
+    - Enforce strong passwords
+    - Enable 2FA for GitHub
+    - Use short-lived tokens
+    - Implement session timeout
+  </Accordion>
+
+  <Accordion icon="eye" title="Monitoring">
+    - Enable audit logging
+    - Monitor failed login attempts
+    - Set up alerts for anomalies
+    - Regular security reviews
+  </Accordion>
+</AccordionGroup>
+
+### Security Headers
+
+Add to nginx config:
+
+```nginx
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';" always;
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion icon="circle-exclamation" title="Application won't start">
+    **Check:**
+    - Node version: `node --version` (must be 20+)
+    - Port availability: `lsof -i :3000`
+    - Environment variables: Check .env.local
+    - Database: Verify orphelix.db exists and is writable
+    
+    **Logs:**
+    ```bash
+    # PM2
+    pm2 logs orphelix
+    
+    # Docker
+    docker logs orphelix
+    
+    # Kubernetes
+    kubectl logs deployment/orphelix -n orphelix
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="Can't connect to cluster">
+    **Check:**
+    - Kubeconfig: `kubectl config view`
+    - Current context: `kubectl config current-context`
+    - Cluster access: `kubectl get nodes`
+    - RBAC permissions: `kubectl auth can-i get pods`
+    
+    **For cloud providers:**
+    - AWS: Token may be expired, run `aws eks update-kubeconfig`
+    - GCP: Run `gcloud container clusters get-credentials`
+    - Azure: Run `az aks get-credentials`
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="GitHub integration not working">
+    **Check:**
+    - OAuth App credentials in .env.local
+    - GitHub App credentials
+    - Callback URL matches: `https://your-domain.com/api/auth/callback/github`
+    - Organization access granted
+    
+    **Test:**
+    ```bash
+    curl https://your-domain.com/api/github/auth-status
+    ```
+  </Accordion>
+
+  <Accordion icon="circle-exclamation" title="High memory usage">
+    **Solutions:**
+    - Increase memory limit in PM2/Docker/K8s
+    - Reduce concurrent requests
+    - Enable aggressive garbage collection:
+      ```bash
+      NODE_OPTIONS="--max-old-space-size=2048"
+      ```
+    - Check for memory leaks in logs
+  </Accordion>
+</AccordionGroup>
+
+## Upgrading
+
+### Standalone
+
+```bash
+cd orphelix/app
+
+# Pull latest
+git pull origin main
+
+# Install dependencies
+npm install
+
+# Rebuild
+npm run build:standalone
+
+# Restart
+./orphelix-cli.js restart
+```
+
+### Docker
+
+```bash
+# Pull latest
+git pull origin main
+
+# Rebuild image
+docker-compose build
+
+# Restart
+docker-compose up -d
+```
+
+### Kubernetes
+
+```bash
+# Update image
+kubectl set image deployment/orphelix \
+  orphelix=orphelix:v0.2.0 \
+  -n orphelix
+
+# Or apply new manifest
+kubectl apply -f orphelix-deployment.yaml
+```
+
+## Performance Tuning
+
+### Node.js Optimization
+
+```bash
+# Increase memory
+NODE_OPTIONS="--max-old-space-size=4096"
+
+# Enable V8 optimizations
+NODE_OPTIONS="--optimize-for-size"
+
+# Production mode
+NODE_ENV=production
+```
+
+### Next.js Optimization
+
+```javascript
+// next.config.mjs
+export default {
+  output: 'standalone',
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+  swcMinify: true,
+}
+```
+
+### Database Optimization
+
+```bash
+# Enable WAL mode (better concurrency)
+sqlite3 orphelix.db "PRAGMA journal_mode=WAL;"
+
+# Optimize database
+sqlite3 orphelix.db "VACUUM; ANALYZE;"
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Getting Started" icon="rocket" href="/developer/getting-started">
+    Development environment setup
+  </Card>
+  <Card title="Architecture" icon="diagram-project" href="/developer/architecture">
+    System design and patterns
+  </Card>
+  <Card title="Configuration" icon="gear" href="/user/configuration/cluster-connection">
+    Cluster and application config
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/developer/contributing">
+    Contribute to Orphelix
+  </Card>
+</CardGroup>
+
+## Support
 
 <Note>
-  See [Installation](/installation) for deployment options.
+Need help? Create an [issue](https://github.com/dmakowski/orphelix/issues) or ask in [Discussions](https://github.com/dmakowski/orphelix/discussions).
 </Note>
