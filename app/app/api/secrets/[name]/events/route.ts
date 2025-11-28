@@ -1,39 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchResourceEvents } from '@/lib/k8s/api'
 import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
+import { k8sResourceDetailSchema } from '@/lib/validation/schemas'
+import { handleApiError } from '@/lib/api/errors'
+
+// Create rate limiter for K8s detail operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
 
 /**
  * GET /api/secrets/[name]/events
  *
- * Fetches events for a specific Secret
- * Requires namespace query parameter
+ * Retrieves events for a specific Secret
+ *
+ * Rate Limited: 60 requests per 60 seconds
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
-    // const context = getContextFromRequest(request) // TODO: use context when API supports it
 
-    if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
-    }
+    // Validate input
+    const validated = k8sResourceDetailSchema.parse({ name, namespace })
 
-    const events = await fetchResourceEvents('Secret', name, namespace)
+    const events = await fetchResourceEvents('Secret', validated.name, validated.namespace)
     return NextResponse.json(events)
   } catch (error) {
-    console.error('[API] Failed to fetch Secret events:', error)
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch Secret events',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

@@ -375,3 +375,11 @@ export const k8sResourceDetailSchema = z.object({
   name: k8sNameSchema,
   namespace: namespaceSchema,
 })
+
+/**
+ * K8s Cluster-Wide Resource Schema
+ * For resources that don't belong to a namespace (e.g., Nodes, Namespaces)
+ */
+export const k8sClusterResourceSchema = z.object({
+  name: k8sNameSchema,
+})
