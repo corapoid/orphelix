@@ -16,6 +16,7 @@ import * as yaml from 'js-yaml'
  * @see https://kubernetes.io/docs/concepts/overview/working-with-objects/names/
  */
 export const k8sNameSchema = z.string()
+  .trim()
   .min(1, 'Resource name is required')
   .max(253, 'Resource name must not exceed 253 characters')
   .regex(
@@ -28,6 +29,7 @@ export const k8sNameSchema = z.string()
  * Stricter than resource names (max 63 chars)
  */
 export const namespaceSchema = z.string()
+  .trim()
   .min(1, 'Namespace is required')
   .max(63, 'Namespace must not exceed 63 characters')
   .regex(
@@ -74,6 +76,7 @@ export const containerNameSchema = z.string()
  * Ensures valid YAML syntax and reasonable size
  */
 export const yamlContentSchema = z.string()
+  .min(1, 'YAML content cannot be empty')
   .max(1048576, 'YAML content must not exceed 1MB') // 1MB limit
   .refine((val) => {
     try {
@@ -87,12 +90,13 @@ export const yamlContentSchema = z.string()
 /**
  * GitHub Owner Validation
  * @see https://github.com/dead-claudia/github-limits
+ * Rules: alphanumeric or single hyphens, cannot start/end with hyphen, no consecutive hyphens
  */
 export const githubOwnerSchema = z.string()
   .min(1, 'Owner is required')
   .max(39, 'Owner must not exceed 39 characters')
   .regex(
-    /^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/,
+    /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/,
     'Invalid GitHub owner format'
   )
 
@@ -103,8 +107,12 @@ export const githubRepoNameSchema = z.string()
   .min(1, 'Repository name is required')
   .max(100, 'Repository name must not exceed 100 characters')
   .regex(
-    /^[a-zA-Z0-9._-]+$/,
+    /^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*$/,
     'Repository name must consist of alphanumeric characters, dots, underscores, or hyphens'
+  )
+  .refine(
+    (name) => !name.startsWith('.') && !name.endsWith('.'),
+    'Repository name cannot start or end with a dot'
   )
 
 /**
@@ -373,7 +381,7 @@ export function validateQueryParams<T>(
  */
 export const k8sResourceDetailSchema = z.object({
   name: k8sNameSchema,
-  namespace: namespaceSchema,
+  namespace: namespaceSchema.default('default'),
 })
 
 /**

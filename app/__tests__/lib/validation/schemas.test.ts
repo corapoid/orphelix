@@ -156,7 +156,7 @@ describe('Validation Schemas', () => {
         'my-org',
         'user123',
         'a',
-        'a' + '-'.repeat(37), // 39 chars (max)
+        'a' + '-b'.repeat(19), // 39 chars (max) - alternating pattern
       ]
 
       validOwners.forEach(owner => {
