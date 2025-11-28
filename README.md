@@ -117,66 +117,10 @@ npm run orphelix open -- --port 8080
 
 ## 📖 Documentation
 
-### 📘 User Documentation
+📚 **[Full Documentation](https://orphelix.mintlify.app)** - Complete user guide, CLI reference, developer docs, and API documentation
 
-Complete user guide available in the `/docs` directory:
+### 📋 Additional Resources
 
-- **[Introduction](docs/introduction.mdx)** - What is Orphelix and key features
-- **[Quickstart](docs/quickstart.mdx)** - Get started in 5 minutes
-- **[Installation](docs/installation.mdx)** - Detailed installation guide
-- **[Dashboard Guide](docs/user/dashboard.mdx)** - Using the main dashboard
-- **[Search & Filters](docs/user/search-filters.mdx)** - Finding resources quickly
-- **[GitHub Integration](docs/user/github/overview.mdx)** - GitOps workflow setup
-- **[GitHub App Setup](docs/user/github/github-app-setup.mdx)** - Step-by-step configuration
-
-<details>
-<summary>📖 View documentation with Mintlify (optional)</summary>
-
-```bash
-cd docs
-npx mint@latest dev
-```
-
-Note: Mintlify may have dependency issues. Documentation is fully readable as markdown files.
-</details>
-
-<details>
-<summary>📚 All Documentation Sections</summary>
-
-**User Guide:**
-- Dashboard Overview
-- Deployments Management
-- Pods Monitoring & Logs
-- Nodes Monitoring
-- ConfigMaps & Secrets
-- HPA (HorizontalPodAutoscaler)
-- Events Timeline
-- Topology Visualization
-- Search & Filters
-
-**GitHub Integration:**
-- Overview & Benefits
-- OAuth Setup
-- GitHub App Setup
-- YAML Editor Usage
-- Pull Request Workflow
-
-**Configuration:**
-- Cluster Connection
-- Namespace Selection
-- Settings & Preferences
-- Demo Mode
-
-</details>
-
-### 🔧 Developer Documentation
-- **[Technical Documentation](TECHNICAL.md)** - Architecture, technology stack, key patterns, API routes
-- **[Testing Guide](TESTING.md)** - Unit tests, E2E tests, coverage reports
-- **[API Reference](docs/api-reference/introduction.mdx)** - REST API documentation
-- **[Roadmap](ROADMAP.md)** - Future features and development plans
-
-### 📋 Project Information
-
-- **[Security & Privacy](SECURITY.md)** - How data is stored and accessed
-- **[Changelog](CHANGELOG.md)** - Complete version history and updates
+- **[Security & Privacy](SECURITY.md)** - Authentication, data storage, and cluster access
+- **[Changelog](CHANGELOG.md)** - Version history and updates
 - **[License](LICENSE)** - Apache License 2.0
