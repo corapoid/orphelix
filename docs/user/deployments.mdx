@@ -1,12 +1,381 @@
 ---
 title: 'Deployments'
-description: 'Documentation under construction'
+description: 'Manage Kubernetes deployments - view details, restart, edit YAML, and monitor pod health'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+The Deployments page provides comprehensive management of Kubernetes deployments. View deployment status, manage replicas, restart deployments, edit YAML manifests, and monitor associated pods.
+
+<img src="/images/deployments.png" alt="Deployments List" />
+
+## List View
+
+### Features
+
+<CardGroup cols={2}>
+  <Card title="Real-time Status" icon="circle-check">
+    Live deployment status with available/desired replicas
+  </Card>
+  <Card title="Quick Actions" icon="bolt">
+    Restart deployments and edit YAML directly from the list
+  </Card>
+  <Card title="Search & Filter" icon="filter">
+    Find deployments by name and filter by status
+  </Card>
+  <Card title="Sorting" icon="arrow-down-a-z">
+    Sort by name, status, replicas, or age
+  </Card>
+</CardGroup>
+
+### Deployment Status
+
+Deployments display one of three statuses:
+
+<AccordionGroup>
+  <Accordion icon="circle-check" title="Available">
+    All replicas are running and ready. The deployment is healthy.
+
+    **Indicator:** Green badge with "Available"
+  </Accordion>
+
+  <Accordion icon="spinner" title="Progressing">
+    Deployment is currently updating, scaling, or rolling out changes.
+
+    **Indicator:** Yellow badge with "Progressing"
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="Degraded">
+    Some replicas are not ready, or the deployment has issues.
+
+    **Indicator:** Red badge with "Degraded"
+  </Accordion>
+</AccordionGroup>
+
+### Table Columns
+
+| Column | Description |
+|--------|-------------|
+| **Name** | Deployment name (clickable to view details) |
+| **Status** | Current deployment status badge |
+| **Replicas** | Available/Desired replica count (e.g., "3/3") |
+| **Age** | Time since deployment creation |
+| **Actions** | Quick action buttons (Restart, Edit YAML) |
+
+## Detail View
+
+Click any deployment name to view comprehensive details.
+
+### Overview Section
+
+<Steps>
+  <Step title="Basic Information">
+    - **Namespace**: Current namespace
+    - **Labels**: Key-value labels
+    - **Selectors**: Pod selector labels
+    - **Strategy**: Deployment strategy (RollingUpdate/Recreate)
+  </Step>
+
+  <Step title="Replica Information">
+    - **Desired Replicas**: Target number of pods
+    - **Available Replicas**: Currently running and ready
+    - **Unavailable Replicas**: Pods not ready
+    - **Updated Replicas**: Pods with latest template
+  </Step>
+
+  <Step title="Timestamps">
+    - **Created**: When deployment was created
+    - **Last Updated**: Most recent change timestamp
+  </Step>
+</Steps>
+
+### Pods Section
+
+View all pods belonging to this deployment:
+
+<img src="/images/deployment-pods.png" alt="Deployment Pods" />
+
+**Pod Information:**
+- **Name**: Pod name with status icon
+- **Status**: Running, Pending, Failed, etc.
+- **Node**: Node where pod is running
+- **Restarts**: Number of container restarts
+- **Age**: Pod uptime
+
+<Tip>
+  Click any pod name to navigate to the pod detail page with logs and events
+</Tip>
+
+### Topology View
+
+Visualize deployment relationships:
+
+<img src="/images/deployment-topology.png" alt="Deployment Topology" />
+
+The topology graph shows:
+- **Deployment** (center node)
+- **ConfigMaps** used by deployment
+- **Secrets** used by deployment
+- **HorizontalPodAutoscaler** (if configured)
+- **Pods** managed by deployment
 
 <Note>
-  Full documentation will be added soon.
+  Interactive graph - click nodes to navigate to their detail pages
 </Note>
+
+### Resource Metrics
+
+Real-time resource usage charts (when metrics available):
+
+<CardGroup cols={2}>
+  <Card title="CPU Usage" icon="microchip">
+    Current CPU usage vs limits
+  </Card>
+  <Card title="Memory Usage" icon="memory">
+    Current memory usage vs limits
+  </Card>
+</CardGroup>
+
+### Events
+
+Recent events related to this deployment:
+
+- Scaled up/down events
+- Image pull events
+- Replica set creation
+- Pod scheduling events
+- Error events
+
+## Actions
+
+### Restart Deployment
+
+Perform a rolling restart (equivalent to `kubectl rollout restart`):
+
+<Steps>
+  <Step title="Click Restart Button">
+    In the list view or detail view, click the **"Restart"** button
+  </Step>
+
+  <Step title="Confirm Action">
+    A dialog appears asking for confirmation
+
+    <Warning>
+      This triggers a rolling restart of all pods. Ensure your deployment has multiple replicas to avoid downtime.
+    </Warning>
+  </Step>
+
+  <Step title="Monitor Progress">
+    Watch the deployment status change to "Progressing" as pods restart
+  </Step>
+
+  <Step title="Completion">
+    Status returns to "Available" when all pods are ready
+  </Step>
+</Steps>
+
+**Use Cases:**
+- Apply configuration changes from ConfigMaps/Secrets
+- Clear pod-level issues
+- Restart after environment updates
+- Force image pull (if using :latest tag)
+
+### Edit YAML
+
+Edit deployment manifest and create a Pull Request:
+
+<Steps>
+  <Step title="Open YAML Editor">
+    Click **"Edit YAML"** button in detail view
+  </Step>
+
+  <Step title="Make Changes">
+    Monaco editor appears with full YAML manifest
+
+    <Tip>
+      Editor features: syntax highlighting, auto-completion, error detection
+    </Tip>
+  </Step>
+
+  <Step title="Common Edits">
+    - Update container image tag
+    - Adjust resource limits/requests
+    - Add/modify environment variables
+    - Change replica count
+    - Update labels/annotations
+  </Step>
+
+  <Step title="Create Pull Request">
+    Click **"Create PR"** to submit changes via GitHub integration
+
+    <Note>
+      Requires GitHub App setup. See [GitHub Integration](/user/github/overview)
+    </Note>
+  </Step>
+</Steps>
+
+**Example: Update Image Tag**
+
+```yaml
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        image: myapp:v1.0.0  # Change to v1.1.0
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+```
+
+## Filters & Search
+
+### Status Filter
+
+Filter deployments by status:
+
+<Tabs>
+  <Tab title="All Statuses">
+    Show all deployments regardless of status
+  </Tab>
+  <Tab title="Available">
+    Show only healthy deployments
+  </Tab>
+  <Tab title="Progressing">
+    Show deployments currently updating
+  </Tab>
+  <Tab title="Degraded">
+    Show deployments with issues
+  </Tab>
+</Tabs>
+
+### Search
+
+Use the global search bar to find deployments by name:
+
+```
+Search: api-gateway
+Result: Filters to deployments containing "api-gateway"
+```
+
+Search is case-insensitive and matches partial names.
+
+## Related Resources
+
+### ConfigMaps & Secrets
+
+Deployments often reference ConfigMaps and Secrets:
+
+<Steps>
+  <Step title="View in Topology">
+    See linked ConfigMaps/Secrets in the topology graph
+  </Step>
+
+  <Step title="Navigate to Resource">
+    Click ConfigMap/Secret nodes to view details
+  </Step>
+
+  <Step title="Update Configuration">
+    Edit ConfigMap/Secret values and restart deployment to apply
+  </Step>
+</Steps>
+
+### Horizontal Pod Autoscaler
+
+If an HPA is configured:
+
+- View target CPU utilization
+- See min/max replica limits
+- Monitor current replica count
+- Navigate to HPA details
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Health Checks">
+    Always configure liveness and readiness probes for zero-downtime deployments
+  </Accordion>
+
+  <Accordion icon="check" title="Resource Limits">
+    Set CPU/memory limits and requests to prevent resource starvation
+  </Accordion>
+
+  <Accordion icon="check" title="Multiple Replicas">
+    Run at least 2 replicas for high availability
+  </Accordion>
+
+  <Accordion icon="check" title="Rolling Updates">
+    Use RollingUpdate strategy with appropriate maxSurge and maxUnavailable
+  </Accordion>
+
+  <Accordion icon="check" title="Image Tags">
+    Use specific version tags instead of :latest for reproducibility
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+### Deployment Not Available
+
+**Symptom:** Deployment shows as Degraded with 0/3 available replicas
+
+**Possible Causes:**
+- Image pull errors
+- Resource limits too low
+- Failed readiness probes
+- Node resource constraints
+
+**Solutions:**
+1. Check Events tab for specific errors
+2. View pod details and logs
+3. Verify resource requests/limits
+4. Check node capacity
+
+### Pods Restarting Frequently
+
+**Symptom:** High restart count in pods table
+
+**Possible Causes:**
+- Application crashes
+- OOMKilled (memory limit exceeded)
+- Failed liveness probes
+- Resource constraints
+
+**Solutions:**
+1. View pod logs for crash reasons
+2. Check container restart history
+3. Increase memory limits if OOMKilled
+4. Review liveness probe configuration
+
+### Rolling Update Stuck
+
+**Symptom:** Deployment stuck in "Progressing" status
+
+**Possible Causes:**
+- New pods failing readiness checks
+- Insufficient cluster resources
+- Pod disruption budget blocking termination
+
+**Solutions:**
+1. Check new pod logs and events
+2. Verify resource availability
+3. Review readiness probe configuration
+4. Check pod disruption budgets
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Pods" icon="cube" href="/user/pods">
+    Learn about pod management and logs
+  </Card>
+  <Card title="ConfigMaps & Secrets" icon="key" href="/user/configmaps-secrets">
+    Manage configuration and secrets
+  </Card>
+  <Card title="Topology" icon="diagram-project" href="/user/topology">
+    Visualize resource relationships
+  </Card>
+  <Card title="GitHub Integration" icon="github" href="/user/github/overview">
+    Set up YAML editing with GitOps
+  </Card>
+</CardGroup>

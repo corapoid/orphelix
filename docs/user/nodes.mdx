@@ -1,12 +1,761 @@
 ---
 title: 'Nodes'
-description: 'Documentation under construction'
+description: 'Monitor Kubernetes cluster nodes - view resource capacity, allocatable resources, and running pods'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+The Nodes page provides comprehensive monitoring of Kubernetes cluster nodes. View node status, resource capacity, resource allocation, and which pods are running on each node.
+
+<img src="/images/nodes.png" alt="Nodes List" />
+
+## List View
+
+### Features
+
+<CardGroup cols={2}>
+  <Card title="Node Status" icon="server">
+    Real-time node health and readiness status
+  </Card>
+  <Card title="Resource Monitoring" icon="chart-line">
+    CPU, memory, and pod capacity tracking
+  </Card>
+  <Card title="Pod Distribution" icon="cubes">
+    See how many pods are running on each node
+  </Card>
+  <Card title="Utilization Metrics" icon="gauge">
+    Percentage of resources allocated
+  </Card>
+</CardGroup>
+
+### Node Status
+
+Nodes can have multiple conditions indicating their health:
+
+<AccordionGroup>
+  <Accordion icon="circle-check" title="Ready">
+    Node is healthy and ready to accept pods.
+
+    **Indicator:** Green badge with "Ready"
+    
+    **What it means:** 
+    - Kubelet is functioning properly
+    - Sufficient resources available
+    - Network connectivity established
+    - Container runtime operational
+  </Accordion>
+
+  <Accordion icon="circle-xmark" title="NotReady">
+    Node has issues and cannot accept new pods.
+
+    **Indicator:** Red badge with "NotReady"
+    
+    **Common causes:**
+    - Kubelet not responding
+    - Network connectivity lost
+    - Disk pressure
+    - Memory pressure
+    - PID pressure
+  </Accordion>
+
+  <Accordion icon="ban" title="SchedulingDisabled">
+    Node is cordoned and won't accept new pods.
+
+    **Indicator:** Orange badge with "SchedulingDisabled"
+    
+    **What it means:**
+    - Node manually cordoned (`kubectl cordon`)
+    - Under maintenance
+    - Being prepared for removal
+    - Existing pods continue running
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="DiskPressure">
+    Node is running out of disk space.
+
+    **Indicator:** Yellow badge with "DiskPressure"
+    
+    **Thresholds:**
+    - Available disk < 10% (default)
+    - Available inodes < 5%
+    
+    **Actions taken:**
+    - Evict pods with BestEffort QoS
+    - Prevent new pod scheduling
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="MemoryPressure">
+    Node is running low on memory.
+
+    **Indicator:** Yellow badge with "MemoryPressure"
+    
+    **Thresholds:**
+    - Available memory < 100Mi (default)
+    
+    **Actions taken:**
+    - Evict pods based on QoS and memory usage
+    - Prevent new BestEffort pods
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="PIDPressure">
+    Node is running out of process IDs.
+
+    **Indicator:** Yellow badge with "PIDPressure"
+    
+    **What it means:**
+    - Too many processes running
+    - Approaching PID limit
+    - Pods may fail to start
+  </Accordion>
+</AccordionGroup>
+
+### Table Columns
+
+| Column | Description |
+|--------|-------------|
+| **Name** | Node name (clickable to view details) |
+| **Status** | Node health status badge |
+| **Roles** | Node roles (master, worker, etc.) |
+| **CPU** | CPU capacity and allocation percentage |
+| **Memory** | Memory capacity and allocation percentage |
+| **Pods** | Number of pods running / maximum pods |
+| **Age** | Time since node joined cluster |
+
+### Resource Indicators
+
+Each node shows resource utilization with color-coded progress bars:
+
+<Tabs>
+  <Tab title="CPU">
+    **Display:** `8 cores (45% allocated)`
+    
+    - **Green**: < 70% allocated
+    - **Yellow**: 70-90% allocated
+    - **Red**: > 90% allocated
+    
+    Shows allocatable CPU vs requested CPU by pods
+  </Tab>
+
+  <Tab title="Memory">
+    **Display:** `32 GB (62% allocated)`
+    
+    - **Green**: < 80% allocated
+    - **Yellow**: 80-95% allocated
+    - **Red**: > 95% allocated
+    
+    Shows allocatable memory vs requested memory by pods
+  </Tab>
+
+  <Tab title="Pods">
+    **Display:** `48 / 110 pods`
+    
+    - **Green**: < 80% capacity
+    - **Yellow**: 80-95% capacity
+    - **Red**: > 95% capacity
+    
+    Shows current pod count vs maximum pod capacity
+  </Tab>
+</Tabs>
+
+## Detail View
+
+Click any node name to view comprehensive details.
+
+### Overview Section
+
+<Steps>
+  <Step title="Basic Information">
+    - **Name**: Node hostname
+    - **Status**: Overall node health status
+    - **Roles**: Kubernetes roles assigned
+    - **Labels**: All node labels (topology, instance type, zone, etc.)
+    - **Annotations**: Node annotations
+    - **Created**: When node joined cluster
+  </Step>
+
+  <Step title="Node Info">
+    - **Kubelet Version**: Kubernetes version running
+    - **Container Runtime**: Docker, containerd, CRI-O version
+    - **OS Image**: Operating system and version
+    - **Kernel Version**: Linux kernel version
+    - **Architecture**: CPU architecture (amd64, arm64, etc.)
+    - **Operating System**: linux, windows
+  </Step>
+
+  <Step title="Network Information">
+    - **Internal IP**: Node internal IP address
+    - **Hostname**: Node hostname
+    - **External IP**: Public IP (if available)
+  </Step>
+</Steps>
+
+### Resource Capacity
+
+Detailed breakdown of node resources:
+
+<img src="/images/node-resources.png" alt="Node Resources" />
+
+#### CPU Resources
+
+<Tabs>
+  <Tab title="Capacity">
+    **Total CPU cores** available on the node
+    
+    Example: `8 cores` (physical CPU)
+  </Tab>
+
+  <Tab title="Allocatable">
+    **CPU cores** available for pods (capacity minus system reserved)
+    
+    Example: `7.8 cores` (0.2 reserved for system)
+    
+    Calculation:
+    ```
+    Allocatable = Capacity - System Reserved - Kube Reserved
+    ```
+  </Tab>
+
+  <Tab title="Requests">
+    **Total CPU** requested by all pods on this node
+    
+    Example: `3.5 cores` (45% of allocatable)
+    
+    Determines scheduling decisions
+  </Tab>
+
+  <Tab title="Limits">
+    **Total CPU** limits set by all pods
+    
+    Example: `7.0 cores` (90% of allocatable)
+    
+    Maximum CPU pods can burst to
+  </Tab>
+</Tabs>
+
+#### Memory Resources
+
+<Tabs>
+  <Tab title="Capacity">
+    **Total memory** available on the node
+    
+    Example: `32 GB`
+  </Tab>
+
+  <Tab title="Allocatable">
+    **Memory** available for pods (capacity minus system reserved)
+    
+    Example: `30.5 GB` (1.5 GB reserved)
+  </Tab>
+
+  <Tab title="Requests">
+    **Total memory** requested by all pods
+    
+    Example: `18 GB` (59% of allocatable)
+  </Tab>
+
+  <Tab title="Limits">
+    **Total memory** limits set by all pods
+    
+    Example: `28 GB` (92% of allocatable)
+  </Tab>
+</Tabs>
+
+#### Pod Capacity
+
+Maximum number of pods the node can run:
+
+- **Capacity**: Maximum pods (e.g., 110)
+- **Running**: Current pod count (e.g., 48)
+- **Available**: Remaining capacity (e.g., 62)
 
 <Note>
-  Full documentation will be added soon.
+  Pod capacity is determined by kubelet `--max-pods` flag and CNI plugin limitations
 </Note>
+
+#### Storage Resources
+
+<AccordionGroup>
+  <Accordion icon="hard-drive" title="Ephemeral Storage">
+    Temporary storage on node's root filesystem
+    
+    - **Capacity**: Total ephemeral storage
+    - **Allocatable**: Available for pods
+    - **Requests**: Storage requested by pods
+    
+    Used for:
+    - Container layers
+    - EmptyDir volumes
+    - Container logs
+    - Container writable layers
+  </Accordion>
+
+  <Accordion icon="database" title="Persistent Volumes">
+    List of PersistentVolumes bound to this node
+    
+    Shows:
+    - PV name
+    - Capacity
+    - Access modes
+    - Status
+    - Claim reference
+  </Accordion>
+</AccordionGroup>
+
+### Pods Section
+
+View all pods running on this node:
+
+<img src="/images/node-pods.png" alt="Pods on Node" />
+
+**Pod Table Columns:**
+- **Name**: Pod name with namespace
+- **Status**: Pod phase (Running, Pending, etc.)
+- **Namespace**: Pod namespace
+- **CPU Requests**: CPU requested by pod
+- **Memory Requests**: Memory requested by pod
+- **Restarts**: Container restart count
+- **Age**: Pod uptime
+
+<Tip>
+  Click any pod name to navigate to the pod detail page
+</Tip>
+
+**Pod Grouping:**
+
+Pods are grouped by namespace for easier viewing:
+- System pods (kube-system)
+- Application pods (default, custom namespaces)
+- Monitoring pods (monitoring namespace)
+
+### Conditions
+
+Detailed node condition history:
+
+<img src="/images/node-conditions.png" alt="Node Conditions" />
+
+| Condition | Status | Description |
+|-----------|--------|-------------|
+| **Ready** | True/False | Node is healthy and ready |
+| **MemoryPressure** | True/False | Node is low on memory |
+| **DiskPressure** | True/False | Node is low on disk space |
+| **PIDPressure** | True/False | Node is low on process IDs |
+| **NetworkUnavailable** | True/False | Network is incorrectly configured |
+
+Each condition shows:
+- **Status**: True, False, Unknown
+- **Reason**: Why condition is in current state
+- **Message**: Detailed explanation
+- **Last Heartbeat**: When condition last updated
+- **Last Transition**: When condition changed state
+
+### Events
+
+Recent events related to this node:
+
+<AccordionGroup>
+  <Accordion icon="circle-check" title="Normal Events">
+    Routine node operations
+    
+    Examples:
+    - NodeReady: Node became ready
+    - RegisteredNode: Node registered with API server
+    - Starting kubelet: Kubelet service started
+    - NodeHasSufficientMemory: Memory available
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="Warning Events">
+    Node issues and problems
+    
+    Examples:
+    - NodeNotReady: Node lost connectivity
+    - Rebooted: Node rebooted
+    - EvictionThresholdMet: Disk/memory pressure
+    - ContainerGCFailed: Garbage collection failed
+    - ImageGCFailed: Image cleanup failed
+  </Accordion>
+</AccordionGroup>
+
+### Taints
+
+Node taints prevent certain pods from scheduling:
+
+<img src="/images/node-taints.png" alt="Node Taints" />
+
+**Taint Effects:**
+
+<Tabs>
+  <Tab title="NoSchedule">
+    **Hard constraint** - Pods without matching toleration won't schedule
+    
+    Example:
+    ```yaml
+    taints:
+    - key: "dedicated"
+      value: "gpu"
+      effect: "NoSchedule"
+    ```
+    
+    Requires pod toleration:
+    ```yaml
+    tolerations:
+    - key: "dedicated"
+      operator: "Equal"
+      value: "gpu"
+      effect: "NoSchedule"
+    ```
+  </Tab>
+
+  <Tab title="PreferNoSchedule">
+    **Soft constraint** - Scheduler tries to avoid, but allows if necessary
+    
+    Example:
+    ```yaml
+    taints:
+    - key: "workload"
+      value: "batch"
+      effect: "PreferNoSchedule"
+    ```
+    
+    Pods without toleration may still schedule if no other nodes available
+  </Tab>
+
+  <Tab title="NoExecute">
+    **Eviction** - Existing pods without toleration are evicted
+    
+    Example:
+    ```yaml
+    taints:
+    - key: "node.kubernetes.io/not-ready"
+      effect: "NoExecute"
+      tolerationSeconds: 300
+    ```
+    
+    Evicts pods after `tolerationSeconds` (if specified)
+  </Tab>
+</Tabs>
+
+**Common Taints:**
+
+| Taint Key | Purpose |
+|-----------|---------|
+| `node.kubernetes.io/not-ready` | Node not ready (automatic) |
+| `node.kubernetes.io/unreachable` | Node unreachable (automatic) |
+| `node.kubernetes.io/disk-pressure` | Disk pressure detected |
+| `node.kubernetes.io/memory-pressure` | Memory pressure detected |
+| `node.kubernetes.io/pid-pressure` | PID pressure detected |
+| `node.kubernetes.io/network-unavailable` | Network not ready |
+| `node.kubernetes.io/unschedulable` | Node cordoned |
+
+## Resource Allocation
+
+### Understanding Requests vs Limits
+
+<Tabs>
+  <Tab title="Requests">
+    **Minimum guaranteed resources** for a pod
+    
+    - Used by scheduler to place pods
+    - Pod won't be scheduled if node lacks requested resources
+    - Pod always gets at least this much
+    
+    Example:
+    ```yaml
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "256Mi"
+    ```
+  </Tab>
+
+  <Tab title="Limits">
+    **Maximum resources** a pod can use
+    
+    - Pod can't exceed these limits
+    - CPU: Throttled when limit reached
+    - Memory: OOMKilled when limit exceeded
+    
+    Example:
+    ```yaml
+    resources:
+      limits:
+        cpu: "1000m"
+        memory: "512Mi"
+    ```
+  </Tab>
+</Tabs>
+
+### Quality of Service (QoS)
+
+Pods are assigned QoS classes affecting eviction order:
+
+<AccordionGroup>
+  <Accordion icon="crown" title="Guaranteed">
+    **Highest priority** - Last to be evicted
+    
+    Requirements:
+    - Every container has CPU and memory limits
+    - Requests equal limits for both CPU and memory
+    
+    ```yaml
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+    ```
+  </Accordion>
+
+  <Accordion icon="star" title="Burstable">
+    **Medium priority** - Evicted after BestEffort
+    
+    Requirements:
+    - At least one container has CPU or memory request/limit
+    - Doesn't meet Guaranteed criteria
+    
+    ```yaml
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "128Mi"
+      limits:
+        cpu: "1000m"
+        memory: "512Mi"
+    ```
+  </Accordion>
+
+  <Accordion icon="circle" title="BestEffort">
+    **Lowest priority** - First to be evicted
+    
+    Requirements:
+    - No containers have CPU or memory requests/limits
+    
+    ```yaml
+    # No resources specified
+    containers:
+    - name: app
+      image: nginx
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Eviction Policies
+
+When node runs out of resources, kubelet evicts pods:
+
+**Eviction Signals:**
+- `memory.available` < 100Mi
+- `nodefs.available` < 10% (root filesystem)
+- `nodefs.inodesFree` < 5%
+- `imagefs.available` < 15% (image filesystem)
+
+**Eviction Order:**
+1. BestEffort pods using most resources
+2. Burstable pods exceeding requests
+3. Burstable pods within requests
+4. Guaranteed pods (last resort)
+
+Within each category, evict lowest priority pods first.
+
+## Troubleshooting
+
+### Node NotReady
+
+**Symptom:** Node shows NotReady status
+
+**Diagnostic Steps:**
+
+<Steps>
+  <Step title="Check Node Conditions">
+    View Conditions section for specific issues:
+    - MemoryPressure
+    - DiskPressure
+    - PIDPressure
+    - NetworkUnavailable
+  </Step>
+
+  <Step title="Check Events">
+    Look for warning events:
+    - "Kubelet stopped posting node status"
+    - "Container runtime not responding"
+    - "Failed to initialize network plugin"
+  </Step>
+
+  <Step title="Check Kubelet">
+    SSH to node and check kubelet:
+    ```bash
+    systemctl status kubelet
+    journalctl -u kubelet -f
+    ```
+  </Step>
+
+  <Step title="Check Resources">
+    Verify node has sufficient resources:
+    ```bash
+    df -h    # Disk space
+    free -h  # Memory
+    top      # CPU and processes
+    ```
+  </Step>
+</Steps>
+
+**Common Causes:**
+
+<AccordionGroup>
+  <Accordion icon="plug" title="Network Issues">
+    Node can't communicate with API server
+    
+    Solutions:
+    - Check network connectivity
+    - Verify firewall rules
+    - Test DNS resolution
+    - Check API server endpoints
+  </Accordion>
+
+  <Accordion icon="hard-drive" title="Disk Full">
+    Node out of disk space
+    
+    Solutions:
+    - Clean up container images: `docker system prune`
+    - Remove old logs: `journalctl --vacuum-time=3d`
+    - Increase disk size
+    - Check for filled volumes
+  </Accordion>
+
+  <Accordion icon="memory" title="Memory Pressure">
+    Node low on memory
+    
+    Solutions:
+    - Evict non-essential pods
+    - Increase node memory
+    - Reduce pod memory requests
+    - Fix memory leaks in applications
+  </Accordion>
+
+  <Accordion icon="cube" title="Container Runtime Issues">
+    Docker/containerd not responding
+    
+    Solutions:
+    - Restart container runtime: `systemctl restart docker`
+    - Check runtime logs
+    - Verify runtime configuration
+    - Update runtime if outdated
+  </Accordion>
+</AccordionGroup>
+
+### High Resource Utilization
+
+**Symptom:** Node consistently at >90% CPU or memory
+
+**Solutions:**
+
+<Steps>
+  <Step title="Identify Resource Hogs">
+    Check Pods section to find pods using most resources
+  </Step>
+
+  <Step title="Optimize Pod Requests">
+    Reduce over-requested resources:
+    ```yaml
+    # Before
+    requests:
+      cpu: "2000m"
+    
+    # After (if only using 500m)
+    requests:
+      cpu: "500m"
+    ```
+  </Step>
+
+  <Step title="Distribute Pods">
+    Move pods to other nodes:
+    ```bash
+    kubectl drain <node> --ignore-daemonsets
+    kubectl uncordon <node>
+    ```
+  </Step>
+
+  <Step title="Scale Cluster">
+    Add more nodes to cluster:
+    - Increase node pool size
+    - Add larger nodes
+    - Enable cluster autoscaling
+  </Step>
+</Steps>
+
+### Pod Evictions
+
+**Symptom:** Pods being evicted from node
+
+**Reasons:**
+
+1. **Resource Pressure**
+   - MemoryPressure
+   - DiskPressure
+   - PIDPressure
+
+2. **Manual Drain**
+   - Node maintenance
+   - Node upgrade
+   - Cluster scaling
+
+3. **Preemption**
+   - Higher priority pods need resources
+   - Cluster autoscaler needs to consolidate
+
+**Solutions:**
+
+- Increase node resources
+- Reduce pod resource usage
+- Adjust pod priorities
+- Clean up unused resources
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Monitor Resource Utilization">
+    Keep node utilization at 60-80% for optimal performance and headroom
+  </Accordion>
+
+  <Accordion icon="check" title="Set Resource Requests Accurately">
+    Base requests on actual usage, not maximum possible usage
+  </Accordion>
+
+  <Accordion icon="check" title="Use Node Labels">
+    Label nodes for targeted scheduling:
+    ```bash
+    kubectl label nodes <node> workload=gpu
+    kubectl label nodes <node> environment=production
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Implement Node Auto-scaling">
+    Automatically add/remove nodes based on demand
+  </Accordion>
+
+  <Accordion icon="check" title="Regular Maintenance">
+    Schedule node updates and security patches regularly
+  </Accordion>
+
+  <Accordion icon="check" title="Monitor Node Health">
+    Set up alerts for NotReady nodes and resource pressure
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Pods" icon="cube" href="/user/pods">
+    View pods running on nodes
+  </Card>
+  <Card title="Events" icon="bell" href="/user/events">
+    Monitor cluster events
+  </Card>
+  <Card title="Dashboard" icon="chart-line" href="/user/dashboard">
+    View cluster overview
+  </Card>
+  <Card title="HPA" icon="arrows-up-down" href="/user/hpa">
+    Configure autoscaling
+  </Card>
+</CardGroup>

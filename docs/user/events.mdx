@@ -1,12 +1,630 @@
 ---
 title: 'Events'
-description: 'Documentation under construction'
+description: 'Monitor Kubernetes cluster events - track pod failures, scheduling issues, and system warnings'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+The Events page provides a comprehensive view of all Kubernetes cluster events. Events are time-stamped records of actions and state changes in your cluster, essential for troubleshooting and monitoring.
+
+<img src="/images/events.png" alt="Events List" />
+
+## What are Kubernetes Events?
+
+Events are records created by Kubernetes components when:
+- Resources are created, modified, or deleted
+- Pods are scheduled or fail to schedule
+- Containers start, stop, or crash
+- Health probes fail
+- Resource limits are exceeded
+- Errors occur in the cluster
 
 <Note>
-  Full documentation will be added soon.
+  Events are stored for 1 hour by default in Kubernetes. Orphelix displays events from the current namespace.
 </Note>
+
+## List View
+
+### Features
+
+<CardGroup cols={2}>
+  <Card title="Real-time Updates" icon="rotate">
+    Events update automatically as they occur
+  </Card>
+  <Card title="Type Filtering" icon="filter">
+    Filter by Normal or Warning events
+  </Card>
+  <Card title="Time Range" icon="clock">
+    View events from last hour, 6h, 12h, or 24h
+  </Card>
+  <Card title="Search" icon="magnifying-glass">
+    Search by resource name, reason, or message
+  </Card>
+</CardGroup>
+
+### Event Types
+
+Events are categorized into two types:
+
+<Tabs>
+  <Tab title="Normal">
+    **Informational events** indicating routine operations
+    
+    **Indicator:** Blue info icon
+    
+    **Examples:**
+    - Scheduled: Pod assigned to node
+    - Pulling: Pulling container image
+    - Pulled: Successfully pulled image
+    - Created: Container created
+    - Started: Container started
+    - ScalingReplicaSet: Scaled deployment
+    - SuccessfulCreate: Pod created successfully
+    
+    <Note>
+      Normal events help understand cluster activity and changes
+    </Note>
+  </Tab>
+
+  <Tab title="Warning">
+    **Error and warning events** requiring attention
+    
+    **Indicator:** Red warning icon
+    
+    **Examples:**
+    - Failed: Container or pod failed
+    - FailedScheduling: Cannot schedule pod
+    - FailedMount: Volume mount failed
+    - BackOff: Container crash backoff
+    - Unhealthy: Liveness/readiness probe failed
+    - FailedKillPod: Cannot terminate pod
+    - OOMKilling: Out of memory kill
+    
+    <Warning>
+      Warning events indicate problems that may affect application availability
+    </Warning>
+  </Tab>
+</Tabs>
+
+### Table Columns
+
+| Column | Description |
+|--------|-------------|
+| **Type** | Event type icon (Normal/Warning) |
+| **Reason** | Short reason code (e.g., "Scheduled", "Failed") |
+| **Object** | Resource kind and name (e.g., "Pod/myapp-123") |
+| **Message** | Detailed event description |
+| **Count** | Number of times event occurred |
+| **Age** | Time since first occurrence |
+| **Last Seen** | Time since last occurrence |
+
+### Time-based Sorting
+
+Events are sorted by most recent first (Last Seen column). This helps identify:
+- Current ongoing issues
+- Recently resolved problems
+- Event frequency patterns
+
+## Filters
+
+### Type Filter
+
+<Tabs>
+  <Tab title="All">
+    Show all events (Normal + Warning)
+    
+    Use for: Complete cluster activity overview
+  </Tab>
+
+  <Tab title="Normal">
+    Show only informational events
+    
+    Use for:
+    - Understanding deployment changes
+    - Tracking pod lifecycle
+    - Auditing scaling operations
+  </Tab>
+
+  <Tab title="Warning">
+    Show only error/warning events
+    
+    Use for:
+    - Troubleshooting failures
+    - Identifying critical issues
+    - Monitoring cluster health
+  </Tab>
+</Tabs>
+
+### Time Range Filter
+
+<AccordionGroup>
+  <Accordion icon="clock" title="Last 1 Hour">
+    **Most recent events** (default)
+    
+    Best for:
+    - Active troubleshooting
+    - Real-time monitoring
+    - Recent deployments
+    
+    Typical count: 50-200 events
+  </Accordion>
+
+  <Accordion icon="clock" title="Last 6 Hours">
+    **Recent history**
+    
+    Best for:
+    - Identifying patterns
+    - Finding recurring issues
+    - Reviewing recent changes
+    
+    Typical count: 300-1000 events
+  </Accordion>
+
+  <Accordion icon="clock" title="Last 12 Hours">
+    **Half-day history**
+    
+    Best for:
+    - Daily operations review
+    - Overnight issue analysis
+    - Trend identification
+    
+    Typical count: 600-2000 events
+  </Accordion>
+
+  <Accordion icon="clock" title="Last 24 Hours">
+    **Full day history**
+    
+    Best for:
+    - Comprehensive analysis
+    - Root cause investigation
+    - Performance review
+    
+    Typical count: 1000-4000 events
+  </Accordion>
+</Tabs>
+
+<Note>
+  Longer time ranges may show fewer events due to Kubernetes' 1-hour event retention window. Consider using logging solutions for longer-term event storage.
+</Note>
+
+## Common Event Reasons
+
+### Pod Lifecycle Events
+
+<AccordionGroup>
+  <Accordion icon="calendar-check" title="Scheduled">
+    **Type:** Normal
+    
+    **Message:** "Successfully assigned default/myapp-123 to node-1"
+    
+    **Meaning:** Pod has been assigned to a node by the scheduler
+    
+    **Next steps:** Watch for Pulling and Started events
+  </Accordion>
+
+  <Accordion icon="download" title="Pulling / Pulled">
+    **Type:** Normal
+    
+    **Message:** "Pulling image 'nginx:1.21'"
+    
+    **Meaning:** Downloading container image from registry
+    
+    **Duration:** Varies by image size and network speed
+  </Accordion>
+
+  <Accordion icon="play" title="Started">
+    **Type:** Normal
+    
+    **Message:** "Started container myapp"
+    
+    **Meaning:** Container successfully started
+    
+    **Indicates:** Application is running
+  </Accordion>
+
+  <Accordion icon="rotate" title="BackOff">
+    **Type:** Warning
+    
+    **Message:** "Back-off restarting failed container"
+    
+    **Meaning:** Container crashed and is in restart backoff
+    
+    **Action required:** Check pod logs for crash reason
+  </Accordion>
+
+  <Accordion icon="skull" title="Killing">
+    **Type:** Normal
+    
+    **Message:** "Stopping container myapp"
+    
+    **Meaning:** Container being gracefully terminated
+    
+    **Common causes:** Pod deletion, deployment rollout
+  </Accordion>
+</AccordionGroup>
+
+### Scheduling Events
+
+<AccordionGroup>
+  <Accordion icon="circle-xmark" title="FailedScheduling">
+    **Type:** Warning
+    
+    **Common messages:**
+    - "0/3 nodes are available: insufficient cpu"
+    - "0/3 nodes are available: node(s) didn't match pod affinity rules"
+    - "0/3 nodes are available: 3 node(s) had taint {key=value}, that the pod didn't tolerate"
+    
+    **Action required:**
+    1. Check resource requests vs node capacity
+    2. Verify node selectors and affinity rules
+    3. Review node taints and tolerations
+    4. Scale cluster if needed
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="FailedMount">
+    **Type:** Warning
+    
+    **Messages:**
+    - "Unable to mount volumes: timeout expired waiting for volumes to attach"
+    - "MountVolume.SetUp failed: configmap 'app-config' not found"
+    
+    **Action required:**
+    1. Verify ConfigMaps/Secrets exist
+    2. Check PVC status
+    3. Review storage class
+    4. Check volume node affinity
+  </Accordion>
+</AccordionGroup>
+
+### Image Events
+
+<AccordionGroup>
+  <Accordion icon="ban" title="Failed">
+    **Type:** Warning
+    
+    **Message:** "Failed to pull image 'myapp:v1.0.0': rpc error: code = Unknown desc = Error response from daemon: pull access denied"
+    
+    **Causes:**
+    - Image doesn't exist
+    - Wrong registry URL
+    - Authentication failed
+    - Network connectivity issues
+    
+    **Solutions:**
+    1. Verify image name and tag
+    2. Check imagePullSecrets
+    3. Test manual pull: `docker pull <image>`
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="ImagePullBackOff">
+    **Type:** Warning
+    
+    **Message:** "Back-off pulling image 'myapp:latest'"
+    
+    **Meaning:** Repeated failure to pull image, backing off retries
+    
+    **Related to:** Failed event above
+  </Accordion>
+</AccordionGroup>
+
+### Health Check Events
+
+<AccordionGroup>
+  <Accordion icon="heart-crack" title="Unhealthy">
+    **Type:** Warning
+    
+    **Messages:**
+    - "Liveness probe failed: HTTP probe failed with statuscode: 500"
+    - "Readiness probe failed: Get http://10.1.2.3:8080/ready: dial tcp 10.1.2.3:8080: connect: connection refused"
+    
+    **Action required:**
+    1. Check application health endpoint
+    2. Verify probe configuration
+    3. Review application logs
+    4. Adjust probe thresholds if needed
+  </Accordion>
+</AccordionGroup>
+
+### Resource Events
+
+<AccordionGroup>
+  <Accordion icon="memory" title="OOMKilling">
+    **Type:** Warning
+    
+    **Message:** "Memory cgroup out of memory: Killed process 1234 (java)"
+    
+    **Meaning:** Container exceeded memory limit and was killed
+    
+    **Action required:**
+    1. Increase memory limits
+    2. Investigate memory leaks
+    3. Optimize application memory usage
+  </Accordion>
+
+  <Accordion icon="ban" title="FailedCreatePodSandBox">
+    **Type:** Warning
+    
+    **Message:** "Failed to create pod sandbox: rpc error: code = Unknown desc = failed to setup network for sandbox"
+    
+    **Causes:**
+    - CNI plugin issues
+    - Network configuration errors
+    - IP address exhaustion
+    
+    **Action required:**
+    1. Check CNI plugin logs
+    2. Verify network configuration
+    3. Check IP address pool
+  </Accordion>
+</AccordionGroup>
+
+### Scaling Events
+
+<AccordionGroup>
+  <Accordion icon="up-down" title="ScalingReplicaSet">
+    **Type:** Normal
+    
+    **Message:** "Scaled up replica set myapp-abcd1234 to 5"
+    
+    **Meaning:** Deployment scaled (manual or HPA)
+    
+    **Related:** Check HPA events for autoscaling
+  </Accordion>
+
+  <Accordion icon="check" title="SuccessfulCreate">
+    **Type:** Normal
+    
+    **Message:** "Created pod: myapp-abcd1234-xyz89"
+    
+    **Meaning:** ReplicaSet created new pod
+    
+    **Follows:** ScalingReplicaSet event
+  </Accordion>
+
+  <Accordion icon="trash" title="SuccessfulDelete">
+    **Type:** Normal
+    
+    **Message:** "Deleted pod: myapp-abcd1234-xyz89"
+    
+    **Meaning:** ReplicaSet deleted pod (scale down or rollout)
+  </Accordion>
+</AccordionGroup>
+
+## Search Functionality
+
+Use the global search bar to filter events:
+
+### Search by Object Name
+
+```
+Search: myapp
+Result: Shows all events for resources containing "myapp"
+```
+
+### Search by Reason
+
+```
+Search: Failed
+Result: Shows all failure events
+```
+
+### Search by Message
+
+```
+Search: "insufficient cpu"
+Result: Shows scheduling failures due to CPU
+```
+
+**Search Tips:**
+- Case-insensitive matching
+- Partial string matching
+- Searches across all visible columns
+- Combines with type and time range filters
+
+## Event Count Column
+
+The **Count** column shows how many times an event occurred:
+
+<Tabs>
+  <Tab title="Count = 1">
+    **One-time event**
+    
+    Typical for:
+    - Pod creation
+    - Image pulls
+    - Container starts
+  </Tab>
+
+  <Tab title="Count > 1">
+    **Recurring event**
+    
+    **Indicates:**
+    - Ongoing issue (CrashLoopBackOff)
+    - Repeated failures (ImagePullBackOff)
+    - Regular operations (Probe success)
+    
+    <Warning>
+      High counts (>10) on Warning events indicate persistent problems
+    </Warning>
+  </Tab>
+</Tabs>
+
+**Age vs Last Seen:**
+- **Age**: Time since first occurrence
+- **Last Seen**: Time since most recent occurrence
+- **Pattern**: Age much older than Last Seen = recurring issue
+
+Example:
+```
+Count: 25
+Age: 15m
+Last Seen: 30s
+
+Interpretation: Event occurred 25 times over 15 minutes, 
+most recently 30 seconds ago - ongoing issue!
+```
+
+## Event Correlation
+
+Use events to understand resource relationships:
+
+### Example: Deployment Rollout
+
+<Steps>
+  <Step title="ScalingReplicaSet">
+    ```
+    Type: Normal
+    Reason: ScalingReplicaSet
+    Message: Scaled up replica set myapp-v2 to 3
+    ```
+  </Step>
+
+  <Step title="SuccessfulCreate">
+    ```
+    Type: Normal
+    Reason: SuccessfulCreate
+    Message: Created pod: myapp-v2-abc123
+    ```
+  </Step>
+
+  <Step title="Scheduled">
+    ```
+    Type: Normal
+    Object: Pod/myapp-v2-abc123
+    Message: Successfully assigned to node-1
+    ```
+  </Step>
+
+  <Step title="Pulling">
+    ```
+    Type: Normal
+    Object: Pod/myapp-v2-abc123
+    Message: Pulling image "myapp:v2.0"
+    ```
+  </Step>
+
+  <Step title="Started">
+    ```
+    Type: Normal
+    Object: Pod/myapp-v2-abc123
+    Message: Started container myapp
+    ```
+  </Step>
+</Steps>
+
+## Troubleshooting with Events
+
+### Debugging Pod Failures
+
+<Steps>
+  <Step title="Find the Pod">
+    Search for pod name in events
+  </Step>
+
+  <Step title="Check Scheduling">
+    Look for FailedScheduling events
+    
+    Common issues:
+    - Insufficient resources
+    - Node selector mismatch
+    - Taint/toleration issues
+  </Step>
+
+  <Step title="Check Image Pull">
+    Look for Failed or ImagePullBackOff
+    
+    Common issues:
+    - Wrong image name
+    - Registry authentication
+    - Network connectivity
+  </Step>
+
+  <Step title="Check Container Start">
+    Look for BackOff or Failed
+    
+    Common issues:
+    - Application crash on startup
+    - Missing environment variables
+    - Configuration errors
+  </Step>
+
+  <Step title="Check Health Probes">
+    Look for Unhealthy events
+    
+    Common issues:
+    - Probe configuration incorrect
+    - Application not responding
+    - Slow startup
+  </Step>
+</Steps>
+
+### Identifying Patterns
+
+**Repeated Events:**
+- High count on same event = persistent issue
+- Check Last Seen for recency
+
+**Event Clusters:**
+- Multiple related events at same time = cascading failure
+- Example: Node NotReady → Many pod Evicted events
+
+**Warning Clusters:**
+- Many warnings in short time = cluster-wide issue
+- Check node events for infrastructure problems
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Monitor Warning Events">
+    Set up alerts for high warning event counts
+    
+    ```bash
+    kubectl get events --field-selector type=Warning -w
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Use Event Logging">
+    Send events to logging system for long-term retention:
+    - ELK Stack (Elasticsearch, Logstash, Kibana)
+    - Grafana Loki
+    - Cloud logging (CloudWatch, Stackdriver)
+  </Accordion>
+
+  <Accordion icon="check" title="Review Events Regularly">
+    Check events daily for:
+    - Recurring failures
+    - Performance issues
+    - Resource constraints
+  </Accordion>
+
+  <Accordion icon="check" title="Correlate with Metrics">
+    Combine events with resource metrics:
+    - CPU/memory usage
+    - Network traffic
+    - Pod restart counts
+  </Accordion>
+
+  <Accordion icon="check" title="Document Common Issues">
+    Create runbooks for frequent events:
+    - FailedScheduling → Scale cluster
+    - OOMKilling → Increase memory
+    - ImagePullBackOff → Check registry
+  </Accordion>
+</AccordionGroup>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Pods" icon="cube" href="/user/pods">
+    View pod details and logs
+  </Card>
+  <Card title="Deployments" icon="layer-group" href="/user/deployments">
+    Check deployment status
+  </Card>
+  <Card title="Nodes" icon="server" href="/user/nodes">
+    Monitor node health
+  </Card>
+  <Card title="Dashboard" icon="chart-line" href="/user/dashboard">
+    View cluster overview
+  </Card>
+</CardGroup>

@@ -1,12 +1,721 @@
 ---
 title: 'Pods'
-description: 'Documentation under construction'
+description: 'Monitor and manage Kubernetes pods - view logs, check health, restart containers, and troubleshoot issues'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+The Pods page provides detailed monitoring and management of Kubernetes pods. View real-time container logs, check health probes, track restart history, and troubleshoot pod issues.
+
+<img src="/images/pods.png" alt="Pods List" />
+
+## List View
+
+### Features
+
+<CardGroup cols={2}>
+  <Card title="Live Status" icon="circle-dot">
+    Real-time pod status with phase indicators
+  </Card>
+  <Card title="Container Logs" icon="file-lines">
+    View logs for any container directly from the list
+  </Card>
+  <Card title="Health Monitoring" icon="heart-pulse">
+    Track liveness and readiness probe status
+  </Card>
+  <Card title="Restart Tracking" icon="rotate">
+    Monitor container restart counts and history
+  </Card>
+</CardGroup>
+
+### Pod Status
+
+Pods can be in one of several phases:
+
+<AccordionGroup>
+  <Accordion icon="circle-check" title="Running">
+    Pod is running normally. All containers started successfully.
+
+    **Indicator:** Green badge with "Running"
+    
+    **What it means:** The pod has been bound to a node and all containers have been created. At least one container is running or is in the process of starting or restarting.
+  </Accordion>
+
+  <Accordion icon="clock" title="Pending">
+    Pod is waiting to be scheduled or containers are being created.
+
+    **Indicator:** Yellow badge with "Pending"
+    
+    **Common reasons:**
+    - Waiting for node assignment
+    - Pulling container images
+    - Insufficient cluster resources
+    - Volume mounting in progress
+  </Accordion>
+
+  <Accordion icon="xmark-circle" title="Failed">
+    Pod has failed and will not restart.
+
+    **Indicator:** Red badge with "Failed"
+    
+    **Common reasons:**
+    - Container exited with error code
+    - Image pull failed permanently
+    - Node failure
+    - Resource constraints
+  </Accordion>
+
+  <Accordion icon="check-circle" title="Succeeded">
+    Pod completed successfully (typically from Jobs).
+
+    **Indicator:** Blue badge with "Succeeded"
+    
+    **What it means:** All containers in the pod have terminated successfully and will not be restarted.
+  </Accordion>
+
+  <Accordion icon="rotate" title="CrashLoopBackOff">
+    Container is repeatedly crashing.
+
+    **Indicator:** Red badge with "CrashLoopBackOff"
+    
+    **Common reasons:**
+    - Application startup failure
+    - Missing dependencies
+    - Configuration errors
+    - Resource limits too low
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="ImagePullBackOff">
+    Container image cannot be pulled.
+
+    **Indicator:** Orange badge with "ImagePullBackOff"
+    
+    **Common reasons:**
+    - Image doesn't exist
+    - Registry authentication failed
+    - Network connectivity issues
+    - Wrong image name/tag
+  </Accordion>
+
+  <Accordion icon="ban" title="Evicted">
+    Pod was evicted from the node.
+
+    **Indicator:** Red badge with "Evicted"
+    
+    **Common reasons:**
+    - Node out of resources
+    - Exceeded pod memory limit
+    - Node maintenance
+    - Priority preemption
+  </Accordion>
+</AccordionGroup>
+
+### Table Columns
+
+| Column | Description |
+|--------|-------------|
+| **Name** | Pod name (clickable to view details) |
+| **Status** | Current pod phase badge |
+| **Node** | Node where pod is running |
+| **IP** | Pod IP address |
+| **Restarts** | Total container restart count |
+| **Age** | Time since pod creation |
+| **Actions** | Quick action buttons (View Logs, Restart) |
+
+### Status Filters
+
+Filter pods by status:
+
+<Tabs>
+  <Tab title="All">
+    Show all pods in the namespace
+  </Tab>
+  <Tab title="Running">
+    Show only healthy running pods
+  </Tab>
+  <Tab title="Pending">
+    Show pods waiting to start
+  </Tab>
+  <Tab title="Failed">
+    Show failed pods
+  </Tab>
+  <Tab title="CrashLoopBackOff">
+    Show pods repeatedly crashing
+  </Tab>
+</Tabs>
+
+## Detail View
+
+Click any pod name to view comprehensive details.
+
+### Overview Section
+
+<Steps>
+  <Step title="Basic Information">
+    - **Namespace**: Current namespace
+    - **Node**: Node assignment with link to node details
+    - **IP Address**: Pod IP and Host IP
+    - **Service Account**: ServiceAccount used by pod
+    - **QoS Class**: Quality of Service class (Guaranteed, Burstable, BestEffort)
+  </Step>
+
+  <Step title="Status Information">
+    - **Phase**: Current pod phase
+    - **Conditions**: Pod conditions (Initialized, Ready, ContainersReady, PodScheduled)
+    - **Start Time**: When pod started running
+    - **Labels**: Key-value labels
+    - **Annotations**: Pod annotations
+  </Step>
+
+  <Step title="Resource Usage">
+    - **CPU Requests/Limits**: Total for all containers
+    - **Memory Requests/Limits**: Total for all containers
+    - **Storage**: Persistent volume claims
+  </Step>
+</Steps>
+
+### Containers Section
+
+View details for each container in the pod:
+
+<img src="/images/pod-containers.png" alt="Pod Containers" />
+
+**Container Information:**
+- **Name**: Container name
+- **Image**: Full container image path
+- **Image Pull Policy**: Always, IfNotPresent, Never
+- **State**: Running, Waiting, Terminated
+- **Ready**: Whether container passed readiness checks
+- **Restart Count**: Number of times container restarted
+- **Ports**: Container ports and protocols
+
+<Tip>
+  Click the **"View Logs"** button next to any container to open the logs viewer
+</Tip>
+
+### Container Logs
+
+Real-time log viewer with advanced features:
+
+<img src="/images/pod-logs.png" alt="Pod Logs Viewer" />
+
+**Features:**
+- **Container Selection**: Switch between containers in multi-container pods
+- **Line Limit**: Choose number of log lines (100, 500, 1000, 5000)
+- **Auto-refresh**: Logs update automatically
+- **Syntax Highlighting**: Colored output for errors, warnings, JSON
+- **Search**: Filter log lines by keyword
+- **Download**: Export logs to file
+- **Timestamps**: Toggle timestamp display
+
+**Example Usage:**
+
+```bash
+# View last 100 lines
+[Container: app] [Lines: 100]
+
+2024-11-28T10:15:23.456Z INFO  Server started on port 3000
+2024-11-28T10:15:24.789Z INFO  Connected to database
+2024-11-28T10:15:25.123Z WARN  Cache miss for key: user:123
+2024-11-28T10:15:26.456Z ERROR Failed to connect to Redis
+```
 
 <Note>
-  Full documentation will be added soon.
+  Logs are fetched from the Kubernetes API and may have delays depending on cluster configuration
 </Note>
+
+### Health Checks
+
+View liveness and readiness probe configuration and status:
+
+<img src="/images/pod-health-checks.png" alt="Health Checks" />
+
+#### Liveness Probe
+
+Determines if container is alive and should be restarted:
+
+<AccordionGroup>
+  <Accordion icon="heart-pulse" title="HTTP GET">
+    Performs HTTP request to specified path and port
+    
+    ```yaml
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    ```
+  </Accordion>
+
+  <Accordion icon="terminal" title="Exec Command">
+    Executes command inside container
+    
+    ```yaml
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    ```
+  </Accordion>
+
+  <Accordion icon="plug" title="TCP Socket">
+    Attempts TCP connection to specified port
+    
+    ```yaml
+    livenessProbe:
+      tcpSocket:
+        port: 8080
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Readiness Probe
+
+Determines if container is ready to accept traffic:
+
+- **Success**: Container added to service endpoints
+- **Failure**: Container removed from service endpoints
+- **Configuration**: Similar to liveness probe
+
+<Warning>
+  Failed readiness probes don't restart the container - they only remove it from service load balancing
+</Warning>
+
+#### Startup Probe
+
+For slow-starting containers:
+
+- Disables liveness/readiness checks until first success
+- Prevents premature restart during startup
+- Useful for legacy applications with long initialization
+
+### Container Restart History
+
+Track when and why containers restarted:
+
+<img src="/images/pod-restart-history.png" alt="Restart History" />
+
+**Information Displayed:**
+- **Timestamp**: When restart occurred
+- **Reason**: Why container restarted (Error, OOMKilled, etc.)
+- **Exit Code**: Container exit code
+- **Message**: Detailed error message
+- **Signal**: Termination signal (if applicable)
+
+**Common Exit Codes:**
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success (normal termination) |
+| 1 | General error |
+| 125 | Container failed to run |
+| 126 | Command cannot be invoked |
+| 127 | Command not found |
+| 137 | SIGKILL (OOMKilled or killed externally) |
+| 139 | SIGSEGV (segmentation fault) |
+| 143 | SIGTERM (graceful shutdown) |
+
+### Events
+
+Recent events related to this pod:
+
+- **Scheduled**: Pod assigned to node
+- **Pulling**: Pulling container image
+- **Pulled**: Successfully pulled image
+- **Created**: Container created
+- **Started**: Container started
+- **Killing**: Container being terminated
+- **Failed**: Container failed to start
+- **BackOff**: Backing off after failed start
+
+### ConfigMaps & Secrets
+
+View ConfigMaps and Secrets mounted by this pod:
+
+<Steps>
+  <Step title="Volume Mounts">
+    List of volumes mounted into containers:
+    
+    - ConfigMap volumes
+    - Secret volumes
+    - PersistentVolumeClaims
+    - EmptyDir volumes
+    - HostPath volumes
+  </Step>
+
+  <Step title="Environment Variables">
+    Environment variables sourced from ConfigMaps/Secrets:
+    
+    - ConfigMapKeyRef
+    - SecretKeyRef
+    - ConfigMapRef (all keys)
+    - SecretRef (all keys)
+  </Step>
+
+  <Step title="Navigate">
+    Click ConfigMap/Secret names to view their details
+  </Step>
+</Steps>
+
+## Actions
+
+### Restart Pod
+
+Delete the pod to trigger recreation by its controller:
+
+<Steps>
+  <Step title="Click Restart Button">
+    In the detail view, click **"Restart Pod"**
+  </Step>
+
+  <Step title="Confirm Action">
+    A confirmation dialog appears
+
+    <Warning>
+      This deletes the pod. It will be recreated by its Deployment/StatefulSet/DaemonSet controller.
+    </Warning>
+  </Step>
+
+  <Step title="Wait for Recreation">
+    Watch as:
+    1. Old pod enters Terminating state
+    2. New pod is created (Pending)
+    3. Container images are pulled
+    4. New pod starts (Running)
+  </Step>
+
+  <Step title="Verify Health">
+    Check new pod logs and health probes
+  </Step>
+</Steps>
+
+**When to Restart:**
+- Container stuck in error state
+- Memory leak suspected
+- Configuration changes need to be applied
+- Debugging intermittent issues
+- Force image re-pull
+
+<Note>
+  Standalone pods (not managed by a controller) will be permanently deleted
+</Note>
+
+### View Logs
+
+Open the logs viewer for detailed log analysis:
+
+<Steps>
+  <Step title="Select Container">
+    If multi-container pod, choose which container
+  </Step>
+
+  <Step title="Set Line Limit">
+    Choose how many lines to fetch (100-5000)
+  </Step>
+
+  <Step title="Enable Auto-refresh">
+    Toggle auto-refresh for live log streaming
+  </Step>
+
+  <Step title="Search Logs">
+    Use search bar to filter log lines
+  </Step>
+
+  <Step title="Download">
+    Export logs to text file for offline analysis
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+### Pod Stuck in Pending
+
+**Symptom:** Pod remains in Pending state for extended time
+
+**Possible Causes:**
+
+<AccordionGroup>
+  <Accordion icon="server" title="Insufficient Resources">
+    Cluster doesn't have enough CPU/memory
+    
+    **Solution:**
+    1. Check events for "Insufficient cpu" or "Insufficient memory"
+    2. Scale up cluster or reduce resource requests
+    3. View node capacity in Nodes page
+  </Accordion>
+
+  <Accordion icon="download" title="Image Pull Failure">
+    Cannot pull container image
+    
+    **Solution:**
+    1. Check events for image pull errors
+    2. Verify image name and tag
+    3. Check registry authentication
+    4. Test image pull manually: `docker pull <image>`
+  </Accordion>
+
+  <Accordion icon="hard-drive" title="Volume Mount Issues">
+    PersistentVolumeClaim not bound or accessible
+    
+    **Solution:**
+    1. Check PVC status
+    2. Verify StorageClass availability
+    3. Check volume node affinity
+  </Accordion>
+
+  <Accordion icon="ban" title="Node Selector Mismatch">
+    No nodes match pod's nodeSelector/affinity rules
+    
+    **Solution:**
+    1. Check pod's nodeSelector in YAML
+    2. Verify node labels match requirements
+    3. Review affinity/anti-affinity rules
+  </Accordion>
+</AccordionGroup>
+
+### CrashLoopBackOff
+
+**Symptom:** Container repeatedly crashes and restarts
+
+**Diagnostic Steps:**
+
+<Steps>
+  <Step title="Check Container Logs">
+    View logs for error messages and stack traces
+  </Step>
+
+  <Step title="Review Exit Code">
+    Check restart history for exit codes:
+    - 137: OOMKilled (increase memory limit)
+    - 1/127: Application error (check logs)
+    - 139: Segmentation fault (application bug)
+  </Step>
+
+  <Step title="Verify Configuration">
+    - Environment variables correct?
+    - ConfigMaps/Secrets accessible?
+    - Required files/volumes mounted?
+  </Step>
+
+  <Step title="Check Resource Limits">
+    - Memory limit sufficient?
+    - CPU limit not too restrictive?
+    - Increase limits and test
+  </Step>
+
+  <Step title="Test Locally">
+    Run container image locally with same configuration:
+    ```bash
+    docker run -it <image> /bin/sh
+    ```
+  </Step>
+</Steps>
+
+### OOMKilled (Out of Memory)
+
+**Symptom:** Container killed with exit code 137
+
+**Solutions:**
+
+1. **Increase Memory Limit**
+   ```yaml
+   resources:
+     limits:
+       memory: "1Gi"  # Increase from 512Mi
+     requests:
+       memory: "512Mi"
+   ```
+
+2. **Analyze Memory Usage**
+   - Check metrics in detail view
+   - Profile application memory consumption
+   - Look for memory leaks
+
+3. **Optimize Application**
+   - Reduce memory footprint
+   - Implement caching strategies
+   - Fix memory leaks
+
+### ImagePullBackOff
+
+**Symptom:** Cannot pull container image
+
+**Common Solutions:**
+
+<Tabs>
+  <Tab title="Authentication">
+    **Private Registry Authentication**
+    
+    Create image pull secret:
+    ```bash
+    kubectl create secret docker-registry regcred \
+      --docker-server=<registry> \
+      --docker-username=<username> \
+      --docker-password=<password>
+    ```
+    
+    Reference in pod:
+    ```yaml
+    imagePullSecrets:
+    - name: regcred
+    ```
+  </Tab>
+
+  <Tab title="Image Name">
+    **Verify Image Path**
+    
+    Check image name format:
+    - `nginx:latest` (Docker Hub)
+    - `gcr.io/project/image:tag` (GCR)
+    - `registry.example.com/image:tag` (Private)
+    
+    Common mistakes:
+    - Wrong registry URL
+    - Typo in image name
+    - Non-existent tag
+  </Tab>
+
+  <Tab title="Network">
+    **Network Connectivity**
+    
+    Test from node:
+    ```bash
+    # SSH to node
+    docker pull <image>
+    ```
+    
+    Check:
+    - Internet connectivity
+    - DNS resolution
+    - Firewall rules
+    - Proxy configuration
+  </Tab>
+</Tabs>
+
+### Failed Readiness Probe
+
+**Symptom:** Pod running but not ready (not receiving traffic)
+
+**Solutions:**
+
+1. **Check Probe Configuration**
+   ```yaml
+   readinessProbe:
+     httpGet:
+       path: /ready
+       port: 8080
+     initialDelaySeconds: 10  # Too short?
+     periodSeconds: 5
+     failureThreshold: 3
+   ```
+
+2. **Increase Delays**
+   - Application needs more time to start
+   - Increase `initialDelaySeconds`
+   - Adjust `periodSeconds`
+
+3. **Fix Health Endpoint**
+   - Ensure `/ready` endpoint exists
+   - Returns 200 status code
+   - Responds quickly (< timeout)
+
+4. **Check Dependencies**
+   - Database connection ready?
+   - External services accessible?
+   - Required files loaded?
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Always Set Resource Limits">
+    Prevent resource starvation and OOMKills
+    
+    ```yaml
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Configure Health Probes">
+    Enable auto-recovery and traffic management
+    
+    ```yaml
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    
+    readinessProbe:
+      httpGet:
+        path: /ready
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Use Specific Image Tags">
+    Avoid `latest` tag for reproducibility
+    
+    ```yaml
+    # Good
+    image: nginx:1.21.6
+    
+    # Bad
+    image: nginx:latest
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Implement Graceful Shutdown">
+    Handle SIGTERM for clean termination
+    
+    ```yaml
+    lifecycle:
+      preStop:
+        exec:
+          command: ["/bin/sh", "-c", "sleep 15"]
+    ```
+  </Accordion>
+
+  <Accordion icon="check" title="Log to stdout/stderr">
+    Make logs accessible via kubectl/Orphelix
+    
+    ```javascript
+    // Good
+    console.log("Message")
+    
+    // Bad (logs to file only)
+    fs.writeFile("/var/log/app.log", "Message")
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Deployments" icon="layer-group" href="/user/deployments">
+    View parent deployment details
+  </Card>
+  <Card title="Nodes" icon="server" href="/user/nodes">
+    Check node where pod is running
+  </Card>
+  <Card title="ConfigMaps & Secrets" icon="key" href="/user/configmaps-secrets">
+    View mounted configuration
+  </Card>
+  <Card title="Events" icon="bell" href="/user/events">
+    See all cluster events
+  </Card>
+</CardGroup>

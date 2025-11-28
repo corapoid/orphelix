@@ -1,12 +1,677 @@
 ---
-title: 'HorizontalPodAutoscaler'
-description: 'Documentation under construction'
+title: 'Horizontal Pod Autoscaler (HPA)'
+description: 'Monitor and manage autoscaling - view CPU utilization, replica counts, and scaling behavior'
 ---
 
 ## Overview
 
-This documentation page is under construction.
+Horizontal Pod Autoscaler (HPA) automatically scales the number of pods based on observed CPU utilization or custom metrics. Orphelix provides real-time monitoring of HPA status, metrics, and scaling behavior.
+
+<img src="/images/hpa.png" alt="HPA List" />
+
+## What is HPA?
+
+HPA automatically adjusts the number of pod replicas in a Deployment, StatefulSet, or ReplicaSet based on resource utilization:
+
+<CardGroup cols={2}>
+  <Card title="Scale Up" icon="arrow-up">
+    Add more replicas when CPU/memory usage is high
+  </Card>
+  <Card title="Scale Down" icon="arrow-down">
+    Remove replicas when resource usage is low
+  </Card>
+  <Card title="Automatic" icon="wand-magic-sparkles">
+    No manual intervention required
+  </Card>
+  <Card title="Cost Efficient" icon="dollar-sign">
+    Pay only for resources you need
+  </Card>
+</CardGroup>
+
+## List View
+
+### Features
+
+- **Real-time Metrics**: Live CPU utilization percentages
+- **Replica Counts**: Current, min, and max replicas
+- **Target Status**: Whether HPA is meeting targets
+- **Scaling Activity**: Recent scale up/down events
+
+### Table Columns
+
+| Column | Description |
+|--------|-------------|
+| **Name** | HPA name (clickable to view details) |
+| **Target** | Resource being scaled (Deployment/StatefulSet) |
+| **Min/Max** | Minimum and maximum replica limits |
+| **Current** | Current number of replicas |
+| **CPU** | Current CPU utilization vs target (e.g., "45% / 80%") |
+| **Status** | Scaling status indicator |
+| **Age** | Time since HPA creation |
+
+### Status Indicators
+
+<AccordionGroup>
+  <Accordion icon="circle-check" title="Active">
+    HPA is monitoring and scaling normally
+    
+    **Indicator:** Green badge
+    
+    **Means:**
+    - Metrics are being collected
+    - Scaling decisions are being made
+    - Target resource is healthy
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="Unable to Scale">
+    HPA cannot scale the target
+    
+    **Indicator:** Red badge
+    
+    **Common causes:**
+    - Target resource doesn't exist
+    - Metrics unavailable
+    - Insufficient permissions
+    - Target at max/min replicas
+  </Accordion>
+
+  <Accordion icon="clock" title="Scaling">
+    HPA is actively scaling replicas
+    
+    **Indicator:** Yellow badge
+    
+    **Means:**
+    - Scale up/down in progress
+    - Waiting for new pods to become ready
+    - Cooldown period active
+  </Accordion>
+
+  <Accordion icon="circle-info" title="Unknown">
+    HPA status cannot be determined
+    
+    **Indicator:** Gray badge
+    
+    **Possible reasons:**
+    - Just created
+    - Metrics server not available
+    - Connection issues
+  </Accordion>
+</AccordionGroup>
+
+## Detail View
+
+Click any HPA name to view comprehensive details:
+
+### Overview Section
+
+<Steps>
+  <Step title="Basic Information">
+    - **Name**: HPA identifier
+    - **Namespace**: Current namespace
+    - **Target**: Resource being scaled (with link)
+    - **Status**: Current HPA status
+    - **Created**: Creation timestamp
+  </Step>
+
+  <Step title="Replica Configuration">
+    - **Min Replicas**: Minimum pod count (never scale below)
+    - **Max Replicas**: Maximum pod count (never scale above)
+    - **Current Replicas**: Current number of running pods
+    - **Desired Replicas**: Target replica count based on metrics
+  </Step>
+
+  <Step title="Metrics">
+    - **Target Metric**: CPU or custom metric name
+    - **Target Value**: Threshold for scaling (e.g., 80% CPU)
+    - **Current Value**: Actual measured value
+    - **Utilization %**: Current as percentage of target
+  </Step>
+</Steps>
+
+### Scaling Metrics
+
+<img src="/images/hpa-metrics.png" alt="HPA Metrics" />
+
+#### CPU Utilization
+
+Most common HPA metric:
+
+<Tabs>
+  <Tab title="Target Utilization">
+    **Desired average CPU** across all pods
+    
+    Example: 80%
+    
+    Calculation:
+    ```
+    Average CPU across all pods should be ~80%
+    ```
+  </Tab>
+
+  <Tab title="Current Utilization">
+    **Actual average CPU** usage
+    
+    Example: 45%
+    
+    Displayed with progress bar:
+    - Green: < 70% of target
+    - Yellow: 70-100% of target
+    - Red: > 100% of target
+  </Tab>
+
+  <Tab title="Scaling Decision">
+    HPA calculates desired replicas:
+    
+    ```
+    desiredReplicas = ceil(currentReplicas * (currentMetric / targetMetric))
+    ```
+    
+    Example:
+    ```
+    Current: 3 replicas at 120% CPU
+    Target: 80% CPU
+    Desired: ceil(3 * (120/80)) = ceil(4.5) = 5 replicas
+    ```
+  </Tab>
+</Tabs>
+
+**CPU Progress Bar:**
+
+<img src="/images/hpa-cpu-bar.png" alt="CPU Utilization Bar" />
+
+```
+Current: 45% ████████░░░░░░░░░░ Target: 80%
+Status: Under target - may scale down
+```
+
+#### Memory Utilization
+
+HPA can also scale based on memory:
+
+```yaml
+metrics:
+- type: Resource
+  resource:
+    name: memory
+    target:
+      type: Utilization
+      averageUtilization: 70
+```
 
 <Note>
-  Full documentation will be added soon.
+  Memory-based scaling requires metrics-server to be running in the cluster
 </Note>
+
+#### Custom Metrics
+
+HPA supports custom metrics from:
+- Prometheus
+- Application metrics
+- Queue depth
+- Request rate
+
+```yaml
+metrics:
+- type: Pods
+  pods:
+    metric:
+      name: http_requests_per_second
+    target:
+      type: AverageValue
+      averageValue: "1000"
+```
+
+### Scaling Behavior
+
+View recent scaling activity:
+
+<Steps>
+  <Step title="Scale Up Events">
+    When HPA added replicas:
+    
+    - Timestamp of scale up
+    - Previous replica count
+    - New replica count
+    - Reason (CPU above target, etc.)
+  </Step>
+
+  <Step title="Scale Down Events">
+    When HPA removed replicas:
+    
+    - Timestamp of scale down
+    - Previous replica count
+    - New replica count
+    - Reason (CPU below target, etc.)
+  </Step>
+
+  <Step title="Cooldown Periods">
+    HPA waits between scaling operations:
+    
+    - **Scale Up**: 3 minutes default
+    - **Scale Down**: 5 minutes default
+    
+    Prevents thrashing from metric fluctuations
+  </Step>
+</Steps>
+
+### Conditions
+
+HPA conditions indicate scaling health:
+
+| Condition | Status | Meaning |
+|-----------|--------|---------|
+| **AbleToScale** | True/False | Can HPA scale the target? |
+| **ScalingActive** | True/False | Is HPA actively monitoring? |
+| **ScalingLimited** | True/False | At min or max replica limit? |
+
+<Warning>
+  If ScalingLimited is True, HPA cannot scale further. Consider adjusting limits or adding more nodes.
+</Warning>
+
+### Events
+
+Recent HPA events:
+
+- SuccessfulRescale: Scaled from X to Y replicas
+- FailedGetResourceMetric: Cannot fetch CPU metrics
+- FailedComputeMetricsReplicas: Cannot calculate desired replicas
+- FailedRescale: Scale operation failed
+
+## Creating an HPA
+
+### Using kubectl
+
+<Tabs>
+  <Tab title="Simple CPU">
+    Scale based on CPU:
+    
+    ```bash
+    kubectl autoscale deployment myapp \
+      --cpu-percent=80 \
+      --min=2 \
+      --max=10
+    ```
+  </Tab>
+
+  <Tab title="YAML Manifest">
+    Full HPA spec:
+    
+    ```yaml
+    apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: myapp-hpa
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: myapp
+      minReplicas: 2
+      maxReplicas: 10
+      metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 80
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 50
+            periodSeconds: 60
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+    ```
+  </Tab>
+
+  <Tab title="Memory-based">
+    Scale based on memory:
+    
+    ```yaml
+    apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: myapp-hpa
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: myapp
+      minReplicas: 2
+      maxReplicas: 10
+      metrics:
+      - type: Resource
+        resource:
+          name: memory
+          target:
+            type: Utilization
+            averageUtilization: 70
+    ```
+  </Tab>
+
+  <Tab title="Multiple Metrics">
+    Scale based on multiple metrics:
+    
+    ```yaml
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70
+    ```
+    
+    HPA uses the metric requiring most replicas
+  </Tab>
+</Tabs>
+
+### Prerequisites
+
+<AccordionGroup>
+  <Accordion icon="chart-line" title="Metrics Server">
+    Install metrics-server in your cluster:
+    
+    ```bash
+    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+    ```
+    
+    Verify it's running:
+    ```bash
+    kubectl top nodes
+    kubectl top pods
+    ```
+  </Accordion>
+
+  <Accordion icon="cube" title="Resource Requests">
+    Pods must have CPU/memory requests defined:
+    
+    ```yaml
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+    ```
+    
+    <Warning>
+      HPA cannot function without resource requests!
+    </Warning>
+  </Accordion>
+
+  <Accordion icon="layer-group" title="Target Resource">
+    Deployment/StatefulSet must exist and be healthy:
+    
+    ```bash
+    kubectl get deployment myapp
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Scaling Behavior Configuration
+
+Control how fast HPA scales up/down:
+
+### Scale Up Behavior
+
+```yaml
+behavior:
+  scaleUp:
+    stabilizationWindowSeconds: 0  # No delay
+    policies:
+    - type: Percent
+      value: 100  # Double replicas
+      periodSeconds: 15  # Every 15 seconds
+    - type: Pods
+      value: 4  # Or add 4 pods
+      periodSeconds: 15
+    selectPolicy: Max  # Use policy allowing most replicas
+```
+
+**Aggressive scale up:**
+- No stabilization window
+- Can double capacity quickly
+- Good for traffic spikes
+
+### Scale Down Behavior
+
+```yaml
+behavior:
+  scaleDown:
+    stabilizationWindowSeconds: 300  # 5 minute window
+    policies:
+    - type: Percent
+      value: 50  # Remove 50% of replicas
+      periodSeconds: 60
+    - type: Pods
+      value: 2  # Or remove 2 pods
+      periodSeconds: 60
+    selectPolicy: Min  # Use policy removing fewest replicas
+```
+
+**Conservative scale down:**
+- 5 minute stabilization
+- Gradual reduction
+- Prevents flapping
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion icon="check" title="Set Reasonable Limits">
+    Choose appropriate min/max:
+    
+    ```yaml
+    minReplicas: 2  # Maintain availability
+    maxReplicas: 10  # Limit blast radius
+    ```
+    
+    - **Min**: Ensure availability during scale down
+    - **Max**: Prevent runaway scaling costs
+  </Accordion>
+
+  <Accordion icon="check" title="Define Resource Requests">
+    Always set CPU/memory requests:
+    
+    ```yaml
+    resources:
+      requests:
+        cpu: "250m"  # 25% of a CPU core
+        memory: "256Mi"
+    ```
+    
+    Base on actual usage, not maximums
+  </Accordion>
+
+  <Accordion icon="check" title="Use Appropriate Targets">
+    Set targets with headroom:
+    
+    - **CPU**: 70-80% (not 100%)
+    - **Memory**: 70-80% (not 100%)
+    
+    Allows time to scale before saturation
+  </Accordion>
+
+  <Accordion icon="check" title="Configure Scale Down Delay">
+    Prevent flapping with stabilization:
+    
+    ```yaml
+    behavior:
+      scaleDown:
+        stabilizationWindowSeconds: 300
+    ```
+    
+    Wait for sustained low usage before scaling down
+  </Accordion>
+
+  <Accordion icon="check" title="Monitor Scaling Events">
+    Watch for frequent scaling:
+    
+    ```bash
+    kubectl get events --field-selector involvedObject.name=myapp-hpa
+    ```
+    
+    Frequent scaling indicates wrong targets
+  </Accordion>
+
+  <Accordion icon="check" title="Test Scaling Behavior">
+    Load test your application:
+    
+    1. Generate load
+    2. Watch HPA scale up
+    3. Remove load
+    4. Watch HPA scale down
+    5. Adjust targets as needed
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+### HPA Not Scaling
+
+**Symptom:** Replicas stay constant despite high CPU
+
+**Check:**
+
+<Steps>
+  <Step title="Verify Metrics Server">
+    ```bash
+    kubectl top nodes
+    kubectl top pods -n <namespace>
+    ```
+    
+    If error: Metrics server not installed/running
+  </Step>
+
+  <Step title="Check Resource Requests">
+    ```bash
+    kubectl get deployment myapp -o yaml | grep -A 5 resources
+    ```
+    
+    Must have CPU requests defined
+  </Step>
+
+  <Step title="View HPA Status">
+    ```bash
+    kubectl describe hpa myapp-hpa
+    ```
+    
+    Look for error messages in conditions
+  </Step>
+
+  <Step title="Check Current Metrics">
+    ```bash
+    kubectl get hpa myapp-hpa
+    ```
+    
+    TARGETS column shows current vs target
+  </Step>
+</Steps>
+
+### Metrics Unavailable
+
+**Symptom:** HPA shows "unknown" for current CPU
+
+**Solutions:**
+
+1. **Restart Metrics Server**
+   ```bash
+   kubectl rollout restart deployment metrics-server -n kube-system
+   ```
+
+2. **Check Metrics Server Logs**
+   ```bash
+   kubectl logs -n kube-system -l k8s-app=metrics-server
+   ```
+
+3. **Verify Kubelet Metrics**
+   ```bash
+   curl -k https://<node-ip>:10250/metrics
+   ```
+
+### Constant Scaling (Flapping)
+
+**Symptom:** HPA constantly scales up and down
+
+**Causes:**
+
+- Target too close to actual usage
+- Insufficient stabilization window
+- Application resource usage varies wildly
+
+**Solutions:**
+
+1. **Increase Target Threshold**
+   ```yaml
+   averageUtilization: 80  # Was 60, now 80
+   ```
+
+2. **Add Stabilization Window**
+   ```yaml
+   behavior:
+     scaleDown:
+       stabilizationWindowSeconds: 300
+   ```
+
+3. **Adjust Scale Down Policy**
+   ```yaml
+   policies:
+   - type: Percent
+     value: 25  # Scale down slowly (was 50%)
+     periodSeconds: 60
+   ```
+
+### Hitting Max Replicas
+
+**Symptom:** HPA at max replicas, but CPU still high
+
+**Solutions:**
+
+1. **Increase Max Replicas**
+   ```yaml
+   maxReplicas: 20  # Was 10
+   ```
+
+2. **Add More Nodes**
+   Scale cluster to accommodate more pods
+
+3. **Optimize Application**
+   Reduce CPU usage per request
+
+4. **Increase Pod Resources**
+   ```yaml
+   resources:
+     requests:
+       cpu: "500m"  # Was 250m
+   ```
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Deployments" icon="layer-group" href="/user/deployments">
+    View HPA target deployments
+  </Card>
+  <Card title="Pods" icon="cube" href="/user/pods">
+    Monitor pod resource usage
+  </Card>
+  <Card title="Nodes" icon="server" href="/user/nodes">
+    Check cluster capacity
+  </Card>
+  <Card title="Events" icon="bell" href="/user/events">
+    View scaling events
+  </Card>
+</CardGroup>
