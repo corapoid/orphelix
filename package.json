@@ -1,21 +1,17 @@
 {
   "name": "orphelix-monorepo",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "app",
-    "landing-page"
+    "app"
   ],
   "scripts": {
-    "dev:app": "cd app && npm run dev",
-    "dev:landing": "cd landing-page && npm run dev",
-    "build:app": "cd app && npm run build",
-    "build:landing": "cd landing-page && npm run build",
+    "dev": "cd app && npm run dev",
+    "build": "cd app && npm run build",
     "screenshots": "tsx scripts/generate-screenshots.ts",
     "lint": "cd app && npm run lint",
     "type-check": "cd app && npm run type-check",
-    "test": "cd app && npm run test",
-    "build": "npm run build:app && npm run build:landing"
+    "test": "cd app && npm run test"
   },
   "devDependencies": {
     "@tauri-apps/api": "^2.9.0",

@@ -16,25 +16,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       return session
     },
-    async authorized({ auth, request }) {
-      const { pathname } = request.nextUrl
-
-      // Allow access to root path (welcome screen)
-      if (pathname === '/') return true
-
-      // Allow API routes
-      if (pathname.startsWith('/api')) return true
-
-      // Check if user is authenticated (for real mode)
-      if (auth) return true
-
-      // Check for demo mode cookie
-      const appMode = request.cookies.get('app-mode')?.value
-      if (appMode === 'demo') return true
-
-      // Deny access - will redirect to '/'
-      return false
-    },
   },
   pages: {
     signIn: '/', // Redirect to welcome modal
