@@ -42,39 +42,34 @@ This section contains comprehensive technical documentation for developers who w
 
 Orphelix follows a modern, scalable architecture:
 
-```
-┌─────────────────────────────────────────────────┐
-│              Browser (Client)                    │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐      │
-│  │   React  │  │   MUI    │  │  Zustand │      │
-│  │ Components│  │  Styles  │  │   Store  │      │
-│  └──────────┘  └──────────┘  └──────────┘      │
-│         │              │              │          │
-│         └──────────────┴──────────────┘          │
-│                      │                            │
-│            ┌─────────▼─────────┐                 │
-│            │  TanStack Query   │                 │
-│            │  (Data Fetching)  │                 │
-│            └─────────┬─────────┘                 │
-└──────────────────────┼──────────────────────────┘
-                       │
-           ┌───────────▼────────────┐
-           │   Next.js API Routes   │
-           │   (Server-side)        │
-           └───────────┬────────────┘
-                       │
-       ┌───────────────┼───────────────┐
-       │               │               │
-  ┌────▼────┐    ┌────▼────┐    ┌────▼────┐
-  │   K8s   │    │   SSE   │    │ GitHub  │
-  │  Client │    │ Watches │    │   API   │
-  └─────────┘    └─────────┘    └─────────┘
-       │
-       │
-  ┌────▼─────────────┐
-  │  Kubernetes API  │
-  │     Cluster      │
-  └──────────────────┘
+```mermaid
+graph TB
+    subgraph Browser["Browser (Client)"]
+        React["React<br/>Components"]
+        MUI["Material-UI<br/>Styles"]
+        Zustand["Zustand<br/>Store"]
+
+        React --> TanStack
+        MUI --> TanStack
+        Zustand --> TanStack
+
+        TanStack["TanStack Query<br/>(Data Fetching)"]
+    end
+
+    TanStack -->|HTTP/SSE| API["Next.js API Routes<br/>(Server-side)"]
+
+    API --> K8s["Kubernetes<br/>Client"]
+    API --> SSE["SSE<br/>Watches"]
+    API --> GitHub["GitHub<br/>API"]
+
+    K8s -->|kubectl| Cluster["Kubernetes API<br/>Cluster"]
+
+    style Browser fill:#667EEA,stroke:#764BA2,stroke-width:3px,color:#fff
+    style API fill:#764BA2,stroke:#667EEA,stroke-width:2px,color:#fff
+    style Cluster fill:#326CE5,stroke:#326CE5,stroke-width:2px,color:#fff
+    style TanStack fill:#FF4154,stroke:#FF4154,stroke-width:2px,color:#fff
+    style K8s fill:#326CE5,stroke:#326CE5,stroke-width:2px,color:#fff
+    style GitHub fill:#24292e,stroke:#24292e,stroke-width:2px,color:#fff
 ```
 
 ## Key Design Patterns
