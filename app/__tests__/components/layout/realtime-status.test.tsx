@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { RealtimeStatus } from '@/components/layout/realtime-status'
+import { RealtimeStatus } from '@/app/components/layout/realtime-status'
 
 // Mock the realtime hook
 const mockReconnect = vi.fn()

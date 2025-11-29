@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Footer } from '@/components/layout/footer'
+import { Footer } from '@/app/components/layout/footer'
 
 describe('Footer', () => {
   beforeEach(() => {

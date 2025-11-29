@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Logo } from '@/components/layout/logo'
+import { Logo } from '@/app/components/layout/logo'
 
 describe('Logo', () => {
   describe('Expanded State (Default)', () => {

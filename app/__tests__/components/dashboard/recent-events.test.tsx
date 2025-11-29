@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { RecentEvents } from '@/components/dashboard/recent-events'
+import { RecentEvents } from '@/app/components/dashboard/recent-events'
 import type { Event } from '@/types/kubernetes'
 
 // Mock the formatAge utility

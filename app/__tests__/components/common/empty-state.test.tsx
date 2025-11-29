@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { EmptyState } from '@/components/common/empty-state'
+import { EmptyState } from '@/app/components/common/empty-state'
 import SearchIcon from '@mui/icons-material/Search'
 
 describe('EmptyState', () => {

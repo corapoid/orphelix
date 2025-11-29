@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { LogsViewer } from '@/components/pods/logs-viewer'
+import { LogsViewer } from '@/app/components/pods/logs-viewer'
 
 // Mock scrollIntoView
 Element.prototype.scrollIntoView = vi.fn()

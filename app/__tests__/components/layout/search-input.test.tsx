@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { SearchInput } from '@/components/layout/search-input'
+import { SearchInput } from '@/app/components/layout/search-input'
 
 // Mock the search context
 const mockSetSearchQuery = vi.fn()

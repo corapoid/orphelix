@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { NamespaceSelector } from '@/components/layout/namespace-selector'
+import { NamespaceSelector } from '@/app/components/layout/namespace-selector'
 
 // Mock the mode store
 const mockSetNamespace = vi.fn()

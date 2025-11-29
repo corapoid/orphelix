@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ContextSelector } from '@/components/layout/context-selector'
+import { ContextSelector } from '@/app/components/layout/context-selector'
 
 describe('ContextSelector', () => {
   describe('Expanded State (Default)', () => {

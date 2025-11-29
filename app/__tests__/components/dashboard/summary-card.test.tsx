@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { SummaryCard } from '@/components/dashboard/summary-card'
+import { SummaryCard } from '@/app/components/dashboard/summary-card'
 import StorageIcon from '@mui/icons-material/Storage'
 import CloudIcon from '@mui/icons-material/Cloud'
 import DnsIcon from '@mui/icons-material/Dns'
