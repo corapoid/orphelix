@@ -247,7 +247,7 @@ describe('Database CRUD Operations - Core Functionality', () => {
       throw new Error('Simulated error')
 
       db.exec('COMMIT')
-    } catch (error) {
+    } catch (_error) {
       db.exec('ROLLBACK')
     }
 
