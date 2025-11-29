@@ -1,0 +1,113 @@
+name: Bundle Size Check
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'app/**/*.ts'
+      - 'app/**/*.tsx'
+      - 'app/**/*.js'
+      - 'app/**/*.jsx'
+      - 'app/package.json'
+      - 'app/package-lock.json'
+      - 'app/next.config.ts'
+
+jobs:
+  analyze:
+    name: Analyze Bundle Size
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+
+      - name: Build for production
+        working-directory: ./app
+        run: npm run build
+        env:
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: dummy-secret-for-build
+          ANALYZE: true
+
+      - name: Analyze bundle size
+        working-directory: ./app
+        run: |
+          echo "## 📦 Bundle Size Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Get .next/standalone size
+          if [ -d ".next/standalone" ]; then
+            STANDALONE_SIZE=$(du -sh .next/standalone | cut -f1)
+            echo "**Standalone Build**: $STANDALONE_SIZE" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Get static assets size
+          if [ -d ".next/static" ]; then
+            STATIC_SIZE=$(du -sh .next/static | cut -f1)
+            echo "**Static Assets**: $STATIC_SIZE" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Largest Files" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+
+          # Find largest 10 files in .next directory
+          find .next -type f -exec du -h {} + 2>/dev/null | \
+            sort -rh | \
+            head -10 | \
+            awk '{printf "| `%s` | %s |\n", $2, $1}' >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for large files
+        working-directory: ./app
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ⚠️ Large File Warning" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Find JavaScript files larger than 500KB
+          LARGE_FILES=$(find .next/static -name "*.js" -size +500k 2>/dev/null || true)
+
+          if [ -n "$LARGE_FILES" ]; then
+            echo "The following JavaScript files are larger than 500KB:" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$LARGE_FILES" | while read file; do
+              SIZE=$(du -h "$file" | cut -f1)
+              echo "$file: $SIZE"
+            done >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Consider code splitting or lazy loading for these files." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No JavaScript files larger than 500KB found." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Compare with base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Size Comparison with Base Branch" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Full comparison will be available when base branch build data is cached." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis
+          path: |
+            app/.next/**/*.js.map
+            app/.next/build-manifest.json
+          retention-days: 7

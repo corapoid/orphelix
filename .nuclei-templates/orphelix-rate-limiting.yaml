@@ -1,0 +1,42 @@
+id: orphelix-rate-limiting
+info:
+  name: Orphelix Rate Limiting Test
+  author: orphelix-security-team
+  severity: medium
+  description: Test rate limiting implementation on Orphelix API endpoints
+  reference:
+    - https://github.com/projectdiscovery/nuclei
+  tags: orphelix,rate-limit,dos
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/ai/troubleshoot"
+
+    headers:
+      User-Agent: "Nuclei-RateLimit-Test"
+      Content-Type: "application/json"
+
+    attack: clusterbomb
+    payloads:
+      sequence:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+
+    matchers:
+      - type: status
+        status:
+          - 429
+        condition: and
+
+      - type: word
+        part: body
+        words:
+          - "rate limit"
+          - "too many requests"
+        condition: or

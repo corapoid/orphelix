@@ -1,0 +1,46 @@
+id: orphelix-sql-injection
+info:
+  name: Orphelix SQL Injection Protection Test
+  author: orphelix-security-team
+  severity: critical
+  description: Test SQL injection protection in Orphelix database operations
+  reference:
+    - https://owasp.org/www-community/attacks/SQL_Injection
+  tags: orphelix,sqli,security,database
+
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/api/api-keys"
+
+    headers:
+      User-Agent: "Nuclei-SQLi-Test"
+      Content-Type: "application/json"
+
+    body: |
+      {
+        "name": "test' OR '1'='1",
+        "description": "1; DROP TABLE api_keys--"
+      }
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 400
+          - 422
+
+      - type: word
+        part: body
+        words:
+          - "validation"
+          - "invalid"
+        condition: or
+
+      - type: word
+        part: body
+        negative: true
+        words:
+          - "SQL"
+          - "syntax error"
+          - "database error"

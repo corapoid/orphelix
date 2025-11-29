@@ -1,0 +1,138 @@
+name: Security Scan with Nuclei
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  nuclei-scan:
+    name: Nuclei Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+
+      - name: Build application
+        working-directory: ./app
+        run: npm run build
+        env:
+          # Use dummy values for build (not needed for security scan)
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: dummy-secret-for-build
+
+      - name: Start application
+        working-directory: ./app
+        run: |
+          npm run start &
+          APP_PID=$!
+          echo "APP_PID=$APP_PID" >> $GITHUB_ENV
+
+          # Wait for app to be ready
+          echo "Waiting for application to start..."
+          timeout 60 bash -c 'until curl -s http://localhost:3000 > /dev/null; do sleep 2; done' || (echo "App failed to start" && exit 1)
+          echo "Application started successfully"
+
+      - name: Install Nuclei
+        run: |
+          go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: Update Nuclei templates
+        run: nuclei -update-templates
+
+      - name: Run Nuclei security scan
+        run: |
+          nuclei \
+            -t .nuclei-templates/ \
+            -u http://localhost:3000 \
+            -json \
+            -o nuclei-results.json \
+            -v || true  # Don't fail on findings, just report them
+
+      - name: Generate Markdown report
+        if: always()
+        run: |
+          nuclei \
+            -t .nuclei-templates/ \
+            -u http://localhost:3000 \
+            -markdown-export nuclei-report.md \
+            -silent || true
+
+      - name: Upload Nuclei results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuclei-scan-results
+          path: |
+            nuclei-results.json
+            nuclei-report.md
+          retention-days: 30
+
+      - name: Parse results and create summary
+        if: always()
+        run: |
+          echo "## 🔒 Nuclei Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f nuclei-results.json ]; then
+            TOTAL=$(jq '. | length' nuclei-results.json 2>/dev/null || echo "0")
+            CRITICAL=$(jq '[.[] | select(.info.severity == "critical")] | length' nuclei-results.json 2>/dev/null || echo "0")
+            HIGH=$(jq '[.[] | select(.info.severity == "high")] | length' nuclei-results.json 2>/dev/null || echo "0")
+            MEDIUM=$(jq '[.[] | select(.info.severity == "medium")] | length' nuclei-results.json 2>/dev/null || echo "0")
+            INFO=$(jq '[.[] | select(.info.severity == "info")] | length' nuclei-results.json 2>/dev/null || echo "0")
+
+            echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔴 Critical | $CRITICAL |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟠 High | $HIGH |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟡 Medium | $MEDIUM |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔵 Info | $INFO |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Total** | **$TOTAL** |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+              echo "⚠️ **Warning**: Critical or High severity findings detected!" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Please review the full report in the artifacts." >> $GITHUB_STEP_SUMMARY
+            else
+              echo "✅ No critical or high severity findings!" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "❌ No results file found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          if [ ! -z "$APP_PID" ]; then
+            kill $APP_PID || true
+          fi
+
+      - name: Fail on critical findings
+        if: always()
+        run: |
+          if [ -f nuclei-results.json ]; then
+            CRITICAL=$(jq '[.[] | select(.info.severity == "critical")] | length' nuclei-results.json 2>/dev/null || echo "0")
+            if [ "$CRITICAL" -gt 0 ]; then
+              echo "❌ Critical security findings detected!"
+              exit 1
+            fi
+          fi
