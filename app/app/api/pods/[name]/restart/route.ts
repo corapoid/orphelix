@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCoreApi, initK8sClient } from '@/lib/k8s/client'
+import { getCoreApi } from '@/lib/k8s/client'
 import { rateLimit } from '@/lib/security/rate-limiter'
 import { POD_RESTART_LIMIT } from '@/lib/security/rate-limit-configs'
 import { podRestartSchema } from '@/lib/validation/schemas'
@@ -37,8 +37,6 @@ export async function POST(
       namespace,
     })
 
-    // Initialize Kubernetes client
-    initK8sClient()
     const coreApi = getCoreApi()
 
     // Delete the pod - Kubernetes will recreate it if managed by a controller

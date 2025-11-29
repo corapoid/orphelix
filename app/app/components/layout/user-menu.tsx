@@ -51,8 +51,8 @@ export function UserMenu() {
     handleClose()
     // Prefix path with /demo if in demo mode
     const finalPath = mode === 'demo' ? `/demo${path}` : path
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    router.push(finalPath as any)
+    // Next.js router.push requires exact route typing, using type assertion for dynamic paths
+    router.push(finalPath as Parameters<typeof router.push>[0])
   }
 
   const handleLogout = async () => {

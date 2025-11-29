@@ -6,6 +6,7 @@ import { getCoreApi } from '../client'
 import { calculateAge } from '../utils/helpers'
 import { createLogger } from '@/lib/logging/logger'
 import type { ConfigMap, Secret } from '@/types/kubernetes'
+import yaml from 'js-yaml'
 
 const logger = createLogger({ module: 'k8s-config' })
 
@@ -66,8 +67,6 @@ export async function fetchConfigMapYaml(
     const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedConfigMap({ name, namespace })
 
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const yaml = require('js-yaml')
     const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
 
     return yamlString
@@ -159,8 +158,6 @@ export async function fetchSecretYaml(
     const coreApi = getCoreApi(contextName)
     const response = await coreApi.readNamespacedSecret({ name, namespace })
 
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const yaml = require('js-yaml')
     const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
 
     return yamlString

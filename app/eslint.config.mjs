@@ -50,12 +50,15 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
       'no-console': 'off',
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn', // Changed from 'error' to 'warn' for tests
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
         },
       ],
+      '@typescript-eslint/no-require-imports': 'off', // Allow require in tests
+      'prefer-const': 'warn', // Downgrade to warning in tests
     },
   },
 ]

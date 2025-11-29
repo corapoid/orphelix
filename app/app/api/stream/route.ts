@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server'
-import { initK8sClient } from '@/lib/k8s/client'
 import * as k8s from '@kubernetes/client-node'
 import { rateLimit } from '@/lib/security/rate-limiter'
 import { STREAM_LIMIT } from '@/lib/security/rate-limit-configs'
@@ -93,19 +92,6 @@ export async function GET(request: NextRequest) {
       }, 30000) // Every 30 seconds
 
       try {
-        // Initialize Kubernetes client with specified context
-        try {
-          initK8sClient(contextName)
-        } catch (error) {
-          logger.error({ error, context: contextName }, 'Failed to initialize Kubernetes client')
-          sendEvent('error', {
-            message: 'Kubernetes configuration not available. Real-time updates disabled.'
-          })
-          clearInterval(heartbeatInterval)
-          safeClose()
-          return
-        }
-
         // Initialize KubeConfig for Watch API
         const kc = new k8s.KubeConfig()
 

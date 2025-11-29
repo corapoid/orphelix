@@ -9,6 +9,7 @@ import { getAppsApi } from '../client'
 import { calculateAge } from '../utils/helpers'
 import { createLogger } from '@/lib/logging/logger'
 import type { Deployment, DeploymentStatus } from '@/types/kubernetes'
+import yaml from 'js-yaml'
 
 const logger = createLogger({ module: 'k8s-deployments' })
 
@@ -190,8 +191,6 @@ export async function fetchDeploymentYaml(
     const response = await appsApi.readNamespacedDeployment({ name, namespace })
 
     // Convert to YAML using js-yaml
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const yaml = require('js-yaml')
     const yamlString = yaml.dump(response, { noRefs: true, sortKeys: true })
 
     return yamlString

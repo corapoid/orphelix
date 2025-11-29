@@ -195,15 +195,12 @@ export async function retry<T>(
       const delay = calculateDelay(attempt, initialDelayMs, maxDelayMs, backoffMultiplier)
 
       // Log retry attempt
-      logger.info(
-        {
-          attempt,
-          maxAttempts,
-          delay,
-          error: error instanceof Error ? error.message : String(error)
-        },
-        'Retrying operation after transient failure'
-      )
+      logger.info('Retrying operation after transient failure', {
+        attempt,
+        maxAttempts,
+        delay,
+        error: error instanceof Error ? error.message : String(error),
+      })
 
       // Call onRetry callback if provided
       if (onRetry) {
@@ -284,15 +281,12 @@ export async function retryK8sOperation<T>(
       return false
     },
     onRetry: (attempt, delay, error) => {
-      logger.info(
-        {
-          operation: operationName,
-          attempt,
-          delay,
-          error: error instanceof Error ? error.message : String(error)
-        },
-        'Retrying K8s operation'
-      )
+      logger.info('Retrying K8s operation', {
+        operation: operationName,
+        attempt,
+        delay,
+        error: error instanceof Error ? error.message : String(error),
+      })
     }
   })
 }
@@ -327,15 +321,12 @@ export async function retryGitHubOperation<T>(
       return false
     },
     onRetry: (attempt, delay, error) => {
-      logger.info(
-        {
-          operation: operationName,
-          attempt,
-          delay,
-          error: error instanceof Error ? error.message : String(error)
-        },
-        'Retrying GitHub operation'
-      )
+      logger.info('Retrying GitHub operation', {
+        operation: operationName,
+        attempt,
+        delay,
+        error: error instanceof Error ? error.message : String(error),
+      })
     }
   })
 }

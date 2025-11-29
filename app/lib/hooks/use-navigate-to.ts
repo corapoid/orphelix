@@ -1,4 +1,5 @@
 import { useRouter, usePathname } from 'next/navigation'
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { useModeStore } from '@/lib/core/store'
 
 /**
@@ -9,7 +10,7 @@ import { useModeStore } from '@/lib/core/store'
  * navigateTo('/jobs/my-job') // -> /demo/jobs/my-job if in demo mode
  */
 export function useNavigateTo() {
-  const router = useRouter()
+  const router = useRouter() as AppRouterInstance
   const pathname = usePathname()
   const mode = useModeStore((state) => state.mode)
 
@@ -22,8 +23,7 @@ export function useNavigateTo() {
       ? `/demo${path}`
       : path
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    router.push(finalPath as any)
+    router.push(finalPath)
   }
 
   return navigateTo
