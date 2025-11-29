@@ -168,6 +168,7 @@ describe('POST /api/deployments/[name]/restart', () => {
         { method: 'POST' }
       )
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _response = await POST(request, { params: Promise.resolve({ name: 'test-deployment' }) })
 
       expect(mockRateLimiter).toHaveBeenCalled()

@@ -142,6 +142,7 @@ describe('API Keys Management Endpoints', () => {
         method: 'GET',
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _response = await GET(request)
 
       expect(mockRateLimiter).toHaveBeenCalled()
@@ -242,6 +243,7 @@ describe('API Keys Management Endpoints', () => {
         }),
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _response = await POST(request)
 
       expect(mockRateLimiter).toHaveBeenCalled()
@@ -303,6 +305,7 @@ describe('API Keys Management Endpoints', () => {
         method: 'DELETE',
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _response = await DELETE(request)
 
       expect(mockRateLimiter).toHaveBeenCalled()
