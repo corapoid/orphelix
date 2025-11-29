@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { ErrorState } from '@/app/components/common/error-state'
+import { ErrorState } from '@/components/common/error-state'
 
 describe('ErrorState', () => {
   beforeEach(() => {

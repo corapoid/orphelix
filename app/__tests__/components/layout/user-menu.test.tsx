@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
-import { UserMenu } from '@/app/components/layout/user-menu'
+import { UserMenu } from '@/components/layout/user-menu'
 
 // Mock next-auth
 const mockSignOut = vi.fn()
