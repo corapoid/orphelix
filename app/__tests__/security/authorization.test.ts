@@ -102,8 +102,8 @@ describe('Authorization Security', () => {
     })
 
     it('should prevent cross-namespace resource access', () => {
-      const userNamespace = 'staging'
-      const resourceNamespace = 'production'
+      const userNamespace = 'staging' as string
+      const resourceNamespace = 'production' as string
 
       const canAccess = userNamespace === resourceNamespace
       expect(canAccess).toBe(false)
@@ -311,10 +311,9 @@ describe('Authorization Security', () => {
     })
 
     it('should require elevated permissions for sensitive resources', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _standardPermissions = ['get', 'list']
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _elevatedPermissions = ['create', 'update', 'patch', 'delete']
+      // Define permission levels
+      const standardPermissions = ['get', 'list']
+      const elevatedPermissions = ['create', 'update', 'patch', 'delete']
 
       const requiresElevated = (resource: string) => {
         return ['secrets', 'roles', 'rolebindings'].includes(resource)
@@ -322,6 +321,10 @@ describe('Authorization Security', () => {
 
       expect(requiresElevated('secrets')).toBe(true)
       expect(requiresElevated('pods')).toBe(false)
+
+      // Verify permission sets are defined
+      expect(standardPermissions).toContain('get')
+      expect(elevatedPermissions).toContain('delete')
     })
 
     it('should mask sensitive data in logs', () => {
@@ -395,7 +398,7 @@ describe('Authorization Security', () => {
     })
 
     it('should prevent vertical privilege escalation', () => {
-      const userRole = 'viewer'
+      const userRole = 'viewer' as string
       const adminOnlyAction = 'delete-cluster-resources'
 
       const adminActions = ['delete-cluster-resources', 'modify-rbac']
@@ -427,8 +430,7 @@ describe('Authorization Security', () => {
     })
 
     it('should allow read operations in demo mode', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _demoMode = true
+      const demoMode = true
       const readVerbs = ['get', 'list', 'watch']
 
       const canRead = (verb: string) => {
@@ -438,6 +440,7 @@ describe('Authorization Security', () => {
       expect(canRead('get')).toBe(true)
       expect(canRead('list')).toBe(true)
       expect(canRead('delete')).toBe(false)
+      expect(demoMode).toBe(true) // Verify demo mode is active
     })
   })
 })

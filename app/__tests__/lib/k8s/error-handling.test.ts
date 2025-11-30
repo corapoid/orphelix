@@ -532,8 +532,8 @@ describe('Kubernetes Error Handling', () => {
     })
 
     it('should handle optimistic locking failures', () => {
-      const currentVersion = '123'
-      const requestVersion = '122'
+      const currentVersion = '123' as string
+      const requestVersion = '122' as string
 
       const isConflict = currentVersion !== requestVersion
       expect(isConflict).toBe(true)

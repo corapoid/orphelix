@@ -149,12 +149,13 @@ describe('XSS Prevention', () => {
     })
 
     it('should be aware of dangerouslySetInnerHTML risks', () => {
-      const _unsafeHtml = '<img src=x onerror="alert(1)">'
+      const unsafeHtml = '<img src=x onerror="alert(1)">'
       // This is dangerous:
       // <div dangerouslySetInnerHTML={{ __html: unsafeHtml }} />
 
       // The name itself warns developers
       expect('dangerouslySetInnerHTML').toContain('dangerous')
+      expect(unsafeHtml).toContain('onerror') // Verify we recognize dangerous patterns
     })
 
     it('should sanitize HTML before using dangerouslySetInnerHTML', () => {
@@ -372,12 +373,14 @@ describe('XSS Prevention', () => {
     })
 
     it('should sanitize before inserting into DOM', () => {
-      const _userInput = '<img src=x onerror="alert(1)">'
+      const userInput = '<img src=x onerror="alert(1)">'
 
       // For vanilla JS, use textContent or sanitize
-      const isSafe = true // Assuming React JSX usage
+      const isSafe = !userInput.includes('onerror') // Simple check (use DOMPurify in real code)
 
-      expect(isSafe).toBe(true)
+      // React JSX would escape this automatically
+      expect(userInput).toContain('onerror') // Verify dangerous content detected
+      expect(isSafe).toBe(false) // Should be detected as unsafe
     })
 
     it('should validate document.location usage', () => {

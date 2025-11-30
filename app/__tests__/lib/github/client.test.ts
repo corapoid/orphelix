@@ -529,8 +529,6 @@ describe('GitHub Client', () => {
 
       mockOctokit.repos.listForAuthenticatedUser.mockResolvedValue({ data: [] })
 
-      const { createLogger } = await import('@/lib/logging/logger')
-      const logger = createLogger({ module: 'github-client' })
 
       const { GitHubClient } = await import('@/lib/github/client')
       const client = new GitHubClient(accessToken)
@@ -538,10 +536,10 @@ describe('GitHub Client', () => {
 
       // Check all log calls
       const allCalls = [
-        ...logger.info.mock.calls,
-        ...logger.error.mock.calls,
-        ...logger.warn.mock.calls,
-        ...logger.debug.mock.calls,
+        ...mockLoggerInstance.info.mock.calls,
+        ...mockLoggerInstance.error.mock.calls,
+        ...mockLoggerInstance.warn.mock.calls,
+        ...mockLoggerInstance.debug.mock.calls,
       ]
 
       for (const call of allCalls) {
@@ -558,8 +556,6 @@ describe('GitHub Client', () => {
 
       mockOctokit.repos.getContent.mockRejectedValue(new Error('API error'))
 
-      const { createLogger } = await import('@/lib/logging/logger')
-      const logger = createLogger({ module: 'github-client' })
 
       const { GitHubClient } = await import('@/lib/github/client')
       const client = new GitHubClient(accessToken)
@@ -567,7 +563,7 @@ describe('GitHub Client', () => {
       await client.listYamlFiles('test-user', 'my-repo', 'k8s')
 
       // Check error logs
-      const errorCalls = logger.error.mock.calls
+      const errorCalls = mockLoggerInstance.error.mock.calls
 
       for (const call of errorCalls) {
         const callStr = JSON.stringify(call)

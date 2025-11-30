@@ -31,8 +31,6 @@ const mockLogger = {
 
 vi.mock('@/lib/logging/logger', () => mockLogger)
 
-// Export for test access
-
 // Mock @octokit/app
 vi.mock('@octokit/app', () => ({
   App: class MockApp {
@@ -276,8 +274,6 @@ describe('GitHub App Authentication', () => {
       const privateKey = '-----BEGIN RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEA...\\n-----END RSA PRIVATE KEY-----'
       process.env.GITHUB_APP_PRIVATE_KEY = privateKey
 
-      const { createLogger } = await import('@/lib/logging/logger')
-      const logger = createLogger({ module: 'github-app-auth' })
 
       vi.resetModules()
       const { GitHubAppAuth } = await import('@/lib/auth/github-app')
@@ -285,10 +281,10 @@ describe('GitHub App Authentication', () => {
 
       // Check all log calls
       const allCalls = [
-        ...logger.info.mock.calls,
-        ...logger.error.mock.calls,
-        ...logger.warn.mock.calls,
-        ...logger.debug.mock.calls,
+        ...mockLoggerInstance.info.mock.calls,
+        ...mockLoggerInstance.error.mock.calls,
+        ...mockLoggerInstance.warn.mock.calls,
+        ...mockLoggerInstance.debug.mock.calls,
       ]
 
       for (const call of allCalls) {
@@ -309,17 +305,15 @@ describe('GitHub App Authentication', () => {
       const { GitHubAppAuth } = await import('@/lib/auth/github-app')
       const auth = new GitHubAppAuth()
 
-      const { createLogger } = await import('@/lib/logging/logger')
-      const logger = createLogger({ module: 'github-app-auth' })
 
       await auth.exchangeCode('oauth_code_12345')
 
       // Check all log calls
       const allCalls = [
-        ...logger.info.mock.calls,
-        ...logger.error.mock.calls,
-        ...logger.warn.mock.calls,
-        ...logger.debug.mock.calls,
+        ...mockLoggerInstance.info.mock.calls,
+        ...mockLoggerInstance.error.mock.calls,
+        ...mockLoggerInstance.warn.mock.calls,
+        ...mockLoggerInstance.debug.mock.calls,
       ]
 
       for (const call of allCalls) {
@@ -337,17 +331,14 @@ describe('GitHub App Authentication', () => {
       const { GitHubAppAuth } = await import('@/lib/auth/github-app')
       const auth = new GitHubAppAuth()
 
-      const { createLogger } = await import('@/lib/logging/logger')
-      const logger = createLogger({ module: 'github-app-auth' })
-
       await auth.refreshToken('ghr_old_refresh_token')
 
-      // Check all log calls
+      // Check all log calls using mockLoggerInstance
       const allCalls = [
-        ...logger.info.mock.calls,
-        ...logger.error.mock.calls,
-        ...logger.warn.mock.calls,
-        ...logger.debug.mock.calls,
+        ...mockLoggerInstance.info.mock.calls,
+        ...mockLoggerInstance.error.mock.calls,
+        ...mockLoggerInstance.warn.mock.calls,
+        ...mockLoggerInstance.debug.mock.calls,
       ]
 
       for (const call of allCalls) {
@@ -364,17 +355,14 @@ describe('GitHub App Authentication', () => {
       const { GitHubAppAuth } = await import('@/lib/auth/github-app')
       const auth = new GitHubAppAuth()
 
-      const { createLogger } = await import('@/lib/logging/logger')
-      const logger = createLogger({ module: 'github-app-auth' })
-
       await auth.getInstallationToken(12345)
 
-      // Check all log calls
+      // Check all log calls using mockLoggerInstance
       const allCalls = [
-        ...logger.info.mock.calls,
-        ...logger.error.mock.calls,
-        ...logger.warn.mock.calls,
-        ...logger.debug.mock.calls,
+        ...mockLoggerInstance.info.mock.calls,
+        ...mockLoggerInstance.error.mock.calls,
+        ...mockLoggerInstance.warn.mock.calls,
+        ...mockLoggerInstance.debug.mock.calls,
       ]
 
       for (const call of allCalls) {
@@ -390,8 +378,6 @@ describe('GitHub App Authentication', () => {
       const clientSecret = 'secret_abc123def456ghi789'
       process.env.GITHUB_APP_CLIENT_SECRET = clientSecret
 
-      const { createLogger } = await import('@/lib/logging/logger')
-      const logger = createLogger({ module: 'github-app-auth' })
 
       vi.resetModules()
       const { GitHubAppAuth } = await import('@/lib/auth/github-app')
@@ -399,10 +385,10 @@ describe('GitHub App Authentication', () => {
 
       // Check all log calls
       const allCalls = [
-        ...logger.info.mock.calls,
-        ...logger.error.mock.calls,
-        ...logger.warn.mock.calls,
-        ...logger.debug.mock.calls,
+        ...mockLoggerInstance.info.mock.calls,
+        ...mockLoggerInstance.error.mock.calls,
+        ...mockLoggerInstance.warn.mock.calls,
+        ...mockLoggerInstance.debug.mock.calls,
       ]
 
       for (const call of allCalls) {

@@ -395,8 +395,8 @@ describe('GitHub Token Management', () => {
     })
 
     it('should detect token theft attempts', () => {
-      const tokenUserId = 'user123'
-      const requestUserId = 'user456'
+      const tokenUserId = 'user123' as string
+      const requestUserId = 'user456' as string
 
       const isSuspicious = tokenUserId !== requestUserId
       expect(isSuspicious).toBe(true)

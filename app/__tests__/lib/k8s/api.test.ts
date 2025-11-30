@@ -86,9 +86,6 @@ describe('K8s API Security', () => {
     })
 
     it('should not log kubeconfig credentials', async () => {
-      const { createK8sLogger } = await import('@/lib/logging/logger')
-      const mockK8sLogger = createK8sLogger()
-
       // Simulate fetching pods
       const { fetchPods } = await import('@/lib/k8s/resources/pods')
 
@@ -98,11 +95,11 @@ describe('K8s API Security', () => {
         // Expected to fail with mocked client
       }
 
-      // Check all log calls for credential patterns
+      // Check all log calls for credential patterns using mockLoggerInstance
       const allCalls = [
-        ...mockK8sLogger.info.mock.calls,
-        ...mockK8sLogger.error.mock.calls,
-        ...mockK8sLogger.debug.mock.calls,
+        ...mockLoggerInstance.info.mock.calls,
+        ...mockLoggerInstance.error.mock.calls,
+        ...mockLoggerInstance.debug.mock.calls,
       ]
 
       for (const call of allCalls) {

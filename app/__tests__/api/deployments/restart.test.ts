@@ -13,7 +13,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { mockLoggerModule, _mockRateLimiterModule } from '../../helpers/mocks'
+import { mockLoggerModule } from '../../helpers/mocks'
 
 // Mock K8s client
 vi.mock('@/lib/k8s/client', () => ({
@@ -168,8 +168,9 @@ describe('POST /api/deployments/[name]/restart', () => {
         { method: 'POST' }
       )
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _response = await POST(request, { params: Promise.resolve({ name: 'test-deployment' }) })
+
+
+      await POST(request, { params: Promise.resolve({ name: 'test-deployment' }) })
 
       expect(mockRateLimiter).toHaveBeenCalled()
     })

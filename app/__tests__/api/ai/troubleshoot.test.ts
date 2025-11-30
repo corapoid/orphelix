@@ -151,8 +151,7 @@ describe('POST /api/ai/troubleshoot', () => {
         }),
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _response = await POST(request)
+      await POST(request)
 
       expect(mockRateLimiter).toHaveBeenCalled()
     })

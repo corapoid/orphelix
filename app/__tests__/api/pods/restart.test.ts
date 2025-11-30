@@ -156,8 +156,9 @@ describe('POST /api/pods/[name]/restart', () => {
         { method: 'POST' }
       )
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _response = await POST(request, { params: Promise.resolve({ name: 'test-pod' }) })
+
+
+      await POST(request, { params: Promise.resolve({ name: 'test-pod' }) })
 
       expect(mockRateLimiter).toHaveBeenCalled()
     })

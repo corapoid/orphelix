@@ -103,7 +103,7 @@ describe('UserMenu', () => {
     })
 
     it('should display first letter when no image', () => {
-      mockSession.user.image = undefined
+      mockSession.user.image = ''
       const { container } = render(<UserMenu />)
 
       // Avatar should contain "T" (first letter of "Test User")
