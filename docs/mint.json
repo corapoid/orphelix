@@ -1,5 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
+  "name": "Orphelix",
   "logo": {
     "dark": "/logo/dark-with-text.svg",
     "light": "/logo/light-with-text.svg",
