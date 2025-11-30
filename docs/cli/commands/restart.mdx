@@ -5,13 +5,21 @@ description: 'Restart Orphelix application'
 
 # orphelix restart
 
-Restart the Orphelix application without stopping pm2.
+Restart the Orphelix application without rebuilding. This is a quick restart that only restarts the PM2 process.
 
 ## Usage
 
 ```bash
 orphelix restart [options]
 ```
+
+## What it does
+
+The `restart` command:
+1. Syncs static assets to standalone build
+2. Restarts the PM2 process
+
+This is much faster than `rebuild` (1-2 seconds vs 30-60 seconds).
 
 ## Options
 
@@ -28,7 +36,24 @@ orphelix restart --port 8080
 orphelix restart --name prod
 ```
 
+## When to use
+
+Use `restart` when:
+- You've changed configuration files (`.env.local`)
+- You want to reload without code changes
+- You need a quick restart
+
+For code changes, use [`rebuild`](/cli/commands/rebuild) instead.
+
+## Difference from rebuild
+
+| Command | What it does | Time | Use case |
+|---------|-------------|------|----------|
+| `restart` | Restart PM2 only | ~1s | Config changes |
+| `rebuild` | Build + restart | ~30-60s | Code changes |
+
 ## Related Commands
 
-- [start](/cli/commands/start)
-- [stop](/cli/commands/stop)
+- [rebuild](/cli/commands/rebuild) - Rebuild and restart
+- [start](/cli/commands/start) - Start Orphelix
+- [stop](/cli/commands/stop) - Stop Orphelix

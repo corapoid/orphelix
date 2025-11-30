@@ -118,6 +118,7 @@
         "cli/commands/start",
         "cli/commands/stop",
         "cli/commands/restart",
+        "cli/commands/rebuild",
         "cli/commands/status",
         "cli/commands/logs",
         "cli/commands/list",

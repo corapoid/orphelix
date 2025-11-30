@@ -1,0 +1,65 @@
+---
+title: 'orphelix rebuild'
+description: 'Rebuild and restart Orphelix application'
+---
+
+# orphelix rebuild
+
+Rebuild the Next.js application and restart PM2 process. This is useful after making code changes.
+
+## What it does
+
+The `rebuild` command performs three steps:
+
+1. **Build** - Runs `npm run build` to create production build
+2. **Sync Assets** - Copies static assets to standalone build
+3. **Restart** - Restarts the PM2 process with new code
+
+## Usage
+
+```bash
+orphelix rebuild [options]
+```
+
+## Options
+
+| Option | Alias | Description |
+|--------|-------|-------------|
+| `--port` | `-p` | Custom port |
+| `--name` | `-n` | Instance name |
+
+## Example
+
+```bash
+# Rebuild default instance
+orphelix rebuild
+
+# Rebuild specific instance
+orphelix rebuild --name prod
+
+# Rebuild with custom port
+orphelix rebuild --port 8080
+```
+
+## When to use
+
+Use `rebuild` when:
+- You've made code changes and want to deploy them
+- You've pulled latest changes from git
+- You've updated dependencies
+- You need a fresh build
+
+## Difference from restart
+
+| Command | What it does |
+|---------|-------------|
+| `restart` | Only restarts PM2 process (fast, ~1s) |
+| `rebuild` | Builds + restarts (slower, ~30-60s) |
+
+Use `restart` for configuration changes, use `rebuild` for code changes.
+
+## Related Commands
+
+- [start](/cli/commands/start) - Start Orphelix
+- [restart](/cli/commands/restart) - Quick restart without rebuild
+- [stop](/cli/commands/stop) - Stop Orphelix

@@ -295,6 +295,47 @@ const commands = {
     }
   },
 
+  rebuild: (port, instanceName) => {
+    const name = getInstanceName(instanceName)
+    console.log(`🔨 Rebuilding Orphelix${name !== 'orphelix' ? ` (${name})` : ''}...`)
+    console.log('')
+
+    try {
+      const actualPort = getPort(port)
+
+      // Step 1: Build the application
+      console.log('📦 Step 1/3: Building Next.js application...')
+      execSync('npm run build', {
+        cwd: APP_DIR,
+        stdio: 'inherit'
+      })
+      console.log('✅ Build completed\n')
+
+      // Step 2: Copy static assets
+      console.log('📦 Step 2/3: Syncing static assets to standalone build...')
+      copyStandaloneAssets()
+      console.log('✅ Assets synced\n')
+
+      // Step 3: Restart PM2
+      console.log('🔄 Step 3/3: Restarting PM2 process...')
+      const env = { ...process.env, ORPHELIX_PORT: actualPort }
+      execSync(`npx pm2 restart ${name}`, {
+        cwd: APP_DIR,
+        stdio: 'inherit',
+        env
+      })
+
+      console.log('')
+      console.log('✅ Rebuild completed successfully!')
+      console.log(`📍 Open in browser: http://orphelix.local:${actualPort}`)
+      console.log(`📍 Or: http://localhost:${actualPort}`)
+    } catch (error) {
+      console.error('❌ Rebuild failed')
+      console.error('💡 Check the error messages above for details')
+      process.exit(1)
+    }
+  },
+
   logs: (instanceName) => {
     const name = getInstanceName(instanceName)
     try {
@@ -850,6 +891,7 @@ Commands:
     start          Start Orphelix in background (auto-installs deps, builds, configures)
     stop           Stop Orphelix
     restart        Restart Orphelix
+    rebuild        Rebuild application and restart (useful after code changes)
     status         Check if Orphelix is running
     list           List all running Orphelix instances
     logs           View real-time logs (Ctrl+C to exit)
@@ -887,6 +929,7 @@ Examples:
   orphelix start                     # First run: installs, builds, configures orphelix.local
   orphelix start --port 8080         # Start on port 8080
   orphelix start --name prod -p 3000 # Start named instance "orphelix-prod" on port 3000
+  orphelix rebuild                   # Rebuild after code changes (npm run build + restart)
   orphelix list                      # List all running instances
   orphelix logs --name prod          # View logs for specific instance
   orphelix stop --name prod          # Stop specific instance
