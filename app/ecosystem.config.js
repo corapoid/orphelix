@@ -4,8 +4,8 @@ module.exports = {
   apps: [
     {
       name: 'orphelix',
-      script: path.join(__dirname, '.next/standalone/orphelix/app/server.js'),
-      cwd: path.join(__dirname, '.next/standalone/orphelix/app'),
+      script: path.join(__dirname, '.next/standalone/server.js'),
+      cwd: path.join(__dirname, '.next/standalone'),
       exec_mode: 'fork',
       autorestart: true,
       watch: false,

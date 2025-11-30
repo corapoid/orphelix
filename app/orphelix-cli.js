@@ -15,21 +15,21 @@ function copyStandaloneAssets() {
   try {
     // Copy .next/static to standalone
     const staticSrc = path.join(APP_DIR, '.next/static')
-    const staticDest = path.join(APP_DIR, '.next/standalone/orphelix/app/.next/static')
+    const staticDest = path.join(APP_DIR, '.next/standalone/.next/static')
     if (fs.existsSync(staticSrc)) {
       fs.cpSync(staticSrc, staticDest, { recursive: true })
     }
 
     // Copy public to standalone
     const publicSrc = path.join(APP_DIR, 'public')
-    const publicDest = path.join(APP_DIR, '.next/standalone/orphelix/app/public')
+    const publicDest = path.join(APP_DIR, '.next/standalone/public')
     if (fs.existsSync(publicSrc)) {
       fs.cpSync(publicSrc, publicDest, { recursive: true })
     }
 
     // Copy .env.local to standalone
     const envSrc = path.join(APP_DIR, '.env.local')
-    const envDest = path.join(APP_DIR, '.next/standalone/orphelix/app/.env.local')
+    const envDest = path.join(APP_DIR, '.next/standalone/.env.local')
     if (fs.existsSync(envSrc)) {
       fs.cpSync(envSrc, envDest)
     }
@@ -337,11 +337,25 @@ const commands = {
 
       // Step 2: Build the application
       console.log('📦 Step 2/4: Building Next.js application...')
-      execSync('npm run build', {
-        cwd: APP_DIR,
-        stdio: 'inherit'
-      })
-      console.log('✅ Build completed\n')
+      try {
+        const buildOutput = execSync('npm run build', {
+          cwd: APP_DIR,
+          stdio: 'pipe',
+          encoding: 'utf-8'
+        })
+
+        // Extract compile time from output
+        const compileMatch = buildOutput.match(/Compiled in ([\d.]+s)/)
+        if (compileMatch) {
+          console.log(`   ✓ Compiled in ${compileMatch[1]}`)
+        }
+        console.log('✅ Build completed\n')
+      } catch (error) {
+        // Show full output on build error
+        console.error('❌ Build failed:\n')
+        console.error(error.stdout || error.message)
+        throw error
+      }
 
       // Step 3: Copy static assets
       console.log('📦 Step 3/4: Syncing static assets to standalone build...')
