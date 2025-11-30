@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -140,7 +140,7 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
   const editorLanguage = fileExtension === 'json' ? 'json' : fileExtension === 'md' ? 'markdown' : 'yaml'
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+    <GlassDialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>{filePath}</DialogTitle>
       <DialogContent>
         {isLoading ? (
@@ -214,6 +214,6 @@ export function FileEditorModal({ open, onClose, filePath, branch }: FileEditorM
           </>
         )}
       </DialogActions>
-    </Dialog>
+    </GlassDialog>
   )
 }

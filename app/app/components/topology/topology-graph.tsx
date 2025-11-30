@@ -17,7 +17,7 @@ import '../../react-flow-overrides.css'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import { useTheme } from '@mui/material/styles'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit'
@@ -231,7 +231,7 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
 
   if (fullscreen) {
     return (
-      <Dialog
+      <GlassDialog
         open={fullscreen}
         onClose={toggleFullscreen}
         maxWidth={false}
@@ -248,7 +248,7 @@ function TopologyGraphInner({ data, height = 600 }: TopologyGraphProps) {
         }}
       >
         {graphContent}
-      </Dialog>
+      </GlassDialog>
     )
   }
 

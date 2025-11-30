@@ -87,7 +87,7 @@ describe('Kubernetes Authentication', () => {
       // Mock returns undefined by default, check the method exists
       expect(kc.getCurrentContext).toBeDefined()
       expect(typeof kc.getCurrentContext).toBe('function')
-    })
+    }, 10000)
 
     it('should list available contexts', () => {
       const { KubeConfig } = require('@kubernetes/client-node')

@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
@@ -14,6 +13,7 @@ import {
 } from '@mui/material'
 import WarningIcon from '@mui/icons-material/Warning'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
+import { GlassDialog } from '@/lib/ui'
 
 interface RestartPodDialogProps {
   open: boolean
@@ -36,7 +36,7 @@ export function RestartPodDialog({
   onCancel,
 }: RestartPodDialogProps) {
   return (
-    <Dialog open={open} onClose={isLoading ? undefined : onCancel} maxWidth="sm" fullWidth>
+    <GlassDialog open={open} onClose={isLoading ? undefined : onCancel} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <WarningIcon color="warning" />
         Restart Pod
@@ -76,6 +76,6 @@ export function RestartPodDialog({
           {isLoading ? 'Restarting...' : 'Restart Pod'}
         </Button>
       </DialogActions>
-    </Dialog>
+    </GlassDialog>
   )
 }

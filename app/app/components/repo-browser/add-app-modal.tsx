@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -689,7 +689,7 @@ ${filesToAdd.map(f => `- \`${f.path}\``).join('\n')}
   }
 
   return (
-    <Dialog
+    <GlassDialog
       open={open}
       onClose={handleClose}
       maxWidth="md"
@@ -775,6 +775,6 @@ ${filesToAdd.map(f => `- \`${f.path}\``).join('\n')}
           {successMessage}
         </Alert>
       </Snackbar>
-    </Dialog>
+    </GlassDialog>
   )
 }

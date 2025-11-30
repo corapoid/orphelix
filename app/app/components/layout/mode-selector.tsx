@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -111,7 +111,7 @@ export function ModeSelector({ open, onClose }: ModeSelectorProps) {
   }
 
   return (
-    <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
+    <GlassDialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
       <DialogTitle>Select Mode</DialogTitle>
 
       <DialogContent>
@@ -225,6 +225,6 @@ export function ModeSelector({ open, onClose }: ModeSelectorProps) {
           {tempMode === 'demo' ? 'Use Demo Mode' : 'Connect'}
         </Button>
       </DialogActions>
-    </Dialog>
+    </GlassDialog>
   )
 }

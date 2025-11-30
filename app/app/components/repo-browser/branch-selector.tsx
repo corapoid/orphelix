@@ -7,7 +7,7 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -96,7 +96,7 @@ export function BranchSelector({ owner, repo, selectedBranch, onBranchChange }: 
         New Branch
       </Button>
 
-      <Dialog open={showNewBranchDialog} onClose={() => setShowNewBranchDialog(false)}>
+      <GlassDialog open={showNewBranchDialog} onClose={() => setShowNewBranchDialog(false)}>
         <DialogTitle>Create New Branch</DialogTitle>
         <DialogContent>
           <TextField
@@ -115,7 +115,7 @@ export function BranchSelector({ owner, repo, selectedBranch, onBranchChange }: 
             {creating ? 'Creating...' : 'Create'}
           </Button>
         </DialogActions>
-      </Dialog>
+      </GlassDialog>
     </Box>
   )
 }

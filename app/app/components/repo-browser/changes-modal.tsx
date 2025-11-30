@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -196,7 +196,7 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
   }
 
   return (
-    <Dialog
+    <GlassDialog
       open={open}
       onClose={onClose}
       maxWidth="md"
@@ -355,6 +355,6 @@ export function ChangesModal({ open, onClose }: ChangesModalProps) {
           </>
         )}
       </DialogActions>
-    </Dialog>
+    </GlassDialog>
   )
 }

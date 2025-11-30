@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Button from '@mui/material/Button'
@@ -84,7 +84,7 @@ export function SelectRepoModal({ open, onClose }: SelectRepoModalProps) {
   }
 
   return (
-    <Dialog
+    <GlassDialog
       open={open}
       onClose={onClose}
       maxWidth="lg"
@@ -206,6 +206,6 @@ export function SelectRepoModal({ open, onClose }: SelectRepoModalProps) {
           </Button>
         </Box>
       </DialogContent>
-    </Dialog>
+    </GlassDialog>
   )
 }

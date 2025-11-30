@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
-import Dialog from '@mui/material/Dialog'
+import { GlassDialog } from '@/lib/ui'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -319,27 +319,27 @@ export function YamlEditorModal({
   // Check if user is authenticated (OAuth or GitHub App)
   if (isAuthenticated === false) {
     return (
-      <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <GlassDialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
         <DialogContent>
           <Alert severity="info">Please connect your GitHub account in Settings first.</Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Close</Button>
         </DialogActions>
-      </Dialog>
+      </GlassDialog>
     )
   }
 
   // Still loading authentication status
   if (isAuthenticated === null) {
     return (
-      <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <GlassDialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
         <DialogContent>
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
             <CircularProgress />
           </Box>
         </DialogContent>
-      </Dialog>
+      </GlassDialog>
     )
   }
 
@@ -367,7 +367,7 @@ export function YamlEditorModal({
     }
 
     return (
-      <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <GlassDialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
         <DialogContent>
           <Alert severity="info">
             <Typography variant="body2" fontWeight={500} gutterBottom>
@@ -401,7 +401,7 @@ export function YamlEditorModal({
         <DialogActions>
           <Button onClick={onClose}>Close</Button>
         </DialogActions>
-      </Dialog>
+      </GlassDialog>
     )
   }
 
@@ -441,7 +441,7 @@ export function YamlEditorModal({
 
   if (prCreated) {
     return (
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <GlassDialog open={open} onClose={onClose} maxWidth="md" fullWidth>
         <DialogTitle>Pull Request Created Successfully! 🎉</DialogTitle>
         <DialogContent>
           <Alert severity="success" sx={{ mb: 2 }}>
@@ -493,14 +493,14 @@ export function YamlEditorModal({
             {isMergingPR ? 'Merging...' : 'Merge Now'}
           </Button>
         </DialogActions>
-      </Dialog>
+      </GlassDialog>
     )
   }
 
   const resourceTypeLabel = resourceType === 'configmap' ? 'ConfigMap' : resourceType === 'secret' ? 'Secret' : 'Deployment'
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+    <GlassDialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>Edit YAML - {resourceName} ({resourceTypeLabel})</DialogTitle>
       <DialogContent>
         {filesLoading || matchingFile ? (
@@ -628,6 +628,6 @@ export function YamlEditorModal({
           {isCreatingPR ? 'Creating PR...' : 'Create Pull Request'}
         </Button>
       </DialogActions>
-    </Dialog>
+    </GlassDialog>
   )
 }
