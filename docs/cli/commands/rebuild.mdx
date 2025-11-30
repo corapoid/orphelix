@@ -9,11 +9,12 @@ Rebuild the Next.js application and restart PM2 process. This is useful after ma
 
 ## What it does
 
-The `rebuild` command performs three steps:
+The `rebuild` command performs four steps:
 
-1. **Build** - Runs `npm run build` to create production build
-2. **Sync Assets** - Copies static assets to standalone build
-3. **Restart** - Restarts the PM2 process with new code
+1. **Update Dependencies** - Checks for and updates outdated dev dependencies
+2. **Build** - Runs `npm run build` to create production build
+3. **Sync Assets** - Copies static assets to standalone build
+4. **Restart** - Restarts the PM2 process with new code
 
 ## Usage
 

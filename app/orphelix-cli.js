@@ -303,21 +303,53 @@ const commands = {
     try {
       const actualPort = getPort(port)
 
-      // Step 1: Build the application
-      console.log('📦 Step 1/3: Building Next.js application...')
+      // Step 1: Update outdated dependencies
+      console.log('📦 Step 1/4: Checking for outdated dependencies...')
+      try {
+        // Check if there are outdated packages
+        const outdated = execSync('npm outdated --json', {
+          cwd: APP_DIR,
+          encoding: 'utf-8'
+        })
+
+        if (outdated && outdated.trim() !== '{}') {
+          const packages = JSON.parse(outdated)
+          const devPackages = Object.keys(packages).filter(pkg => packages[pkg].type === 'devDependencies')
+
+          if (devPackages.length > 0) {
+            console.log(`   Found ${devPackages.length} outdated dev dependencies, updating...`)
+            execSync(`npm update ${devPackages.join(' ')}`, {
+              cwd: APP_DIR,
+              stdio: 'inherit'
+            })
+            console.log('✅ Dependencies updated\n')
+          } else {
+            console.log('✅ All dev dependencies are up to date\n')
+          }
+        } else {
+          console.log('✅ All dependencies are up to date\n')
+        }
+      } catch (error) {
+        // npm outdated returns exit code 1 if there are outdated packages
+        // This is expected, so we continue
+        console.log('✅ Dependency check completed\n')
+      }
+
+      // Step 2: Build the application
+      console.log('📦 Step 2/4: Building Next.js application...')
       execSync('npm run build', {
         cwd: APP_DIR,
         stdio: 'inherit'
       })
       console.log('✅ Build completed\n')
 
-      // Step 2: Copy static assets
-      console.log('📦 Step 2/3: Syncing static assets to standalone build...')
+      // Step 3: Copy static assets
+      console.log('📦 Step 3/4: Syncing static assets to standalone build...')
       copyStandaloneAssets()
       console.log('✅ Assets synced\n')
 
-      // Step 3: Restart PM2
-      console.log('🔄 Step 3/3: Restarting PM2 process...')
+      // Step 4: Restart PM2
+      console.log('🔄 Step 4/4: Restarting PM2 process...')
       const env = { ...process.env, ORPHELIX_PORT: actualPort }
       execSync(`npx pm2 restart ${name}`, {
         cwd: APP_DIR,
