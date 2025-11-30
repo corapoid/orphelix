@@ -5,6 +5,9 @@
  */
 
 import type { Event, Pod, Deployment } from '@/types/kubernetes'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'ai-context-collector' })
 
 export interface TroubleshootingContext {
   resource?: {
@@ -64,7 +67,7 @@ export async function collectDeploymentContext(
       }))
     }
   } catch (error) {
-    console.warn('Failed to fetch deployment events:', error)
+    logger.warn({ error, deployment: deployment.name, namespace }, 'Failed to fetch deployment events')
   }
 
   return context
@@ -130,7 +133,7 @@ export async function collectPodContext(
         }))
       }
     } catch (error) {
-      console.warn('Failed to fetch pod events:', error)
+      logger.warn({ error, pod: pod.name, namespace }, 'Failed to fetch pod events')
     }
   }
 
@@ -178,7 +181,7 @@ export async function collectPodContext(
         context.logs = logsText.split('\n').filter(Boolean).slice(-20)
       }
     } catch (error) {
-      console.warn('Failed to fetch pod logs:', error)
+      logger.warn({ error, pod: pod.name, namespace, container }, 'Failed to fetch pod logs')
     }
   }
 
@@ -323,7 +326,7 @@ export async function collectFailingPodsContext(namespace: string = 'default', m
 
     return contexts.join('\n')
   } catch (error) {
-    console.warn('Failed to collect failing pods context:', error)
+    logger.warn({ error, namespace, mode }, 'Failed to collect failing pods context')
     return ''
   }
 }

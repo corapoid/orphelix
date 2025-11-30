@@ -2,34 +2,52 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getNamespaceFromRequest } from '@/lib/core/api-helpers'
 import { fetchDeployments, fetchPods, fetchNodes, fetchConfigMaps, fetchSecrets, fetchHPAs, fetchPVs, fetchServices, fetchIngresses, fetchStatefulSets, fetchDaemonSets, fetchJobs, fetchCronJobs } from '@/lib/k8s/api'
 import type { DashboardSummary } from '@/types/kubernetes'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_LIST_LIMIT } from '@/lib/security/rate-limit-configs'
+import { namespaceSchema } from '@/lib/validation/schemas'
+import { handleApiError, ValidationError } from '@/lib/api/errors'
 
+// Create rate limiter for dashboard operations
+const limiter = rateLimit(K8S_LIST_LIMIT)
+
+/**
+ * GET /api/dashboard/summary
+ *
+ * Retrieves dashboard summary for a namespace
+ *
+ * Rate Limited: 120 requests per 60 seconds
+ */
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const namespace = getNamespaceFromRequest(request)
     // const context = getContextFromRequest(request) // TODO: use context when API supports it
 
     if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
+      throw new ValidationError('Namespace parameter is required')
     }
+
+    // Validate namespace
+    const validated = namespaceSchema.parse(namespace)
 
     // Fetch data in parallel
     const [deployments, pods, nodes, configMaps, secrets, hpas, pvs, services, ingresses, statefulsets, daemonsets, jobs, cronjobs] = await Promise.all([
-      fetchDeployments(namespace),
-      fetchPods(namespace),
+      fetchDeployments(validated),
+      fetchPods(validated),
       fetchNodes(),
-      fetchConfigMaps(namespace),
-      fetchSecrets(namespace),
-      fetchHPAs(namespace),
+      fetchConfigMaps(validated),
+      fetchSecrets(validated),
+      fetchHPAs(validated),
       fetchPVs(),
-      fetchServices(namespace),
-      fetchIngresses(namespace),
-      fetchStatefulSets(namespace),
-      fetchDaemonSets(namespace),
-      fetchJobs(namespace),
-      fetchCronJobs(namespace),
+      fetchServices(validated),
+      fetchIngresses(validated),
+      fetchStatefulSets(validated),
+      fetchDaemonSets(validated),
+      fetchJobs(validated),
+      fetchCronJobs(validated),
     ])
 
     // Calculate summary
@@ -93,10 +111,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(summary)
   } catch (error) {
-    console.error('[API] Failed to fetch dashboard summary:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch dashboard summary' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

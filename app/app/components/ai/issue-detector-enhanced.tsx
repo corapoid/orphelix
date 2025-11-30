@@ -17,6 +17,7 @@ import WarningIcon from '@mui/icons-material/Warning'
 import ErrorIcon from '@mui/icons-material/Error'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ReactMarkdown from 'react-markdown'
+import { useApiKey, useApiKeyExists } from '@/lib/hooks/use-api-key'
 
 interface IssueDetectorEnhancedProps {
   events?: Event[]
@@ -43,8 +44,11 @@ interface DetectedIssue {
 export function IssueDetectorEnhanced({ events = [], metrics, summary, namespace = 'default' }: IssueDetectorEnhancedProps) {
   const [issues, setIssues] = useState<DetectedIssue[]>([])
   const [expanded, setExpanded] = useState(true)
-  const [hasApiKey, setHasApiKey] = useState(false)
   const [autoExplainEnabled, setAutoExplainEnabled] = useState(false)
+
+  // Get API key from encrypted storage
+  const { apiKey } = useApiKey('openai')
+  const { exists: hasApiKey } = useApiKeyExists('openai')
 
   // Import useModeStore dynamically to get current mode
   const [mode, setMode] = useState<'real' | 'demo'>('real')
@@ -53,19 +57,6 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary, namespace
       const currentMode = useModeStore.getState().mode
       setMode(currentMode)
     })
-  }, [])
-
-  useEffect(() => {
-    const apiKey = localStorage.getItem('orphelix_openai_key')
-    setHasApiKey(!!apiKey)
-
-    const handleKeyUpdate = () => {
-      const key = localStorage.getItem('orphelix_openai_key')
-      setHasApiKey(!!key)
-    }
-
-    window.addEventListener('openai-key-updated', handleKeyUpdate)
-    return () => window.removeEventListener('openai-key-updated', handleKeyUpdate)
   }, [])
 
   useEffect(() => {
@@ -145,7 +136,6 @@ export function IssueDetectorEnhanced({ events = [], metrics, summary, namespace
     })
 
     try {
-      const apiKey = localStorage.getItem('orphelix_openai_key')
       if (!apiKey) return
 
       // Build context for AI

@@ -1,7 +1,24 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { GENERAL_API_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError } from '@/lib/api/errors'
 
-export async function POST() {
+// Create rate limiter
+const limiter = rateLimit(GENERAL_API_LIMIT)
+
+/**
+ * POST /api/github-app/logout
+ *
+ * Logs out from GitHub App by deleting cookies
+ *
+ * Rate Limited: 100 requests per 60 seconds
+ */
+export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const cookieStore = await cookies()
 
@@ -11,10 +28,6 @@ export async function POST() {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('GitHub App logout error:', error)
-    return NextResponse.json(
-      { error: 'Failed to logout' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

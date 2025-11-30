@@ -7,43 +7,47 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createOpenAI } from '@ai-sdk/openai'
 import { generateText } from 'ai'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { AI_QUERY_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError } from '@/lib/api/errors'
+import { z } from 'zod'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-interface MatchRequest {
-  resourceName: string
-  namespace: string
-  resourceType: string
-  files: Array<{ path: string; name: string }>
-  apiKey: string // User's OpenAI API key from localStorage
-}
+// Create rate limiter for AI queries
+const limiter = rateLimit(AI_QUERY_LIMIT)
+
+// Validate request schema
+const matchFileSchema = z.object({
+  resourceName: z.string().min(1, 'Resource name is required'),
+  namespace: z.string().min(1, 'Namespace is required'),
+  resourceType: z.string().min(1, 'Resource type is required'),
+  files: z.array(z.object({
+    path: z.string(),
+    name: z.string(),
+  })),
+  apiKey: z.string().min(1, 'API key is required').startsWith('sk-', 'Invalid API key format'),
+})
 
 /**
  * POST /api/ai/match-file
+ *
  * AI-powered file matching using OpenAI
+ *
+ * Rate Limited: 5 requests per 60 seconds
  */
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
-    const body: MatchRequest = await request.json()
-    const { resourceName, namespace, resourceType, files, apiKey } = body
+    const body = await request.json()
 
-    if (!resourceName || !namespace || !resourceType || !files || !apiKey) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
-    // Validate API key format
-    const trimmedApiKey = apiKey.trim()
-
-    if (!trimmedApiKey.startsWith('sk-')) {
-      return NextResponse.json(
-        { error: 'Invalid API key format. OpenAI API keys should start with "sk-"' },
-        { status: 400 }
-      )
-    }
+    // Validate input
+    const validated = matchFileSchema.parse(body)
+    const { resourceName, namespace, resourceType, files, apiKey } = validated
 
     // Filter out base/ files if there are environment-specific files available
     const envFiles = files.filter((f: { path: string; name: string }) => !f.path.startsWith('base/'))
@@ -109,7 +113,7 @@ If no good matches exist, return:
 
     // Create OpenAI client with user's API key
     const openaiClient = createOpenAI({
-      apiKey: trimmedApiKey,
+      apiKey: apiKey.trim(),
     })
 
     const result = await generateText({
@@ -142,24 +146,7 @@ If no good matches exist, return:
         duration,
       })
     }
-  } catch (error: unknown) {
-    console.error('[AI Matcher] Error:', error)
-
-    // Check if it's an API key error
-    const errorObj = error as { statusCode?: number; message?: string }
-    if (errorObj?.statusCode === 401 || errorObj?.message?.includes('API key') || errorObj?.message?.includes('Incorrect API key')) {
-      return NextResponse.json(
-        { error: 'Invalid or expired OpenAI API key. Please check your API key in Settings > AI Features.' },
-        { status: 401 }
-      )
-    }
-
-    return NextResponse.json(
-      {
-        error: 'AI matching failed',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    )
+  } catch (error) {
+    return handleApiError(error)
   }
 }

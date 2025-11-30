@@ -2,38 +2,69 @@ import { GitHubClient } from '@/lib/github/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { getGitHubToken } from '@/lib/github/get-token'
 import { getMockRepositoryTree } from '@/lib/mocks/github-data'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { GITHUB_FILE_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError, AuthenticationError } from '@/lib/api/errors'
+import { z } from 'zod'
 
+// Create rate limiter
+const limiter = rateLimit(GITHUB_FILE_LIMIT)
+
+// Validate request parameters
+const treeRequestSchema = z.object({
+  owner: z.string().min(1, 'Owner is required'),
+  repo: z.string().min(1, 'Repo is required'),
+  ref: z.string().optional().default('main'),
+  path: z.string().optional().default(''),
+  mode: z.enum(['demo']).optional(),
+})
+
+/**
+ * GET /api/github/tree
+ *
+ * Retrieves GitHub repository tree
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { searchParams } = new URL(request.url)
-    const owner = searchParams.get('owner')
-    const repo = searchParams.get('repo')
-    const ref = searchParams.get('ref') || 'main'
-    const path = searchParams.get('path') || ''
-    const mode = searchParams.get('mode')
 
-    if (!owner || !repo) {
-      return NextResponse.json({ error: 'owner and repo are required' }, { status: 400 })
-    }
+    // Validate input
+    const validated = treeRequestSchema.parse({
+      owner: searchParams.get('owner'),
+      repo: searchParams.get('repo'),
+      ref: searchParams.get('ref') || 'main',
+      path: searchParams.get('path') || '',
+      mode: searchParams.get('mode') || undefined,
+    })
 
     // Mock mode for demo
-    if (mode === 'demo') {
-      const tree = getMockRepositoryTree(path)
+    if (validated.mode === 'demo') {
+      const tree = getMockRepositoryTree(validated.path)
       return NextResponse.json(tree)
     }
 
     const token = await getGitHubToken()
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized - Please connect GitHub' }, { status: 401 })
+      throw new AuthenticationError('Please connect GitHub')
     }
 
     const github = new GitHubClient(token)
-    const tree = await github.getRepositoryTree(owner, repo, ref, path)
+    const tree = await github.getRepositoryTree(
+      validated.owner,
+      validated.repo,
+      validated.ref,
+      validated.path
+    )
 
     return NextResponse.json(tree)
   } catch (error) {
-    console.error('Failed to fetch tree:', error)
-    return NextResponse.json({ error: 'Failed to fetch tree' }, { status: 500 })
+    return handleApiError(error)
   }
 }

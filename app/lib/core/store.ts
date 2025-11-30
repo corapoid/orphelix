@@ -1,6 +1,9 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AppMode, KubernetesContext } from '@/types/app'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'store' })
 
 interface ModeStore {
   mode: AppMode
@@ -46,7 +49,7 @@ async function syncStateToServer(state: Partial<ModeStore>) {
       }),
     })
   } catch (error) {
-    console.error('Failed to sync settings to server:', error)
+    logger.error({ error }, 'Failed to sync settings to server')
   }
 }
 
@@ -148,7 +151,7 @@ export const useModeStore = create<ModeStore>()((set, get) => ({
         hasCompletedWelcome: false,
       })
     } catch (error) {
-      console.error('Failed to reset settings:', error)
+      logger.error({ error }, 'Failed to reset settings')
     }
   },
   syncToServer: () => syncStateToServer(get()),

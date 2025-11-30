@@ -12,55 +12,64 @@ import {
   fetchConfigMapYaml,
   fetchSecretYaml
 } from '@/lib/k8s/api'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
+import { k8sResourceDetailSchema } from '@/lib/validation/schemas'
+import { handleApiError, NotFoundError } from '@/lib/api/errors'
+import { z } from 'zod'
 
+// Create rate limiter for K8s detail operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
+
+// Validate resource type
+const resourceTypeSchema = z.enum(['deployments', 'configmaps', 'secrets'])
+
+/**
+ * GET /api/resources/[type]/[name]/yaml
+ *
+ * Retrieves YAML manifest for a specific resource
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ type: string; name: string }> }
 ) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { type, name } = await params
     const namespace = getNamespaceFromRequest(request)
     const context = getContextFromRequest(request)
 
-    if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
-    }
+    // Validate resource type
+    const validatedType = resourceTypeSchema.parse(type)
+
+    // Validate resource identity
+    const validated = k8sResourceDetailSchema.parse({ name, namespace })
 
     let yaml: string | null = null
 
-    switch (type) {
+    switch (validatedType) {
       case 'deployments':
-        yaml = await fetchDeploymentYaml(name, namespace, context)
+        yaml = await fetchDeploymentYaml(validated.name, validated.namespace, context)
         break
       case 'configmaps':
-        yaml = await fetchConfigMapYaml(name, namespace, context)
+        yaml = await fetchConfigMapYaml(validated.name, validated.namespace, context)
         break
       case 'secrets':
-        yaml = await fetchSecretYaml(name, namespace, context)
+        yaml = await fetchSecretYaml(validated.name, validated.namespace, context)
         break
-      default:
-        return NextResponse.json(
-          { error: `Unsupported resource type: ${type}` },
-          { status: 400 }
-        )
     }
 
     if (!yaml) {
-      return NextResponse.json(
-        { error: `Resource not found: ${type}/${name}` },
-        { status: 404 }
-      )
+      throw new NotFoundError(validatedType, `${validated.namespace}/${validated.name}`)
     }
 
     return NextResponse.json({ yaml })
   } catch (error) {
-    console.error(`[API] Failed to fetch ${params} YAML:`, error)
-    return NextResponse.json(
-      { error: 'Failed to fetch resource YAML' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

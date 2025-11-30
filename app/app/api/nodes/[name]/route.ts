@@ -1,36 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchNode } from '@/lib/k8s/api'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
+import { k8sClusterResourceSchema } from '@/lib/validation/schemas'
+import { handleApiError, NotFoundError } from '@/lib/api/errors'
+
+// Create rate limiter for K8s detail operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
 
 /**
  * GET /api/nodes/[name]
  *
- * Fetches details for a specific Node
+ * Retrieves a specific Node by name (cluster-wide resource)
+ *
+ * Rate Limited: 60 requests per 60 seconds
  */
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { name } = await params
 
-    const node = await fetchNode(name)
+    // Validate input
+    const validated = k8sClusterResourceSchema.parse({ name })
+
+    const node = await fetchNode(validated.name)
 
     if (!node) {
-      return NextResponse.json(
-        { error: 'Node not found' },
-        { status: 404 }
-      )
+      throw new NotFoundError('Node', validated.name)
     }
 
     return NextResponse.json(node)
   } catch (error) {
-    console.error('[API] Failed to fetch Node:', error)
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch Node',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

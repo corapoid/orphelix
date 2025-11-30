@@ -1,4 +1,7 @@
 import { Octokit } from '@octokit/rest'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'github-client' })
 
 export interface YamlFile {
   name: string
@@ -75,7 +78,7 @@ export class GitHubClient {
         }
       }
     } catch (error) {
-      console.error(`Error listing files in ${path}:`, error)
+      logger.error({ error, owner, repo, path, ref }, 'Error listing YAML files')
     }
 
     return files
@@ -291,7 +294,7 @@ export class GitHubClient {
         size: item.type === 'file' ? item.size : undefined,
       }))
     } catch (error) {
-      console.error(`Error getting tree for ${path}:`, error)
+      logger.error({ error, owner, repo, path, ref }, 'Error getting repository tree')
       return []
     }
   }

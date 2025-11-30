@@ -2,6 +2,9 @@
 
 import { useModeStore } from '@/lib/core/store'
 import { useEffect, useRef } from 'react'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'db-client-sync' })
 
 /**
  * Hook to initialize and sync stores with SQLite database
@@ -24,7 +27,7 @@ export function useInitializeStores() {
           modeStore.initialize(data)
         }
       } catch (error) {
-        console.error('Failed to load settings from database:', error)
+        logger.error({ error }, 'Failed to load settings from database')
         // If fetch fails, mark as initialized anyway to prevent infinite loading
         modeStore.initialize({})
       }
@@ -69,7 +72,9 @@ export async function migrateLocalStorageToDatabase() {
     if (response.ok) {
       // Mark migration as complete
       localStorage.setItem(migrationKey, 'true')
-      console.log('✅ Successfully migrated localStorage to SQLite')
+      logger.info('Successfully migrated localStorage to SQLite', {
+        migratedKeys: Object.keys(localStorageData).length
+      })
 
       // Optionally clear old localStorage data
       Object.keys(localStorageData).forEach((key) => {
@@ -79,6 +84,6 @@ export async function migrateLocalStorageToDatabase() {
       })
     }
   } catch (error) {
-    console.error('Failed to migrate localStorage:', error)
+    logger.error({ error }, 'Failed to migrate localStorage')
   }
 }

@@ -1,0 +1,39 @@
+id: orphelix-api-security
+info:
+  name: Orphelix API Security Scan
+  author: orphelix-security-team
+  severity: info
+  description: Security scan template for Orphelix Kubernetes Dashboard API endpoints
+  reference:
+    - https://github.com/projectdiscovery/nuclei
+  tags: orphelix,api,security
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/dashboard/summary"
+      - "{{BaseURL}}/api/pods"
+      - "{{BaseURL}}/api/deployments"
+      - "{{BaseURL}}/api/namespaces"
+
+    headers:
+      User-Agent: "Nuclei-Security-Scanner"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+          - 401
+
+      - type: word
+        part: header
+        words:
+          - "application/json"
+
+    extractors:
+      - type: kval
+        kval:
+          - x_frame_options
+          - x_content_type_options
+          - content_security_policy

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'use-github-app' })
 
 export interface GitHubInstallation {
   id: number
@@ -40,7 +43,7 @@ export function useGitHubApp() {
         setInstallations([])
       }
     } catch (error) {
-      console.error('Failed to check GitHub App installations:', error)
+      logger.error({ error }, 'Failed to check GitHub App installations')
       setIsAuthenticated(false)
       setInstallations([])
     } finally {

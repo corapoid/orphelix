@@ -1,68 +1,93 @@
 import { GitHubClient } from '@/lib/github/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { getGitHubToken } from '@/lib/github/get-token'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { GITHUB_PR_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError, AuthenticationError } from '@/lib/api/errors'
+import { z } from 'zod'
 
-interface FileChange {
-  path: string
-  content: string
-  sha: string
-}
+// Create rate limiter
+const limiter = rateLimit(GITHUB_PR_LIMIT)
 
+// Validate request schema
+const multiFilePRSchema = z.object({
+  owner: z.string().min(1, 'Owner is required'),
+  repo: z.string().min(1, 'Repo is required'),
+  branch: z.string().min(1, 'Branch name is required'),
+  baseBranch: z.string().optional().default('main'),
+  files: z.array(z.object({
+    path: z.string().min(1, 'File path is required'),
+    content: z.string(),
+    sha: z.string(),
+  })).min(1, 'At least one file is required'),
+  commitMessage: z.string().optional(),
+  prTitle: z.string().optional(),
+  prBody: z.string().optional(),
+})
+
+/**
+ * POST /api/github/create-multi-file-pr
+ *
+ * Creates a GitHub pull request with multiple file changes
+ *
+ * Rate Limited: 20 requests per 5 minutes
+ */
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const token = await getGitHubToken()
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized - Please connect GitHub' }, { status: 401 })
+      throw new AuthenticationError('Please connect GitHub')
     }
 
     const requestBody = await request.json()
-    const {
-      owner,
-      repo,
-      branch: newBranch,
-      baseBranch = 'main',
-      files,
-      commitMessage,
-      prTitle,
-      prBody,
-    } = requestBody
 
-    if (!owner || !repo || !newBranch || !files || !Array.isArray(files) || files.length === 0) {
-      return NextResponse.json(
-        { error: 'owner, repo, branch, and files array are required' },
-        { status: 400 }
-      )
-    }
+    // Validate input
+    const validated = multiFilePRSchema.parse(requestBody)
 
     const github = new GitHubClient(token)
 
     // 1. Create new branch from base
-    await github.createBranch(owner, repo, baseBranch, newBranch)
+    await github.createBranch(validated.owner, validated.repo, validated.baseBranch, validated.branch)
 
     // 2. Commit each file to the new branch
-    for (const file of files as FileChange[]) {
-      const message = commitMessage || `Update ${file.path}`
-      await github.commitFile(owner, repo, newBranch, file.path, file.content, file.sha, message)
+    for (const file of validated.files) {
+      const message = validated.commitMessage || `Update ${file.path}`
+      await github.commitFile(
+        validated.owner,
+        validated.repo,
+        validated.branch,
+        file.path,
+        file.content,
+        file.sha,
+        message
+      )
     }
 
     // 3. Create PR
-    const title = prTitle || `Update ${files.length} files`
-    const body = prBody || `Updated ${files.length} configuration files`
+    const title = validated.prTitle || `Update ${validated.files.length} files`
+    const body = validated.prBody || `Updated ${validated.files.length} configuration files`
 
-    const pr = await github.createPullRequest(owner, repo, title, newBranch, baseBranch, body)
+    const pr = await github.createPullRequest(
+      validated.owner,
+      validated.repo,
+      title,
+      validated.branch,
+      validated.baseBranch,
+      body
+    )
 
     return NextResponse.json({
       success: true,
       number: pr.number,
       url: pr.url,
-      branch: newBranch,
+      branch: validated.branch,
     })
   } catch (error) {
-    console.error('Failed to create multi-file PR:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create multi-file PR' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

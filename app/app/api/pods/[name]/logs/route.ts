@@ -1,6 +1,10 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { fetchPodLogs } from '@/lib/k8s/api'
 import { getMockPodLogs } from '@/lib/mocks/data'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { LOGS_FETCH_LIMIT } from '@/lib/security/rate-limit-configs'
+import { podLogsRequestSchema } from '@/lib/validation/schemas'
+import { handleApiError } from '@/lib/api/errors'
 
 interface LogLine {
   line: number
@@ -81,33 +85,55 @@ function parseLogLine(line: string, lineNumber: number): LogLine {
   }
 }
 
+// Create rate limiter for pod logs operations
+const limiter = rateLimit(LOGS_FETCH_LIMIT)
+
+/**
+ * GET /api/pods/[name]/logs
+ *
+ * Fetches logs from a specific pod
+ *
+ * Rate Limited: 30 requests per 60 seconds
+ */
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { name } = await params
     const { searchParams } = new URL(request.url)
-    const namespace = searchParams.get('namespace') || ''
-    const context = searchParams.get('context') || undefined
-    const container = searchParams.get('container') || undefined
-    const tail = parseInt(searchParams.get('tail') || '100')
-    const previous = searchParams.get('previous') === 'true'
 
-    if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
-    }
+    // Validate input using Zod schema
+    const validated = podLogsRequestSchema.parse({
+      name,
+      namespace: searchParams.get('namespace'),
+      container: searchParams.get('container') || undefined,
+      tail: searchParams.get('tail') ? parseInt(searchParams.get('tail')!) : undefined,
+      previous: searchParams.get('previous') === 'true',
+      timestamps: searchParams.get('timestamps') === 'true',
+      sinceSeconds: searchParams.get('sinceSeconds') ? parseInt(searchParams.get('sinceSeconds')!) : undefined,
+    })
+
+    const context = searchParams.get('context') || undefined
 
     // Try to fetch real logs, fall back to mock if it fails (demo mode)
     let logsRaw: string
     try {
-      logsRaw = await fetchPodLogs(name, namespace, context, container, tail, previous)
+      logsRaw = await fetchPodLogs(
+        validated.name,
+        validated.namespace,
+        context,
+        validated.container,
+        validated.tail,
+        validated.previous
+      )
     } catch {
       // If real cluster is unavailable, use mock logs
-      logsRaw = getMockPodLogs(name)
+      logsRaw = getMockPodLogs(validated.name)
     }
 
     // Parse logs into structured format
@@ -120,10 +146,6 @@ export async function GET(
       totalLines: parsedLogs.length,
     })
   } catch (error) {
-    console.error('[API] Failed to fetch pod logs:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch pod logs' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

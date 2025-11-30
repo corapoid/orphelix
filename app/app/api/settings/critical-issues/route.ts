@@ -1,7 +1,32 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { CriticalIssuesService } from '@/lib/db/services'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { SETTINGS_UPDATE_LIMIT, GENERAL_API_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError } from '@/lib/api/errors'
+import { z } from 'zod'
 
-export async function GET(request: Request) {
+// Create rate limiters
+const updateLimiter = rateLimit(SETTINGS_UPDATE_LIMIT)
+const generalLimiter = rateLimit(GENERAL_API_LIMIT)
+
+// Validate request schemas
+const criticalIssuesUpdateSchema = z.object({
+  resourceType: z.string().min(1, 'Resource type is required'),
+  enabled: z.boolean(),
+})
+
+/**
+ * GET /api/settings/critical-issues
+ *
+ * Retrieves critical issues settings
+ *
+ * Rate Limited: 100 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await generalLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { searchParams } = new URL(request.url)
     const resourceType = searchParams.get('resource')
@@ -14,24 +39,31 @@ export async function GET(request: Request) {
     const enabled = CriticalIssuesService.getEnabled()
     return NextResponse.json(Array.from(enabled))
   } catch (error) {
-    console.error('Failed to get critical issues settings:', error)
-    return NextResponse.json(
-      { error: 'Failed to get critical issues settings' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
 
-export async function POST(request: Request) {
+/**
+ * POST /api/settings/critical-issues
+ *
+ * Updates critical issues settings
+ *
+ * Rate Limited: 30 requests per 60 seconds
+ */
+export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await updateLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
-    const { resourceType, enabled } = await request.json()
-    CriticalIssuesService.setEnabled(resourceType, enabled)
+    const body = await request.json()
+
+    // Validate input
+    const validated = criticalIssuesUpdateSchema.parse(body)
+
+    CriticalIssuesService.setEnabled(validated.resourceType, validated.enabled)
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Failed to update critical issues settings:', error)
-    return NextResponse.json(
-      { error: 'Failed to update critical issues settings' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

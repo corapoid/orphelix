@@ -5,53 +5,37 @@
  * and remediation suggestions.
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { createOpenAI } from '@ai-sdk/openai'
 import { streamText } from 'ai'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { AI_QUERY_LIMIT } from '@/lib/security/rate-limit-configs'
+import { aiQuerySchema } from '@/lib/validation/schemas'
+import { handleApiError } from '@/lib/api/errors'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-interface TroubleshootRequest {
-  query: string
-  context?: {
-    resource?: {
-      type: string
-      name: string
-      namespace: string
-      status?: string
-      data?: Record<string, unknown>
-    }
-    events?: Array<{
-      type: string
-      reason: string
-      message: string
-      count: number
-    }>
-    logs?: string[]
-    metrics?: {
-      cpu?: string
-      memory?: string
-    }
-  }
-  apiKey: string // User's OpenAI API key
-}
+// Create rate limiter for AI queries
+const limiter = rateLimit(AI_QUERY_LIMIT)
 
 /**
  * POST /api/ai/troubleshoot
  * Streaming AI troubleshooting endpoint
+ *
+ * Rate Limited: 5 requests per 60 seconds
  */
 export async function POST(request: NextRequest) {
-  try {
-    const body: TroubleshootRequest = await request.json()
-    const { query, context, apiKey } = body
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
 
-    if (!query || !apiKey) {
-      return NextResponse.json(
-        { error: 'Missing required fields: query and apiKey' },
-        { status: 400 }
-      )
-    }
+  try {
+    const body = await request.json()
+
+    // Validate input using Zod schema
+    const validated = aiQuerySchema.parse(body)
+    const { query, context, apiKey } = validated
 
     // Build context string
     let contextStr = ''
@@ -130,13 +114,6 @@ Please provide a detailed troubleshooting response following the structure above
     // Return streaming response
     return result.toTextStreamResponse()
   } catch (error) {
-    console.error('[AI Troubleshoot] Error:', error)
-    return NextResponse.json(
-      {
-        error: 'AI troubleshooting failed',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

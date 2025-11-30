@@ -1,0 +1,133 @@
+#!/bin/bash
+
+# Pre-commit hook for security checks
+# This hook runs security validations before allowing a commit
+
+set -e
+
+echo "🔒 Running security checks..."
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Track if any checks failed
+FAILED=0
+
+# 1. Check for secrets in staged files
+echo "📝 Checking for potential secrets..."
+SECRETS_PATTERNS=(
+  "password\s*=\s*['\"][^'\"]+['\"]"
+  "api[_-]?key\s*=\s*['\"][^'\"]+['\"]"
+  "secret\s*=\s*['\"][^'\"]+['\"]"
+  "token\s*=\s*['\"][^'\"]+['\"]"
+  "-----BEGIN RSA PRIVATE KEY-----"
+  "-----BEGIN PRIVATE KEY-----"
+)
+
+for pattern in "${SECRETS_PATTERNS[@]}"; do
+  if git diff --cached | grep -iE "$pattern" > /dev/null 2>&1; then
+    echo -e "${RED}⚠️  Potential secret found matching pattern: $pattern${NC}"
+    FAILED=1
+  fi
+done
+
+if [ $FAILED -eq 0 ]; then
+  echo -e "${GREEN}✓ No secrets detected${NC}"
+fi
+
+# 2. Check for console.log in production code
+echo "📝 Checking for console.log in production code..."
+CONSOLE_COUNT=$(git diff --cached --name-only | grep -E '\.(ts|tsx)$' | grep -v test | xargs grep -l "console\." 2>/dev/null | wc -l)
+
+if [ "$CONSOLE_COUNT" -gt 0 ]; then
+  echo -e "${YELLOW}⚠️  Found $CONSOLE_COUNT file(s) with console.log statements${NC}"
+  git diff --cached --name-only | grep -E '\.(ts|tsx)$' | grep -v test | xargs grep -l "console\." 2>/dev/null | while read file; do
+    echo -e "${YELLOW}   - $file${NC}"
+  done
+  echo -e "${YELLOW}   Consider using the logger instead${NC}"
+  # Don't fail, just warn
+fi
+
+# 3. Check for eslint-disable and @ts-ignore
+echo "📝 Checking for eslint-disable and @ts-ignore..."
+IGNORE_COUNT=$(git diff --cached | grep -E "eslint-disable|@ts-ignore" | wc -l)
+
+if [ "$IGNORE_COUNT" -gt 0 ]; then
+  echo -e "${YELLOW}⚠️  Found $IGNORE_COUNT eslint-disable or @ts-ignore comments${NC}"
+  echo -e "${YELLOW}   Please fix the underlying issues instead${NC}"
+  # Don't fail, just warn
+fi
+
+# 4. Run TypeScript type check on staged files
+if command -v tsc &> /dev/null; then
+  echo "📝 Running TypeScript type check..."
+  cd app
+  if ! npm run type-check --silent; then
+    echo -e "${RED}✗ TypeScript type check failed${NC}"
+    FAILED=1
+  else
+    echo -e "${GREEN}✓ TypeScript type check passed${NC}"
+  fi
+  cd ..
+fi
+
+# 5. Run ESLint on staged files
+if command -v npm &> /dev/null; then
+  echo "📝 Running ESLint..."
+  STAGED_FILES=$(git diff --cached --name-only | grep -E '\.(ts|tsx)$' | tr '\n' ' ')
+
+  if [ -n "$STAGED_FILES" ]; then
+    cd app
+    if ! npx eslint $STAGED_FILES --quiet; then
+      echo -e "${RED}✗ ESLint found issues${NC}"
+      FAILED=1
+    else
+      echo -e "${GREEN}✓ ESLint passed${NC}"
+    fi
+    cd ..
+  fi
+fi
+
+# 6. Check for hardcoded IP addresses or URLs (except localhost)
+echo "📝 Checking for hardcoded IPs/URLs..."
+if git diff --cached | grep -E "https?://(?!localhost|127\.0\.0\.1|example\.com|github\.com)" | grep -v "api.github.com" > /dev/null 2>&1; then
+  echo -e "${YELLOW}⚠️  Found hardcoded URLs in code${NC}"
+  echo -e "${YELLOW}   Consider using environment variables${NC}"
+  # Don't fail, just warn
+fi
+
+# 7. Verify no .env files are being committed
+echo "📝 Checking for .env files..."
+if git diff --cached --name-only | grep -E "\.env$|\.env\.local$" > /dev/null 2>&1; then
+  echo -e "${RED}✗ .env file detected in staged changes${NC}"
+  echo -e "${RED}   .env files should never be committed${NC}"
+  FAILED=1
+fi
+
+# 8. Optional: Run Nuclei on localhost if running
+if command -v nuclei &> /dev/null; then
+  if curl -s http://localhost:3000 > /dev/null 2>&1; then
+    echo "📝 Running Nuclei security scan..."
+    if ! nuclei -t .nuclei-templates/orphelix-api-security.yaml -u http://localhost:3000 -silent; then
+      echo -e "${YELLOW}⚠️  Nuclei scan found potential issues${NC}"
+      echo -e "${YELLOW}   Review findings manually${NC}"
+      # Don't fail, just warn
+    else
+      echo -e "${GREEN}✓ Nuclei scan passed${NC}"
+    fi
+  fi
+fi
+
+# Summary
+echo ""
+if [ $FAILED -eq 1 ]; then
+  echo -e "${RED}❌ Pre-commit security checks failed${NC}"
+  echo -e "${RED}   Please fix the issues above before committing${NC}"
+  exit 1
+else
+  echo -e "${GREEN}✅ All security checks passed${NC}"
+  exit 0
+fi

@@ -14,6 +14,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import { GlassPanel } from '@/lib/ui'
 import type { TroubleshootingContext } from '@/lib/ai/context-collector'
 import ReactMarkdown from 'react-markdown'
+import { useApiKey } from '@/lib/hooks/use-api-key'
 
 interface Message {
   id: string
@@ -33,6 +34,9 @@ export function TroubleshootingChat({ context }: TroubleshootingChatProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Get API key from encrypted storage
+  const { apiKey, loading: apiKeyLoading } = useApiKey('openai')
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -58,9 +62,8 @@ export function TroubleshootingChat({ context }: TroubleshootingChatProps) {
     setError(null)
 
     try {
-      // Get API key from localStorage
-      const apiKey = localStorage.getItem('orphelix_openai_key')
-      if (!apiKey) {
+      // Check for API key
+      if (!apiKey || apiKeyLoading) {
         setError('OpenAI API key not configured. Please add it in Settings.')
         setIsLoading(false)
         return

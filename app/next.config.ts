@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version,
   },
+  // Exclude test files from node_modules
+  serverExternalPackages: ['pino', 'pino-pretty'],
 }
 
 export default nextConfig

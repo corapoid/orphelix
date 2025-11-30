@@ -2,6 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useModeStore } from '@/lib/core/store'
 import { generateMockNodes, generateMockEvents } from '@/lib/mocks/data'
 import type { Node, Event, NodeStatus } from '@/types/kubernetes'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'use-nodes' })
 
 /**
  * Hook to fetch all nodes
@@ -88,7 +91,7 @@ export function useNodeEvents(nodeName: string) {
       // If 403 (forbidden), return empty array instead of throwing
       if (!response.ok) {
         if (response.status === 403) {
-          console.warn('Node events: insufficient permissions (403)')
+          logger.warn({ nodeName, status: 403 }, 'Node events: insufficient permissions')
           return []
         }
         throw new Error('Failed to fetch node events')
@@ -127,7 +130,7 @@ export function useNodePods(nodeName: string) {
       // If 403 (forbidden), return empty array instead of throwing
       if (!response.ok) {
         if (response.status === 403) {
-          console.warn('Node pods: insufficient permissions (403)')
+          logger.warn({ nodeName, namespace: selectedNamespace, status: 403 }, 'Node pods: insufficient permissions')
           return []
         }
         throw new Error('Failed to fetch node pods')

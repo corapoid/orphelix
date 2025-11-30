@@ -1,46 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchConfigMap } from '@/lib/k8s/api'
 import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
+import { k8sResourceDetailSchema } from '@/lib/validation/schemas'
+import { handleApiError, NotFoundError } from '@/lib/api/errors'
+
+// Create rate limiter for K8s detail operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
 
 /**
  * GET /api/configmaps/[name]
  *
- * Fetches a single ConfigMap by name in the specified namespace
+ * Retrieves a specific ConfigMap by name
+ *
+ * Rate Limited: 60 requests per 60 seconds
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
     const context = getContextFromRequest(request)
 
-    if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
-    }
+    // Validate input
+    const validated = k8sResourceDetailSchema.parse({ name, namespace })
 
-    const configMap = await fetchConfigMap(name, namespace, context)
+    const configMap = await fetchConfigMap(validated.name, validated.namespace, context)
 
     if (!configMap) {
-      return NextResponse.json(
-        { error: `ConfigMap '${name}' not found in namespace '${namespace}'` },
-        { status: 404 }
-      )
+      throw new NotFoundError('ConfigMap', validated.name)
     }
 
     return NextResponse.json(configMap)
   } catch (error) {
-    console.error('[API] Failed to fetch ConfigMap:', error)
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch ConfigMap',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

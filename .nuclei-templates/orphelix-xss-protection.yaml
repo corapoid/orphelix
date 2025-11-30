@@ -1,0 +1,40 @@
+id: orphelix-xss-protection
+info:
+  name: Orphelix XSS Protection Test
+  author: orphelix-security-team
+  severity: high
+  description: Test XSS protection mechanisms in Orphelix
+  reference:
+    - https://owasp.org/www-community/attacks/xss/
+  tags: orphelix,xss,security
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/pods?namespace=<script>alert(1)</script>"
+      - "{{BaseURL}}/api/deployments?name=<img src=x onerror=alert(1)>"
+
+    headers:
+      User-Agent: "Nuclei-XSS-Test"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 400
+          - 422
+
+      - type: word
+        part: body
+        words:
+          - "validation"
+          - "invalid"
+        condition: or
+
+      - type: word
+        part: body
+        negative: true
+        words:
+          - "<script>"
+          - "onerror"
+          - "alert(1)"

@@ -1,5 +1,8 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { execSync } from 'child_process'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_LIST_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError } from '@/lib/api/errors'
 
 interface KubeContext {
   name: string
@@ -9,7 +12,21 @@ interface KubeContext {
   current: boolean
 }
 
-export async function GET() {
+// Create rate limiter for contexts operations
+const limiter = rateLimit(K8S_LIST_LIMIT)
+
+/**
+ * GET /api/contexts
+ *
+ * Retrieves list of kubectl contexts
+ *
+ * Rate Limited: 120 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     // Get contexts with details
     const output = execSync('kubectl config get-contexts', { encoding: 'utf-8' })
@@ -39,14 +56,6 @@ export async function GET() {
 
     return NextResponse.json({ contexts })
   } catch (error) {
-    console.error('[API] Failed to get kubectl contexts:', error)
-    return NextResponse.json(
-      {
-        error: 'Failed to get kubectl contexts',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        contexts: [],
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

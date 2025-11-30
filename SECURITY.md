@@ -337,12 +337,76 @@ If you discover a security vulnerability in Orphelix:
 
 We take security seriously and will respond within 48 hours.
 
+## 🔍 Security Scanning with Nuclei
+
+Orphelix includes custom [Nuclei](https://github.com/projectdiscovery/nuclei) templates for automated security testing.
+
+### Installation
+
+```bash
+# Install Nuclei
+brew install nuclei  # macOS
+# or
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+```
+
+### Running Security Scans
+
+```bash
+# Scan local development instance
+nuclei -t .nuclei-templates/ -u http://localhost:3000
+
+# Specific security checks
+nuclei -t .nuclei-templates/orphelix-api-security.yaml -u http://localhost:3000
+nuclei -t .nuclei-templates/orphelix-rate-limiting.yaml -u http://localhost:3000
+nuclei -t .nuclei-templates/orphelix-xss-protection.yaml -u http://localhost:3000
+nuclei -t .nuclei-templates/orphelix-sql-injection.yaml -u http://localhost:3000
+
+# Generate report
+nuclei -t .nuclei-templates/ -u http://localhost:3000 -json -o security-scan.json
+```
+
+### Available Templates
+
+| Template | Purpose | Severity |
+|----------|---------|----------|
+| `orphelix-api-security.yaml` | API endpoint security headers | Info |
+| `orphelix-rate-limiting.yaml` | Rate limit enforcement | Medium |
+| `orphelix-xss-protection.yaml` | XSS prevention mechanisms | High |
+| `orphelix-sql-injection.yaml` | SQL injection protection | Critical |
+
+### CI/CD Integration
+
+Add to `.github/workflows/security-scan.yml`:
+
+```yaml
+name: Security Scan
+on: [push, pull_request]
+
+jobs:
+  nuclei:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nuclei
+        run: go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+      - name: Run Security Scan
+        run: |
+          npm run build && npm run start &
+          sleep 10
+          nuclei -t .nuclei-templates/ -u http://localhost:3000 -json -o scan-results.json
+```
+
+See [`.nuclei-templates/README.md`](.nuclei-templates/README.md) for detailed documentation.
+
 ## 📚 Related Documentation
 
 - [GitHub OAuth Setup Guide](docs/user/github/oauth-setup.mdx)
 - [GitHub App Setup Guide](docs/user/github/github-app-setup.mdx)
 - [Cluster Connection Guide](docs/user/cluster-connection.mdx)
 - [Technical Architecture](TECHNICAL.md)
+- [Nuclei Templates](.nuclei-templates/README.md)
+- [Security Report](SECURITY_REPORT.md)
 
 ## ✅ Security Checklist
 
@@ -355,8 +419,11 @@ Before deploying Orphelix in your organization, verify:
 - [ ] Demo mode is used for public demonstrations (never real cluster data)
 - [ ] Team members understand what data is stored and where
 - [ ] Cluster audit logging is enabled for compliance
+- [ ] Nuclei security scans pass without critical findings
+- [ ] Rate limiting is properly configured for production load
+- [ ] All security headers are enabled in production
 
 ---
 
-**Last Updated**: 2025-11-28
-**Version**: 0.1.0
+**Last Updated**: 2025-11-29
+**Version**: 0.1.1

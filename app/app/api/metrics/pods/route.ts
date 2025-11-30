@@ -2,8 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import { generateMockPodMetrics } from '@/lib/mocks/data'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_LIST_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError } from '@/lib/api/errors'
+import { z } from 'zod'
 
 const execAsync = promisify(exec)
+
+// Create rate limiter for metrics operations
+const limiter = rateLimit(K8S_LIST_LIMIT)
+
+// Validate request parameters
+const podMetricsSchema = z.object({
+  namespace: z.string().min(1, 'Namespace is required'),
+  deployment: z.string().min(1, 'Deployment name is required'),
+  mode: z.enum(['real', 'demo']).optional().default('real'),
+})
 
 interface PodMetrics {
   podName: string
@@ -74,29 +88,36 @@ function parseMemory(memory: string): number {
   return parseInt(memory)
 }
 
+/**
+ * GET /api/metrics/pods
+ *
+ * Retrieves pod metrics from metrics-server
+ *
+ * Rate Limited: 120 requests per 60 seconds
+ */
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const namespace = searchParams.get('namespace') || 'default'
-  const deploymentName = searchParams.get('deployment')
-  const mode = searchParams.get('mode') || 'real'
-
-  if (!deploymentName) {
-    return NextResponse.json(
-      { error: 'deployment parameter is required' },
-      { status: 400 }
-    )
-  }
-
-  // Return mock data in demo/mock mode
-  if (mode === 'demo' || mode === 'demo') {
-    const mockData = generateMockPodMetrics(deploymentName, namespace)
-    return NextResponse.json(mockData)
-  }
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
 
   try {
+    const searchParams = request.nextUrl.searchParams
+
+    // Validate input
+    const validated = podMetricsSchema.parse({
+      namespace: searchParams.get('namespace') || 'default',
+      deployment: searchParams.get('deployment'),
+      mode: searchParams.get('mode') || 'real',
+    })
+
+    // Return mock data in demo/mock mode
+    if (validated.mode === 'demo') {
+      const mockData = generateMockPodMetrics(validated.deployment, validated.namespace)
+      return NextResponse.json(mockData)
+    }
     // Get deployment to find pod selector
     const { stdout: deploymentJson } = await execAsync(
-      `kubectl get deployment ${deploymentName} -n ${namespace} -o json`
+      `kubectl get deployment ${validated.deployment} -n ${validated.namespace} -o json`
     )
     const deployment = JSON.parse(deploymentJson)
 
@@ -107,12 +128,12 @@ export async function GET(request: NextRequest) {
 
     // Get pod metrics from metrics-server
     const { stdout: metricsOutput } = await execAsync(
-      `kubectl top pods -n ${namespace} -l ${labelSelector} --no-headers`
+      `kubectl top pods -n ${validated.namespace} -l ${labelSelector} --no-headers`
     )
 
     // Get pod details for resource requests/limits
     const { stdout: podsJson } = await execAsync(
-      `kubectl get pods -n ${namespace} -l ${labelSelector} -o json`
+      `kubectl get pods -n ${validated.namespace} -l ${labelSelector} -o json`
     )
     const podsData = JSON.parse(podsJson)
 
@@ -179,23 +200,13 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      deployment: deploymentName,
-      namespace,
+      deployment: validated.deployment,
+      namespace: validated.namespace,
       metrics,
       requirements,
       timestamp: new Date().toISOString(),
     })
-
   } catch (error) {
-    console.error('Failed to fetch pod metrics:', error)
-
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch pod metrics',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        suggestion: 'Make sure metrics-server is installed in your cluster: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml'
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

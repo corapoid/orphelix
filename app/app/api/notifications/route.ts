@@ -1,7 +1,31 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getDatabase } from '@/lib/db/database'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { SETTINGS_UPDATE_LIMIT, GENERAL_API_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError } from '@/lib/api/errors'
+import { z } from 'zod'
 
-export async function GET() {
+// Create rate limiters
+const updateLimiter = rateLimit(SETTINGS_UPDATE_LIMIT)
+const generalLimiter = rateLimit(GENERAL_API_LIMIT)
+
+// Validate notification settings update
+const notificationUpdateSchema = z.object({
+  enabled: z.boolean(),
+})
+
+/**
+ * GET /api/notifications
+ *
+ * Retrieves notification settings
+ *
+ * Rate Limited: 100 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await generalLimiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const db = getDatabase()
 
@@ -19,41 +43,40 @@ export async function GET() {
       status: notificationsEnabled ? 'active' : 'disabled'
     })
   } catch (error) {
-    console.error('Failed to get notification settings:', error)
-    return NextResponse.json(
-      { error: 'Failed to get notification settings' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
 
-export async function POST(request: Request) {
-  try {
-    const { enabled } = await request.json()
+/**
+ * POST /api/notifications
+ *
+ * Updates notification settings
+ *
+ * Rate Limited: 30 requests per 60 seconds
+ */
+export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await updateLimiter(request)
+  if (rateLimitResult) return rateLimitResult
 
-    if (typeof enabled !== 'boolean') {
-      return NextResponse.json(
-        { error: 'enabled must be a boolean' },
-        { status: 400 }
-      )
-    }
+  try {
+    const body = await request.json()
+
+    // Validate input
+    const validated = notificationUpdateSchema.parse(body)
 
     const db = getDatabase()
 
     db.prepare(
       'UPDATE user_settings SET notifications_enabled = ? WHERE id = 1'
-    ).run(enabled ? 1 : 0)
+    ).run(validated.enabled ? 1 : 0)
 
     return NextResponse.json({
       success: true,
-      enabled,
-      message: enabled ? 'Notifications enabled' : 'Notifications disabled'
+      enabled: validated.enabled,
+      message: validated.enabled ? 'Notifications enabled' : 'Notifications disabled'
     })
   } catch (error) {
-    console.error('Failed to update notification settings:', error)
-    return NextResponse.json(
-      { error: 'Failed to update notification settings' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

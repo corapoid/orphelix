@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import dynamic from 'next/dynamic'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -16,9 +17,20 @@ import InputLabel from '@mui/material/InputLabel'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import Editor from '@monaco-editor/react'
 import { useGitHubStore, useModeStore } from '@/lib/core/store'
 import { useRouter } from 'next/navigation'
+import { useApiKeyExists } from '@/lib/hooks/use-api-key'
+
+// Lazy load Monaco Editor to reduce initial bundle size
+// This saves ~5-6MB on initial page load
+const Editor = dynamic(() => import('@monaco-editor/react'), {
+  loading: () => (
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight={400}>
+      <CircularProgress />
+    </Box>
+  ),
+  ssr: false,
+})
 
 interface YamlEditorModalProps {
   open: boolean
@@ -51,6 +63,9 @@ export function YamlEditorModal({
   const [matchInfo, setMatchInfo] = useState<{ method: string; confidence?: number; reasoning?: string } | null>(null)
   const [matchedFiles, setMatchedFiles] = useState<Array<{ file: string; confidence: number; environment: string; reasoning: string }>>([])
   const [showFileSelector, setShowFileSelector] = useState(false)
+
+  // Check if OpenAI API key exists
+  const { exists: hasOpenAIKey } = useApiKeyExists('openai')
 
   // Check authentication status (both OAuth and GitHub App)
   const { data: authStatus } = useQuery({
@@ -93,12 +108,9 @@ export function YamlEditorModal({
       setMatchInfo(null)
 
       try {
-        // Check if AI is available (OpenAI key configured)
-        const openaiKey = localStorage.getItem('orphelix_openai_key')
-
         let response: Response
 
-        if (openaiKey) {
+        if (hasOpenAIKey) {
           // Smart filtering before AI matching for better performance
           const baseResourceName = resourceName.replace(/-(main|dev|prod|staging|test)$/, '')
           const resourceWords = baseResourceName.toLowerCase().split(/[-_]/)
@@ -143,7 +155,7 @@ export function YamlEditorModal({
               namespace,
               resourceType,
               files: filesToMatch.map((f: FileItem) => ({ path: f.path, name: f.name })),
-              apiKey: openaiKey,
+              apiKey: hasOpenAIKey,
             }),
           })
         } else {
@@ -198,7 +210,7 @@ export function YamlEditorModal({
         const data = await response.json()
 
         // Handle different response formats (AI vs pattern matching)
-        if (openaiKey && data.matches) {
+        if (hasOpenAIKey && data.matches) {
           // New AI format with multiple matches
           setMatchedFiles(data.matches)
 
@@ -223,13 +235,13 @@ export function YamlEditorModal({
           }
         } else {
           // Old format or pattern matching
-          const matchedFilePath = openaiKey
+          const matchedFilePath = hasOpenAIKey
             ? data.matchedFile  // Old AI format
             : data.matchedFile?.path  // Pattern matcher returns object
 
           if (matchedFilePath) {
             setMatchInfo({
-              method: openaiKey ? 'ai' : (data.method || 'pattern'),
+              method: hasOpenAIKey ? 'ai' : (data.method || 'pattern'),
               confidence: data.confidence,
               reasoning: data.reasoning,
             })

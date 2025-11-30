@@ -6,6 +6,9 @@
  */
 
 import yaml from 'js-yaml'
+import { createLogger } from '@/lib/logging/logger'
+
+const logger = createLogger({ module: 'yaml-comparator' })
 
 interface K8sObject {
   kind?: string
@@ -77,7 +80,7 @@ export function compareYaml(clusterYaml: string, repoYaml: string): number {
 
     return Math.round((score / totalChecks) * 100)
   } catch (error) {
-    console.error('YAML comparison error:', error)
+    logger.error({ error }, 'YAML comparison error')
     return 0
   }
 }

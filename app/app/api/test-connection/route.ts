@@ -1,10 +1,26 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { exec } from 'child_process'
 import { promisify } from 'util'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
 
 const execAsync = promisify(exec)
 
-export async function GET() {
+// Create rate limiter for connection test operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
+
+/**
+ * GET /api/test-connection
+ *
+ * Test cluster connection using kubectl
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
+export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     // Use 'kubectl version' to test API connectivity
     // Removed --short flag as it's deprecated in newer kubectl versions
@@ -31,8 +47,6 @@ export async function GET() {
       { status: 500 }
     )
   } catch (error: unknown) {
-    console.error('Cluster connection test failed:', error)
-
     // Check if it's a permission error (this shouldn't happen with kubectl version)
     const errorMessage = error instanceof Error ? error.message : ''
     const isPermissionError = errorMessage.includes('Forbidden') || errorMessage.includes('forbidden')

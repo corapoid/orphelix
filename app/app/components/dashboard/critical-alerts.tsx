@@ -24,6 +24,7 @@ import { useNavigateTo } from '@/lib/hooks/use-navigate-to'
 import { useSidebarPins, useModeStore, useCriticalIssuesSettings } from '@/lib/core/store'
 import { collectFailingPodsContext } from '@/lib/ai/context-collector'
 import { useTheme } from '@/lib/ui'
+import { useApiKey, useApiKeyExists } from '@/lib/hooks/use-api-key'
 
 interface CriticalAlertsProps {
   summary: DashboardSummary
@@ -52,7 +53,6 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
 
   const [aiExplanations, setAiExplanations] = useState<Record<number, string>>({})
   const [aiLoading, setAiLoading] = useState<Record<number, boolean>>({})
-  const [hasApiKey, setHasApiKey] = useState(false)
 
   const { data: pods, refetch: refetchPods } = usePods()
   const { data: nodes, refetch: refetchNodes } = useNodes()
@@ -63,18 +63,9 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
   const mode = useModeStore((state) => state.mode)
   const namespace = useModeStore((state) => state.selectedNamespace)
 
-  useEffect(() => {
-    const apiKey = localStorage.getItem('orphelix_openai_key')
-    setHasApiKey(!!apiKey)
-
-    const handleKeyUpdate = () => {
-      const key = localStorage.getItem('orphelix_openai_key')
-      setHasApiKey(!!key)
-    }
-
-    window.addEventListener('openai-key-updated', handleKeyUpdate)
-    return () => window.removeEventListener('openai-key-updated', handleKeyUpdate)
-  }, [])
+  // Get API key from encrypted storage
+  const { apiKey } = useApiKey('openai')
+  const { exists: hasApiKey } = useApiKeyExists('openai')
 
   // Save to localStorage when expanded changes
   useEffect(() => {
@@ -99,7 +90,6 @@ export function CriticalAlerts({ summary }: CriticalAlertsProps) {
     setAiExplanations(prev => ({ ...prev, [index]: '' }))
 
     try {
-      const apiKey = localStorage.getItem('orphelix_openai_key')
       if (!apiKey) return
 
       // Collect detailed context from failing pods

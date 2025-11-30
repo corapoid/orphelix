@@ -1,47 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchSecret } from '@/lib/k8s/api'
 import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_DETAIL_LIMIT } from '@/lib/security/rate-limit-configs'
+import { k8sResourceDetailSchema } from '@/lib/validation/schemas'
+import { handleApiError, NotFoundError } from '@/lib/api/errors'
+
+// Create rate limiter for K8s detail operations
+const limiter = rateLimit(K8S_DETAIL_LIMIT)
 
 /**
  * GET /api/secrets/[name]
  *
- * Fetches a single Secret by name
- * Requires namespace query parameter
+ * Retrieves a specific Secret by name
+ *
+ * Rate Limited: 60 requests per 60 seconds
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const { name } = await params
     const namespace = getNamespaceFromRequest(request)
     const context = getContextFromRequest(request)
 
-    if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
-    }
+    // Validate input
+    const validated = k8sResourceDetailSchema.parse({ name, namespace })
 
-    const secret = await fetchSecret(name, namespace, context)
+    const secret = await fetchSecret(validated.name, validated.namespace, context)
 
     if (!secret) {
-      return NextResponse.json(
-        { error: `Secret '${name}' not found in namespace '${namespace}'` },
-        { status: 404 }
-      )
+      throw new NotFoundError('Secret', validated.name)
     }
 
     return NextResponse.json(secret)
   } catch (error) {
-    console.error('[API] Failed to fetch Secret:', error)
-    return NextResponse.json(
-      {
-        error: 'Failed to fetch Secret',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

@@ -1,19 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getNamespaceFromRequest, getContextFromRequest } from '@/lib/core/api-helpers'
 import { fetchEvents } from '@/lib/k8s/api'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { K8S_LIST_LIMIT } from '@/lib/security/rate-limit-configs'
+import { namespaceSchema } from '@/lib/validation/schemas'
+import { handleApiError } from '@/lib/api/errors'
+import { z } from 'zod'
 
+// Create rate limiter for K8s list operations
+const limiter = rateLimit(K8S_LIST_LIMIT)
+
+/**
+ * Events List Request Schema
+ */
+const eventsListSchema = z.object({
+  namespace: namespaceSchema,
+  timeRangeHours: z.number().int().min(1).max(24).default(24),
+})
+
+/**
+ * GET /api/events
+ *
+ * Retrieves events for a namespace
+ *
+ * Rate Limited: 120 requests per 60 seconds
+ */
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const namespace = getNamespaceFromRequest(request)
     const context = getContextFromRequest(request)
-
-    // Require namespace for events (no cluster-wide access)
-    if (!namespace) {
-      return NextResponse.json(
-        { error: 'Namespace parameter is required' },
-        { status: 400 }
-      )
-    }
 
     // Get time range from query params (default: 24 hours, max: 24 hours)
     const { searchParams } = new URL(request.url)
@@ -23,18 +42,16 @@ export async function GET(request: NextRequest) {
     if (timeRangeParam) {
       const parsed = parseInt(timeRangeParam, 10)
       if (!isNaN(parsed) && parsed > 0) {
-        // Limit to max 24 hours
         timeRangeHours = Math.min(parsed, 24)
       }
     }
 
-    const events = await fetchEvents(namespace, context, timeRangeHours)
+    // Validate input
+    const validated = eventsListSchema.parse({ namespace, timeRangeHours })
+
+    const events = await fetchEvents(validated.namespace, context, validated.timeRangeHours)
     return NextResponse.json(events)
   } catch (error) {
-    console.error('[API] Failed to fetch events:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch events' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

@@ -1,6 +1,9 @@
 import Database from 'better-sqlite3'
 import path from 'path'
 import fs from 'fs'
+import { createDbLogger } from '@/lib/logging/logger'
+
+const logger = createDbLogger()
 
 let db: Database.Database | null = null
 
@@ -30,9 +33,9 @@ export function getDatabase(): Database.Database {
     if (fs.existsSync(schemaPath)) {
       const schema = fs.readFileSync(schemaPath, 'utf-8')
       db.exec(schema)
-      console.log('✅ Database initialized with schema')
+      logger.info('Database initialized with schema', { dbPath })
     } else {
-      console.warn('⚠️  Schema file not found, database may not be properly initialized')
+      logger.warn('Schema file not found, database may not be properly initialized', { schemaPath })
     }
   }
 
@@ -93,7 +96,7 @@ export function migrateFromLocalStorage(localStorageData: Record<string, string>
             state.hasCompletedWelcome ? 1 : 0
           )
       } catch (e) {
-        console.error('Failed to migrate orphelix-mode:', e)
+        logger.error('Failed to migrate orphelix-mode', e)
       }
     }
 
@@ -145,7 +148,7 @@ export function migrateFromLocalStorage(localStorageData: Record<string, string>
           }
         }
       } catch (e) {
-        console.error('Failed to migrate orphelix-github:', e)
+        logger.error('Failed to migrate orphelix-github', e)
       }
     }
 
@@ -165,7 +168,7 @@ export function migrateFromLocalStorage(localStorageData: Record<string, string>
           }
         }
       } catch (e) {
-        console.error('Failed to migrate cluster aliases:', e)
+        logger.error('Failed to migrate cluster aliases', e)
       }
     }
 
@@ -187,7 +190,7 @@ export function migrateFromLocalStorage(localStorageData: Record<string, string>
           }
         }
       } catch (e) {
-        console.error('Failed to migrate critical issues settings:', e)
+        logger.error('Failed to migrate critical issues settings', e)
       }
     }
 
@@ -216,15 +219,15 @@ export function migrateFromLocalStorage(localStorageData: Record<string, string>
           }
         }
       } catch (e) {
-        console.error('Failed to migrate sidebar pins:', e)
+        logger.error('Failed to migrate sidebar pins', e)
       }
     }
 
     database.exec('COMMIT')
-    console.log('✅ Successfully migrated localStorage data to SQLite')
+    logger.info('Successfully migrated localStorage data to SQLite')
   } catch (error) {
     database.exec('ROLLBACK')
-    console.error('❌ Failed to migrate data:', error)
+    logger.error('Failed to migrate data', error)
     throw error
   }
 }

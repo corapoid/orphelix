@@ -3,6 +3,10 @@
  */
 
 import { useState, useEffect } from 'react'
+import { createLogger } from '@/lib/logging/logger'
+import { useApiKey } from './use-api-key'
+
+const logger = createLogger({ module: 'use-ai-file-matcher' })
 
 interface MatchResult {
   matchedFile: string | null
@@ -22,8 +26,16 @@ export function useAIFileMatcher(
   const [result, setResult] = useState<MatchResult | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  // Get API key from encrypted storage
+  const { apiKey, loading: apiKeyLoading } = useApiKey('openai')
+
   useEffect(() => {
     if (!enabled || !files || files.length === 0) {
+      return
+    }
+
+    // Wait for API key to load
+    if (apiKeyLoading) {
       return
     }
 
@@ -32,9 +44,8 @@ export function useAIFileMatcher(
       setError(null)
 
       try {
-        // Check for OpenAI API key - get fresh value from localStorage
-        const apiKey = localStorage.getItem('orphelix_openai_key')?.trim()
-        if (!apiKey) {
+        // Check for OpenAI API key
+        if (!apiKey?.trim()) {
           setError('OpenAI API key not configured')
           setMatching(false)
           return
@@ -61,7 +72,7 @@ export function useAIFileMatcher(
         setResult(data)
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error'
-        console.error('[AI Matcher] Error:', message)
+        logger.error({ error: err, resourceName, namespace, resourceType }, 'AI matcher error')
         setError(message)
       } finally {
         setMatching(false)
@@ -69,7 +80,7 @@ export function useAIFileMatcher(
     }
 
     performMatching()
-  }, [resourceName, namespace, resourceType, files, enabled])
+  }, [resourceName, namespace, resourceType, files, enabled, apiKey, apiKeyLoading])
 
   return {
     matching,

@@ -1,60 +1,97 @@
 import { GitHubClient } from '@/lib/github/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { getGitHubToken } from '@/lib/github/get-token'
+import { rateLimit } from '@/lib/security/rate-limiter'
+import { GITHUB_FILE_LIMIT } from '@/lib/security/rate-limit-configs'
+import { handleApiError, AuthenticationError } from '@/lib/api/errors'
+import { z } from 'zod'
 
+// Create rate limiter
+const limiter = rateLimit(GITHUB_FILE_LIMIT)
+
+// Validate request schemas
+const branchesListSchema = z.object({
+  owner: z.string().min(1, 'Owner is required'),
+  repo: z.string().min(1, 'Repo is required'),
+})
+
+const branchCreateSchema = z.object({
+  owner: z.string().min(1, 'Owner is required'),
+  repo: z.string().min(1, 'Repo is required'),
+  baseBranch: z.string().min(1, 'Base branch is required'),
+  newBranch: z.string().min(1, 'New branch name is required'),
+})
+
+/**
+ * GET /api/github/branches
+ *
+ * Lists branches in GitHub repository
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const token = await getGitHubToken()
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized - Please connect GitHub' }, { status: 401 })
+      throw new AuthenticationError('Please connect GitHub')
     }
 
     const { searchParams } = new URL(request.url)
-    const owner = searchParams.get('owner')
-    const repo = searchParams.get('repo')
 
-    if (!owner || !repo) {
-      return NextResponse.json({ error: 'owner and repo are required' }, { status: 400 })
-    }
+    // Validate input
+    const validated = branchesListSchema.parse({
+      owner: searchParams.get('owner'),
+      repo: searchParams.get('repo'),
+    })
 
     const github = new GitHubClient(token)
-    const branches = await github.listBranches(owner, repo)
+    const branches = await github.listBranches(validated.owner, validated.repo)
 
     return NextResponse.json(branches)
   } catch (error) {
-    console.error('Failed to fetch branches:', error)
-    return NextResponse.json({ error: 'Failed to fetch branches' }, { status: 500 })
+    return handleApiError(error)
   }
 }
 
+/**
+ * POST /api/github/branches
+ *
+ * Creates a new branch in GitHub repository
+ *
+ * Rate Limited: 60 requests per 60 seconds
+ */
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await limiter(request)
+  if (rateLimitResult) return rateLimitResult
+
   try {
     const token = await getGitHubToken()
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized - Please connect GitHub' }, { status: 401 })
+      throw new AuthenticationError('Please connect GitHub')
     }
 
     const body = await request.json()
-    const { owner, repo, baseBranch, newBranch } = body
 
-    if (!owner || !repo || !baseBranch || !newBranch) {
-      return NextResponse.json(
-        { error: 'owner, repo, baseBranch, and newBranch are required' },
-        { status: 400 }
-      )
-    }
+    // Validate input
+    const validated = branchCreateSchema.parse(body)
 
     const github = new GitHubClient(token)
-    await github.createBranch(owner, repo, baseBranch, newBranch)
-
-    return NextResponse.json({ success: true, branch: newBranch })
-  } catch (error: unknown) {
-    console.error('Failed to create branch:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create branch' },
-      { status: 500 }
+    await github.createBranch(
+      validated.owner,
+      validated.repo,
+      validated.baseBranch,
+      validated.newBranch
     )
+
+    return NextResponse.json({ success: true, branch: validated.newBranch })
+  } catch (error) {
+    return handleApiError(error)
   }
 }
