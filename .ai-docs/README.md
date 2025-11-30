@@ -36,6 +36,14 @@ Guidelines for AI assistants contributing to the project:
 - Commit message format
 - PR workflow
 
+### [SECURITY_REPORT.md](./SECURITY_REPORT.md)
+Detailed technical security analysis and implementation:
+- Complete security architecture
+- Endpoint-by-endpoint security coverage (77/77)
+- Implementation patterns and code examples
+- Testing procedures and results
+- Threat model and OWASP compliance
+
 ## 🎯 Purpose
 
 These documents help AI assistants:

@@ -111,8 +111,7 @@ npm run orphelix help       # Show all commands
 
 ### 📋 Additional Resources
 
-- **[Security & Privacy](SECURITY.md)** - Authentication, data storage, and cluster access
-- **[Security Report](SECURITY_REPORT.md)** - Comprehensive security analysis and implementation details
+- **[Security & Privacy](SECURITY.md)** - Authentication, security features, and best practices
 - **[Changelog](CHANGELOG.md)** - Version history and updates
 - **[License](LICENSE)** - Apache License 2.0
 
