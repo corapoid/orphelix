@@ -10,6 +10,37 @@ const STANDALONE_SERVER = path.join(APP_DIR, '.next/standalone/orphelix/app/serv
 const LOGS_DIR = path.join(APP_DIR, 'logs')
 const PACKAGE_JSON = path.join(APP_DIR, 'package.json')
 
+// Helper function to copy static files and public directory to standalone
+function copyStandaloneAssets() {
+  try {
+    // Copy .next/static to standalone
+    const staticSrc = path.join(APP_DIR, '.next/static')
+    const staticDest = path.join(APP_DIR, '.next/standalone/orphelix/app/.next/static')
+    if (fs.existsSync(staticSrc)) {
+      fs.cpSync(staticSrc, staticDest, { recursive: true })
+    }
+
+    // Copy public to standalone
+    const publicSrc = path.join(APP_DIR, 'public')
+    const publicDest = path.join(APP_DIR, '.next/standalone/orphelix/app/public')
+    if (fs.existsSync(publicSrc)) {
+      fs.cpSync(publicSrc, publicDest, { recursive: true })
+    }
+
+    // Copy .env.local to standalone
+    const envSrc = path.join(APP_DIR, '.env.local')
+    const envDest = path.join(APP_DIR, '.next/standalone/orphelix/app/.env.local')
+    if (fs.existsSync(envSrc)) {
+      fs.cpSync(envSrc, envDest)
+    }
+
+    return true
+  } catch (error) {
+    console.warn('⚠️  Warning: Could not copy standalone assets:', error.message)
+    return false
+  }
+}
+
 // Import CLI helpers
 const backupModule = require('./lib/cli/backup')
 const configExportModule = require('./lib/cli/config-export')
@@ -143,8 +174,13 @@ const commands = {
       // 3. Check and build standalone if needed
       if (!fs.existsSync(STANDALONE_SERVER)) {
         console.log('🔨 Building standalone application (this may take a few minutes)...')
-        execSync('npm run build:standalone', { cwd: APP_DIR, stdio: 'inherit' })
+        execSync('npm run build', { cwd: APP_DIR, stdio: 'inherit' })
+        console.log('📦 Copying static assets to standalone build...')
+        copyStandaloneAssets()
         console.log('✅ Build completed')
+      } else {
+        // Copy assets even if build exists (for updates to .env.local or static files)
+        copyStandaloneAssets()
       }
 
       // 4. Create logs directory if it doesn't exist
@@ -239,6 +275,11 @@ const commands = {
     console.log(`🔄 Restarting Orphelix${name !== 'orphelix' ? ` (${name})` : ''}...`)
     try {
       const actualPort = getPort(port)
+
+      // Copy latest static assets and .env.local before restarting
+      console.log('📦 Syncing static assets to standalone build...')
+      copyStandaloneAssets()
+
       const env = { ...process.env, ORPHELIX_PORT: actualPort }
       execSync(`npx pm2 restart ${name}`, {
         cwd: APP_DIR,
