@@ -11,36 +11,123 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Lint, Type-check, Test & Build
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [24.x]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '24.x'
           cache: 'npm'
           cache-dependency-path: 'app/package-lock.json'
 
       - name: Install dependencies
         run: cd app && npm ci
 
-      - name: Run linter
+      - name: Run ESLint
         run: cd app && npm run lint
 
-      - name: Run type check
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: Install dependencies
+        run: cd app && npm ci
+
+      - name: Run TypeScript type check
         run: cd app && npm run type-check
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [type-check]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: Install dependencies
+        run: cd app && npm ci
 
       - name: Run unit tests
         run: cd app && npm test
+
+      - name: Upload test coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage
+          path: app/coverage
+          retention-days: 7
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: Install dependencies
+        run: cd app && npm ci
+
+      - name: Run npm audit
+        run: cd app && npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for console.log statements
+        run: |
+          if grep -r "console\.log" app/app app/lib --include="*.ts" --include="*.tsx" --exclude-dir=node_modules; then
+            echo "❌ Found console.log statements - please use logger instead"
+            exit 1
+          fi
+        continue-on-error: true
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: Install dependencies
+        run: cd app && npm ci
 
       - name: Build application
         run: cd app && npm run build
@@ -55,3 +142,8 @@ jobs:
             app/package.json
             app/package-lock.json
           retention-days: 7
+
+      - name: Check build size
+        run: |
+          echo "Build completed successfully"
+          du -sh app/.next
