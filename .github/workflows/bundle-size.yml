@@ -12,6 +12,10 @@ on:
       - 'app/package-lock.json'
       - 'app/next.config.ts'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   analyze:
     name: Analyze Bundle Size
