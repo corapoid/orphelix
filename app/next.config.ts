@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
   },
   // Exclude test files from node_modules
   serverExternalPackages: ['pino', 'pino-pretty'],
+  // Set turbopack root to current directory (app/)
+  turbopack: {
+    root: process.cwd(),
+  },
 }
 
 export default nextConfig
