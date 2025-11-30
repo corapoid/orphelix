@@ -19,7 +19,7 @@ FAILED=0
 # 1. Lint check
 echo ""
 echo "📝 Running ESLint..."
-if npm run lint --silent; then
+if (cd app && npm run lint --silent); then
     echo -e "${GREEN}✅ Lint passed${NC}"
 else
     echo -e "${RED}❌ Lint failed${NC}"
@@ -30,7 +30,7 @@ fi
 # 2. Type check
 echo ""
 echo "🔷 Running TypeScript type check..."
-if npm run type-check --silent; then
+if (cd app && npm run type-check --silent); then
     echo -e "${GREEN}✅ Type check passed${NC}"
 else
     echo -e "${RED}❌ Type check failed${NC}"
@@ -41,7 +41,7 @@ fi
 # 3. Unit tests
 echo ""
 echo "🧪 Running unit tests..."
-if npm run test --silent; then
+if (cd app && npm run test --silent); then
     echo -e "${GREEN}✅ Tests passed${NC}"
 else
     echo -e "${RED}❌ Tests failed${NC}"

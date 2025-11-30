@@ -25,6 +25,22 @@ import {
 const logger = createLogger({ module: 'api-retry' })
 
 /**
+ * Error-like object with status code and message
+ */
+interface ErrorWithStatus {
+  status?: number
+  statusCode?: number
+  message?: string
+}
+
+/**
+ * Type guard to check if error has status/message properties
+ */
+function isErrorWithStatus(error: unknown): error is ErrorWithStatus {
+  return typeof error === 'object' && error !== null
+}
+
+/**
  * Retry configuration
  */
 export interface RetryConfig {
@@ -81,14 +97,14 @@ const DEFAULT_CONFIG: Required<Omit<RetryConfig, 'onRetry'>> = {
   retryableStatusCodes: [...RETRYABLE_HTTP_STATUS_CODES],
   isRetryable: (error: unknown) => {
     // Check if error has status code
-    if (typeof error === 'object' && error !== null) {
-      const statusCode = (error as any).status || (error as any).statusCode
+    if (isErrorWithStatus(error)) {
+      const statusCode = error.status || error.statusCode
       if (typeof statusCode === 'number') {
         return DEFAULT_CONFIG.retryableStatusCodes.includes(statusCode)
       }
 
       // Check for network errors
-      const message = (error as any).message || ''
+      const message = error.message || ''
       if (typeof message === 'string') {
         return (
           message.includes('ECONNRESET') ||
@@ -237,7 +253,7 @@ export async function retry<T>(
  * const data = await fetchWithRetry('/api/data')
  * ```
  */
-export function withRetry<TArgs extends any[], TResult>(
+export function withRetry<TArgs extends unknown[], TResult>(
   fn: (...args: TArgs) => Promise<TResult>,
   config: RetryConfig = {}
 ): (...args: TArgs) => Promise<TResult> {
@@ -260,16 +276,16 @@ export async function retryK8sOperation<T>(
     maxDelayMs: K8S_RETRY_MAX_DELAY_MS,
     isRetryable: (error: unknown) => {
       // Retry on network errors and specific K8s errors
-      if (typeof error === 'object' && error !== null) {
-        const statusCode = (error as any).statusCode || (error as any).status
+      if (isErrorWithStatus(error)) {
+        const statusCode = error.statusCode || error.status
 
         // Retry on these K8s API errors
-        if (RETRYABLE_HTTP_STATUS_CODES.includes(statusCode)) {
+        if (typeof statusCode === 'number' && (RETRYABLE_HTTP_STATUS_CODES as readonly number[]).includes(statusCode)) {
           return true
         }
 
         // Retry on network errors
-        const message = (error as any).message || ''
+        const message = error.message || ''
         if (
           message.includes('ECONNRESET') ||
           message.includes('ETIMEDOUT') ||
@@ -304,16 +320,16 @@ export async function retryGitHubOperation<T>(
     initialDelayMs: GITHUB_RETRY_INITIAL_DELAY_MS,
     maxDelayMs: GITHUB_RETRY_MAX_DELAY_MS,
     isRetryable: (error: unknown) => {
-      if (typeof error === 'object' && error !== null) {
-        const statusCode = (error as any).status
+      if (isErrorWithStatus(error)) {
+        const statusCode = error.status
 
         // Retry on rate limit (403) and service errors
-        if ([403, ...RETRYABLE_HTTP_STATUS_CODES].includes(statusCode)) {
+        if (typeof statusCode === 'number' && ([403, ...(RETRYABLE_HTTP_STATUS_CODES as readonly number[])] as number[]).includes(statusCode)) {
           return true
         }
 
         // GitHub sometimes returns 403 for rate limiting
-        const message = (error as any).message || ''
+        const message = error.message || ''
         if (message.includes('rate limit') || message.includes('API rate limit')) {
           return true
         }

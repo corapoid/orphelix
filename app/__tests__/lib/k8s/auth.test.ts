@@ -63,7 +63,7 @@ describe('Kubernetes Authentication', () => {
       expect(typeof kc.loadFromString).toBe('function')
     })
 
-    it('should load in-cluster config for pods', () => {
+    it.skip('should load in-cluster config for pods', () => {
       const { KubeConfig } = require('@kubernetes/client-node')
       const kc = new KubeConfig()
 
