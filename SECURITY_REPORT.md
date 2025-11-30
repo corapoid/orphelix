@@ -2,20 +2,20 @@
 
 ## Executive Summary
 
-Orphelix to w pełni zabezpieczona aplikacja Kubernetes management z kompletnymi zabezpieczeniami na poziomie enterprise. Aplikacja została poddana 3-fazowemu procesowi zabezpieczania, osiągając **100% pokrycie endpointów** z wielowarstwową ochroną przed współczesnymi zagrożeniami bezpieczeństwa.
+Orphelix is a fully secured Kubernetes management application with comprehensive enterprise-level security. The application has undergone a 3-phase security hardening process, achieving **100% endpoint coverage** with multi-layered protection against modern security threats.
 
-**Status bezpieczeństwa:** ✅ **Production Ready**
-**Pokrycie zabezpieczeń:** 100% (77/77 endpointów)
-**Test coverage (security):** 97% (229/236 testów)
-**Znane luki:** 0
+**Security Status:** ✅ **Production Ready**
+**Security Coverage:** 100% (77/77 endpoints)
+**Test Coverage (security):** 97% (229/236 tests)
+**Known Vulnerabilities:** 0
 
 ---
 
-## 1. Architektura Bezpieczeństwa
+## 1. Security Architecture
 
 ### 1.1 Defense in Depth Strategy
 
-Orphelix implementuje wielowarstwową strategię obronną:
+Orphelix implements a multi-layered defense strategy:
 
 ```
 ┌─────────────────────────────────────────┐
@@ -54,12 +54,12 @@ Orphelix implementuje wielowarstwową strategię obronną:
 
 ---
 
-## 2. Zabezpieczenia API Endpoints (77/77 - 100%)
+## 2. API Endpoint Security (77/77 - 100%)
 
 ### 2.1 Rate Limiting
 
-**Implementacja:** LRU Cache-based rate limiter
-**Konfiguracje:** 9 różnych limitów dostosowanych do typu operacji
+**Implementation:** LRU Cache-based rate limiter
+**Configurations:** 9 different limits tailored to operation types
 
 | Endpoint Type | Limit | Window | Config |
 |---------------|-------|--------|--------|
@@ -74,14 +74,14 @@ Orphelix implementuje wielowarstwową strategię obronną:
 | Settings Updates | 30 req | 60s | SETTINGS_UPDATE_LIMIT |
 | General API | 100 req | 60s | GENERAL_API_LIMIT |
 
-**Cechy:**
+**Features:**
 - ✅ IP-based tracking
 - ✅ Sliding window algorithm
 - ✅ Automatic cleanup (LRU eviction)
 - ✅ Environment-configurable
 - ✅ Graceful degradation
 
-**Przykład konfiguracji:**
+**Configuration Example:**
 ```typescript
 // lib/security/rate-limit-configs.ts
 export const K8S_LIST_LIMIT: RateLimitConfig = {
@@ -91,7 +91,7 @@ export const K8S_LIST_LIMIT: RateLimitConfig = {
 }
 ```
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ Brute force attacks
 - ⚠️ DDoS attacks
 - ⚠️ API abuse
@@ -99,10 +99,10 @@ export const K8S_LIST_LIMIT: RateLimitConfig = {
 
 ### 2.2 Input Validation
 
-**Implementacja:** Zod schemas z custom validators
-**Pokrycie:** 100% endpointów
+**Implementation:** Zod schemas with custom validators
+**Coverage:** 100% of endpoints
 
-**Rodzaje walidacji:**
+**Validation Types:**
 
 #### DNS-1123 Compliance (Kubernetes)
 ```typescript
@@ -116,17 +116,17 @@ export const k8sNameSchema = z.string()
   .transform(val => val.trim().toLowerCase())
 ```
 
-**Walidowane parametry:**
+**Validated Parameters:**
 - ✅ Kubernetes resource names (DNS-1123)
 - ✅ Namespaces
 - ✅ GitHub owner/repo/branch names
 - ✅ File paths (with path traversal prevention)
 - ✅ YAML content
-- ✅ API keys format
+- ✅ API key formats
 - ✅ Email addresses
 - ✅ URLs
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ Injection attacks
 - ⚠️ Path traversal
 - ⚠️ Invalid resource names
@@ -149,8 +149,8 @@ export const githubFilePathSchema = z.string()
 
 ### 2.3 Error Handling
 
-**Implementacja:** Centralized error handler
-**Lokalizacja:** `lib/api/errors.ts`
+**Implementation:** Centralized error handler
+**Location:** `lib/api/errors.ts`
 
 **Custom Error Classes:**
 ```typescript
@@ -161,14 +161,14 @@ export const githubFilePathSchema = z.string()
 - InternalServerError (500)
 ```
 
-**Cechy:**
+**Features:**
 - ✅ Standardized responses
 - ✅ Proper HTTP status codes
 - ✅ No sensitive data leakage
 - ✅ Structured error logging
 - ✅ User-friendly messages
 
-**Przykład:**
+**Example:**
 ```typescript
 export function handleApiError(error: unknown): NextResponse {
   if (error instanceof ZodError) {
@@ -193,7 +193,7 @@ export function handleApiError(error: unknown): NextResponse {
 }
 ```
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ Information disclosure
 - ⚠️ Stack trace leakage
 - ⚠️ Error-based enumeration
@@ -203,7 +203,7 @@ export function handleApiError(error: unknown): NextResponse {
 ## 3. SQL Injection Prevention
 
 **Status:** ✅ **100% Protected**
-**Metoda:** Prepared statements with parameterized queries
+**Method:** Prepared statements with parameterized queries
 
 ### 3.1 Database Architecture
 
@@ -212,34 +212,34 @@ export function handleApiError(error: unknown): NextResponse {
 
 ### 3.2 Implementation Pattern
 
-**✅ BEZPIECZNE:**
+**✅ SECURE:**
 ```typescript
-// Wszystkie zapytania używają placeholders (?)
+// All queries use placeholders (?)
 db.prepare('SELECT * FROM users WHERE id = ?').get(userId)
 db.prepare('UPDATE settings SET value = ? WHERE key = ?').run(value, key)
 db.prepare('INSERT INTO data (name, value) VALUES (?, ?)').run(name, value)
 ```
 
-**❌ NIEBEZPIECZNE (NIE UŻYWANE):**
+**❌ UNSAFE (NOT USED):**
 ```typescript
-// String concatenation - NIGDY!
+// String concatenation - NEVER!
 db.exec(`SELECT * FROM users WHERE id = ${userId}`)
 db.exec(`UPDATE settings SET value = '${value}'`)
 ```
 
 ### 3.3 Verification
 
-**Przeskanowane pliki:**
-- ✅ `lib/db/services.ts` - wszystkie zapytania bezpieczne
-- ✅ `lib/db/database.ts` - transakcje i migracje bezpieczne
-- ✅ Zero string concatenation w SQL
+**Scanned Files:**
+- ✅ `lib/db/services.ts` - all queries secure
+- ✅ `lib/db/database.ts` - transactions and migrations secure
+- ✅ Zero string concatenation in SQL
 
-**Statystyki:**
+**Statistics:**
 - Prepared statements: 100%
 - Parameterized queries: 100%
 - String concatenation: 0%
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ SQL Injection
 - ⚠️ Second-order SQL injection
 - ⚠️ Blind SQL injection
@@ -249,7 +249,7 @@ db.exec(`UPDATE settings SET value = '${value}'`)
 ## 4. API Key Encryption
 
 **Status:** ✅ **Production Ready**
-**Implementacja:** `lib/security/encryption.ts`
+**Implementation:** `lib/security/encryption.ts`
 
 ### 4.1 Encryption Specification
 
@@ -268,7 +268,7 @@ db.exec(`UPDATE settings SET value = '${value}'`)
 base64 base64  base64    base64
 ```
 
-**Przykład:**
+**Example:**
 ```
 rHO8VnX5...==.Pk9mN1Y...==.LmQ3Z2F...==.dGVzdC1h...==
 ```
@@ -276,16 +276,16 @@ rHO8VnX5...==.Pk9mN1Y...==.LmQ3Z2F...==.dGVzdC1h...==
 ### 4.3 Security Features
 
 ✅ **Authenticated Encryption (GCM mode)**
-- Zapewnia confidentiality + integrity + authenticity
-- Wykrywa modyfikacje (tampering)
+- Provides confidentiality + integrity + authenticity
+- Detects tampering
 - Authentication tag validation
 
 ✅ **Unique Salt per Encryption**
-- Zapobiega rainbow table attacks
+- Prevents rainbow table attacks
 - 256-bit random salt
 
 ✅ **Unique IV per Encryption**
-- Zapobiega pattern analysis
+- Prevents pattern analysis
 - 128-bit random IV
 
 ✅ **Key Derivation (scrypt)**
@@ -315,7 +315,7 @@ ENCRYPTION_KEY=your-base64-encryption-key-here
 # openssl rand -base64 32
 ```
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ Database leaks (API keys encrypted at rest)
 - ⚠️ Unauthorized access to sensitive data
 - ⚠️ Tampering attacks (auth tag validation)
@@ -354,7 +354,7 @@ cookieStore.set('github_app_token', token, {
 **Rate Limiting:**
 - OAuth callback: 5 requests / 15 minutes (anti-brute force)
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ XSS attacks (HTTP-only cookies)
 - ⚠️ CSRF attacks (SameSite)
 - ⚠️ Token theft
@@ -365,8 +365,8 @@ cookieStore.set('github_app_token', token, {
 
 ## 6. Security Headers
 
-**Implementacja:** Next.js middleware
-**Lokalizacja:** `middleware.ts`
+**Implementation:** Next.js middleware
+**Location:** `middleware.ts`
 
 ### 6.1 Configured Headers
 
@@ -387,12 +387,12 @@ cookieStore.set('github_app_token', token, {
 'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'
 ```
 
-**W produkcji dodatkowo:**
+**In production additionally:**
 ```typescript
 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
 ```
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ XSS attacks
 - ⚠️ Clickjacking
 - ⚠️ MIME sniffing attacks
@@ -402,7 +402,7 @@ cookieStore.set('github_app_token', token, {
 
 ## 7. Type Safety
 
-**Język:** TypeScript (strict mode)
+**Language:** TypeScript (strict mode)
 **Coverage:** 100%
 
 ### 7.1 Strict Configuration
@@ -428,7 +428,7 @@ cookieStore.set('github_app_token', token, {
 - ✅ IntelliSense support
 - ✅ Refactoring safety
 
-**Ochrona przed:**
+**Protection Against:**
 - ⚠️ Type confusion vulnerabilities
 - ⚠️ Null pointer exceptions
 - ⚠️ Undefined behavior
@@ -437,8 +437,8 @@ cookieStore.set('github_app_token', token, {
 
 ## 8. Logging & Monitoring
 
-**Implementacja:** Pino (structured logging)
-**Lokalizacja:** `lib/logging/logger.ts`
+**Implementation:** Pino (structured logging)
+**Location:** `lib/logging/logger.ts`
 
 ### 8.1 Features
 
@@ -452,13 +452,13 @@ cookieStore.set('github_app_token', token, {
 ### 8.2 Sensitive Data Protection
 
 ```typescript
-// ❌ NIGDY nie loguj:
+// ❌ NEVER log:
 - API keys
 - Passwords
 - Tokens
 - Personal data (PII)
 
-// ✅ Loguj:
+// ✅ Do log:
 - Request metadata
 - Error context
 - Performance metrics
@@ -547,11 +547,11 @@ npm outdated                # Check outdated packages
 ### 11.2 Known Limitations
 
 1. **Local Kubernetes Access**
-   - Wymaga dostępu do kubeconfig
-   - Trust model: aplikacja działa w trusted environment
+   - Requires access to kubeconfig
+   - Trust model: application runs in trusted environment
 
 2. **Client-Side Security**
-   - Next.js app - standardowe zabezpieczenia SPA
+   - Next.js app - standard SPA security
    - Relies on browser security features
 
 3. **No Built-in WAF**
@@ -707,17 +707,17 @@ npm run build
 
 ## 16. Conclusion
 
-Orphelix implementuje **enterprise-grade security** z wielowarstwową ochroną przed współczesnymi zagrożeniami. Aplikacja jest gotowa do wdrożenia produkcyjnego z następującymi kluczowymi zabezpieczeniami:
+Orphelix implements **enterprise-grade security** with multi-layered protection against modern threats. The application is production-ready with the following key security features:
 
-### ✅ Kluczowe Osiągnięcia
+### ✅ Key Achievements
 
-1. **100% API Endpoint Coverage** - wszystkie 77 endpointów zabezpieczonych
-2. **Defense in Depth** - 5 warstw zabezpieczeń
+1. **100% API Endpoint Coverage** - all 77 endpoints secured
+2. **Defense in Depth** - 5 layers of security
 3. **SQL Injection Immune** - 100% prepared statements
 4. **Data Protection** - AES-256-GCM encryption
-5. **Rate Limiting** - 9 konfiguracji anti-abuse
+5. **Rate Limiting** - 9 anti-abuse configurations
 6. **97% Test Pass Rate** - comprehensive security testing
-7. **Zero Known Vulnerabilities** - aktualnie
+7. **Zero Known Vulnerabilities** - currently
 
 ### 🎯 Security Posture
 
@@ -729,7 +729,7 @@ Orphelix implementuje **enterprise-grade security** z wielowarstwową ochroną p
 
 **Overall Risk Level:** 🟢 **LOW**
 
-Orphelix jest bezpieczną aplikacją gotową do użycia w środowisku produkcyjnym przy zachowaniu podstawowych praktyk DevSecOps.
+Orphelix is a secure application ready for production use when following basic DevSecOps practices.
 
 ---
 
