@@ -5,10 +5,11 @@ import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import Select from '@mui/material/Select'
+import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import ButtonBase from '@mui/material/ButtonBase'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import CheckIcon from '@mui/icons-material/Check'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import Link from '@mui/material/Link'
@@ -52,6 +53,8 @@ export function WelcomeModal() {
   const [loading, setLoading] = useState(false)
   const [verifyingConnection, setVerifyingConnection] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [clusterMenuAnchor, setClusterMenuAnchor] = useState<null | HTMLElement>(null)
+  const [namespaceMenuAnchor, setNamespaceMenuAnchor] = useState<null | HTMLElement>(null)
 
   // Update open state when hasCompletedWelcome changes
   useEffect(() => {
@@ -558,90 +561,194 @@ export function WelcomeModal() {
           {/* Step: Cluster Selection */}
           {step === 'cluster-selection' && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              <FormControl fullWidth>
-                <InputLabel id="cluster-select-label">Select Kubernetes Cluster</InputLabel>
-                <Select
-                  labelId="cluster-select-label"
-                  id="cluster-select"
-                  value={selectedContextName}
-                  label="Select Kubernetes Cluster"
-                  onChange={(e) => setSelectedContextName(e.target.value)}
-                  displayEmpty={false}
-                  MenuProps={{
-                    sx: {
-                      zIndex: 10000,
-                    }
+              {/* Cluster Selector */}
+              <Box>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontWeight: 600 }}>
+                  Select Kubernetes Cluster
+                </Typography>
+                <ButtonBase
+                  onClick={(e) => setClusterMenuAnchor(e.currentTarget)}
+                  sx={{
+                    width: '100%',
+                    px: 2,
+                    py: 1.5,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    bgcolor: 'background.paper',
+                    '&:hover': {
+                      borderColor: 'primary.main',
+                      bgcolor: 'action.hover',
+                    },
                   }}
                 >
-                  {selectedContextName === '' && (
-                    <MenuItem value="" disabled>
-                      <Typography variant="body2" color="text.secondary">
-                        Choose a cluster...
+                  {selectedContextName ? (
+                    <Box sx={{ textAlign: 'left' }}>
+                      <Typography variant="body2" fontWeight={600}>
+                        {contexts.find((c) => c.name === selectedContextName)?.name}
                       </Typography>
-                    </MenuItem>
+                      <Typography variant="caption" color="text.secondary">
+                        {contexts.find((c) => c.name === selectedContextName)?.cluster}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      Choose a cluster...
+                    </Typography>
                   )}
-                  {contexts.map((context) => (
-                    <MenuItem key={context.name} value={context.name}>
-                      <Box>
-                        <Typography variant="body2" fontWeight={500}>
-                          {context.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {context.cluster}
-                        </Typography>
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              {/* Namespace selector (optional) */}
-              {selectedContextName && (
-                <FormControl fullWidth>
-                  <InputLabel id="namespace-select-label">Namespace (optional)</InputLabel>
-                  <Select
-                    labelId="namespace-select-label"
-                    id="namespace-select"
-                    value={selectedNamespace}
-                    label="Namespace (optional)"
-                    onChange={(e) => setSelectedNamespace(e.target.value)}
-                    disabled={loadingNamespaces}
-                    endAdornment={
-                      loadingNamespaces ? (
-                        <Box sx={{ position: 'absolute', right: 40, display: 'flex', alignItems: 'center' }}>
-                          <CircularProgress size={20} />
-                        </Box>
-                      ) : null
-                    }
-                    MenuProps={{
-                      sx: {
-                        zIndex: 10000,
-                      }
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>
-                        {loadingNamespaces
-                          ? 'Loading namespaces...'
-                          : namespaces.length === 0
-                          ? 'Unable to load namespaces (using default)'
-                          : 'Use cluster default'}
-                      </em>
-                    </MenuItem>
-                    {namespaces.map((ns) => (
-                      <MenuItem key={ns.name} value={ns.name}>
-                        <Box>
-                          <Typography variant="body2" fontWeight={500}>
-                            {ns.name}
+                  <KeyboardArrowDownIcon />
+                </ButtonBase>
+                <Menu
+                  anchorEl={clusterMenuAnchor}
+                  open={Boolean(clusterMenuAnchor)}
+                  onClose={() => setClusterMenuAnchor(null)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  sx={{
+                    mt: 1,
+                    '& .MuiPaper-root': {
+                      minWidth: 400,
+                      maxHeight: 400,
+                      borderRadius: 2,
+                    },
+                  }}
+                >
+                  {contexts.map((context) => {
+                    const selected = selectedContextName === context.name
+                    return (
+                      <MenuItem
+                        key={context.name}
+                        onClick={() => {
+                          setSelectedContextName(context.name)
+                          setClusterMenuAnchor(null)
+                        }}
+                        selected={selected}
+                        sx={{ py: 1.5, gap: 1.5 }}
+                      >
+                        {selected ? <CheckIcon sx={{ fontSize: 20 }} /> : <Box sx={{ width: 20 }} />}
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="body2" fontWeight={600}>
+                            {context.name}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {ns.status}
+                            {context.cluster}
                           </Typography>
                         </Box>
                       </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    )
+                  })}
+                </Menu>
+              </Box>
+
+              {/* Namespace selector (optional) */}
+              {selectedContextName && (
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontWeight: 600 }}>
+                    Namespace (optional)
+                  </Typography>
+                  <ButtonBase
+                    onClick={(e) => !loadingNamespaces && setNamespaceMenuAnchor(e.currentTarget)}
+                    disabled={loadingNamespaces}
+                    sx={{
+                      width: '100%',
+                      px: 2,
+                      py: 1.5,
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      bgcolor: 'background.paper',
+                      '&:hover': {
+                        borderColor: 'primary.main',
+                        bgcolor: 'action.hover',
+                      },
+                      '&.Mui-disabled': {
+                        opacity: 0.6,
+                      },
+                    }}
+                  >
+                    {loadingNamespaces ? (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CircularProgress size={16} />
+                        <Typography variant="body2" color="text.secondary">
+                          Loading namespaces...
+                        </Typography>
+                      </Box>
+                    ) : selectedNamespace ? (
+                      <Box sx={{ textAlign: 'left' }}>
+                        <Typography variant="body2" fontWeight={600}>
+                          {selectedNamespace}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {namespaces.find((ns) => ns.name === selectedNamespace)?.status}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        {namespaces.length === 0 ? 'Use cluster default' : 'Choose namespace...'}
+                      </Typography>
+                    )}
+                    <KeyboardArrowDownIcon />
+                  </ButtonBase>
+                  <Menu
+                    anchorEl={namespaceMenuAnchor}
+                    open={Boolean(namespaceMenuAnchor)}
+                    onClose={() => setNamespaceMenuAnchor(null)}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                    sx={{
+                      mt: 1,
+                      '& .MuiPaper-root': {
+                        minWidth: 400,
+                        maxHeight: 400,
+                        borderRadius: 2,
+                      },
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        setSelectedNamespace('')
+                        setNamespaceMenuAnchor(null)
+                      }}
+                      selected={selectedNamespace === ''}
+                      sx={{ py: 1.5, gap: 1.5 }}
+                    >
+                      {selectedNamespace === '' ? <CheckIcon sx={{ fontSize: 20 }} /> : <Box sx={{ width: 20 }} />}
+                      <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                        Use cluster default
+                      </Typography>
+                    </MenuItem>
+                    {namespaces.map((ns) => {
+                      const selected = selectedNamespace === ns.name
+                      return (
+                        <MenuItem
+                          key={ns.name}
+                          onClick={() => {
+                            setSelectedNamespace(ns.name)
+                            setNamespaceMenuAnchor(null)
+                          }}
+                          selected={selected}
+                          sx={{ py: 1.5, gap: 1.5 }}
+                        >
+                          {selected ? <CheckIcon sx={{ fontSize: 20 }} /> : <Box sx={{ width: 20 }} />}
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="body2" fontWeight={600}>
+                              {ns.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {ns.status}
+                            </Typography>
+                          </Box>
+                        </MenuItem>
+                      )
+                    })}
+                  </Menu>
+                </Box>
               )}
 
               <Box sx={{ display: 'flex', gap: 2 }}>
