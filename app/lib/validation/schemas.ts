@@ -39,14 +39,18 @@ export const namespaceSchema = z.string()
 
 /**
  * Kubernetes Context Name Validation
- * More permissive than resource names
+ * More permissive than resource names - allows colons for AWS ARN contexts
  */
 export const contextNameSchema = z.string()
   .min(1, 'Context name is required')
   .max(255, 'Context name must not exceed 255 characters')
   .regex(
-    /^[a-zA-Z0-9_.-]+$/,
-    'Context name must consist of alphanumeric characters, underscores, dots, or hyphens'
+    /^[a-zA-Z0-9_.:/-]+$/,
+    'Context name must consist of alphanumeric characters, underscores, dots, colons, slashes, or hyphens'
+  )
+  .refine(
+    (val) => !val.includes('..'),
+    'Context name must not contain parent directory references (..)'
   )
 
 /**
@@ -258,7 +262,7 @@ export const settingsUpdateSchema = z.object({
     user: z.string(),
     namespace: namespaceSchema.optional(),
   }).nullable().optional(),
-  selectedNamespace: namespaceSchema.optional(),
+  selectedNamespace: z.string().transform((val) => val === '' ? undefined : val).pipe(namespaceSchema).optional(),
   clusterConnected: z.boolean().optional(),
   connectionError: z.string().nullable().optional(),
   realtimeEnabled: z.boolean().optional(),
