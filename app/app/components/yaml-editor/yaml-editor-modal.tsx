@@ -348,20 +348,14 @@ export function YamlEditorModal({
       // Check if running in browser
       if (typeof window === 'undefined') return
 
-      const redirectUri = `${window.location.origin}/api/github-app/callback`
-      const state = Math.random().toString(36).substring(7)
+      // Use app slug from environment or default to 'orphelix'
+      const appSlug = process.env.NEXT_PUBLIC_GITHUB_APP_SLUG || 'orphelix'
+      const redirectUri = encodeURIComponent(`${window.location.origin}/api/github-app/callback`)
+      const state = `redirect_uri=${redirectUri}`
 
-      // Use environment variable - this is replaced at build time
-      // TEMPORARY: Hardcoded fallback for testing
-      const clientId = process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID || 'Iv23lipSNqtEiL3HtNnk'
-
-      if (clientId) {
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`
-      } else {
-        // Fallback to settings if env var not configured
-        onClose()
-        router.push(mode === 'demo' ? '/demo/settings?tab=1' : '/settings?tab=1')
-      }
+      // Redirect to GitHub App installation page (NOT OAuth authorize)
+      // User will choose which repositories to grant access to
+      window.location.href = `https://github.com/apps/${appSlug}/installations/new?state=${state}`
     }
 
     return (

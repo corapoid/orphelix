@@ -77,23 +77,15 @@ export function RepoSelector() {
   const handleInstallApp = () => {
     if (typeof window === 'undefined') return
 
-    const redirectUri = `${window.location.origin}/api/github-app/callback`
+    // Use app slug from environment or default to 'orphelix'
+    const appSlug = process.env.NEXT_PUBLIC_GITHUB_APP_SLUG || 'orphelix'
+    const redirectUri = encodeURIComponent(`${window.location.origin}/api/github-app/callback`)
     const returnTo = encodeURIComponent('/repo-browser')
-    const state = `${Math.random().toString(36).substring(7)}_return=${returnTo}`
-    const clientId = process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID
-    const appName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME
+    const state = `redirect_uri=${redirectUri}_return=${returnTo}`
 
-    if (clientId) {
-      // If already have repos, go to app installation settings to add more
-      if (repositories.length > 0 && appName) {
-        window.location.href = `https://github.com/apps/${appName}/installations/new`
-      } else {
-        // Otherwise do OAuth flow
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`
-      }
-    } else {
-      router.push(mode === 'demo' ? '/demo/settings?tab=1' : '/settings?tab=1')
-    }
+    // Redirect to GitHub App installation page (NOT OAuth authorize)
+    // User will choose which repositories to grant access to
+    window.location.href = `https://github.com/apps/${appSlug}/installations/new?state=${state}`
   }
 
   const handleSelectRepo = (repo: Repository) => {
