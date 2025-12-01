@@ -18,7 +18,7 @@ import Tooltip from '@mui/material/Tooltip'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
-import { GlassPanel, GlassButton } from '@/lib/ui'
+import { GlassPanel, GlassButton, useTheme } from '@/lib/ui'
 import { useModeStore } from '@/lib/core/store'
 import { useThemeMode } from '@/app/components/theme-provider'
 import { welcomeBackground } from '@/lib/ui/backgrounds'
@@ -43,6 +43,8 @@ export function WelcomeModal() {
   const router = useRouter()
   const { hasCompletedWelcome, setMode, setContext, setNamespace, setHasCompletedWelcome } = useModeStore()
   const { actualTheme, setThemeMode } = useThemeMode()
+  const { visualPreset } = useTheme()
+  const isGlass = visualPreset !== 'classic'
   const [open, setOpen] = useState(!hasCompletedWelcome)
   const [step, setStep] = useState<WelcomeStep>('initial')
   const [contexts, setContexts] = useState<KubeContext[]>([])
@@ -612,7 +614,11 @@ export function WelcomeModal() {
                       sx: {
                         minWidth: 400,
                         maxHeight: 400,
-                        borderRadius: 2,
+                        borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                        ...(isGlass && {
+                          backdropFilter: 'blur(36px)',
+                          WebkitBackdropFilter: 'blur(36px)',
+                        }),
                       },
                     },
                   }}
@@ -708,7 +714,11 @@ export function WelcomeModal() {
                         sx: {
                           minWidth: 400,
                           maxHeight: 400,
-                          borderRadius: 2,
+                          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                          ...(isGlass && {
+                            backdropFilter: 'blur(36px)',
+                            WebkitBackdropFilter: 'blur(36px)',
+                          }),
                         },
                       },
                     }}
