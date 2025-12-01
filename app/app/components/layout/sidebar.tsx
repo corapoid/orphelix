@@ -586,7 +586,7 @@ export function Sidebar() {
                 pl: 1,
               }}
             >
-              v1.0.0
+              v{process.env.NEXT_PUBLIC_APP_VERSION}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Tooltip title={editMode ? 'Done editing' : 'Edit menu'}>
