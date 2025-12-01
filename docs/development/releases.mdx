@@ -1,0 +1,208 @@
+---
+title: 'Release Process'
+description: 'How to create and publish releases for Orphelix'
+---
+
+# Release Process
+
+Orphelix uses automated GitHub releases that are triggered when changes are merged to the main branch.
+
+## How It Works
+
+The release process is fully automated through GitHub Actions:
+
+1. **Developer updates version** - Update `app/package.json` version and `CHANGELOG.md`
+2. **Create PR to main** - Push changes to a feature branch and create PR
+3. **Merge to main** - After review, merge the PR
+4. **Automatic release** - GitHub Actions creates a release automatically
+
+## Creating a New Release
+
+### Step 1: Update Version
+
+Update the version in `app/package.json`:
+
+```json
+{
+  "version": "0.2.0"
+}
+```
+
+Follow [Semantic Versioning](https://semver.org/):
+- **Major** (1.0.0): Breaking changes
+- **Minor** (0.1.0): New features, backwards compatible
+- **Patch** (0.0.1): Bug fixes, backwards compatible
+
+Pre-release versions:
+- **Alpha**: `0.2.0-alpha.1`
+- **Beta**: `0.2.0-beta.1`
+- **Release Candidate**: `0.2.0-rc.1`
+
+### Step 2: Update Changelog
+
+Add a new section to `CHANGELOG.md`:
+
+```markdown
+## [0.2.0] - 2025-12-01
+
+### Added
+- New feature X
+- New feature Y
+
+### Fixed
+- Bug fix A
+- Bug fix B
+
+### Changed
+- Improvement C
+```
+
+### Step 3: Create Feature Branch
+
+```bash
+git checkout -b feat/release-0.2.0
+git add app/package.json CHANGELOG.md
+git commit -m "chore: Prepare release 0.2.0"
+git push origin feat/release-0.2.0
+```
+
+### Step 4: Create Pull Request
+
+```bash
+gh pr create --title "chore: Prepare release 0.2.0" --body "Release preparation for v0.2.0"
+```
+
+### Step 5: Merge to Main
+
+After review and CI passes, merge the PR to main.
+
+## What Happens Automatically
+
+When the PR is merged to main:
+
+1. **CI Workflow Runs** - Lint, type-check, test, security scan, build
+2. **Release Workflow Detects Version Change** - Compares current vs previous package.json
+3. **Git Tag Created** - Creates tag `v0.2.0`
+4. **GitHub Release Created** - With changelog content and installation instructions
+
+## Release Workflow Details
+
+The release workflow (`.github/workflows/release.yml`):
+
+- **Triggers on**: Push to main with changes to `app/package.json` or `CHANGELOG.md`
+- **Version Detection**: Compares current vs previous package.json version
+- **Tag Creation**: Creates `v{version}` tag automatically
+- **Release Notes**: Extracts changelog for the version
+- **Pre-release Detection**: Marks alpha/beta/rc as pre-release
+
+## CI/CD Pipeline
+
+### Branch CI
+
+All branches run the full CI pipeline:
+- Lint (ESLint)
+- Type Check (TypeScript)
+- Unit Tests (Vitest)
+- Security Scan (npm audit, console.log check)
+- Build (Next.js production build)
+
+Pull requests to main also run this pipeline.
+
+### Main Branch
+
+After merge to main:
+- All CI checks run
+- Release workflow runs (if version/changelog changed)
+- No artifacts are uploaded to releases
+
+## Branch Protection Recommendations
+
+Recommended settings for main branch:
+
+1. **Require pull request reviews** - At least 1 approval
+2. **Require status checks** - All CI jobs must pass
+3. **Require branches to be up to date** - Before merging
+4. **Do not allow force pushes** - Protect git history
+
+## Example Workflow
+
+Complete example of releasing version 0.2.0:
+
+```bash
+# 1. Create feature branch
+git checkout -b feat/release-0.2.0
+
+# 2. Update version
+# Edit app/package.json: "version": "0.2.0"
+
+# 3. Update changelog
+# Edit CHANGELOG.md: Add ## [0.2.0] section
+
+# 4. Commit changes
+git add app/package.json CHANGELOG.md
+git commit -m "chore: Prepare release 0.2.0"
+
+# 5. Push branch
+git push origin feat/release-0.2.0
+
+# 6. Create PR
+gh pr create --title "chore: Prepare release 0.2.0" --body "Release preparation for v0.2.0"
+
+# 7. Wait for CI to pass and get approval
+
+# 8. Merge PR (via GitHub UI or CLI)
+gh pr merge --squash
+
+# 9. Wait for release workflow to complete
+
+# 10. Verify release created
+gh release list
+```
+
+## Troubleshooting
+
+### Release Not Created
+
+Check if:
+- Version in package.json actually changed from previous commit
+- CHANGELOG.md has entry for the new version
+- Release workflow ran successfully: `gh run list --workflow=release.yml`
+
+### Tag Already Exists
+
+If tag exists, release creation is skipped. Delete the tag:
+
+```bash
+git tag -d v0.2.0
+git push origin :refs/tags/v0.2.0
+```
+
+Then re-run the workflow or manually trigger it.
+
+### CI Fails on Branch
+
+Fix the issues before merging:
+- Lint errors: Run `npm run lint` and fix issues
+- Type errors: Run `npm run type-check` and fix issues
+- Test failures: Run `npm test` and fix failing tests
+- Build errors: Run `npm run build` and fix errors
+
+## Version History
+
+View all releases:
+
+```bash
+gh release list
+```
+
+View specific release:
+
+```bash
+gh release view v0.2.0
+```
+
+## Related Documentation
+
+- [CI/CD Configuration](/.github/workflows/ci.yml)
+- [Release Workflow](/.github/workflows/release.yml)
+- [CHANGELOG.md](/CHANGELOG.md)
