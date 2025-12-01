@@ -1,6 +1,6 @@
 {
   "name": "orphelix",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Modern, full-featured Kubernetes dashboard with real-time updates and GitOps integration",
   "author": "Dariusz Makowski <corapoid@gmail.com>",
   "license": "SEE LICENSE IN LICENSE",

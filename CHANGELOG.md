@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-12-01
+
+### Added
+- **Automated GitHub Releases** - Workflow for automatic release creation on version changes
+- **Release Documentation** - Complete guide for creating releases in docs/development/releases.mdx
+- **Liquid Glass Modal Styling** - Applied glass morphism design to all modal dialogs
+- **CLI Rebuild Command** - `orphelix rebuild` with auto-update of dev dependencies
+- **CI Workflow Enhancements** - Detailed step summaries and test coverage reporting
+
+### Fixed
+- **AWS EKS Support** - Allow colons and slashes in context names for AWS ARN format (arn:aws:eks:region:account:cluster/name)
+- **Welcome Modal UX** - Hide demo option while loading clusters, improved dropdown styling with backdrop blur
+- **Cluster Selector UI** - Updated to match main app styling with custom ButtonBase + Menu dropdowns
+- **Version Display** - Dynamic version reading from package.json in sidebar and footer
+- **PM2 Standalone Paths** - Corrected build paths and suppressed verbose output
+- **Console.log Cleanup** - Removed debug statements from application code
+- **Documentation** - Fixed TypeScript warnings and updated dependency badges
+
+### Changed
+- **README Structure** - Moved Quick Start section to top for better onboarding
+- **CI/CD Pipeline** - Runs on all branches, releases only on main after version changes
+- **Next.js Config** - Silenced workspace root warning
+
 ## [0.1.0] - 2025-11-28
 
 First official release of Orphelix - Modern Kubernetes Dashboard
