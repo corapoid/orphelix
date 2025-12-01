@@ -355,8 +355,6 @@ export function YamlEditorModal({
       // TEMPORARY: Hardcoded fallback for testing
       const clientId = process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID || 'Iv23lipSNqtEiL3HtNnk'
 
-      console.log('Install GitHub App (YAML Editor) - clientId:', clientId)
-
       if (clientId) {
         window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`
       } else {

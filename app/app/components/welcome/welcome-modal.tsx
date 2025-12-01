@@ -91,7 +91,6 @@ export function WelcomeModal() {
         }
 
         const data = await response.json()
-        console.log('Namespaces loaded:', data)
 
         if (Array.isArray(data)) {
           setNamespaces(data)
