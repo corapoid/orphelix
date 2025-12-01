@@ -520,27 +520,29 @@ export function WelcomeModal() {
                 )}
               </GlassButton>
 
-              <Typography variant="body2" color="text.secondary" textAlign="center">
-                or
-              </Typography>
+              {!loading && (
+                <>
+                  <Typography variant="body2" color="text.secondary" textAlign="center">
+                    or
+                  </Typography>
 
-              <GlassButton
-                onClick={handleDemoMode}
-                variant="outlined"
-                size="large"
-                sx={{
-                  py: 2,
-                  fontSize: '1rem',
-                  minWidth: 320,
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(30, 30, 46, 0.3)'
-                      : 'rgba(255, 255, 255, 0.1)',
-                  '&:hover': {
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'dark'
+                  <GlassButton
+                    onClick={handleDemoMode}
+                    variant="outlined"
+                    size="large"
+                    sx={{
+                      py: 2,
+                      fontSize: '1rem',
+                      minWidth: 320,
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(30, 30, 46, 0.3)'
+                          : 'rgba(255, 255, 255, 0.1)',
+                      '&:hover': {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === 'dark'
                         ? 'rgba(50, 50, 70, 0.4)'
                         : 'rgba(255, 255, 255, 0.2)',
                   },
@@ -548,6 +550,8 @@ export function WelcomeModal() {
               >
                 Demo
               </GlassButton>
+                </>
+              )}
             </Box>
           )}
 
