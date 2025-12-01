@@ -607,14 +607,16 @@ export function WelcomeModal() {
                   onClose={() => setClusterMenuAnchor(null)}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  sx={{
-                    mt: 1,
-                    '& .MuiPaper-root': {
-                      minWidth: 400,
-                      maxHeight: 400,
-                      borderRadius: 2,
+                  slotProps={{
+                    paper: {
+                      sx: {
+                        minWidth: 400,
+                        maxHeight: 400,
+                        borderRadius: 2,
+                      },
                     },
                   }}
+                  sx={{ mt: 1, zIndex: 10001 }}
                 >
                   {contexts.map((context) => {
                     const selected = selectedContextName === context.name
@@ -701,14 +703,16 @@ export function WelcomeModal() {
                     onClose={() => setNamespaceMenuAnchor(null)}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                    sx={{
-                      mt: 1,
-                      '& .MuiPaper-root': {
-                        minWidth: 400,
-                        maxHeight: 400,
-                        borderRadius: 2,
+                    slotProps={{
+                      paper: {
+                        sx: {
+                          minWidth: 400,
+                          maxHeight: 400,
+                          borderRadius: 2,
+                        },
                       },
                     }}
+                    sx={{ mt: 1, zIndex: 10001 }}
                   >
                     <MenuItem
                       onClick={() => {
