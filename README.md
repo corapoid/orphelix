@@ -24,6 +24,29 @@
 
 ![Orphelix Dashboard](docs/screenshots/dashboard.png)
 
+## 🚀 Quick Start
+
+### Install and running the application
+
+```bash
+cd app
+npm run orphelix start
+```
+
+### Open in browser
+
+```bash
+npm run orphelix open
+```
+
+### Other commands
+
+```bash
+npm run orphelix stop       # Stop the application
+npm run orphelix status     # Check status
+npm run orphelix help       # Show all commands
+```
+
 ## ✨ Features
 
 ### 🎯 Core Capabilities
@@ -81,29 +104,6 @@
 - **GitHub App** for YAML editor and PR workflow ([setup guide](docs/user/github/github-app-setup.mdx))
 
 > **Note**: GitHub OAuth (for login) and GitHub App (for GitOps) are separate. See [SECURITY.md](SECURITY.md#github-authentication) for details.
-
-## 🚀 Quick Start
-
-### Install and running the application
-
-```bash
-cd app
-npm run orphelix start
-```
-
-### Open in browser
-
-```bash
-npm run orphelix open
-```
-
-### Other commands
-
-```bash
-npm run orphelix stop       # Stop the application
-npm run orphelix status     # Check status
-npm run orphelix help       # Show all commands
-```
 
 ## 📖 Documentation
 

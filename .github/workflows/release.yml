@@ -1,0 +1,143 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/package.json'
+      - 'CHANGELOG.md'
+
+jobs:
+  check-version:
+    name: Check for Version Bump
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version: ${{ steps.check.outputs.version }}
+      changelog: ${{ steps.check.outputs.changelog }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if version changed
+        id: check
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(jq -r '.version' app/package.json)
+          echo "Current version: $CURRENT_VERSION"
+
+          # Get previous version from package.json
+          git checkout HEAD~1 -- app/package.json 2>/dev/null || echo '{"version":"0.0.0"}' > app/package.json.old
+          PREVIOUS_VERSION=$(jq -r '.version' app/package.json.old 2>/dev/null || echo "0.0.0")
+          rm -f app/package.json.old
+          git checkout HEAD -- app/package.json
+
+          echo "Previous version: $PREVIOUS_VERSION"
+
+          # Check if version changed
+          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+            # Extract changelog for this version
+            CHANGELOG=$(awk "/## \[$CURRENT_VERSION\]/,/## \[/" CHANGELOG.md | sed '1d;$d' | sed '/^$/d')
+            if [ -z "$CHANGELOG" ]; then
+              # If section-based extraction failed, try alternative format
+              CHANGELOG=$(awk "/## $CURRENT_VERSION/,/## [0-9]/" CHANGELOG.md | sed '1d;$d' | sed '/^$/d')
+            fi
+
+            if [ -z "$CHANGELOG" ]; then
+              echo "Warning: No changelog found for version $CURRENT_VERSION"
+              CHANGELOG="Release version $CURRENT_VERSION"
+            fi
+
+            # Save changelog to file to preserve formatting
+            echo "$CHANGELOG" > /tmp/changelog.txt
+            echo "changelog<<EOF" >> $GITHUB_OUTPUT
+            cat /tmp/changelog.txt >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "Version unchanged"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: check-version
+    if: needs.check-version.outputs.should_release == 'true'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          VERSION="${{ needs.check-version.outputs.version }}"
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists"
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag v$VERSION does not exist"
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Git Tag
+        if: steps.check_tag.outputs.tag_exists == 'false'
+        run: |
+          VERSION="${{ needs.check-version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release version $VERSION"
+          git push origin "v$VERSION"
+
+      - name: Determine if pre-release
+        id: prerelease
+        run: |
+          VERSION="${{ needs.check-version.outputs.version }}"
+          if [[ "$VERSION" =~ (alpha|beta|rc) ]]; then
+            echo "This is a pre-release version"
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "This is a stable release"
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.check-version.outputs.version }}
+          release_name: Orphelix v${{ needs.check-version.outputs.version }}
+          body: |
+            # Orphelix v${{ needs.check-version.outputs.version }}
+
+            ${{ needs.check-version.outputs.changelog }}
+
+            ---
+
+            ## Installation
+
+            ```bash
+            git clone https://github.com/corapoid/orphelix.git
+            cd orphelix
+            npm install
+            npx orphelix start
+            ```
+
+            ## Documentation
+
+            Full documentation: https://docs.orphelix.com
+
+            ## What's Changed
+
+            See [CHANGELOG.md](https://github.com/corapoid/orphelix/blob/main/CHANGELOG.md) for detailed changes.
+          draft: false
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
